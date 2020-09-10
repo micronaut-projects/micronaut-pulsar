@@ -23,9 +23,21 @@ import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.annotation.AnnotationValue;
 import org.apache.pulsar.client.api.*;
 
+/**
+ * Pulsar {@link Producer} factory.
+ */
 @Factory
 public class PulsarProducerFactory {
 
+    /**
+     * Simple factory method for producing Pulsar {@link Producer} beans.
+     * @param pulsarClient main Pulsar Client bean
+     * @param annotationValue method annotation to read properties from
+     * @param schemaResolver schema resolver bean
+     * @param <T> type of message body for pulsar producer
+     * @return new Pulsar producer
+     * @throws PulsarClientException
+     */
     @SuppressWarnings("unchecked")
     @Prototype
     public <T> Producer<T> createProducer(@Parameter PulsarClient pulsarClient,

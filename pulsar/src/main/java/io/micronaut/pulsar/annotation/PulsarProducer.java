@@ -93,7 +93,7 @@ public @interface PulsarProducer {
     int batchingMaxMessages() default 1000;
 
     /**
-     * Default 128KB
+     * Default 128KB.
      *
      * @return Max bytes per batch
      */

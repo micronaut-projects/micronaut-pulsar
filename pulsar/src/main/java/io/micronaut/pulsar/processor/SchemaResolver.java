@@ -32,6 +32,12 @@ import javax.inject.Singleton;
 @Singleton
 public class SchemaResolver {
 
+    /**
+     * Resolve which schema to use.
+     * @param topicAnnotation either producer or consumer annotation
+     * @param messageBodyType type of message body used with Pulsar topic
+     * @return new Schema
+     */
     @SuppressWarnings({"unchecked"})
     public Schema<?> decideSchema(final AnnotationValue<?> topicAnnotation, Class<?> messageBodyType) {
 

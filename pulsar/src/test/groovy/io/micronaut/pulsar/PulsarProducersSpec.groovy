@@ -51,10 +51,6 @@ class PulsarProducersSpec extends Specification {
 
     def setupSpec() {
         pulsarContainer.start()
-        PulsarAdmin admin = PulsarAdmin.builder().serviceHttpUrl(pulsarContainer.httpServiceUrl).build()
-        // due to regex subscription slow updates create topic prior to subscribers
-        admin.topics().createNonPartitionedTopic("public/default/other")
-        admin.close()
         embeddedServer = ApplicationContext.run(EmbeddedServer,
                 CollectionUtils.mapOf("pulsar.service-url", pulsarContainer.pulsarBrokerUrl),
                 StringUtils.EMPTY_STRING_ARRAY
@@ -67,7 +63,7 @@ class PulsarProducersSpec extends Specification {
         ProducerTester producer = context.getBean(ProducerTester)
         def reader = context.getBean(PulsarClient).newReader(Schema.STRING)
                 .startMessageId(MessageId.latest)
-                .topic("public/default/test")
+                .topic("public/default/test2")
                 .create()
         String message = "This should be received"
         //messages will be read sequentially
@@ -88,13 +84,13 @@ class PulsarProducersSpec extends Specification {
 
     @PulsarProducerClient
     static interface ProducerTester {
-        @PulsarProducer(topic = "public/default/test", bodyType = String, producerName = "test-producer")
+        @PulsarProducer(topic = "public/default/test2", bodyType = String, producerName = "test-producer")
         void producer(String message);
-        @PulsarProducer(topic = "public/default/test", bodyType = String, producerName = "test-producer-2")
+        @PulsarProducer(topic = "public/default/test2", bodyType = String, producerName = "test-producer-2")
         String returnOnProduce(String message)
-        @PulsarProducer(topic = "public/default/test", bodyType = String, producerName = "test-producer-3")
+        @PulsarProducer(topic = "public/default/test2", bodyType = String, producerName = "test-producer-3")
         MessageId messageIdOnProduce(String message)
-        @PulsarProducer(topic = "public/default/test", bodyType = String, producerName = "test-producer-reactive")
+        @PulsarProducer(topic = "public/default/test2", bodyType = String, producerName = "test-producer-reactive")
         Single<MessageId> reactiveMessage(String message)
     }
 }

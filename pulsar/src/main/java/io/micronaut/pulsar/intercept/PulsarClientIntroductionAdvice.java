@@ -40,8 +40,11 @@ import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Intercepting pulsar {@link Producer} methods
+ */
 @Singleton
-public class PulsarClientIntroductionAdvice implements MethodInterceptor<Object, Object>, AutoCloseable, PulsarProducerRegistry {
+public final class PulsarClientIntroductionAdvice implements MethodInterceptor<Object, Object>, AutoCloseable, PulsarProducerRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarClientIntroductionAdvice.class);
 

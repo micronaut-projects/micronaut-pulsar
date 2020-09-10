@@ -58,14 +58,12 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
     private final SchemaResolver schemaResolver;
     private final PulsarClient pulsarClient;
 
-
     public PulsarClientScope(BeanContext beanContext, SchemaResolver schemaResolver, PulsarClient pulsarClient) {
         this.beanContext = beanContext;
         this.schemaResolver = schemaResolver;
         this.pulsarClient = pulsarClient;
         producersCollection = new ConcurrentHashMap<>();
     }
-
 
     @Override
     public Class<PulsarProducerClient> annotationType() {
@@ -100,8 +98,8 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
         String id = identifier.getName();
         List<Producer<?>> producers = producersCollection.remove(id);
         if (null != producers) {
-            for(Producer<?> producer : producers) {
-                producer.closeAsync().handle((v,ex) -> {
+            for (Producer<?> producer : producers) {
+                producer.closeAsync().handle((v, ex) -> {
                     if (null != ex) {
                         if (LOG.isWarnEnabled()) {
                             LOG.warn("Error shutting down Pulsar producer: " + producer.getProducerName());

@@ -52,6 +52,7 @@ class PulsarSpec extends Specification {
         PulsarAdmin admin = PulsarAdmin.builder().serviceHttpUrl(pulsarContainer.httpServiceUrl).build()
         // due to regex subscription slow updates create topic prior to subscribers
         admin.topics().createNonPartitionedTopic("public/default/other")
+        admin.topics().createNonPartitionedTopic("public/default/test")
         admin.close()
         embeddedServer = ApplicationContext.run(EmbeddedServer,
                 CollectionUtils.mapOf("pulsar.service-url", pulsarContainer.pulsarBrokerUrl),
@@ -77,8 +78,8 @@ class PulsarSpec extends Specification {
         def producer = context.getBean(PulsarClient).newProducer().topic(topic).create()
         //simple consumer with topic list and blocking
         def message = "This should be received"
+        PollingConditions conditions = new PollingConditions(timeout: 60, delay: 1)
         def messageId = producer.send(message.bytes)
-        PollingConditions conditions = new PollingConditions(timeout: 30, delay: 1)
 
         then:
         conditions.eventually {
@@ -96,7 +97,7 @@ class PulsarSpec extends Specification {
         PulsarConsumerTopicPatternTester consumerPatternTester = context.getBean(PulsarConsumerTopicPatternTester)
         Producer<String> producer = context.getBean(PulsarClient).newProducer(Schema.STRING).topic(topic).create()
         String message = "This should be received"
-        PollingConditions conditions = new PollingConditions(timeout: 30, delay: 1)
+        PollingConditions conditions = new PollingConditions(timeout: 60, delay: 1)
         MessageId messageId = producer.send(message)
 
         then:
