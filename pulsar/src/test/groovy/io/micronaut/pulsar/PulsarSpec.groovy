@@ -51,11 +51,11 @@ class PulsarSpec extends Specification {
 
     def setupSpec() {
         pulsarContainer.start()
-        PulsarAdmin admin = PulsarAdmin.builder().serviceHttpUrl(pulsarContainer.httpServiceUrl).build();
-        admin.topics().createNonPartitionedTopic("persistent://public/default/other2");
+        PulsarAdmin admin = PulsarAdmin.builder().serviceHttpUrl(pulsarContainer.httpServiceUrl).build()
+        admin.topics().createNonPartitionedTopic("public/default/other2")
         embeddedServer = ApplicationContext.run(EmbeddedServer,
                 CollectionUtils.mapOf("pulsar.service-url", pulsarContainer.pulsarBrokerUrl,
-                        "pulsar.io-threads", 2),
+                        "pulsar.io-threads", 2, "listener-threads", 2),
                 StringUtils.EMPTY_STRING_ARRAY
         )
         context = embeddedServer.applicationContext
