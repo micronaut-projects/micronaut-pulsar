@@ -82,7 +82,7 @@ public @interface PulsarConsumer {
 
     /**
      * Used in combination with {@link this#topicsPattern()}. Ignored using {@link this#topics()}. Must be greater than
-     * 1. Low values should be avoided as it will use network too much and could lead to false DDOS attack detection.
+     * 1. Low values should avoided. Pulsar default value is 1 minute
      *
      * @return Amount of delay between checks, in seconds, for new topic matching given pattern.
      */

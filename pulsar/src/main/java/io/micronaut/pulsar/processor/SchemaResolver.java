@@ -42,7 +42,6 @@ public class SchemaResolver {
     public Schema<?> decideSchema(final AnnotationValue<?> topicAnnotation, Class<?> messageBodyType) {
 
         MessageSchema schema = topicAnnotation.getRequiredValue("schema", MessageSchema.class);
-
         if (MessageSchema.BYTES == schema && byte[].class != messageBodyType) {
             if (String.class == messageBodyType) {
                 return Schema.STRING;

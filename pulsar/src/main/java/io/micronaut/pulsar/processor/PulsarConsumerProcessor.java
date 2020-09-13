@@ -104,10 +104,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                     .orElseGet(() -> "pulsar-consumer-" + consumerCounter.get());
             consumerBuilder.consumerName(name);
             if (subscribeAsync) {
-                consumerBuilder.subscribeAsync().thenApply(x -> {
-                    consumers.put(name, x);
-                    return x;
-                });
+                consumerBuilder.subscribeAsync().thenAccept(x -> consumers.put(name, x));
             } else {
                 try {
                     Consumer<?> consumer = consumerBuilder.subscribe();
@@ -160,13 +157,13 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         if (ArrayUtils.isNotEmpty(topics)) {
             consumer.topic(topics);
         } else if (StringUtils.isNotEmpty(topicsPattern)) {
+            consumer.topicsPattern(topicsPattern);
             Optional<RegexSubscriptionMode> mode = topicAnnotation.enumValue("subscriptionTopicsMode", RegexSubscriptionMode.class);
             if (mode.isPresent()) {
                 consumer.subscriptionTopicsMode(mode.get());
             } else {
                 consumer.subscriptionTopicsMode(RegexSubscriptionMode.AllTopics);
             }
-            consumer.topicsPattern(topicsPattern).startMessageIdInclusive();
             OptionalInt topicsRefresh = topicAnnotation.intValue("patternAutoDiscoveryPeriod");
             if (topicsRefresh.isPresent()) {
                 if (topicsRefresh.getAsInt() < 1) {

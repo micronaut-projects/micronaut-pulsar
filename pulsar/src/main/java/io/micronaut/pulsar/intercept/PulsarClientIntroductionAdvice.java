@@ -41,7 +41,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Intercepting pulsar {@link Producer} methods
+ * Intercepting pulsar {@link Producer} methods.
  */
 @Singleton
 public final class PulsarClientIntroductionAdvice implements MethodInterceptor<Object, Object>, AutoCloseable, PulsarProducerRegistry {
