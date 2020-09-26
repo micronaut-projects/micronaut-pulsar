@@ -17,6 +17,12 @@ package io.micronaut.pulsar.events;
 
 import org.apache.pulsar.client.api.Consumer;
 
+/**
+ * Event to produce when Pulsar consumer connects to a broker and starts listening to specified topics.
+ *
+ * @since 1.0
+ * @author Haris Secic
+ */
 public final class ConsumerSubscribedEvent {
 
     private Consumer<?> consumer;

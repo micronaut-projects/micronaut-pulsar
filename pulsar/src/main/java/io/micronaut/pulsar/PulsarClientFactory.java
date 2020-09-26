@@ -35,10 +35,10 @@ import javax.inject.Singleton;
 public final class PulsarClientFactory {
 
     /**
-     * Simple factory method for building main PulsarClient that servers as a connection to Pulsar cluster.
+     * Simple factory method for building main PulsarClient that serves as a connection to Pulsar cluster.
      * @param pulsarClientConfiguration Main configuration for building PulsarClient
      * @return Instance of {@link PulsarClient}
-     * @throws PulsarClientException
+     * @throws PulsarClientException in case any of the required options are missing or malformed
      */
     @Singleton
     public PulsarClient pulsarClient(PulsarClientConfiguration pulsarClientConfiguration) throws PulsarClientException {

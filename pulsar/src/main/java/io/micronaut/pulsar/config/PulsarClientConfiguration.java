@@ -22,6 +22,9 @@ import java.util.Optional;
 
 /**
  * Basic requirements for custom and default configuration to create Pulsar client.
+ *
+ * @since 1.0
+ * @author Haris Secic
  */
 public interface PulsarClientConfiguration {
     String getServiceUrl();

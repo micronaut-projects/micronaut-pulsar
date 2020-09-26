@@ -127,7 +127,7 @@ class PulsarSpec extends Specification {
         }
 
         //testing reverse order to ensure processor will do correct call
-        @PulsarConsumer(topics = ["public/default/test"], consumerName = "single-topic-consumer", subscribeAsync = false)
+        @PulsarConsumer(topics = ["persistent://public/default/test"], consumerName = "single-topic-consumer", subscribeAsync = false)
         def topicListener(Message<byte[]> message, Consumer<byte[]> consumer) {
             latestMessageId = message.messageId
             latestMessage = new String(message.getValue())
@@ -143,7 +143,7 @@ class PulsarSpec extends Specification {
 
         //testing default order
         //fails to subscribe to test topic because exclusive consumer is connected already so subscribe only to other
-        @PulsarConsumer(topicsPattern = 'public/default/other.*', consumerName = "consumer-async", messageBodyType = String.class)
+        @PulsarConsumer(topicsPattern = 'persistent://public/default/other.*', consumerName = "consumer-async")
         def asyncTopicListener(Consumer<String> consumer, Message<String> message) {
             latestMessage = message.value
             latestConsumer = consumer

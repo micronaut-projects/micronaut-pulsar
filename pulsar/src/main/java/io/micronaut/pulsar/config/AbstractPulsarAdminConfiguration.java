@@ -19,6 +19,14 @@ import javax.annotation.Nullable;
 import java.util.Optional;
 import java.util.Properties;
 
+/**
+ * An abstract Pulsar Administration configuration class.
+ *
+ * @param <K> The key deserializer type
+ * @param <V> The value deserializer type
+ * @author Haris Secic
+ * @since 1.0
+ */
 public abstract class AbstractPulsarAdminConfiguration<K, V> extends AbstractPulsarConfiguration<K, V> {
     /**
      * Prefix for Pulsar administration configuration.

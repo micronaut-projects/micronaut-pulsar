@@ -15,15 +15,12 @@
  */
 package io.micronaut.pulsar.config;
 
-import io.micronaut.context.ApplicationContext;
-import io.micronaut.context.Qualifier;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.inject.qualifiers.Qualifiers;
 import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider;
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.ServiceUrlProvider;
@@ -45,18 +42,18 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private String authenticationJwt;
     private String tlsLocation;
     private String serviceUrl;
-    private String serviceUrlProvider;
-
-    private final ApplicationContext applicationContext;
+    private final Optional<ServiceUrlProvider> serviceUrlProvider;
 
     /**
      * Constructs the default Pulsar Client configuration.
      *
-     * @param applicationContext The application context
+     * @param environment Environment
+     * @param serviceUrlProvider Pulsars service URL provider
      */
-    protected DefaultPulsarClientConfiguration(ApplicationContext applicationContext) {
-        super(resolveDefaultConfiguration(applicationContext.getEnvironment()));
-        this.applicationContext = applicationContext;
+    protected DefaultPulsarClientConfiguration(final Environment environment,
+                                               @PulsarServiceUrlProvider final Optional<ServiceUrlProvider> serviceUrlProvider) {
+        super(resolveDefaultConfiguration(environment));
+        this.serviceUrlProvider = serviceUrlProvider;
     }
 
     public Optional<Integer> getIoThreads() {
@@ -106,11 +103,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     public Optional<ServiceUrlProvider> getServiceUrlProvider() {
-        if (null == serviceUrlProvider || serviceUrlProvider.isEmpty()) {
-            Qualifier<ServiceUrlProvider> annotation = Qualifiers.byStereotype(PulsarServiceUrlProvider.class);
-            return this.applicationContext.findBean(ServiceUrlProvider.class, annotation);
-        }
-        return this.applicationContext.findBean(ServiceUrlProvider.class, Qualifiers.byName(serviceUrlProvider));
+        return this.serviceUrlProvider;
     }
 
     @Override

@@ -16,7 +16,7 @@
 package io.micronaut.pulsar.processor;
 
 import com.google.protobuf.GeneratedMessageV3;
-import io.micronaut.pulsar.annotation.MessageSchema;
+import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.core.annotation.AnnotationValue;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.impl.schema.*;

@@ -21,7 +21,10 @@ import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
 
 /**
+ * Default listener for incoming Pulsar messages.
  *
+ * @author Haris Secic
+ * @since 1.0
  */
 @Requires(missingBeans = MessageListenerResolver.class)
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -61,5 +64,4 @@ public class DefaultListener implements MessageListenerResolver {
         //in case invoke has failed but async ack will still happen instead of negative ack
         consumer.acknowledgeAsync(msg);
     }
-
 }

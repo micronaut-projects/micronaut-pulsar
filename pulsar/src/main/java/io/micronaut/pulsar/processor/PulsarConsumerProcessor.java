@@ -43,7 +43,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Processes beans containing methods annotated with @PulsarConsumer.
@@ -89,6 +88,9 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
         if (ArrayUtils.isEmpty(arguments)) {
             throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept at least 1 parameter");
+        } else if (arguments.length > 2) {
+            throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept maximum of 2 parameters " +
+                    "one for message body and one for " + Consumer.class.getName());
         }
 
         //because of processTopic requirements
@@ -104,14 +106,19 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                     .orElseGet(() -> "pulsar-consumer-" + consumerCounter.get());
             consumerBuilder.consumerName(name);
             if (subscribeAsync) {
-                consumerBuilder.subscribeAsync().thenAccept(x -> consumers.put(name, x));
+                consumerBuilder.subscribeAsync().thenAccept(x -> {
+                    consumers.put(name, x);
+                    applicationEventPublisher.publishEventAsync(new ConsumerSubscribedEvent(x));
+                });
             } else {
                 try {
                     Consumer<?> consumer = consumerBuilder.subscribe();
                     consumers.put(name, consumer);
                     applicationEventPublisher.publishEvent(new ConsumerSubscribedEvent(consumer));
                 } catch (PulsarClientException e) {
-                    LOG.error("Could not start pulsar producer " + name, e);
+                    if (LOG.isErrorEnabled()) {
+                        LOG.error("Could not start pulsar producer " + name, e);
+                    }
                 }
             }
         }
@@ -125,29 +132,32 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                                             Object bean) {
 
         Argument<?>[] methodArguments = method.getArguments();
-        Class<?> messageBodyType = topicAnnotation.classValue("messageBodyType")
-                .orElse(topicAnnotation.getRequiredValue("messageBodyType", Class.class));
-        Stream<Argument<?>> argumentsStream = Arrays.stream(methodArguments);
+        Class<?> messageBodyType;
+        Optional<Argument<?>> bodyType = Arrays.stream(methodArguments).filter(x -> !Consumer.class.isAssignableFrom(x.getType())).findFirst();
 
-        Argument<?> messageListener = argumentsStream
-                .filter(x -> x.getType() == messageBodyType || Message.class.isAssignableFrom(x.getType()))
-                .findFirst()
-                .orElseThrow(() -> new IllegalArgumentException("Method annotated with pulsar consumer must accept " +
-                        "parameter of type T or Message<T> where T is defined in PulsarConsumer.messageBodyType"));
+        if (!bodyType.isPresent()) {
+            throw new IllegalArgumentException("Method annotated with pulsar consumer must accept 1 parameter that's of" +
+                    " type other than " + Consumer.class.getName() + " class which can be used to accept pulsar message.");
+        } else {
+            messageBodyType = bodyType.get().getType();
+        }
 
         boolean useMessageWrapper = false; //users can consume only message body and ignore the rest
 
-        if (Message.class.isAssignableFrom(messageListener.getType())) {
-            Argument<?> messageParameter = messageListener.getFirstTypeVariable()
-                    .orElseThrow(() -> new NoSuchElementException("No value present"));
-            if (!messageParameter.getType().isAssignableFrom(messageBodyType)) {
-                throw new IllegalArgumentException("Method annotated with @PulsarConsumer taking Message<T> as " +
-                        "argument must have T of @PulsarConsumer.messageBodyType");
-            }
+        if (Message.class.isAssignableFrom(messageBodyType)) {
             useMessageWrapper = true;
         }
 
-        ConsumerBuilder<?> consumer = pulsarClient.newConsumer(schemaResolver.decideSchema(topicAnnotation, messageBodyType));
+        Schema<?> schema;
+
+        if (useMessageWrapper) {
+            Argument<?> messageWrapper = bodyType.get().getTypeParameters()[0];
+            schema = schemaResolver.decideSchema(topicAnnotation, messageWrapper.getType());
+        } else {
+            schema = schemaResolver.decideSchema(topicAnnotation, messageBodyType);
+        }
+
+        ConsumerBuilder<?> consumer = pulsarClient.newConsumer(schema);
 
         topicAnnotation.stringValue("consumerName").ifPresent(consumer::consumerName);
 

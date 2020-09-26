@@ -15,7 +15,6 @@
  */
 package io.micronaut.pulsar.scope;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanResolutionContext;
 import io.micronaut.context.LifeCycle;
@@ -77,19 +76,19 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
         for (ExecutableMethod<T, ?> x : beanDefinition.getExecutableMethods()) {
             AnnotationValue<PulsarProducer> annotation = x.getAnnotation(PulsarProducer.class);
             if (null != annotation) {
-                producerMethods.add(producer(annotation));
+                producerMethods.add(createProducer(annotation));
             }
         }
         return (T) producersCollection.computeIfAbsent(identifier.getName(), key -> producerMethods);
     }
 
-    private Producer<?> producer(AnnotationValue<PulsarProducer> annotationValue) {
+    private Producer<?> createProducer(AnnotationValue<PulsarProducer> annotationValue) {
         String producerId = annotationValue.getRequiredValue("producerName", String.class);
         //Annotation processor for @PulsarProducer will also create such beans. Avoid having duplicates.
         if (beanContext.containsBean(Producer.class, Qualifiers.byName(producerId))) {
             return beanContext.getBean(Producer.class, Qualifiers.byName(producerId));
         }
-        return beanContext.createBean(Producer.class, pulsarClient, annotationValue, schemaResolver);
+        return beanContext.createBean(Producer.class, Qualifiers.byName(producerId), pulsarClient, annotationValue, schemaResolver);
     }
 
     @SuppressWarnings("unchecked")
@@ -113,7 +112,6 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
         return Optional.empty();
     }
 
-    @NonNull
     @Override
     public PulsarClientScope stop() {
         for (List<Producer<?>> producers : producersCollection.values()) {

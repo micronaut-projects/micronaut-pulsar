@@ -15,23 +15,22 @@
  */
 package io.micronaut.pulsar.annotation;
 
+import javax.inject.Qualifier;
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
-import java.lang.annotation.Target;
 
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
  * Marks a class that contains method to resolve pulsar service url. Class annotated must implement ServiceUrlProvider
- * interface from offical Apache Pulsar Java library.
+ * interface from official Apache Pulsar Java library.
  *
  * @author Haris Secic
  * @since 1.0
  */
 @Documented
 @Retention(RUNTIME)
-@Target({ElementType.METHOD})
+@Qualifier
 public @interface PulsarServiceUrlProvider {
     //Just a distinguished annotation for PulsarServiceProvider
 }

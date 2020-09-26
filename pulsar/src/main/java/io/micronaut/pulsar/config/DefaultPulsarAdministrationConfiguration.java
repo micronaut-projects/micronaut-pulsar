@@ -17,6 +17,12 @@ package io.micronaut.pulsar.config;
 
 import java.util.Properties;
 
+/**
+ * Default Pulsar Administration configuration class.
+ *
+ * @author Haris Secic
+ * @since 1.0
+ */
 public final class DefaultPulsarAdministrationConfiguration extends AbstractPulsarAdminConfiguration {
 
     private String adminUrl = DEFAULT_PULSAR_ADMINISTRATION_ENDPOINT;

@@ -25,6 +25,8 @@ import org.apache.pulsar.client.api.*;
 
 /**
  * Pulsar {@link Producer} factory.
+ * @author Haris Secic
+ * @since 1.0
  */
 @Factory
 public class PulsarProducerFactory {

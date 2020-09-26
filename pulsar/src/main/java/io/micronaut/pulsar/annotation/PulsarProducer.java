@@ -15,6 +15,7 @@
  */
 package io.micronaut.pulsar.annotation;
 
+import io.micronaut.pulsar.MessageSchema;
 import org.apache.pulsar.client.api.CompressionType;
 import org.apache.pulsar.client.api.HashingScheme;
 import org.apache.pulsar.client.api.MessageRoutingMode;
@@ -68,7 +69,7 @@ public @interface PulsarProducer {
     MessageRoutingMode messageRoutingMode() default MessageRoutingMode.RoundRobinPartition;
 
     /**
-     * @return Produce messages of different schemas than one specified at creation time
+     * @return Produce messages of different schemas than specified at creation time
      */
     boolean multiSchema() default true;
 

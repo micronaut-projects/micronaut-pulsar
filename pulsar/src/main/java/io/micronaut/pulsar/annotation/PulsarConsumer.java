@@ -16,6 +16,7 @@
 package io.micronaut.pulsar.annotation;
 
 import io.micronaut.messaging.annotation.MessageListener;
+import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
 
@@ -40,22 +41,18 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface PulsarConsumer {
 
     /**
-     * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic
+     * Has precedence over {@code topicPattern}.
+     * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.
      */
+    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_VALIDATOR)
     String[] topics() default {};
 
     /**
+     * Ignored if {@code topics} attribute is set.
      * @return Topics name in form of tenantName/namespace/topic-name-pattern.
      */
     @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
     String topicsPattern() default "";
-
-    /**
-     * Defaults to {@code byte[]}.
-     *
-     * @return Type of body in puslar message
-     */
-    Class<?> messageBodyType() default byte[].class;
 
     /**
      * Defaults to {@link MessageSchema#BYTES} as default value for Pulsar {@link org.apache.pulsar.client.api.Schema} is {@code byte[]}.
@@ -70,12 +67,11 @@ public @interface PulsarConsumer {
     String consumerName();
 
     /**
+     * Ignored if {@code topics()} attribute is set.
      * Default value {@link RegexSubscriptionMode#AllTopics}
      * <p>
-     * Whether to read topics from persistent, or non-persistent storage, or both
+     * Whether to read topics from persistent, or non-persistent storage, or both.
      * <p>
-     * If topics are set other than {@link this#topicsPattern()} this value will be ignored.
-     *
      * @return subscription
      */
     RegexSubscriptionMode subscriptionTopicsMode() default RegexSubscriptionMode.AllTopics;

@@ -18,13 +18,13 @@ package io.micronaut.pulsar.intercept;
 import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
-import io.micronaut.pulsar.PulsarProducerRegistry;
-import io.micronaut.pulsar.annotation.PulsarProducer;
-import io.micronaut.pulsar.processor.SchemaResolver;
 import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.type.ReturnType;
+import io.micronaut.pulsar.PulsarProducerRegistry;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.processor.SchemaResolver;
 import io.reactivex.Flowable;
 import org.apache.pulsar.client.api.MessageId;
 import org.apache.pulsar.client.api.Producer;
@@ -106,7 +106,9 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
 
                 throw new IllegalArgumentException("Pulsar producers can only return MessageId or body being sent.");
             } catch (PulsarClientException e) {
-                LOG.error("Failed to produce message on producer " + producerId, e);
+                if (LOG.isErrorEnabled()) {
+                    LOG.error("Failed to produce message on producer " + producerId, e);
+                }
                 throw new RuntimeException("Failed to produce a message on " + producerId, e);
             }
         }

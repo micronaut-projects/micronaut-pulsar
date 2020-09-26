@@ -15,6 +15,7 @@
  */
 package io.micronaut.pulsar.annotation;
 
+import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
 
@@ -40,9 +41,11 @@ public @interface PulsarReader {
     /**
      * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic
      */
+    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_VALIDATOR)
     String[] topics() default {};
 
     /**
+     * Ignored if {@code topics()} attribute is set.
      * @return Topics name in form of tenantName/namespace/topic-name-pattern.
      */
     @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
