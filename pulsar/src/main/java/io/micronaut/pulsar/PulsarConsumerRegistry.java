@@ -23,6 +23,9 @@ import java.util.Set;
 
 /**
  * A registry for created Pulsar consumers.
+ *
+ * @author Haris Secic
+ * @since 1.0
  */
 public interface PulsarConsumerRegistry {
 
