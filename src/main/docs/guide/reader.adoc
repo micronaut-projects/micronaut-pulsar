@@ -1,16 +1,22 @@
-== Creating producers
-To initialize a producer it's sufficient to mark an interface with `@PulsarProducerClient` and mark its method with
-`@PulsarProducer`.
+== Readers vs Consumers
+Readers can be used to gain more control over message flow. However, they are limited to single topic in contrast to consumers.
+On the other hand you request each message "manually" by explicitly calling next message read. More useful feature in the  case
+of Readers might be seek, where developers get the ability to position reader where they want in the message log thus being able to
+manually replay messages when required. Simply put it's more similar to reading a file than reacting to an event but file gets modified by an external actor.
+
+== Creating readers
+To initialize a reader it's just declare a field annotated with `@PulsarReader` inside any bean as a field or
+as an argument in its constructor.
 
 [source,java]
 ----
 import io.micronaut.pulsar.annotation.PulsarProducerClient;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 
-@PulsarProducerClient
-public interface ProducerTester {
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer")
-    void producer(String message);
+@Singleton
+public class MyReader {
+    @PulsarReader()
+    private Reader
 }
 ----
 Only *topic* is a required parameter. Other parameters are optional. However, it's important to note that if producer name is not set it will
@@ -25,8 +31,8 @@ MessageId or the type of the parameter passed to function can be used as a retur
 Examples:
 [source,java]
 ----
-import io.micronaut.pulsar.annotation.PulsarProducerClient;
-import io.micronaut.pulsar.annotation.PulsarProducer;
+import PulsarProducerClient;
+import PulsarProducer;
 
 @PulsarProducerClient
 public interface ProducerTester {

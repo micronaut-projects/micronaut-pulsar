@@ -37,19 +37,21 @@ public class PulsarProducerFactory {
      * @param annotationValue method annotation to read properties from
      * @param schemaResolver schema resolver bean
      * @param <T> type of message body for pulsar producer
+     * @param annotatedMethodName method name on which annotation for Pulsar Producer was set
      * @return new Pulsar producer
-     * @throws PulsarClientException
+     * @throws PulsarClientException in case of not being able to create such Producer
      */
     @SuppressWarnings("unchecked")
     @Prototype
     public <T> Producer<T> createProducer(@Parameter PulsarClient pulsarClient,
                                           @Parameter AnnotationValue<PulsarProducer> annotationValue,
-                                          @Parameter SchemaResolver schemaResolver) throws PulsarClientException {
+                                          @Parameter SchemaResolver schemaResolver,
+                                          @Parameter String annotatedMethodName) throws PulsarClientException {
 
         Class<T> bodyType = annotationValue.getRequiredValue("bodyType", Class.class);
         Schema<T> schema = (Schema<T>) schemaResolver.decideSchema(annotationValue, bodyType);
 
-        String producerName = annotationValue.getRequiredValue("producerName", String.class);
+        String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
         String topic = annotationValue.getRequiredValue("topic", String.class);
 
         ProducerBuilder<T> producerBuilder = pulsarClient.newProducer(schema).producerName(producerName).topic(topic);

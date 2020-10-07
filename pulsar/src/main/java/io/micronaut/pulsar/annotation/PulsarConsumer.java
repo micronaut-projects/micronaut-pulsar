@@ -15,6 +15,7 @@
  */
 package io.micronaut.pulsar.annotation;
 
+import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.messaging.annotation.MessageListener;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
@@ -41,10 +42,26 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface PulsarConsumer {
 
     /**
+     * @return Same as {@link #topic()}
+     */
+    @AliasFor(member = "topic")
+    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    String value() default "";
+
+    /**
+     * Has precedence over {@link #topics()} and {@link #topicsPattern()}.
+     * Single topic to consume messages from.
+     *
+     * @return Topic name to listen to
+     */
+    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    String topic() default "";
+
+    /**
      * Has precedence over {@code topicPattern}.
      * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.
      */
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_VALIDATOR)
+    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
     String[] topics() default {};
 
     /**

@@ -4,8 +4,10 @@ releaseHistory: Release History
 quickStart:
   title: Quick Start
 consumer:
-  title: Creating consumers
+  title: Pulsar Consumer
+reader:
+  title: Pulsar readers
 producer:
-  title: Creating producers
+  title: Pulsar producers
 repository: Repository
 

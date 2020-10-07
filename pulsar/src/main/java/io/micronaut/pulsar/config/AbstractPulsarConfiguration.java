@@ -53,8 +53,7 @@ public abstract class AbstractPulsarConfiguration<K, V> {
     /**
      * Regex for validating topic name.
      */
-    public static final String TOPIC_VALIDATOR = "(persistent|non-persistent)://[a-zA-Z0-9\\-]+\\/[a-zA-Z0-9\\-]+\\/[a-zA-Z0-9\\-]+";
-    public static final String TOPIC_NAME_VALIDATOR = "[a-zA-Z0-9\\-]+\\/[a-zA-Z0-9\\-]+\\/\\.+";
+    public static final String TOPIC_NAME_VALIDATOR = "((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)";
 
     private final Properties config;
 

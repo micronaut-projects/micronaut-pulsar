@@ -41,7 +41,7 @@ public @interface PulsarProducer {
     /**
      * @return Producer name.
      */
-    String producerName();
+    String producerName() default "";
 
     /**
      * @return Topic to produce messages to

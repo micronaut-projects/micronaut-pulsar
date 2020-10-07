@@ -42,6 +42,9 @@ import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Intercepting pulsar {@link Producer} methods.
+ *
+ * @author Haris Secic
+ * @since 1.0
  */
 @Singleton
 public final class PulsarClientIntroductionAdvice implements MethodInterceptor<Object, Object>, AutoCloseable, PulsarProducerRegistry {
@@ -68,11 +71,17 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
             AnnotationValue<PulsarProducer> annotationValue = context.findAnnotation(PulsarProducer.class)
                     .orElseThrow(() -> new IllegalStateException("No @PulsarProducer on method: " + context));
 
-            String producerId = annotationValue.getRequiredValue("producerName", String.class);
+            String producerId = annotationValue.stringValue("producerName")
+                    .orElse(context.getExecutableMethod().getMethodName());
             Producer producer = producers.get(producerId);
 
             if (null == producer) {
-                producer = beanContext.createBean(Producer.class, pulsarClient, annotationValue, schemaResolver);
+                producer = beanContext.createBean(Producer.class,
+                        pulsarClient,
+                        annotationValue,
+                        schemaResolver,
+                        context.getMethodName()
+                );
                 producers.put(producerId, producer);
             }
 

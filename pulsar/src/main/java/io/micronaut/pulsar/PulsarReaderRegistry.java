@@ -13,25 +13,29 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.pulsar.annotation;
+package io.micronaut.pulsar;
 
-import javax.inject.Qualifier;
-import java.lang.annotation.Documented;
-import java.lang.annotation.Retention;
-
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import org.apache.pulsar.client.api.Reader;
+import java.util.Collection;
 
 /**
- * Marks a class that contains method to resolve pulsar service url. Class annotated must implement ServiceUrlProvider
- * interface from official Apache Pulsar Java library. Also servers as qualifier for injection of ServiceUrlProvider
- * bean.
+ * Keep track of all created Pulsar readers.
  *
  * @author Haris Secic
  * @since 1.0
  */
-@Documented
-@Retention(RUNTIME)
-@Qualifier
-public @interface PulsarServiceUrlProvider {
-    //Just a distinguished annotation for PulsarServiceProvider
+public interface PulsarReaderRegistry {
+
+    /**
+     * If not specified explicitly, reader name will default to property/field name.
+     *
+     * @param identifier
+     * @return Pulsar Reader by it's name
+     */
+    Reader<?> getReader(String identifier);
+
+    /**
+     * @return all registered Pulsar Readers
+     */
+    Collection<Reader<?>> getReaders();
 }

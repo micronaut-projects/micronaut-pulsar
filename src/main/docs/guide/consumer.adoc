@@ -3,8 +3,8 @@ To create a consumer simply create a class that contains `@PulsarConsumer` annot
 
 [source,java]
 ----
-import PulsarSubscription;
-import PulsarConsumer;
+import io.micronaut.pulsar.annotation.PulsarSubscription;
+import io.micronaut.pulsar.annotation.PulsarConsumer;
 
 @PulsarSubscription
 public class SampleListener {

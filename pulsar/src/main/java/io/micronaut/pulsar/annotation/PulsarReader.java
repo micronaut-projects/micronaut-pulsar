@@ -15,11 +15,8 @@
  */
 package io.micronaut.pulsar.annotation;
 
+import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.pulsar.MessageSchema;
-import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
-import org.apache.pulsar.client.api.RegexSubscriptionMode;
-
-import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -35,28 +32,22 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Documented
 @Retention(RUNTIME)
-@Target({ElementType.FIELD})
+@Target({ElementType.PARAMETER, ElementType.FIELD})
 public @interface PulsarReader {
 
     /**
-     * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic
+     * @return topic name to listen to
+     * @see #topic()
      */
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_VALIDATOR)
-    String[] topics() default {};
+    @AliasFor(member = "topic")
+    String value() default "";
 
     /**
-     * Ignored if {@code topics()} attribute is set.
-     * @return Topics name in form of tenantName/namespace/topic-name-pattern.
-     */
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
-    String topicsPattern() default "";
-
-    /**
-     * Defaults to {@code byte[]}.
+     * Only single topic subscription possible for readers.
      *
-     * @return Type of body in puslar message
+     * @return topic name to listen to
      */
-    Class<?> messageBodyType() default byte[].class;
+    String topic() default "";
 
     /**
      * Defaults to {@link MessageSchema#BYTES} as default value for Pulsar {@link org.apache.pulsar.client.api.Schema} is {@code byte[]}.
@@ -66,31 +57,12 @@ public @interface PulsarReader {
     MessageSchema schema() default MessageSchema.BYTES;
 
     /**
-     * @return Consumer name for more descriptive monitoring
+     * @return Consumer name.
      */
-    String consumerName();
+    String readerName();
 
     /**
-     * Default value {@link RegexSubscriptionMode#AllTopics}
-     * <p>
-     * Whether to read topics from persistent, or non-persistent storage, or both
-     * <p>
-     * If topics are set other than {@link this#topicsPattern()} this value will be ignored.
-     *
-     * @return subscription
-     */
-    RegexSubscriptionMode subscriptionTopicsMode();
-
-    /**
-     * Used in combination with {@link this#topicsPattern()}. Ignored using {@link this#topics()}. Must be greater than
-     * 1. Low values should be avoided as it will use network too much and could lead to false DDOS attack detection.
-     *
-     * @return Amount of delay between checks, in seconds, for new topic matching given pattern.
-     */
-    int patternAutoDiscoveryPeriod() default -1;
-
-    /**
-     * By default consumer should subscribe in non-blocking manner using default {@link java.util.concurrent.CompletableFuture} of {@link org.apache.pulsar.client.api.ConsumerBuilder#subscribeAsync()}.
+     * By default reader should subscribe in non-blocking manner using default {@link java.util.concurrent.CompletableFuture} of {@link org.apache.pulsar.client.api.ConsumerBuilder#subscribeAsync()}.
      * <p>
      * If blocking set to false application will block until consumer is successfully subscribed
      *
@@ -99,27 +71,7 @@ public @interface PulsarReader {
     boolean subscribeAsync() default true;
 
     /**
-     * By default it will use default value of {@link org.apache.pulsar.client.api.ConsumerBuilder} which is disabled
-     * and no redelivery happens unless consumer crashed.
-     * <p>
-     * Must be greater than 1s.
-     *
-     * @return Allowed time to pass before message is acknowledged.
-     * @see org.apache.pulsar.client.api.ConsumerBuilder#ackTimeout
+     * @return Whether to position reader to newest available message in queue or not.
      */
-    String ackTimeout() default "";
-
-    /**
-     * @return Number of items allowed in the queue. Default -1 as in Pulsar Java Client
-     */
-    int receiverQueueSize() default -1;
-
-    /**
-     * By default no priority is set.
-     * Use any value less than 0 to disable. Use anything above 0 to set lower priority level.
-     *
-     * @return priority level for a consumer
-     * @see org.apache.pulsar.client.api.ConsumerBuilder#priorityLevel(int)
-     */
-    int priorityLevel() default -1;
+    boolean startMessageLatest() default true;
 }

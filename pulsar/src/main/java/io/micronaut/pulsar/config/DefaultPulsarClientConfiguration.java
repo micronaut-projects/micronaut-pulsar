@@ -32,6 +32,12 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
+/**
+ * Default properties holder for Pulsar client configuration.
+ *
+ * @author Haris Secic
+ * @since 1.0
+ */
 @ConfigurationProperties(AbstractPulsarConfiguration.PREFIX)
 @Requires(AbstractPulsarConfiguration.PREFIX)
 @Requires(missingBeans = PulsarClientConfiguration.class)

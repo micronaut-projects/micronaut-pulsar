@@ -161,9 +161,13 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
         topicAnnotation.stringValue("consumerName").ifPresent(consumer::consumerName);
 
+        String topic = topicAnnotation.stringValue().orElse(null);
         String[] topics = topicAnnotation.stringValues("topics");
         String topicsPattern = topicAnnotation.stringValue("topicsPattern").orElse(null);
 
+        if (StringUtils.isNotEmpty(topic)) {
+            consumer.topic(topic);
+        }
         if (ArrayUtils.isNotEmpty(topics)) {
             consumer.topic(topics);
         } else if (StringUtils.isNotEmpty(topicsPattern)) {
@@ -205,9 +209,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
         topicAnnotation.stringValue("ackTimeout").map(Duration::parse).ifPresent(duration -> {
             long millis = duration.toMillis();
-            //TODO: after enforcing Java 11 use Duration#toSeconds
-            long seconds = millis / 1000;
-            if (1 < seconds) { // pulsar lib demands gt 1 second not gte
+            if (1000 < millis) { // pulsar lib demands gt 1 second not gte
                 consumer.ackTimeout(millis, TimeUnit.MILLISECONDS);
             } else {
                 throw new IllegalArgumentException("Acknowledge timeout must be greater than 1 second");
