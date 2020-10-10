@@ -20,7 +20,6 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.naming.conventions.StringConvention;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider;
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.ServiceUrlProvider;
@@ -45,10 +44,10 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
 
     private Integer ioThreads;
     private Integer listenerThreads;
-    private String authenticationJwt;
-    private String tlsLocation;
+    private String sslProvider;
     private String serviceUrl;
     private final Optional<ServiceUrlProvider> serviceUrlProvider;
+    private Authentication pulsarAuthentication;
 
     /**
      * Constructs the default Pulsar Client configuration.
@@ -66,6 +65,9 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
         return Optional.ofNullable(ioThreads);
     }
 
+    /**
+     * @param ioThreads Number of threads to use with read operations
+     */
     public void setIoThreads(Integer ioThreads) {
         this.ioThreads = ioThreads;
     }
@@ -74,24 +76,27 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
         return Optional.ofNullable(listenerThreads);
     }
 
+    /**
+     * @param listenerThreads Number of threads to use with message listeners.
+     */
     public void setListenerThreads(Integer listenerThreads) {
         this.listenerThreads = listenerThreads;
     }
 
-    public Optional<String> getAuthenticationJwt() {
-        return Optional.ofNullable(authenticationJwt);
-    }
-
     public void setAuthenticationJwt(@Nullable String authenticationJwt) {
-        this.authenticationJwt = authenticationJwt;
+        this.pulsarAuthentication = new AuthenticationToken(authenticationJwt);
     }
 
-    public Optional<String> getTlsLocation() {
-        return Optional.ofNullable(tlsLocation);
+    public Optional<String> getSslProvider() {
+        return Optional.ofNullable(sslProvider);
     }
 
-    public void setTlsLocation(String tlsLocation) {
-        this.tlsLocation = tlsLocation;
+    /**
+     * Defaults to default JVM provider.
+     * @param sslProvider The name of the security provider used for SSL connections.
+     */
+    public void setSslProvider(String sslProvider) {
+        this.sslProvider = sslProvider;
     }
 
     /**
@@ -113,11 +118,8 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     @Override
-    public Optional<Authentication> getAuthentication() {
-        if (StringUtils.isNotEmpty(authenticationJwt)) {
-            return Optional.of(new AuthenticationToken(authenticationJwt));
-        }
-        return Optional.empty();
+    public Authentication getAuthentication() {
+        return Optional.ofNullable(this.pulsarAuthentication).orElse(DEFAULT_PULSAR_AUTHENTICATION);
     }
 
     private static Properties resolveDefaultConfiguration(Environment environment) {

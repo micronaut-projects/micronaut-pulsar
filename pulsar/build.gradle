@@ -18,6 +18,12 @@ dependencies {
     testRuntimeOnly "io.micronaut:micronaut-http-server-netty"
 }
 
-tasks.withType(Test) {
-    useJUnitPlatform()
+test {
+    jvmArgs '-Duser.country=US'
+    jvmArgs '-Duser.language=en'
+    testLogging {
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+    failFast = true
 }

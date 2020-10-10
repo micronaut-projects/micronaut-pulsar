@@ -38,7 +38,7 @@ public class SchemaResolver {
      * @param messageBodyType type of message body used with Pulsar topic
      * @return new Schema
      */
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings({"unchecked", "rawtypes"})
     public Schema<?> decideSchema(final AnnotationValue<?> topicAnnotation, Class<?> messageBodyType) {
 
         MessageSchema schema = topicAnnotation.getRequiredValue("schema", MessageSchema.class);
@@ -77,13 +77,13 @@ public class SchemaResolver {
             case STRING:
                 return new StringSchema();
             case JSON:
-                return JSONSchema.of(messageBodyType);
+                return JSONSchema.of(new SchemaDefinitionBuilderImpl().withPojo(messageBodyType).build());
             case AVRO:
-                return AvroSchema.of(messageBodyType);
+                return AvroSchema.of(new SchemaDefinitionBuilderImpl().withPojo(messageBodyType).build());
             case PROTOBUF:
                 if (GeneratedMessageV3.class.isAssignableFrom(messageBodyType)) {
-                    //casting will still cause unchecked exception
-                    return ProtobufSchema.of((Class<? extends GeneratedMessageV3>) messageBodyType);
+                    Class<? extends GeneratedMessageV3> asProtobuf = (Class<? extends GeneratedMessageV3>) messageBodyType;
+                    return ProtobufSchema.of(new SchemaDefinitionBuilderImpl().withPojo(asProtobuf).build());
                 }
                 throw new ClassCastException(messageBodyType.toString());
             case KEY_VALUE:

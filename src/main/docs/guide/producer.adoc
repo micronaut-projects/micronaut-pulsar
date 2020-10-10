@@ -14,7 +14,8 @@ public interface ProducerTester {
 }
 ----
 Only *topic* is a required parameter. Other parameters are optional. However, it's important to note that if producer name is not set it will
-default to method name which may cause collisions in case of same method names.
+default to method name which may cause collisions in case of same method names. Message content(body) type will be determined
+by the first method parameter class.
 
 === Producer return values
 If for some reason you might need `MessageId` being returned by official Pulsar Java producer implementation you can

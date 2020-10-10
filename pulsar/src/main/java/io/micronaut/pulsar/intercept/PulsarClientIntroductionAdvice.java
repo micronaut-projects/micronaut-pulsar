@@ -75,18 +75,20 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
                     .orElse(context.getExecutableMethod().getMethodName());
             Producer producer = producers.get(producerId);
 
+            Object value = context.getParameterValues()[0];
+
             if (null == producer) {
                 producer = beanContext.createBean(Producer.class,
                         pulsarClient,
                         annotationValue,
                         schemaResolver,
-                        context.getMethodName()
+                        context.getMethodName(),
+                        value.getClass()
                 );
                 producers.put(producerId, producer);
             }
 
             ReturnType<?> returnType = context.getReturnType();
-            Object value = context.getParameterValues()[0];
 
             if (returnType.isAsyncOrReactive()) {
                 if (returnType.isAsync()) {
@@ -108,8 +110,7 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
                     return sent;
                 }
 
-                Class<?> bodyType = annotationValue.getRequiredValue("bodyType", Class.class);
-                if (returnType.getType() == bodyType) {
+                if (returnType.getType() == value.getClass()) {
                     return value;
                 }
 

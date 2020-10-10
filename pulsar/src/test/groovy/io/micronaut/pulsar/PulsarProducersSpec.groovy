@@ -86,13 +86,13 @@ class PulsarProducersSpec extends Specification {
 
     @PulsarProducerClient
     static interface ProducerTester {
-        @PulsarProducer(topic = "public/default/test2", bodyType = String, producerName = "test-producer")
+        @PulsarProducer(topic = "public/default/test2", producerName = "test-producer")
         void producer(String message);
-        @PulsarProducer(topic = "public/default/test2", bodyType = String, producerName = "test-producer-2")
+        @PulsarProducer(value = "public/default/test2", producerName = "test-producer-2")
         String returnOnProduce(String message)
-        @PulsarProducer(topic = "public/default/test2", bodyType = String, producerName = "test-producer-3")
+        @PulsarProducer(topic = "public/default/test2", producerName = "test-producer-3")
         MessageId messageIdOnProduce(String message)
-        @PulsarProducer(topic = "public/default/test2", bodyType = String, producerName = "test-producer-reactive")
+        @PulsarProducer(topic = "public/default/test2", producerName = "test-producer-reactive")
         Single<MessageId> reactiveMessage(String message)
     }
 }

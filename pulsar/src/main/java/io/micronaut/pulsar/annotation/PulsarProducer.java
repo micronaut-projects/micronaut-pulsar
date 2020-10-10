@@ -15,11 +15,14 @@
  */
 package io.micronaut.pulsar.annotation;
 
+import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.pulsar.MessageSchema;
+import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
 import org.apache.pulsar.client.api.CompressionType;
 import org.apache.pulsar.client.api.HashingScheme;
 import org.apache.pulsar.client.api.MessageRoutingMode;
 
+import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -39,6 +42,12 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 public @interface PulsarProducer {
 
     /**
+     * @return Same as {@link #topic()}
+     */
+    @AliasFor(member = "topic")
+    String value() default "";
+
+    /**
      * @return Producer name.
      */
     String producerName() default "";
@@ -46,17 +55,14 @@ public @interface PulsarProducer {
     /**
      * @return Topic to produce messages to
      */
-    String topic();
+    @AliasFor(member = "value")
+    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    String topic() default "";
 
     /**
      * @return Type of message serialization.
      */
     MessageSchema schema() default MessageSchema.BYTES;
-
-    /**
-     * @return Class to expect as message body.
-     */
-    Class<?> bodyType() default byte[].class;
 
     /**
      * @return Compression type.

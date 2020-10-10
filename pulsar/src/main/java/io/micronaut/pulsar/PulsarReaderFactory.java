@@ -25,8 +25,6 @@ import io.micronaut.inject.InjectionPoint;
 import io.micronaut.pulsar.annotation.PulsarReader;
 import io.micronaut.pulsar.processor.SchemaResolver;
 import org.apache.pulsar.client.api.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Map;
@@ -41,7 +39,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Factory
 public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry {
-    private static final Logger LOG = LoggerFactory.getLogger(PulsarReaderFactory.class);
 
     private final Map<String, Reader<?>> readers;
     private final PulsarClient pulsarClient;

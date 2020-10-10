@@ -55,6 +55,7 @@ public @interface PulsarConsumer {
      * @return Topic name to listen to
      */
     @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    @AliasFor(member = "value")
     String topic() default "";
 
     /**
@@ -68,7 +69,7 @@ public @interface PulsarConsumer {
      * Ignored if {@code topics} attribute is set.
      * @return Topics name in form of tenantName/namespace/topic-name-pattern.
      */
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_PATTERN_VALIDATOR)
     String topicsPattern() default "";
 
     /**

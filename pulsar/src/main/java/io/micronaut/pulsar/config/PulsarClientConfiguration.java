@@ -33,11 +33,7 @@ public interface PulsarClientConfiguration {
         return Optional.empty();
     }
 
-    Optional<Authentication> getAuthentication();
-
-    default boolean requiresAuthentication() {
-        return getAuthentication().isPresent();
-    }
+    Authentication getAuthentication();
 
     default Optional<Integer> getIoThreads() {
         return Optional.empty();
@@ -46,4 +42,6 @@ public interface PulsarClientConfiguration {
     default Optional<Integer> getListenerThreads() {
         return Optional.empty();
     }
+
+    Optional<String> getSslProvider();
 }

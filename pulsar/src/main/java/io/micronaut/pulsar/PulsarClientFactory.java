@@ -42,7 +42,7 @@ public final class PulsarClientFactory {
      */
     @Singleton
     public PulsarClient pulsarClient(PulsarClientConfiguration pulsarClientConfiguration) throws PulsarClientException {
-        ClientBuilder clientBuilder = PulsarClient.builder();
+        ClientBuilder clientBuilder = PulsarClient.builder().authentication(pulsarClientConfiguration.getAuthentication());
 
         if (pulsarClientConfiguration.getServiceUrlProvider().isPresent()) {
             clientBuilder.serviceUrlProvider(pulsarClientConfiguration.getServiceUrlProvider().get());
@@ -50,12 +50,9 @@ public final class PulsarClientFactory {
             clientBuilder.serviceUrl(pulsarClientConfiguration.getServiceUrl());
         }
 
-        if (pulsarClientConfiguration.requiresAuthentication()) {
-            pulsarClientConfiguration.getAuthentication().ifPresent(clientBuilder::authentication);
-        }
-
         pulsarClientConfiguration.getIoThreads().ifPresent(clientBuilder::ioThreads);
         pulsarClientConfiguration.getListenerThreads().ifPresent(clientBuilder::listenerThreads);
+        pulsarClientConfiguration.getSslProvider().ifPresent(clientBuilder::sslProvider);
 
         return clientBuilder.build();
     }

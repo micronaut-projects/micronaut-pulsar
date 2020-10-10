@@ -17,6 +17,9 @@ package io.micronaut.pulsar.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.pulsar.MessageSchema;
+import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
+
+import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -47,6 +50,8 @@ public @interface PulsarReader {
      *
      * @return topic name to listen to
      */
+    @AliasFor(member = "value")
+    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
     String topic() default "";
 
     /**

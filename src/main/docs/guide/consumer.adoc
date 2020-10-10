@@ -8,7 +8,7 @@ import io.micronaut.pulsar.annotation.PulsarConsumer;
 
 @PulsarSubscription
 public class SampleListener {
-    @PulsarConsumer(topics = ["persistant://public/default/test"], messageBodyType=String.class)
+    @PulsarConsumer(topics = ["persistant://public/default/test"])
     public void receive(String msg) {
         System.out.println("Received: " + msg);
     }
@@ -61,12 +61,6 @@ Topics option is parsed first so setting both values will make parser ignore top
 |
 |Yes*
 |Required unless topics is specified. Regex for listening multiple topics.
-
-|messageBodyType
-|Class<?>
-|byte[].class
-|No
-|Type of message to expect from Pulsar topic
 
 |schema
 |MessageSchema

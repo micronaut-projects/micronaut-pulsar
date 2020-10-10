@@ -35,7 +35,7 @@ import spock.util.concurrent.PollingConditions
 import java.util.concurrent.TimeUnit
 
 @Stepwise
-class PulsarSpec extends Specification {
+class PulsarConsumerSpec extends Specification {
 
     @AutoCleanup
     @Shared

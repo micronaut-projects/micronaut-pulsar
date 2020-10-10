@@ -39,14 +39,6 @@ public abstract class AbstractPulsarConfiguration<K, V> {
      */
     public static final String DEFAULT_BOOTSTRAP_SERVER = "pulsar://" + DEFAULT_SERVER_HOST_ADDRESS + ":" + DEFAULT_PULSAR_MESSAGING_PORT;
     /**
-     * By default TLS is disabled for Apache Pulsar messaging.
-     */
-    public static final boolean DEFAULT_PULSAR_USE_TLS = false;
-    /**
-     * By default Pulsar authentication is empty thus disabled.
-     */
-    public static final boolean DEFAULT_PULSAR_AUTHENTICATION_IS_ENABLED = false;
-    /**
      * By default Pulsar doesn't have any authentication.
      */
     public static final Authentication DEFAULT_PULSAR_AUTHENTICATION = new AuthenticationDisabled();
@@ -54,6 +46,10 @@ public abstract class AbstractPulsarConfiguration<K, V> {
      * Regex for validating topic name.
      */
     public static final String TOPIC_NAME_VALIDATOR = "((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)";
+    /**
+     * Regex for validating topic pattern.
+     */
+    public static final String TOPIC_NAME_PATTERN_VALIDATOR = "((non-)?persistent://)?(\\w+(-?\\w+)?/){2}.+";
 
     private final Properties config;
 

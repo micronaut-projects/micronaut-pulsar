@@ -3,8 +3,10 @@ package io.micronaut.pulsar
 import io.micronaut.context.ApplicationContext
 import io.micronaut.core.util.CollectionUtils
 import io.micronaut.core.util.StringUtils
+import io.micronaut.inject.FieldInjectionPoint
 import io.micronaut.pulsar.annotation.PulsarReader
 import io.micronaut.runtime.server.EmbeddedServer
+import io.reactivex.Single
 import org.apache.pulsar.client.api.Producer
 import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.Reader
