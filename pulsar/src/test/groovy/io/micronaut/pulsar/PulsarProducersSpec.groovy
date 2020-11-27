@@ -39,7 +39,7 @@ class PulsarProducersSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    PulsarContainer pulsarContainer = new PulsarContainer("2.6.1").with {
+    PulsarContainer pulsarContainer = new PulsarContainer("2.6.2").with {
         it.start()
         it
     }

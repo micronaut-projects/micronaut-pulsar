@@ -39,7 +39,7 @@ class PulsarConsumerSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    PulsarContainer pulsarContainer = new PulsarContainer("2.6.1")
+    PulsarContainer pulsarContainer = new PulsarContainer("2.6.2")
 
     @Shared
     @AutoCleanup
