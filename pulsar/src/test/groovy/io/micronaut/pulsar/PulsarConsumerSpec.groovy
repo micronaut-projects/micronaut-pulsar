@@ -39,7 +39,10 @@ class PulsarConsumerSpec extends Specification {
 
     @AutoCleanup
     @Shared
-    PulsarContainer pulsarContainer = new PulsarContainer("2.6.2")
+    PulsarContainer pulsarContainer = new PulsarContainer("2.6.2").with {
+        it.start()
+        it
+    }
 
     @Shared
     @AutoCleanup
@@ -50,12 +53,10 @@ class PulsarConsumerSpec extends Specification {
     EmbeddedServer embeddedServer
 
     def setupSpec() {
-        pulsarContainer.start()
         PulsarAdmin admin = PulsarAdmin.builder().serviceHttpUrl(pulsarContainer.httpServiceUrl).build()
         admin.topics().createNonPartitionedTopic("public/default/other2")
         embeddedServer = ApplicationContext.run(EmbeddedServer,
-                CollectionUtils.mapOf("pulsar.service-url", pulsarContainer.pulsarBrokerUrl,
-                        "pulsar.io-threads", 2, "listener-threads", 2),
+                CollectionUtils.mapOf("pulsar.service-url", pulsarContainer.pulsarBrokerUrl),
                 StringUtils.EMPTY_STRING_ARRAY
         )
         context = embeddedServer.applicationContext
