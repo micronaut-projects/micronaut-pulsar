@@ -1,64 +1,50 @@
+/*
+ * Copyright 2017-2020 original authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package io.micronaut.pulsar
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.core.util.CollectionUtils
-import io.micronaut.core.util.StringUtils
-import io.micronaut.inject.FieldInjectionPoint
 import io.micronaut.pulsar.annotation.PulsarReader
-import io.micronaut.runtime.server.EmbeddedServer
-import io.reactivex.Single
-import org.apache.pulsar.client.api.Producer
 import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.Reader
 import org.apache.pulsar.client.api.Schema
-import org.testcontainers.containers.PulsarContainer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Stepwise
 
 import javax.inject.Singleton
 import java.util.concurrent.TimeUnit
 
 @Stepwise
-class PulsarReaderSpec extends Specification {
+class PulsarReaderSpec extends PulsarAwareTest {
 
-    @AutoCleanup
-    @Shared
-    PulsarContainer pulsarContainer = new PulsarContainer("2.6.2").with {
-        it.start()
-        it
-    }
+    static final String PULSAR_READER_TEST_TOPIC = "public/default/simple-reader"
 
-    @Shared
-    @AutoCleanup
-    ApplicationContext context
-
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer
-
-    def setupSpec() {
-        embeddedServer = ApplicationContext.run(EmbeddedServer,
-                CollectionUtils.mapOf("pulsar.service-url", pulsarContainer.pulsarBrokerUrl),
-                StringUtils.EMPTY_STRING_ARRAY
-        )
-        context = embeddedServer.applicationContext
+    static {
+        PulsarDefaultContainer.createNonPartitionedTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
     }
 
     @Singleton
     static class ReaderRequester {
-
         private Reader<String> stringReader
 
-        ReaderRequester(@PulsarReader("public/default/test") Reader<String> stringReader) {
+        ReaderRequester(@PulsarReader(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC) Reader<String> stringReader) {
             this.stringReader = stringReader
         }
     }
 
     void "test simple reader"() {
         given:
-        def topic = "persistent://public/default/test"
+        def topic = "persistent://$PulsarReaderSpec.PULSAR_READER_TEST_TOPIC"
         def producer = context.getBean(PulsarClient).newProducer(Schema.STRING).topic(topic)
                 .producerName("string-producer").create()
         def stringReader = context.getBean(ReaderRequester.class).stringReader

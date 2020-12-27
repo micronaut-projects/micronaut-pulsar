@@ -125,8 +125,8 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     }
 
     @SuppressWarnings({"unchecked"})
-    private ConsumerBuilder<?> processTopic(AnnotationValue<PulsarConsumer> topicAnnotation,
-                                            AnnotationValue<PulsarSubscription> listener,
+    private ConsumerBuilder<?> processTopic(AnnotationValue<PulsarConsumer> consumerAnnotation,
+                                            AnnotationValue<PulsarSubscription> subscription,
                                             //? will mess up IntelliJ and compiler so use Object to enable method.invoke
                                             ExecutableMethod<Object, ?> method,
                                             Object bean) {
@@ -138,76 +138,31 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         if (!bodyType.isPresent()) {
             throw new IllegalArgumentException("Method annotated with pulsar consumer must accept 1 parameter that's of" +
                     " type other than " + Consumer.class.getName() + " class which can be used to accept pulsar message.");
-        } else {
-            messageBodyType = bodyType.get().getType();
         }
 
-        boolean useMessageWrapper = false; //users can consume only message body and ignore the rest
-
-        if (Message.class.isAssignableFrom(messageBodyType)) {
-            useMessageWrapper = true;
-        }
+        messageBodyType = bodyType.get().getType();
+        boolean useMessageWrapper = Message.class.isAssignableFrom(messageBodyType); //users can consume only message body and ignore the rest
 
         Schema<?> schema;
-
         if (useMessageWrapper) {
             Argument<?> messageWrapper = bodyType.get().getTypeParameters()[0];
-            schema = schemaResolver.decideSchema(topicAnnotation, messageWrapper.getType());
+            schema = schemaResolver.decideSchema(consumerAnnotation, messageWrapper.getType());
         } else {
-            schema = schemaResolver.decideSchema(topicAnnotation, messageBodyType);
+            schema = schemaResolver.decideSchema(consumerAnnotation, messageBodyType);
         }
 
         ConsumerBuilder<?> consumer = pulsarClient.newConsumer(schema);
+        consumerAnnotation.stringValue("consumerName").ifPresent(consumer::consumerName);
 
-        topicAnnotation.stringValue("consumerName").ifPresent(consumer::consumerName);
+        resolveTopic(consumerAnnotation, consumer);
 
-        String topic = topicAnnotation.stringValue().orElse(null);
-        String[] topics = topicAnnotation.stringValues("topics");
-        String topicsPattern = topicAnnotation.stringValue("topicsPattern").orElse(null);
-
-        if (StringUtils.isNotEmpty(topic)) {
-            consumer.topic(topic);
-        }
-        if (ArrayUtils.isNotEmpty(topics)) {
-            consumer.topic(topics);
-        } else if (StringUtils.isNotEmpty(topicsPattern)) {
-            consumer.topicsPattern(topicsPattern);
-            Optional<RegexSubscriptionMode> mode = topicAnnotation.enumValue("subscriptionTopicsMode", RegexSubscriptionMode.class);
-            if (mode.isPresent()) {
-                consumer.subscriptionTopicsMode(mode.get());
-            } else {
-                consumer.subscriptionTopicsMode(RegexSubscriptionMode.AllTopics);
-            }
-            OptionalInt topicsRefresh = topicAnnotation.intValue("patternAutoDiscoveryPeriod");
-            if (topicsRefresh.isPresent()) {
-                if (topicsRefresh.getAsInt() < 1) {
-                    throw new IllegalArgumentException("Topic " + topicsPattern + " refresh time cannot be below 1 second.");
-                }
-                consumer.patternAutoDiscoveryPeriod(topicsRefresh.getAsInt(), TimeUnit.SECONDS);
-            }
+        if (null != subscription) {
+            subscriptionValues(subscription, consumer);
         } else {
-            throw new IllegalArgumentException("Pulsar consumer requires topics or topicsPattern value");
+            consumerValues(consumerAnnotation, consumer);
         }
 
-        if (null != listener) {
-            String subscriptionName = listener.stringValue("subscriptionName")
-                    .orElse("pulsar-subscription-" + consumerCounter.incrementAndGet());
-
-            consumer.subscriptionName(subscriptionName);
-
-            listener.enumValue("subscriptionType", SubscriptionType.class)
-                    .ifPresent(consumer::subscriptionType);
-
-            Optional<String> ackGroupTimeout = listener.stringValue("ackGroupTimeout");
-            if (ackGroupTimeout.isPresent()) {
-                Duration duration = Duration.parse(ackGroupTimeout.get());
-                consumer.acknowledgmentGroupTime(duration.toNanos(), TimeUnit.NANOSECONDS);
-            }
-        } else {
-            consumer.subscriptionName("pulsar-subsription-" + consumerCounter.incrementAndGet());
-        }
-
-        topicAnnotation.stringValue("ackTimeout").map(Duration::parse).ifPresent(duration -> {
+        consumerAnnotation.stringValue("ackTimeout").map(Duration::parse).ifPresent(duration -> {
             long millis = duration.toMillis();
             if (1000 < millis) { // pulsar lib demands gt 1 second not gte
                 consumer.ackTimeout(millis, TimeUnit.MILLISECONDS);
@@ -223,6 +178,58 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         consumer.messageListener(new DefaultListener(method, useMessageWrapper, consumerIndex, bean));
 
         return consumer;
+    }
+
+    private void resolveTopic(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer) {
+        String topic = consumerAnnotation.stringValue().orElse(null);
+        String[] topics = consumerAnnotation.stringValues("topics");
+        String topicsPattern = consumerAnnotation.stringValue("topicsPattern").orElse(null);
+
+        if (StringUtils.isNotEmpty(topic)) {
+            consumer.topic(topic);
+        } else if (ArrayUtils.isNotEmpty(topics)) {
+            consumer.topic(topics);
+        } else if (StringUtils.isNotEmpty(topicsPattern)) {
+            resolveTopicsPattern(consumerAnnotation, consumer, topicsPattern);
+        } else {
+            throw new IllegalArgumentException("Pulsar consumer requires topics or topicsPattern value");
+        }
+    }
+
+    private void resolveTopicsPattern(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer, String topicsPattern) {
+        consumer.topicsPattern(topicsPattern);
+        RegexSubscriptionMode mode = consumerAnnotation.getRequiredValue("subscriptionTopicsMode", RegexSubscriptionMode.class);
+        consumer.subscriptionTopicsMode(mode);
+        OptionalInt topicsRefresh = consumerAnnotation.intValue("patternAutoDiscoveryPeriod");
+        if (topicsRefresh.isPresent()) {
+            if (topicsRefresh.getAsInt() < 1) {
+                throw new IllegalArgumentException("Topic " + topicsPattern + " refresh time cannot be below 1 second.");
+            }
+            consumer.patternAutoDiscoveryPeriod(topicsRefresh.getAsInt(), TimeUnit.SECONDS);
+        }
+    }
+
+    private void consumerValues(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer) {
+        String subscriptionName = consumerAnnotation.stringValue("subscription")
+                .orElseGet(() -> "pulsar-subscription-" + consumerCounter.incrementAndGet());
+        SubscriptionType subscriptionType = consumerAnnotation.getRequiredValue("subscription", SubscriptionType.class);
+        consumer.subscriptionName(subscriptionName).subscriptionType(subscriptionType);
+    }
+
+    private void subscriptionValues(AnnotationValue<PulsarSubscription> subscription, ConsumerBuilder<?> consumer) {
+        String subscriptionName = subscription.stringValue("subscriptionName")
+                .orElse("pulsar-subscription-" + consumerCounter.incrementAndGet());
+
+        consumer.subscriptionName(subscriptionName);
+
+        subscription.enumValue("subscriptionType", SubscriptionType.class)
+                .ifPresent(consumer::subscriptionType);
+
+        Optional<String> ackGroupTimeout = subscription.stringValue("ackGroupTimeout");
+        if (ackGroupTimeout.isPresent()) {
+            Duration duration = Duration.parse(ackGroupTimeout.get());
+            consumer.acknowledgmentGroupTime(duration.toNanos(), TimeUnit.NANOSECONDS);
+        }
     }
 
     @Override

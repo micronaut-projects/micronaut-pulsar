@@ -20,6 +20,7 @@ import io.micronaut.messaging.annotation.MessageListener;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
+import org.apache.pulsar.client.api.SubscriptionType;
 
 import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
@@ -83,6 +84,15 @@ public @interface PulsarConsumer {
      * @return Consumer name for more descriptive monitoring
      */
     String consumerName();
+
+    /**
+     * @return Subscription name in case consumer was defined outside of the {@link PulsarSubscription} annotated class
+     */
+    String subscription() default "";
+    /**
+     * @return Subscription type in case consumer was defined outside of {@link PulsarSubscription} annotated class
+     */
+    SubscriptionType subscriptionType() default SubscriptionType.Exclusive;
 
     /**
      * Ignored if {@code topics()} attribute is set.

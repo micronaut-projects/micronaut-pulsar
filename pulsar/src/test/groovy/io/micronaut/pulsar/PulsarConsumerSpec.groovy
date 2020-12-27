@@ -15,68 +15,42 @@
  */
 package io.micronaut.pulsar
 
-import io.micronaut.context.ApplicationContext
-import io.micronaut.core.util.CollectionUtils
-import io.micronaut.core.util.StringUtils
+import groovy.transform.CompileStatic
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
-import io.micronaut.pulsar.config.PulsarClientConfiguration
-import io.micronaut.pulsar.processor.PulsarConsumerProcessor
-import io.micronaut.runtime.server.EmbeddedServer
-import org.apache.pulsar.client.admin.PulsarAdmin
 import org.apache.pulsar.client.api.*
-import org.testcontainers.containers.PulsarContainer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Stepwise
 import spock.util.concurrent.PollingConditions
 
 import java.util.concurrent.TimeUnit
 
 @Stepwise
-class PulsarConsumerSpec extends Specification {
+class PulsarConsumerSpec extends PulsarAwareTest {
 
-    @AutoCleanup
-    @Shared
-    PulsarContainer pulsarContainer = new PulsarContainer("2.6.2").with {
-        it.start()
-        it
+    //topic not listened to explicitly
+    static final String PULSAR_REGEX_TEST_TOPIC = "persistent://public/default/other2"
+    static final String PULSAR_STATIC_TOPIC_TEST = "persistent://public/default/test"
+
+    static {
+        PulsarDefaultContainer.createNonPartitionedTopic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
+        PulsarDefaultContainer.createNonPartitionedTopic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
     }
 
-    @Shared
-    @AutoCleanup
-    ApplicationContext context
-
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer
-
-    def setupSpec() {
-        PulsarAdmin admin = PulsarAdmin.builder().serviceHttpUrl(pulsarContainer.httpServiceUrl).build()
-        admin.topics().createNonPartitionedTopic("public/default/other2")
-        embeddedServer = ApplicationContext.run(EmbeddedServer,
-                CollectionUtils.mapOf("pulsar.service-url", pulsarContainer.pulsarBrokerUrl),
-                StringUtils.EMPTY_STRING_ARRAY
-        )
-        context = embeddedServer.applicationContext
-    }
-
-    void "test load configuration"() {
+    void "test create consumer beans"() {
         expect:
         context.isRunning()
-        context.containsBean(PulsarClientConfiguration)
-        context.containsBean(PulsarClient)
-        context.containsBean(PulsarConsumerProcessor)
         context.containsBean(PulsarConsumerTopicListTester)
-        pulsarContainer.pulsarBrokerUrl == context.getBean(PulsarClientConfiguration).serviceUrl
+        PulsarDefaultContainer.PULSAR_ADMIN.topics().getList("public/default").findAll {
+            it.contains("test") || it.contains("other2")
+        }.size() == 2
     }
 
-    void "test consumer read"() {
+    void "test consumer read default topic"() {
         when:
-        def topic = "persistent://public/default/test"
         def consumerTester = context.getBean(PulsarConsumerTopicListTester)
-        def producer = context.getBean(PulsarClient).newProducer().topic(topic).producerName("test-producer").create()
+        def producer = context.getBean(PulsarClient).newProducer()
+                .topic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
+                .producerName("test-producer").create()
         //simple consumer with topic list and blocking
         def message = "This should be received"
         def messageId = producer.send(message.bytes)
@@ -92,14 +66,13 @@ class PulsarConsumerSpec extends Specification {
         producer.close()
     }
 
-    void "test defined schema pattern consumer read with async"() {
+    void "test defined schema consumer read async with regex"() {
         when:
-        String topic = 'persistent://public/default/other2'
         PulsarConsumerTopicPatternTester consumerPatternTester = context.getBean(PulsarConsumerTopicPatternTester)
         context.destroyBean(PulsarConsumerTopicListTester)
-        Producer<String> producer = context.getBean(PulsarClient).newProducer(Schema.STRING).topic(topic).create()
+        Producer<String> producer = context.getBean(PulsarClient).newProducer(Schema.STRING).topic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC).create()
         def blockingReader = context.getBean(PulsarClient).newReader(Schema.STRING).startMessageId(MessageId.latest)
-                .topic(topic)
+                .topic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
                 .create()
         String message = "This should be received"
         PollingConditions conditions = new PollingConditions(timeout: 65, delay: 1)
@@ -118,17 +91,14 @@ class PulsarConsumerSpec extends Specification {
         producer.close()
     }
 
-    @PulsarSubscription
+    @PulsarSubscription(subscriptionName = "array-subscriber-non-async")
     static class PulsarConsumerTopicListTester {
         String latestMessage
         MessageId latestMessageId
         Consumer<byte[]> latestConsumer
 
-        PulsarConsumerTopicListTester() {
-        }
-
         //testing reverse order to ensure processor will do correct call
-        @PulsarConsumer(topics = ["persistent://public/default/test"], consumerName = "single-topic-consumer", subscribeAsync = false)
+        @PulsarConsumer(topics = ['persistent://public/default/test'], consumerName = 'single-topic-consumer', subscribeAsync = false)
         def topicListener(Message<byte[]> message, Consumer<byte[]> consumer) {
             latestMessageId = message.messageId
             latestMessage = new String(message.getValue())

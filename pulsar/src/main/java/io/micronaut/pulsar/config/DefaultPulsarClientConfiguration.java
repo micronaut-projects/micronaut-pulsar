@@ -20,12 +20,15 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.naming.conventions.StringConvention;
+import io.micronaut.core.util.StringUtils;
 import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider;
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.ServiceUrlProvider;
 import org.apache.pulsar.client.impl.auth.AuthenticationToken;
+import org.apache.pulsar.client.impl.auth.oauth2.AuthenticationFactoryOAuth2;
 
 import javax.annotation.Nullable;
+import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -48,6 +51,9 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private String serviceUrl;
     private final Optional<ServiceUrlProvider> serviceUrlProvider;
     private Authentication pulsarAuthentication;
+    private URL oauthIssuerUrl;
+    private URL oauthCredentialsUrl;
+    private String oauthAudience;
 
     /**
      * Constructs the default Pulsar Client configuration.
@@ -120,6 +126,53 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     @Override
     public Authentication getAuthentication() {
         return Optional.ofNullable(this.pulsarAuthentication).orElse(DEFAULT_PULSAR_AUTHENTICATION);
+    }
+
+    /**
+     * Must be set for usage with the OAuth2 authentication.
+     * @return String representing client application willing to listen to
+     */
+    public Optional<String> getOauthAudience() {
+        return Optional.ofNullable(oauthAudience);
+    }
+
+    /**
+     * @param oauthAudience OAuth2 audience
+     */
+    public void setOauthAudience(String oauthAudience) {
+        this.oauthAudience = oauthAudience;
+        generateAuthenticationOAuth2();
+    }
+
+    public Optional<URL> getOauthCredentialsUrl() {
+        return Optional.ofNullable(this.oauthCredentialsUrl);
+    }
+
+    /**
+     * @param oauthCredentialsUrl URL or a path to a file containing client id, client secret, and such for OAuth2 client application.
+     */
+    public void setOauthCredentialsUrl(URL oauthCredentialsUrl) {
+        this.oauthCredentialsUrl = oauthCredentialsUrl;
+        generateAuthenticationOAuth2();
+    }
+
+    public URL getOauthIssuerUrl() {
+        return oauthIssuerUrl;
+    }
+
+    /**
+     * @param oauthIssuerUrl URL of the OAuth2 Token issuer
+     */
+    public void setOauthIssuerUrl(URL oauthIssuerUrl) {
+        this.oauthIssuerUrl = oauthIssuerUrl;
+        generateAuthenticationOAuth2();
+    }
+
+    private void generateAuthenticationOAuth2() {
+        if (null == this.oauthIssuerUrl || null == this.oauthCredentialsUrl || StringUtils.isEmpty(oauthAudience)) {
+            return;
+        }
+        this.pulsarAuthentication = AuthenticationFactoryOAuth2.clientCredentials(this.oauthIssuerUrl, this.oauthCredentialsUrl, oauthAudience);
     }
 
     private static Properties resolveDefaultConfiguration(Environment environment) {

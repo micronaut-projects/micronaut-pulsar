@@ -1,5 +1,3 @@
-Currently only JWT is supported
-
 === JWT
 To configure JWT authentication it's sufficient to pass in JWT into `application.yaml` under `pulsar.authentication-jwt`:
 [source,yaml]
@@ -11,3 +9,37 @@ pulsar:
 
 `io.micronaut.configuration.pulsar.config.AbstractPulsarConfiguration` is left public in case you want to implement more
 options yourself.
+
+It's planned to support JWT path be it HTTP endpoint or simple URL to get fresh JWT
+
+=== OAuth2
+Setup 3 parameters as presented in below example to connect to Pulsar service that uses OAuth2:
+
+[source,yaml]
+----
+pulsar:
+    oauth-issuer-url: https://some-sso.io/...
+    oauth-credentials-url: file:///path/to/file.json
+    audience: localhost:6650
+----
+Issuer URL is simply the URL to the OAuth2 server generating tokens and such.
+
+Parameter _oauth-credentials-url_ is used for loading in a file that contains necessary configuration for _"logging in"_ to OAuth2 provider as a client app.
+File should contain everything defined in Pulsar documentation and type is limited to _"client_credentials"_. Below is example on how should file look like.
+[source,json]
+----
+{
+    "type": "client_credentials",
+    "client_id": "pulsar",
+    "client_secret": "1234-abcd-5678-9011-ab56ac4564sa56",
+    "issuer_url": "https://my-oauth2-server.com/auth/realms/pulsar-realm"
+}
+----
+Example shows something similar that could be set when using KeyCloak or such SSO.
+Audience must be set but Pulsar service can be configured to ignore this value and in such case you might put any text with 1 or more characters.
+For more details please consult Apache Pulsar documentation at https://pulsar.apache.org/docs/en/security-oauth2/[this link]. Consult Java client
+to understand more about limitations for _"client_credentials"_.
+
+Pulsar Java library takes care of the OAuth2 JWT refreshing and such. Apache Pulsar server must be configured to use OAuth2
+and _role_ attribute in its configuration files must be specified in order for Pulsar to be able to detect which kind of _"user"_ is requesting data.
+
