@@ -247,10 +247,15 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     }
 
     @Override
-    public void close() throws PulsarClientException {
+    public void close() {
         for (Consumer<?> consumer : getConsumers().values()) {
-            consumer.unsubscribe();
-            consumer.close();
+            try {
+                consumer.unsubscribe();
+                consumer.close();
+            }
+            catch (Exception e) {
+                LOG.warn("Error shutting down Pulsar consumer: {}", e.getMessage(), e);
+            }
         }
     }
 

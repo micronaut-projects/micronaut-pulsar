@@ -133,8 +133,13 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
     public void close() throws Exception {
         for (Producer<?> producer : this.producers.values()) {
             if (producer.isConnected()) {
-                producer.flush();
-                producer.close();
+                try {
+                    producer.flush();
+                    producer.close();
+                }
+                catch (Exception e) {
+                    LOG.warn("Error shutting down Pulsar producer: {}", e.getMessage(), e);
+                }
             }
         }
     }

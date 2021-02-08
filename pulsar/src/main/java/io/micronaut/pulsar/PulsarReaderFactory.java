@@ -29,6 +29,8 @@ import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.api.Reader;
 import org.apache.pulsar.client.api.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Map;
@@ -43,6 +45,8 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Factory
 public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry {
+
+    private static final Logger LOG = LoggerFactory.getLogger(PulsarReaderFactory.class);
 
     private final Map<String, Reader<?>> readers;
     private final PulsarClient pulsarClient;
@@ -99,7 +103,12 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     @Override
     public void close() throws Exception {
         for (Reader<?> reader : readers.values()) {
-            reader.close();
+            try {
+                reader.close();
+            }
+            catch (Exception e) {
+                LOG.warn("Error shutting down Pulsar reader: {}", e.getMessage(), e);
+            }
         }
         readers.clear();
     }
