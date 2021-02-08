@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -260,8 +260,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
             try {
                 consumer.unsubscribe();
                 consumer.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.warn("Error shutting down Pulsar consumer: {}", e.getMessage(), e);
             }
         }

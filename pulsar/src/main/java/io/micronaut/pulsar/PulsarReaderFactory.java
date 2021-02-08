@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -109,8 +109,7 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         for (Reader<?> reader : readers.values()) {
             try {
                 reader.close();
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 LOG.warn("Error shutting down Pulsar reader: {}", e.getMessage(), e);
             }
         }

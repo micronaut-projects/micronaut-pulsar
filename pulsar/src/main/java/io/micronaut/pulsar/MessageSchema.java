@@ -1,5 +1,5 @@
 /*
- * Copyright 2021 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -99,7 +99,7 @@ public enum MessageSchema {
     AVRO,
 
     /**
-     * A schema for Protocol Buffer generated messages
+     * A schema for Protocol Buffer generated messages.
      */
     PROTOBUF,
 
