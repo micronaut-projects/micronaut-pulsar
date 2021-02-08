@@ -19,11 +19,12 @@ import io.micronaut.messaging.annotation.MessageListener;
 import org.apache.pulsar.client.api.SubscriptionType;
 
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.apache.pulsar.client.api.SubscriptionType.Exclusive;
 
 /**
  * Mark a class that should contain Pulsar consumers. Each method in class should be isolated consumer. However Pulsar
@@ -34,7 +35,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Documented
 @Retention(RUNTIME)
-@Target({ElementType.TYPE})
+@Target(TYPE)
 @MessageListener
 public @interface PulsarSubscription {
 
@@ -52,7 +53,7 @@ public @interface PulsarSubscription {
      * @return Type of consumer subscription
      * @see org.apache.pulsar.client.api.ConsumerBuilder#subscriptionType
      */
-    SubscriptionType subscriptionType() default SubscriptionType.Exclusive;
+    SubscriptionType subscriptionType() default Exclusive;
 
     /**
      * By default it will use PulsarConsumer builder default values.

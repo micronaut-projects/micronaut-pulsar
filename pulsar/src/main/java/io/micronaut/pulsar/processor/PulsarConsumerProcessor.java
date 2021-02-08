@@ -31,18 +31,34 @@ import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.ConsumerSubscribedEvent;
-import org.apache.pulsar.client.api.*;
+import org.apache.pulsar.client.api.Consumer;
+import org.apache.pulsar.client.api.ConsumerBuilder;
+import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.RegexSubscriptionMode;
+import org.apache.pulsar.client.api.Schema;
+import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.time.Duration;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Processes beans containing methods annotated with @PulsarConsumer.
@@ -165,7 +181,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         consumerAnnotation.stringValue("ackTimeout").map(Duration::parse).ifPresent(duration -> {
             long millis = duration.toMillis();
             if (1000 < millis) { // pulsar lib demands gt 1 second not gte
-                consumer.ackTimeout(millis, TimeUnit.MILLISECONDS);
+                consumer.ackTimeout(millis, MILLISECONDS);
             } else {
                 throw new IllegalArgumentException("Acknowledge timeout must be greater than 1 second");
             }
@@ -205,7 +221,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
             if (topicsRefresh.getAsInt() < 1) {
                 throw new IllegalArgumentException("Topic " + topicsPattern + " refresh time cannot be below 1 second.");
             }
-            consumer.patternAutoDiscoveryPeriod(topicsRefresh.getAsInt(), TimeUnit.SECONDS);
+            consumer.patternAutoDiscoveryPeriod(topicsRefresh.getAsInt(), SECONDS);
         }
     }
 
@@ -228,7 +244,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         Optional<String> ackGroupTimeout = subscription.stringValue("ackGroupTimeout");
         if (ackGroupTimeout.isPresent()) {
             Duration duration = Duration.parse(ackGroupTimeout.get());
-            consumer.acknowledgmentGroupTime(duration.toNanos(), TimeUnit.NANOSECONDS);
+            consumer.acknowledgmentGroupTime(duration.toNanos(), NANOSECONDS);
         }
     }
 

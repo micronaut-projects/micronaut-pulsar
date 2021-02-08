@@ -16,6 +16,7 @@
 package io.micronaut.pulsar;
 
 import org.apache.pulsar.client.api.Reader;
+
 import java.util.Collection;
 
 /**

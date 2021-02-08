@@ -19,7 +19,6 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.core.convert.ConversionService;
-import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider;
 import org.apache.pulsar.client.api.Authentication;
@@ -34,14 +33,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
+import static io.micronaut.core.naming.conventions.StringConvention.RAW;
+import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.PREFIX;
+
 /**
  * Default properties holder for Pulsar client configuration.
  *
  * @author Haris Secic
  * @since 1.0
  */
-@ConfigurationProperties(AbstractPulsarConfiguration.PREFIX)
-@Requires(AbstractPulsarConfiguration.PREFIX)
+@ConfigurationProperties(PREFIX)
+@Requires(PREFIX)
 @Requires(missingBeans = PulsarClientConfiguration.class)
 public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfiguration implements PulsarClientConfiguration {
 
@@ -176,7 +178,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     private static Properties resolveDefaultConfiguration(Environment environment) {
-        Map<String, Object> values = environment.containsProperties(PREFIX) ? environment.getProperties(PREFIX, StringConvention.RAW) : Collections.emptyMap();
+        Map<String, Object> values = environment.containsProperties(PREFIX) ? environment.getProperties(PREFIX, RAW) : Collections.emptyMap();
         Properties properties = new Properties();
         values.forEach((key, value) -> {
             if (ConversionService.SHARED.canConvert(value.getClass(), String.class)) {

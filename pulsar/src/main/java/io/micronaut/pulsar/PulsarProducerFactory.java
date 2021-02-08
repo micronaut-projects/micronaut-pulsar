@@ -15,13 +15,20 @@
  */
 package io.micronaut.pulsar;
 
-import io.micronaut.pulsar.annotation.PulsarProducer;
-import io.micronaut.pulsar.processor.SchemaResolver;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.annotation.AnnotationValue;
-import org.apache.pulsar.client.api.*;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.processor.SchemaResolver;
+import org.apache.pulsar.client.api.CompressionType;
+import org.apache.pulsar.client.api.HashingScheme;
+import org.apache.pulsar.client.api.MessageRoutingMode;
+import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.ProducerBuilder;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.Schema;
 
 /**
  * Pulsar {@link Producer} factory.

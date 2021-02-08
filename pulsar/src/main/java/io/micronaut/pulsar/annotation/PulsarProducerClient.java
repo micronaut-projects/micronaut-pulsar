@@ -16,8 +16,8 @@
 package io.micronaut.pulsar.annotation;
 
 import io.micronaut.aop.Introduction;
-import io.micronaut.pulsar.intercept.PulsarClientIntroductionAdvice;
 import io.micronaut.context.annotation.Type;
+import io.micronaut.pulsar.intercept.PulsarClientIntroductionAdvice;
 import io.micronaut.retry.annotation.Recoverable;
 
 import javax.inject.Scope;

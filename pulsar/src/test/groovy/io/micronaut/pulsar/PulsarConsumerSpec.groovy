@@ -15,10 +15,15 @@
  */
 package io.micronaut.pulsar
 
-import groovy.transform.CompileStatic
+
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
-import org.apache.pulsar.client.api.*
+import org.apache.pulsar.client.api.Consumer
+import org.apache.pulsar.client.api.Message
+import org.apache.pulsar.client.api.MessageId
+import org.apache.pulsar.client.api.Producer
+import org.apache.pulsar.client.api.PulsarClient
+import org.apache.pulsar.client.api.Schema
 import spock.lang.Stepwise
 import spock.util.concurrent.PollingConditions
 

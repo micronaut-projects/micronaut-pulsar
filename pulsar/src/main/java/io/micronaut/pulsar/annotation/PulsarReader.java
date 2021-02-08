@@ -17,14 +17,16 @@ package io.micronaut.pulsar.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.pulsar.MessageSchema;
-import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
 
 import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static io.micronaut.pulsar.MessageSchema.BYTES;
+import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR;
+import static java.lang.annotation.ElementType.FIELD;
+import static java.lang.annotation.ElementType.PARAMETER;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
@@ -35,7 +37,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Documented
 @Retention(RUNTIME)
-@Target({ElementType.PARAMETER, ElementType.FIELD})
+@Target({PARAMETER, FIELD})
 public @interface PulsarReader {
 
     /**
@@ -51,7 +53,7 @@ public @interface PulsarReader {
      * @return topic name to listen to
      */
     @AliasFor(member = "value")
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     String topic() default "";
 
     /**
@@ -59,7 +61,7 @@ public @interface PulsarReader {
      *
      * @return Schema to use with pulsar topic consumer
      */
-    MessageSchema schema() default MessageSchema.BYTES;
+    MessageSchema schema() default BYTES;
 
     /**
      * @return Consumer name.

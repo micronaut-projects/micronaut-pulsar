@@ -15,9 +15,9 @@
  */
 package io.micronaut.pulsar;
 
-import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import org.apache.pulsar.client.api.ClientBuilder;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;

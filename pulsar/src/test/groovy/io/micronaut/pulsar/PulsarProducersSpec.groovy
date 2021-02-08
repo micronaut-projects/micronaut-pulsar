@@ -17,19 +17,10 @@ package io.micronaut.pulsar
 
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
-import io.micronaut.context.ApplicationContext
-import io.micronaut.core.util.CollectionUtils
-import io.micronaut.core.util.StringUtils
-import io.micronaut.runtime.server.EmbeddedServer
 import io.reactivex.Single
-import org.apache.pulsar.client.admin.PulsarAdmin
 import org.apache.pulsar.client.api.MessageId
 import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.Schema
-import org.testcontainers.containers.PulsarContainer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
 import spock.lang.Stepwise
 
 import java.util.concurrent.TimeUnit
