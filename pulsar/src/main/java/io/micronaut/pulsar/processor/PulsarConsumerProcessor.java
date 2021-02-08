@@ -232,7 +232,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         String subscriptionName = consumerAnnotation.stringValue("subscription")
                 .orElseGet(() -> "pulsar-subscription-" + consumerCounter.incrementAndGet());
         SubscriptionType subscriptionType = consumerAnnotation.getRequiredValue(
-                "subscription", SubscriptionType.class);
+                "subscriptionType", SubscriptionType.class);
         consumer.subscriptionName(subscriptionName).subscriptionType(subscriptionType);
     }
 

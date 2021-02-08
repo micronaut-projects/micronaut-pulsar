@@ -108,7 +108,7 @@ public @interface PulsarProducer {
      *
      * @return Max bytes per batch
      */
-    int batchingMaxBytes() default 1000 * 128;
+    int batchingMaxBytes() default 1024 * 128;
 
     /**
      * If this is enabled batching should be disabled.

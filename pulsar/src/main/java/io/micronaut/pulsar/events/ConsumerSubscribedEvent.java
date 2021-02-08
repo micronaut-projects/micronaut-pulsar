@@ -25,7 +25,7 @@ import org.apache.pulsar.client.api.Consumer;
  */
 public final class ConsumerSubscribedEvent {
 
-    private Consumer<?> consumer;
+    private final Consumer<?> consumer;
 
     public ConsumerSubscribedEvent(Consumer<?> consumer) {
         this.consumer = consumer;

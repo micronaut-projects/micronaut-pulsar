@@ -119,7 +119,7 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
             for (Producer<?> producer : producers) {
                 try {
                     producer.close();
-                } catch (PulsarClientException e) {
+                } catch (Exception e) {
                     LOG.warn("Error shutting down Pulsar producer: {}", e.getMessage(), e);
                 }
             }
