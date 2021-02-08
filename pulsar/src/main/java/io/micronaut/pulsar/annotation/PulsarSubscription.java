@@ -27,8 +27,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.apache.pulsar.client.api.SubscriptionType.Exclusive;
 
 /**
- * Mark a class that should contain Pulsar consumers. Each method in class should be isolated consumer. However Pulsar
- * provides multiple consumers via single subscription if they are set to Failover, Share, or such.
+ * Mark a class that contains Pulsar consumers. Each method in class should be
+ * isolated consumer. However Pulsar provides multiple consumers via single
+ * subscription if they are set to Failover, Share, or such.
  *
  * @author Haris Secic
  * @since 1.0
@@ -40,7 +41,8 @@ import static org.apache.pulsar.client.api.SubscriptionType.Exclusive;
 public @interface PulsarSubscription {
 
     /**
-     * If not set UUID will be generated as subscription name to avoid collisions if consumer type is Exclusive.
+     * If not set, UUID will be generated as subscription name to avoid
+     * collisions if consumer type is Exclusive.
      *
      * @return Subscription name
      * @see org.apache.pulsar.client.api.ConsumerBuilder#subscriptionType
@@ -48,7 +50,7 @@ public @interface PulsarSubscription {
     String subscriptionName() default "";
 
     /**
-     * By default Exclusive.
+     * By default {@code Exclusive}.
      *
      * @return Type of consumer subscription
      * @see org.apache.pulsar.client.api.ConsumerBuilder#subscriptionType
@@ -58,7 +60,8 @@ public @interface PulsarSubscription {
     /**
      * By default it will use PulsarConsumer builder default values.
      *
-     * @return Maximum amount of time allowed to pass for message to be acknowledged or else redelivery happens.
+     * @return Maximum amount of time allowed to pass for message to be
+     * acknowledged or else redelivery happens.
      * @see org.apache.pulsar.client.api.ConsumerBuilder#acknowledgmentGroupTime
      */
     String ackGroupTimeout() default "";

@@ -15,22 +15,96 @@
  */
 package io.micronaut.pulsar;
 
+/**
+ * Supported schema types.
+ *
+ * @author Haris Secic
+ * @since 1.0
+ */
 public enum MessageSchema {
+
+    /**
+     * A sequence of 8-bit unsigned bytes.
+     */
     BYTES,
+
+    /**
+     * Effectively a `BYTES` schema.
+     */
     BYTEBUFFER,
+
+    /**
+     * A 8-bit signed integer.
+     */
     INT8,
+
+    /**
+     * A 16-bit signed integer.
+     */
     INT16,
+
+    /**
+     * A 32-bit signed integer.
+     */
     INT32,
+
+    /**
+     * A 64-bit signed integer.
+     */
     INT64,
+
+    /**
+     * A binary value.
+     */
     BOOL,
+
+    /**
+     * A single precision (32-bit) IEEE 754 floating-point number.
+     */
     FLOAT,
+
+    /**
+     * A double-precision (64-bit) IEEE 754 floating-point number.
+     */
     DOUBLE,
+
+    /**
+     * A schema for `java.util.Date` or `java.sql.Date`.
+     */
     DATE,
+
+    /**
+     * A schema for `java.sql.Time`.
+     */
     TIME,
+
+    /**
+     * A schema for `java.sql.Timestamp`.
+     */
     TIMESTAMP,
+
+    /**
+     * A Unicode character sequence.
+     */
     STRING,
+
+    /**
+     * A schema for JSON data.
+     */
     JSON,
+
+    /**
+     * An Apache Avro schema.
+     */
     AVRO,
+
+    /**
+     * A schema for Protocol Buffer generated messages
+     */
     PROTOBUF,
+
+    /**
+     * Key/Value pair schema.
+     */
     KEY_VALUE
 }

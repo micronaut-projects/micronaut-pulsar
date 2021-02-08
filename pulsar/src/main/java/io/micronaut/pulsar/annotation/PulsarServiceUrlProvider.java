@@ -22,9 +22,9 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Marks a class that contains method to resolve pulsar service url. Class annotated must implement ServiceUrlProvider
- * interface from official Apache Pulsar Java library. Also servers as qualifier for injection of ServiceUrlProvider
- * bean.
+ * Marks a class that contains a method to resolve the Pulsar service url. The
+ * annotated class must implement {@link org.apache.pulsar.client.api.ServiceUrlProvider}.
+ * Also servers as a qualifier for injection of ServiceUrlProvider bean.
  *
  * @author Haris Secic
  * @since 1.0

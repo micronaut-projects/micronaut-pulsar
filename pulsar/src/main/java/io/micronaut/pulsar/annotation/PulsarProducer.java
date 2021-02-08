@@ -35,7 +35,7 @@ import static org.apache.pulsar.client.api.HashingScheme.JavaStringHash;
 import static org.apache.pulsar.client.api.MessageRoutingMode.RoundRobinPartition;
 
 /**
- * Marks a method that should produce values to pulsar topics on call.
+ * Marks a method that should produce values to Pulsar topics on call.
  *
  * @author Haris Secic
  * @since 1.0

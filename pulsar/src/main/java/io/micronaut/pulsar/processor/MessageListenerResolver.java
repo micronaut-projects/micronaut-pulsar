@@ -18,7 +18,7 @@ package io.micronaut.pulsar.processor;
 import org.apache.pulsar.client.api.MessageListener;
 
 /**
- * This interface provides flexibility to implement {@link org.apache.pulsar.client.api.MessageListener} as beans
+ * Provides flexibility to implement {@link org.apache.pulsar.client.api.MessageListener} as beans
  * while still being able to override default listener resolver for Pulsar Consumers.
  *
  * @author Haris Secic

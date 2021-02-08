@@ -28,7 +28,7 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Annotation for marking a type as bean containing producer methods.
+ * Marks a type as a bean containing producer methods.
  * To avoid mixing up with PulsarClient interface from official library "Producer" part was introduced.
  *
  * @author Haris Secic

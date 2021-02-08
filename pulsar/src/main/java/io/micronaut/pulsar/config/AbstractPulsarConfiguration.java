@@ -53,11 +53,6 @@ public abstract class AbstractPulsarConfiguration<K, V> {
 
     private final Properties config;
 
-    /**
-     * Constructs a new instance.
-     *
-     * @param config The config to use
-     */
     protected AbstractPulsarConfiguration(Properties config) {
         this.config = config;
     }
