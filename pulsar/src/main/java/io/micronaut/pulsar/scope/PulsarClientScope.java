@@ -100,9 +100,7 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
             for (Producer<?> producer : producers) {
                 producer.closeAsync().handle((v, ex) -> {
                     if (null != ex) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("Error shutting down Pulsar producer: " + producer.getProducerName());
-                        }
+                        LOG.warn("Error shutting down Pulsar producer: {}", producer.getProducerName());
                     }
                     return v;
                 });
@@ -119,9 +117,7 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
                 try {
                     producer.close();
                 } catch (PulsarClientException e) {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("Error shutting down Pulsar producer: " + e.getMessage(), e);
-                    }
+                    LOG.warn("Error shutting down Pulsar producer: {}", e.getMessage(), e);
                 }
             }
         }

@@ -132,9 +132,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                     consumers.put(name, consumer);
                     applicationEventPublisher.publishEvent(new ConsumerSubscribedEvent(consumer));
                 } catch (PulsarClientException e) {
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Could not start pulsar producer " + name, e);
-                    }
+                    LOG.error("Could not start pulsar producer {}", name, e);
                 }
             }
         }

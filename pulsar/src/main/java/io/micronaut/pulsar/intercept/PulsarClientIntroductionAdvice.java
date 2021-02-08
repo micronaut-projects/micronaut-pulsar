@@ -116,9 +116,7 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
 
                 throw new IllegalArgumentException("Pulsar producers can only return MessageId or body being sent.");
             } catch (PulsarClientException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Failed to produce message on producer " + producerId, e);
-                }
+                LOG.error("Failed to produce message on producer {}", producerId, e);
                 throw new RuntimeException("Failed to produce a message on " + producerId, e);
             }
         }
