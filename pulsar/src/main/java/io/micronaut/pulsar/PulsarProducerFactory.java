@@ -59,10 +59,15 @@ public class PulsarProducerFactory {
 
         Schema<T> schema = (Schema<T>) schemaResolver.decideSchema(annotationValue, bodyType);
 
-        String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
-        String topic = annotationValue.stringValue("topic").orElseGet(() -> annotationValue.getRequiredValue(String.class));
+        String producerName = annotationValue.stringValue("producerName")
+                .orElse(annotatedMethodName);
+        String topic = annotationValue.stringValue("topic")
+                .orElseGet(() -> annotationValue.getRequiredValue(String.class));
 
-        ProducerBuilder<T> producerBuilder = pulsarClient.newProducer(schema).producerName(producerName).topic(topic);
+        ProducerBuilder<T> producerBuilder = pulsarClient
+                .newProducer(schema)
+                .producerName(producerName)
+                .topic(topic);
 
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);

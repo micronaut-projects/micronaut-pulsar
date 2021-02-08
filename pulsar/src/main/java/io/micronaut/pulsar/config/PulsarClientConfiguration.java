@@ -27,6 +27,7 @@ import java.util.Optional;
  * @author Haris Secic
  */
 public interface PulsarClientConfiguration {
+
     String getServiceUrl();
 
     default Optional<ServiceUrlProvider> getServiceUrlProvider() {

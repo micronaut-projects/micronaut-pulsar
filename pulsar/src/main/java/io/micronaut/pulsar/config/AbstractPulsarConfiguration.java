@@ -22,30 +22,37 @@ import javax.annotation.Nonnull;
 import java.util.Properties;
 
 public abstract class AbstractPulsarConfiguration<K, V> {
+
     /**
      * The default Apache Pulsar messaging port.
      */
     public static final int DEFAULT_PULSAR_MESSAGING_PORT = 6650;
+
     /**
      * The default prefix used for Pulsar configuration.
      */
     public static final String PREFIX = "pulsar";
+
     /**
      * The default server hostname or IP address.
      */
     public static final String DEFAULT_SERVER_HOST_ADDRESS = "localhost";
+
     /**
      * The default bootstrap server address for messaging.
      */
     public static final String DEFAULT_BOOTSTRAP_SERVER = "pulsar://" + DEFAULT_SERVER_HOST_ADDRESS + ":" + DEFAULT_PULSAR_MESSAGING_PORT;
+
     /**
      * By default Pulsar doesn't have any authentication.
      */
     public static final Authentication DEFAULT_PULSAR_AUTHENTICATION = new AuthenticationDisabled();
+
     /**
      * Regex for validating topic name.
      */
     public static final String TOPIC_NAME_VALIDATOR = "((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)";
+
     /**
      * Regex for validating topic pattern.
      */

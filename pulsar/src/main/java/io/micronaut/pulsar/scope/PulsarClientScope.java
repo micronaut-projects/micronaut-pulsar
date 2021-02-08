@@ -57,7 +57,8 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
     private final SchemaResolver schemaResolver;
     private final PulsarClient pulsarClient;
 
-    public PulsarClientScope(BeanContext beanContext, SchemaResolver schemaResolver, PulsarClient pulsarClient) {
+    public PulsarClientScope(BeanContext beanContext, SchemaResolver schemaResolver,
+                             PulsarClient pulsarClient) {
         this.beanContext = beanContext;
         this.schemaResolver = schemaResolver;
         this.pulsarClient = pulsarClient;
@@ -71,7 +72,8 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
 
     @SuppressWarnings({"unchecked"})
     @Override
-    public <T> T get(BeanResolutionContext resolutionContext, BeanDefinition<T> beanDefinition, BeanIdentifier identifier, Provider<T> provider) {
+    public <T> T get(BeanResolutionContext resolutionContext, BeanDefinition<T> beanDefinition,
+                     BeanIdentifier identifier, Provider<T> provider) {
         List<Producer<?>> producerMethods = new ArrayList<>();
         for (ExecutableMethod<T, ?> x : beanDefinition.getExecutableMethods()) {
             AnnotationValue<PulsarProducer> annotation = x.getAnnotation(PulsarProducer.class);
@@ -88,7 +90,8 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
         if (beanContext.containsBean(Producer.class, Qualifiers.byName(producerId))) {
             return beanContext.getBean(Producer.class, Qualifiers.byName(producerId));
         }
-        return beanContext.createBean(Producer.class, Qualifiers.byName(producerId), pulsarClient, annotationValue, schemaResolver);
+        return beanContext.createBean(Producer.class, Qualifiers.byName(producerId),
+                pulsarClient, annotationValue, schemaResolver);
     }
 
     @SuppressWarnings("unchecked")

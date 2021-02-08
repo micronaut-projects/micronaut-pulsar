@@ -67,8 +67,8 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
      */
     @Prototype
     public Reader<?> createReader(InjectionPoint<?> injectionPoint) throws PulsarClientException {
-        AnnotationValue<PulsarReader> annotation = injectionPoint.getAnnotation(PulsarReader.class);
 
+        AnnotationValue<PulsarReader> annotation = injectionPoint.getAnnotation(PulsarReader.class);
         if (null == annotation) { //is this state possible?
             throw new IllegalStateException("Failed to get value for bean annotated with PulsarReader");
         }
@@ -97,7 +97,12 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         boolean startFromLatestMessage = annotation.getRequiredValue("startMessageLatest", boolean.class);
         MessageId startMessageId = startFromLatestMessage ? MessageId.latest : MessageId.earliest;
 
-        return pulsarClient.newReader(schema).startMessageId(startMessageId).readerName(name).topic(topic).create();
+        return pulsarClient
+                .newReader(schema)
+                .startMessageId(startMessageId)
+                .readerName(name)
+                .topic(topic)
+                .create();
     }
 
     @Override

@@ -178,7 +178,9 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     private static Properties resolveDefaultConfiguration(Environment environment) {
-        Map<String, Object> values = environment.containsProperties(PREFIX) ? environment.getProperties(PREFIX, RAW) : Collections.emptyMap();
+        Map<String, Object> values = environment.containsProperties(PREFIX)
+                ? environment.getProperties(PREFIX, RAW)
+                : Collections.emptyMap();
         Properties properties = new Properties();
         values.forEach((key, value) -> {
             if (ConversionService.SHARED.canConvert(value.getClass(), String.class)) {

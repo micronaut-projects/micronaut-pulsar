@@ -147,8 +147,9 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
         Argument<?>[] methodArguments = method.getArguments();
         Class<?> messageBodyType;
-        Optional<Argument<?>> bodyType = Arrays.stream(methodArguments).filter(x -> !Consumer.class.isAssignableFrom(x.getType())).findFirst();
-
+        Optional<Argument<?>> bodyType = Arrays.stream(methodArguments)
+                .filter(x -> !Consumer.class.isAssignableFrom(x.getType()))
+                .findFirst();
         if (!bodyType.isPresent()) {
             throw new IllegalArgumentException("Method annotated with pulsar consumer must accept 1 parameter that's of" +
                     " type other than " + Consumer.class.getName() + " class which can be used to accept pulsar message.");
@@ -194,7 +195,8 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         return consumer;
     }
 
-    private void resolveTopic(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer) {
+    private void resolveTopic(AnnotationValue<PulsarConsumer> consumerAnnotation,
+                              ConsumerBuilder<?> consumer) {
         String topic = consumerAnnotation.stringValue().orElse(null);
         String[] topics = consumerAnnotation.stringValues("topics");
         String topicsPattern = consumerAnnotation.stringValue("topicsPattern").orElse(null);
@@ -210,9 +212,11 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         }
     }
 
-    private void resolveTopicsPattern(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer, String topicsPattern) {
+    private void resolveTopicsPattern(AnnotationValue<PulsarConsumer> consumerAnnotation,
+                                      ConsumerBuilder<?> consumer, String topicsPattern) {
         consumer.topicsPattern(topicsPattern);
-        RegexSubscriptionMode mode = consumerAnnotation.getRequiredValue("subscriptionTopicsMode", RegexSubscriptionMode.class);
+        RegexSubscriptionMode mode = consumerAnnotation.getRequiredValue(
+                "subscriptionTopicsMode", RegexSubscriptionMode.class);
         consumer.subscriptionTopicsMode(mode);
         OptionalInt topicsRefresh = consumerAnnotation.intValue("patternAutoDiscoveryPeriod");
         if (topicsRefresh.isPresent()) {
@@ -223,14 +227,17 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         }
     }
 
-    private void consumerValues(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer) {
+    private void consumerValues(AnnotationValue<PulsarConsumer> consumerAnnotation,
+                                ConsumerBuilder<?> consumer) {
         String subscriptionName = consumerAnnotation.stringValue("subscription")
                 .orElseGet(() -> "pulsar-subscription-" + consumerCounter.incrementAndGet());
-        SubscriptionType subscriptionType = consumerAnnotation.getRequiredValue("subscription", SubscriptionType.class);
+        SubscriptionType subscriptionType = consumerAnnotation.getRequiredValue(
+                "subscription", SubscriptionType.class);
         consumer.subscriptionName(subscriptionName).subscriptionType(subscriptionType);
     }
 
-    private void subscriptionValues(AnnotationValue<PulsarSubscription> subscription, ConsumerBuilder<?> consumer) {
+    private void subscriptionValues(AnnotationValue<PulsarSubscription> subscription,
+                                    ConsumerBuilder<?> consumer) {
         String subscriptionName = subscription.stringValue("subscriptionName")
                 .orElse("pulsar-subscription-" + consumerCounter.incrementAndGet());
 

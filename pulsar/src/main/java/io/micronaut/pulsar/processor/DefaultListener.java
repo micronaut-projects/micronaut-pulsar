@@ -35,7 +35,8 @@ public class DefaultListener implements MessageListenerResolver {
     private final int consumerIndex;
     private final Object invoker;
 
-    public DefaultListener(ExecutableMethod method, boolean useMessageWrapper, int consumerIndex, Object invoker) {
+    public DefaultListener(ExecutableMethod method, boolean useMessageWrapper,
+                           int consumerIndex, Object invoker) {
         this.method = method;
         this.useMessageWrapper = useMessageWrapper;
         this.consumerIndex = consumerIndex;
