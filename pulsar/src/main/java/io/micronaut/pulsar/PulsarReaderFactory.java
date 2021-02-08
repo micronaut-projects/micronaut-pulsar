@@ -48,14 +48,13 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarReaderFactory.class);
 
-    private final Map<String, Reader<?>> readers;
+    private final Map<String, Reader<?>> readers = new ConcurrentHashMap<>();
     private final PulsarClient pulsarClient;
     private final SchemaResolver schemaResolver;
 
     public PulsarReaderFactory(PulsarClient pulsarClient, SchemaResolver schemaResolver) {
         this.pulsarClient = pulsarClient;
         this.schemaResolver = schemaResolver;
-        this.readers = new ConcurrentHashMap<>();
     }
 
     /**

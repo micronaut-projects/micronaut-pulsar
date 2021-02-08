@@ -67,11 +67,8 @@ public abstract class AbstractPulsarConfiguration<K, V> {
     /**
      * @return The Pulsar configuration
      */
-    public @Nonnull
-    Properties getConfig() {
-        if (config != null) {
-            return config;
-        }
-        return new Properties();
+    @Nonnull
+    public Properties getConfig() {
+        return config == null ? new Properties() : config;
     }
 }

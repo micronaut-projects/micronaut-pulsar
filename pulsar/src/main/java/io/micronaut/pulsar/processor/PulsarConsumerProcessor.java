@@ -94,18 +94,19 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     @Override
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
         List<AnnotationValue<PulsarConsumer>> topicAnnotation = method.getAnnotationValuesByType(PulsarConsumer.class);
-        AnnotationValue<PulsarSubscription> subscriptionAnnotation = method.getAnnotation(PulsarSubscription.class);
-
         if (topicAnnotation.isEmpty()) {
             return; //probably never happens
         }
+
+        AnnotationValue<PulsarSubscription> subscriptionAnnotation = method.getAnnotation(PulsarSubscription.class);
 
         Argument<?>[] arguments = method.getArguments();
 
         if (ArrayUtils.isEmpty(arguments)) {
             throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept at least 1 parameter");
-        } else if (arguments.length > 2) {
-            throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept maximum of 2 parameters " +
+        }
+        if (arguments.length > 2) {
+            throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept maximum of 2 parameters, " +
                     "one for message body and one for " + Consumer.class.getName());
         }
 
@@ -146,7 +147,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                                             Object bean) {
 
         Argument<?>[] methodArguments = method.getArguments();
-        Class<?> messageBodyType;
+
         Optional<Argument<?>> bodyType = Arrays.stream(methodArguments)
                 .filter(x -> !Consumer.class.isAssignableFrom(x.getType()))
                 .findFirst();
@@ -155,7 +156,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                     " type other than " + Consumer.class.getName() + " class which can be used to accept pulsar message.");
         }
 
-        messageBodyType = bodyType.get().getType();
+        Class<?> messageBodyType = bodyType.get().getType();
         boolean useMessageWrapper = Message.class.isAssignableFrom(messageBodyType); //users can consume only message body and ignore the rest
 
         Schema<?> schema;
@@ -291,11 +292,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
     @Override
     public boolean isPaused(@Nonnull String id) {
-        if (StringUtils.isNotEmpty(id) && consumers.containsKey(id)) {
-            return paused.containsKey(id);
-        } else {
+        if (StringUtils.isEmpty(id) || !consumers.containsKey(id)) {
             throw new IllegalArgumentException("No consumer found for ID: " + id);
         }
+        return paused.containsKey(id);
     }
 
     @Override
@@ -310,11 +310,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
     @Override
     public void resume(@Nonnull String id) {
-        if (StringUtils.isNotEmpty(id) && paused.containsKey(id)) {
-            Consumer<?> consumer = paused.remove(id);
-            consumer.resume();
-        } else {
+        if (StringUtils.isEmpty(id) || !paused.containsKey(id)) {
             throw new IllegalArgumentException("No paused consumer found for ID: " + id);
         }
+        Consumer<?> consumer = paused.remove(id);
+        consumer.resume();
     }
 }

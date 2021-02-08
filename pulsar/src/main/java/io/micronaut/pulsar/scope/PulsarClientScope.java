@@ -52,7 +52,7 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarClientScope.class);
 
-    private final Map<String, List<Producer<?>>> producersCollection;
+    private final Map<String, List<Producer<?>>> producersCollection = new ConcurrentHashMap<>();
     private final BeanContext beanContext;
     private final SchemaResolver schemaResolver;
     private final PulsarClient pulsarClient;
@@ -62,7 +62,6 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
         this.beanContext = beanContext;
         this.schemaResolver = schemaResolver;
         this.pulsarClient = pulsarClient;
-        producersCollection = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -75,8 +74,8 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
     public <T> T get(BeanResolutionContext resolutionContext, BeanDefinition<T> beanDefinition,
                      BeanIdentifier identifier, Provider<T> provider) {
         List<Producer<?>> producerMethods = new ArrayList<>();
-        for (ExecutableMethod<T, ?> x : beanDefinition.getExecutableMethods()) {
-            AnnotationValue<PulsarProducer> annotation = x.getAnnotation(PulsarProducer.class);
+        for (ExecutableMethod<T, ?> method : beanDefinition.getExecutableMethods()) {
+            AnnotationValue<PulsarProducer> annotation = method.getAnnotation(PulsarProducer.class);
             if (null != annotation) {
                 producerMethods.add(createProducer(annotation));
             }

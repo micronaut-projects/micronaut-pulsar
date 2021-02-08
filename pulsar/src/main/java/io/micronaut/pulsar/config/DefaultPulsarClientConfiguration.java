@@ -92,7 +92,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     public void setAuthenticationJwt(@Nullable String authenticationJwt) {
-        this.pulsarAuthentication = new AuthenticationToken(authenticationJwt);
+        pulsarAuthentication = new AuthenticationToken(authenticationJwt);
     }
 
     public Optional<String> getSslProvider() {
@@ -122,12 +122,12 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     public Optional<ServiceUrlProvider> getServiceUrlProvider() {
-        return this.serviceUrlProvider;
+        return serviceUrlProvider;
     }
 
     @Override
     public Authentication getAuthentication() {
-        return Optional.ofNullable(this.pulsarAuthentication).orElse(DEFAULT_PULSAR_AUTHENTICATION);
+        return Optional.ofNullable(pulsarAuthentication).orElse(DEFAULT_PULSAR_AUTHENTICATION);
     }
 
     /**
@@ -147,7 +147,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     public Optional<URL> getOauthCredentialsUrl() {
-        return Optional.ofNullable(this.oauthCredentialsUrl);
+        return Optional.ofNullable(oauthCredentialsUrl);
     }
 
     /**
@@ -171,10 +171,10 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     private void generateAuthenticationOAuth2() {
-        if (null == this.oauthIssuerUrl || null == this.oauthCredentialsUrl || StringUtils.isEmpty(oauthAudience)) {
+        if (null == oauthIssuerUrl || null == oauthCredentialsUrl || StringUtils.isEmpty(oauthAudience)) {
             return;
         }
-        this.pulsarAuthentication = AuthenticationFactoryOAuth2.clientCredentials(this.oauthIssuerUrl, this.oauthCredentialsUrl, oauthAudience);
+        pulsarAuthentication = AuthenticationFactoryOAuth2.clientCredentials(oauthIssuerUrl, oauthCredentialsUrl, oauthAudience);
     }
 
     private static Properties resolveDefaultConfiguration(Environment environment) {
