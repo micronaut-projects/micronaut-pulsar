@@ -1,8 +1,8 @@
-To configure Apache Pulsar client you should first add the `micronaut-pulsar` module dependency:
+To configure the Apache Pulsar client, first add the `micronaut-pulsar` module dependency:
 
-dependency::micronaut-pulsar[groupId="io.micronaut.pulsar", version="{version}"]
+dependency::micronaut-pulsar[groupId="io.micronaut.pulsar"]
 
-You should then configure the URI of the Pulsar cluster or standalone server you wish to communicate with in `application.yml`:
+Then configure the URI of the Pulsar cluster or standalone server to communicate with in `application.yml`:
 
 .Configuring `pulsar.service-url`
 [source,yaml]
@@ -10,20 +10,17 @@ You should then configure the URI of the Pulsar cluster or standalone server you
 pulsar:
   service-url: pulsar://localhost:6650
 ----
-NOTE: As this module is based on official Java client from Apache Pulsar please visit
-link:https://pulsar.apache.org/docs/en/client-libraries-java/#connection-urls[official documentation] for detailed
-information on format of service URL.
+NOTE: As this module is based on the official Java client from Apache Pulsar, see the link:https://pulsar.apache.org/docs/en/client-libraries-java/#connection-urls[official documentation] for detailed information on service URL format.
 
-Alternatively, `pulsar.service-url-provider` can be set using either `@PulsarServiceUrlProvider` or setting provider name
+Alternatively, `pulsar.service-url-provider` can be set using either `@PulsarServiceUrlProvider` or by setting the provider name
 in `application.yml` as such:
+
 [source,yaml]
 ----
 pulsar:
   service-url-provider: BeanName
 ----
-in which case implementing class must also have `@Named` annotation from micronaut core with value equal to the one in
-YAML. In both cases bean must implement `org.apache.pulsar.client.api.ServiceUrlProvider` interface.
 
-After configuring Pulsar cluster URL micronaut pulsar module will be able to produce bean of type `org.apache.pulsar.client.api.PulsarClient`.
-This bean will be `Singleton` from which all producers and consumers can be created. Since PulsarClient has option of URL provider which is capable of switching URL-s to clusters on demand,
-there's no need to have multiple clients.
+in which case the implementing class must be annotated with `@Named` with value equal to the one in YAML. In both cases, the bean must implement the `org.apache.pulsar.client.api.ServiceUrlProvider` interface.
+
+After configuring the Pulsar cluster URL, the Micronaut Pulsar module will be able to produce a bean of type `org.apache.pulsar.client.api.PulsarClient`. This bean will be a `Singleton` from which all producers and consumers can be created. Since `PulsarClient` supports an URL provider which can switch URLs to clusters on demand, there's no need to have multiple clients.

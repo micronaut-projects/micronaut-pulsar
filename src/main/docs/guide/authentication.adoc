@@ -1,19 +1,21 @@
 === JWT
-To configure JWT authentication it's sufficient to pass in JWT into `application.yaml` under `pulsar.authentication-jwt`:
+
+To configure JWT authentication it's sufficient to specify a JWT in `application.yml` under `pulsar.authentication-jwt`, e.g.:
+
 [source,yaml]
 ----
 pulsar:
-  auth:
-    jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+  authentication:
+    jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...
 ----
 
-`io.micronaut.configuration.pulsar.config.AbstractPulsarConfiguration` is left public in case you want to implement more
-options yourself.
+`io.micronaut.configuration.pulsar.config.AbstractPulsarConfiguration` is left public in case you want to implement more options yourself.
 
-It's planned to support JWT path be it HTTP endpoint or simple URL to get fresh JWT
+It's planned to support specifying a JWT path, either an HTTP endpoint or URL to retrieve a fresh JWT.
 
 === OAuth2
-Setup 3 parameters as presented in below example to connect to Pulsar service that uses OAuth2:
+
+To use OAuth2 authentication, configure three parameters like in the example below to connect to a Pulsar service that uses OAuth2:
 
 [source,yaml]
 ----
@@ -22,10 +24,11 @@ pulsar:
     oauth-credentials-url: file:///path/to/file.json
     audience: localhost:6650
 ----
-Issuer URL is simply the URL to the OAuth2 server generating tokens and such.
 
-Parameter _oauth-credentials-url_ is used for loading in a file that contains necessary configuration for _"logging in"_ to OAuth2 provider as a client app.
-File should contain everything defined in Pulsar documentation and type is limited to _"client_credentials"_. Below is example on how should file look like.
+The issuer URL is the URL to the OAuth2 server generating tokens and such.
+
+Parameter `oauth-credentials-url` is used for reading a file containing necessary configuration for authenticating to the OAuth2 provider as a client app. The file should contain everything defined in Pulsar documentation, and type is limited to `client_credentials`. Below is an example of what the file should look like.
+
 [source,json]
 ----
 {
@@ -35,11 +38,8 @@ File should contain everything defined in Pulsar documentation and type is limit
     "issuer_url": "https://my-oauth2-server.com/auth/realms/pulsar-realm"
 }
 ----
-Example shows something similar that could be set when using KeyCloak or such SSO.
-Audience must be set but Pulsar service can be configured to ignore this value and in such case you might put any text with 1 or more characters.
-For more details please consult Apache Pulsar documentation at https://pulsar.apache.org/docs/en/security-oauth2/[this link]. Consult Java client
-to understand more about limitations for _"client_credentials"_.
 
-Pulsar Java library takes care of the OAuth2 JWT refreshing and such. Apache Pulsar server must be configured to use OAuth2
-and _role_ attribute in its configuration files must be specified in order for Pulsar to be able to detect which kind of _"user"_ is requesting data.
+The example shows something similar that could be set when using KeyCloak or a similar SSO. Audience must be set, but Pulsar service can be configured to ignore this value, and in such case you might put any text with one or more characters. For more details, see the https://pulsar.apache.org/docs/en/security-oauth2/[Apache Pulsar documentation]. Consult Java client to understand more about limitations for `client_credentials`.
 
+The Pulsar library takes care of the OAuth2 JWT refreshing and such. The Pulsar server must be configured to use OAuth2
+and _role_ attribute in its configuration files must be specified for Pulsar to be able to detect which kind of _"user"_ is requesting data.
