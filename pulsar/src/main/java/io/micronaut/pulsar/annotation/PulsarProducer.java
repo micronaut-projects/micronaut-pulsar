@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,28 +17,32 @@ package io.micronaut.pulsar.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.pulsar.MessageSchema;
-import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
 import org.apache.pulsar.client.api.CompressionType;
 import org.apache.pulsar.client.api.HashingScheme;
 import org.apache.pulsar.client.api.MessageRoutingMode;
 
 import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static io.micronaut.pulsar.MessageSchema.BYTES;
+import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR;
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.apache.pulsar.client.api.CompressionType.NONE;
+import static org.apache.pulsar.client.api.HashingScheme.JavaStringHash;
+import static org.apache.pulsar.client.api.MessageRoutingMode.RoundRobinPartition;
 
 /**
- * Marks a method that should produce values to pulsar topics on call.
+ * Marks a method that should produce values to Pulsar topics on call.
  *
  * @author Haris Secic
  * @since 1.0
  */
 @Documented
 @Retention(RUNTIME)
-@Target({ElementType.METHOD})
+@Target(METHOD)
 public @interface PulsarProducer {
 
     /**
@@ -56,23 +60,23 @@ public @interface PulsarProducer {
      * @return Topic to produce messages to
      */
     @AliasFor(member = "value")
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     String topic() default "";
 
     /**
      * @return Type of message serialization.
      */
-    MessageSchema schema() default MessageSchema.BYTES;
+    MessageSchema schema() default BYTES;
 
     /**
      * @return Compression type.
      */
-    CompressionType compressionType() default CompressionType.NONE;
+    CompressionType compressionType() default NONE;
 
     /**
      * @return Message routing mode.
      */
-    MessageRoutingMode messageRoutingMode() default MessageRoutingMode.RoundRobinPartition;
+    MessageRoutingMode messageRoutingMode() default RoundRobinPartition;
 
     /**
      * @return Produce messages of different schemas than specified at creation time
@@ -104,7 +108,7 @@ public @interface PulsarProducer {
      *
      * @return Max bytes per batch
      */
-    int batchingMaxBytes() default 1000 * 128;
+    int batchingMaxBytes() default 1024 * 128;
 
     /**
      * If this is enabled batching should be disabled.
@@ -126,5 +130,5 @@ public @interface PulsarProducer {
     /**
      * @return Change hashing scheme used to choose partition
      */
-    HashingScheme hashingScheme() default HashingScheme.JavaStringHash;
+    HashingScheme hashingScheme() default JavaStringHash;
 }

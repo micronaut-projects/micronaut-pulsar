@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -51,7 +51,7 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarClientIntroductionAdvice.class);
 
-    private final Map<String, Producer<?>> producers;
+    private final Map<String, Producer<?>> producers = new ConcurrentHashMap<>();
     private final PulsarClient pulsarClient;
     private final SchemaResolver schemaResolver;
     private final BeanContext beanContext;
@@ -62,67 +62,65 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
         this.pulsarClient = pulsarClient;
         this.schemaResolver = schemaResolver;
         this.beanContext = beanContext;
-        producers = new ConcurrentHashMap<>();
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
     public Object intercept(MethodInvocationContext<Object, Object> context) {
-        if (context.hasAnnotation(PulsarProducer.class)) {
-            AnnotationValue<PulsarProducer> annotationValue = context.findAnnotation(PulsarProducer.class)
-                    .orElseThrow(() -> new IllegalStateException("No @PulsarProducer on method: " + context));
+        if (!context.hasAnnotation(PulsarProducer.class)) {
+            return context.proceed();
+        }
 
-            String producerId = annotationValue.stringValue("producerName")
-                    .orElse(context.getExecutableMethod().getMethodName());
-            Producer producer = producers.get(producerId);
+        AnnotationValue<PulsarProducer> annotationValue = context.findAnnotation(PulsarProducer.class)
+                .orElseThrow(() -> new IllegalStateException("No @PulsarProducer on method: " + context));
 
-            Object value = context.getParameterValues()[0];
+        String producerId = annotationValue.stringValue("producerName")
+                .orElse(context.getExecutableMethod().getMethodName());
+        Producer producer = producers.get(producerId);
 
-            if (null == producer) {
-                producer = beanContext.createBean(Producer.class,
-                        pulsarClient,
-                        annotationValue,
-                        schemaResolver,
-                        context.getMethodName(),
-                        value.getClass()
-                );
-                producers.put(producerId, producer);
+        Object value = context.getParameterValues()[0];
+
+        if (null == producer) {
+            producer = beanContext.createBean(Producer.class,
+                    pulsarClient,
+                    annotationValue,
+                    schemaResolver,
+                    context.getMethodName(),
+                    value.getClass()
+            );
+            producers.put(producerId, producer);
+        }
+
+        ReturnType<?> returnType = context.getReturnType();
+
+        if (returnType.isAsyncOrReactive()) {
+            if (returnType.isAsync()) {
+                return produce(producer, value);
             }
-
-            ReturnType<?> returnType = context.getReturnType();
-
-            if (returnType.isAsyncOrReactive()) {
-                if (returnType.isAsync()) {
-                    return produce(producer, value);
-                }
-                if (returnType.isReactive()) {
-                    Flowable resulting = Flowable.fromFuture(produce(producer, value));
-                    return Publishers.convertPublisher(resulting, returnType.getType());
-                }
-            }
-
-            try {
-                MessageId sent = producer.send(value);
-                if (returnType.isVoid()) {
-                    return Void.TYPE;
-                }
-
-                if (returnType.getType() == MessageId.class) {
-                    return sent;
-                }
-
-                if (returnType.getType() == value.getClass()) {
-                    return value;
-                }
-
-                throw new IllegalArgumentException("Pulsar producers can only return MessageId or body being sent.");
-            } catch (PulsarClientException e) {
-                if (LOG.isErrorEnabled()) {
-                    LOG.error("Failed to produce message on producer " + producerId, e);
-                }
-                throw new RuntimeException("Failed to produce a message on " + producerId, e);
+            if (returnType.isReactive()) {
+                Flowable resulting = Flowable.fromFuture(produce(producer, value));
+                return Publishers.convertPublisher(resulting, returnType.getType());
             }
         }
-        return context.proceed();
+
+        try {
+            MessageId sent = producer.send(value);
+            if (returnType.isVoid()) {
+                return Void.TYPE;
+            }
+
+            if (returnType.getType() == MessageId.class) {
+                return sent;
+            }
+
+            if (returnType.getType() == value.getClass()) {
+                return value;
+            }
+
+            throw new IllegalArgumentException("Pulsar producers can only return MessageId or body being sent.");
+        } catch (PulsarClientException e) {
+            LOG.error("Failed to produce message on producer {}", producerId, e);
+            throw new RuntimeException("Failed to produce a message on " + producerId, e);
+        }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -133,10 +131,14 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
     @Override
     @PreDestroy
     public void close() throws Exception {
-        for (Producer<?> producer : this.producers.values()) {
+        for (Producer<?> producer : producers.values()) {
             if (producer.isConnected()) {
-                producer.flush();
-                producer.close();
+                try {
+                    producer.flush();
+                    producer.close();
+                } catch (Exception e) {
+                    LOG.warn("Error shutting down Pulsar producer: {}", e.getMessage(), e);
+                }
             }
         }
     }

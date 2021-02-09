@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,18 +31,34 @@ import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.ConsumerSubscribedEvent;
-import org.apache.pulsar.client.api.*;
+import org.apache.pulsar.client.api.Consumer;
+import org.apache.pulsar.client.api.ConsumerBuilder;
+import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.RegexSubscriptionMode;
+import org.apache.pulsar.client.api.Schema;
+import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.time.Duration;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
+
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Processes beans containing methods annotated with @PulsarConsumer.
@@ -78,18 +94,19 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     @Override
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
         List<AnnotationValue<PulsarConsumer>> topicAnnotation = method.getAnnotationValuesByType(PulsarConsumer.class);
-        AnnotationValue<PulsarSubscription> subscriptionAnnotation = method.getAnnotation(PulsarSubscription.class);
-
         if (topicAnnotation.isEmpty()) {
             return; //probably never happens
         }
+
+        AnnotationValue<PulsarSubscription> subscriptionAnnotation = method.getAnnotation(PulsarSubscription.class);
 
         Argument<?>[] arguments = method.getArguments();
 
         if (ArrayUtils.isEmpty(arguments)) {
             throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept at least 1 parameter");
-        } else if (arguments.length > 2) {
-            throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept maximum of 2 parameters " +
+        }
+        if (arguments.length > 2) {
+            throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept maximum of 2 parameters, " +
                     "one for message body and one for " + Consumer.class.getName());
         }
 
@@ -116,9 +133,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                     consumers.put(name, consumer);
                     applicationEventPublisher.publishEvent(new ConsumerSubscribedEvent(consumer));
                 } catch (PulsarClientException e) {
-                    if (LOG.isErrorEnabled()) {
-                        LOG.error("Could not start pulsar producer " + name, e);
-                    }
+                    LOG.error("Could not start pulsar producer {}", name, e);
                 }
             }
         }
@@ -132,15 +147,16 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                                             Object bean) {
 
         Argument<?>[] methodArguments = method.getArguments();
-        Class<?> messageBodyType;
-        Optional<Argument<?>> bodyType = Arrays.stream(methodArguments).filter(x -> !Consumer.class.isAssignableFrom(x.getType())).findFirst();
 
+        Optional<Argument<?>> bodyType = Arrays.stream(methodArguments)
+                .filter(x -> !Consumer.class.isAssignableFrom(x.getType()))
+                .findFirst();
         if (!bodyType.isPresent()) {
             throw new IllegalArgumentException("Method annotated with pulsar consumer must accept 1 parameter that's of" +
                     " type other than " + Consumer.class.getName() + " class which can be used to accept pulsar message.");
         }
 
-        messageBodyType = bodyType.get().getType();
+        Class<?> messageBodyType = bodyType.get().getType();
         boolean useMessageWrapper = Message.class.isAssignableFrom(messageBodyType); //users can consume only message body and ignore the rest
 
         Schema<?> schema;
@@ -165,7 +181,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         consumerAnnotation.stringValue("ackTimeout").map(Duration::parse).ifPresent(duration -> {
             long millis = duration.toMillis();
             if (1000 < millis) { // pulsar lib demands gt 1 second not gte
-                consumer.ackTimeout(millis, TimeUnit.MILLISECONDS);
+                consumer.ackTimeout(millis, MILLISECONDS);
             } else {
                 throw new IllegalArgumentException("Acknowledge timeout must be greater than 1 second");
             }
@@ -180,7 +196,8 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         return consumer;
     }
 
-    private void resolveTopic(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer) {
+    private void resolveTopic(AnnotationValue<PulsarConsumer> consumerAnnotation,
+                              ConsumerBuilder<?> consumer) {
         String topic = consumerAnnotation.stringValue().orElse(null);
         String[] topics = consumerAnnotation.stringValues("topics");
         String topicsPattern = consumerAnnotation.stringValue("topicsPattern").orElse(null);
@@ -196,27 +213,32 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         }
     }
 
-    private void resolveTopicsPattern(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer, String topicsPattern) {
+    private void resolveTopicsPattern(AnnotationValue<PulsarConsumer> consumerAnnotation,
+                                      ConsumerBuilder<?> consumer, String topicsPattern) {
         consumer.topicsPattern(topicsPattern);
-        RegexSubscriptionMode mode = consumerAnnotation.getRequiredValue("subscriptionTopicsMode", RegexSubscriptionMode.class);
+        RegexSubscriptionMode mode = consumerAnnotation.getRequiredValue(
+                "subscriptionTopicsMode", RegexSubscriptionMode.class);
         consumer.subscriptionTopicsMode(mode);
         OptionalInt topicsRefresh = consumerAnnotation.intValue("patternAutoDiscoveryPeriod");
         if (topicsRefresh.isPresent()) {
             if (topicsRefresh.getAsInt() < 1) {
                 throw new IllegalArgumentException("Topic " + topicsPattern + " refresh time cannot be below 1 second.");
             }
-            consumer.patternAutoDiscoveryPeriod(topicsRefresh.getAsInt(), TimeUnit.SECONDS);
+            consumer.patternAutoDiscoveryPeriod(topicsRefresh.getAsInt(), SECONDS);
         }
     }
 
-    private void consumerValues(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer) {
+    private void consumerValues(AnnotationValue<PulsarConsumer> consumerAnnotation,
+                                ConsumerBuilder<?> consumer) {
         String subscriptionName = consumerAnnotation.stringValue("subscription")
                 .orElseGet(() -> "pulsar-subscription-" + consumerCounter.incrementAndGet());
-        SubscriptionType subscriptionType = consumerAnnotation.getRequiredValue("subscription", SubscriptionType.class);
+        SubscriptionType subscriptionType = consumerAnnotation.getRequiredValue(
+                "subscriptionType", SubscriptionType.class);
         consumer.subscriptionName(subscriptionName).subscriptionType(subscriptionType);
     }
 
-    private void subscriptionValues(AnnotationValue<PulsarSubscription> subscription, ConsumerBuilder<?> consumer) {
+    private void subscriptionValues(AnnotationValue<PulsarSubscription> subscription,
+                                    ConsumerBuilder<?> consumer) {
         String subscriptionName = subscription.stringValue("subscriptionName")
                 .orElse("pulsar-subscription-" + consumerCounter.incrementAndGet());
 
@@ -228,15 +250,19 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         Optional<String> ackGroupTimeout = subscription.stringValue("ackGroupTimeout");
         if (ackGroupTimeout.isPresent()) {
             Duration duration = Duration.parse(ackGroupTimeout.get());
-            consumer.acknowledgmentGroupTime(duration.toNanos(), TimeUnit.NANOSECONDS);
+            consumer.acknowledgmentGroupTime(duration.toNanos(), NANOSECONDS);
         }
     }
 
     @Override
-    public void close() throws PulsarClientException {
+    public void close() {
         for (Consumer<?> consumer : getConsumers().values()) {
-            consumer.unsubscribe();
-            consumer.close();
+            try {
+                consumer.unsubscribe();
+                consumer.close();
+            } catch (Exception e) {
+                LOG.warn("Error shutting down Pulsar consumer: {}", e.getMessage(), e);
+            }
         }
     }
 
@@ -265,11 +291,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
     @Override
     public boolean isPaused(@Nonnull String id) {
-        if (StringUtils.isNotEmpty(id) && consumers.containsKey(id)) {
-            return paused.containsKey(id);
-        } else {
+        if (StringUtils.isEmpty(id) || !consumers.containsKey(id)) {
             throw new IllegalArgumentException("No consumer found for ID: " + id);
         }
+        return paused.containsKey(id);
     }
 
     @Override
@@ -284,11 +309,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
     @Override
     public void resume(@Nonnull String id) {
-        if (StringUtils.isNotEmpty(id) && paused.containsKey(id)) {
-            Consumer<?> consumer = paused.remove(id);
-            consumer.resume();
-        } else {
+        if (StringUtils.isEmpty(id) || !paused.containsKey(id)) {
             throw new IllegalArgumentException("No paused consumer found for ID: " + id);
         }
+        Consumer<?> consumer = paused.remove(id);
+        consumer.resume();
     }
 }

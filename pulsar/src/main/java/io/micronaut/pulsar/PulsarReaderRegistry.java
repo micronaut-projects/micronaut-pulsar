@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,10 +16,11 @@
 package io.micronaut.pulsar;
 
 import org.apache.pulsar.client.api.Reader;
+
 import java.util.Collection;
 
 /**
- * Keep track of all created Pulsar readers.
+ * Keeps track of all created Pulsar readers.
  *
  * @author Haris Secic
  * @since 1.0

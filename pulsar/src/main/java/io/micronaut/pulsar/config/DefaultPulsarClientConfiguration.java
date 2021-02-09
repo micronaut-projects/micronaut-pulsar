@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,7 +19,6 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.core.convert.ConversionService;
-import io.micronaut.core.naming.conventions.StringConvention;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider;
 import org.apache.pulsar.client.api.Authentication;
@@ -34,14 +33,17 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Properties;
 
+import static io.micronaut.core.naming.conventions.StringConvention.RAW;
+import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.PREFIX;
+
 /**
  * Default properties holder for Pulsar client configuration.
  *
  * @author Haris Secic
  * @since 1.0
  */
-@ConfigurationProperties(AbstractPulsarConfiguration.PREFIX)
-@Requires(AbstractPulsarConfiguration.PREFIX)
+@ConfigurationProperties(PREFIX)
+@Requires(PREFIX)
 @Requires(missingBeans = PulsarClientConfiguration.class)
 public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfiguration implements PulsarClientConfiguration {
 
@@ -90,7 +92,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     public void setAuthenticationJwt(@Nullable String authenticationJwt) {
-        this.pulsarAuthentication = new AuthenticationToken(authenticationJwt);
+        pulsarAuthentication = new AuthenticationToken(authenticationJwt);
     }
 
     public Optional<String> getSslProvider() {
@@ -120,12 +122,12 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     public Optional<ServiceUrlProvider> getServiceUrlProvider() {
-        return this.serviceUrlProvider;
+        return serviceUrlProvider;
     }
 
     @Override
     public Authentication getAuthentication() {
-        return Optional.ofNullable(this.pulsarAuthentication).orElse(DEFAULT_PULSAR_AUTHENTICATION);
+        return Optional.ofNullable(pulsarAuthentication).orElse(DEFAULT_PULSAR_AUTHENTICATION);
     }
 
     /**
@@ -145,7 +147,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     public Optional<URL> getOauthCredentialsUrl() {
-        return Optional.ofNullable(this.oauthCredentialsUrl);
+        return Optional.ofNullable(oauthCredentialsUrl);
     }
 
     /**
@@ -169,14 +171,16 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     private void generateAuthenticationOAuth2() {
-        if (null == this.oauthIssuerUrl || null == this.oauthCredentialsUrl || StringUtils.isEmpty(oauthAudience)) {
+        if (null == oauthIssuerUrl || null == oauthCredentialsUrl || StringUtils.isEmpty(oauthAudience)) {
             return;
         }
-        this.pulsarAuthentication = AuthenticationFactoryOAuth2.clientCredentials(this.oauthIssuerUrl, this.oauthCredentialsUrl, oauthAudience);
+        pulsarAuthentication = AuthenticationFactoryOAuth2.clientCredentials(oauthIssuerUrl, oauthCredentialsUrl, oauthAudience);
     }
 
     private static Properties resolveDefaultConfiguration(Environment environment) {
-        Map<String, Object> values = environment.containsProperties(PREFIX) ? environment.getProperties(PREFIX, StringConvention.RAW) : Collections.emptyMap();
+        Map<String, Object> values = environment.containsProperties(PREFIX)
+                ? environment.getProperties(PREFIX, RAW)
+                : Collections.emptyMap();
         Properties properties = new Properties();
         values.forEach((key, value) -> {
             if (ConversionService.SHARED.canConvert(value.getClass(), String.class)) {

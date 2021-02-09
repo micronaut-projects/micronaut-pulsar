@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,14 +18,14 @@ package io.micronaut.pulsar.events;
 import org.apache.pulsar.client.api.Consumer;
 
 /**
- * Event to produce when Pulsar consumer connects to a broker and starts listening to specified topics.
+ * Produced when Pulsar consumer connects to a broker and starts listening to specified topics.
  *
  * @since 1.0
  * @author Haris Secic
  */
 public final class ConsumerSubscribedEvent {
 
-    private Consumer<?> consumer;
+    private final Consumer<?> consumer;
 
     public ConsumerSubscribedEvent(Consumer<?> consumer) {
         this.consumer = consumer;

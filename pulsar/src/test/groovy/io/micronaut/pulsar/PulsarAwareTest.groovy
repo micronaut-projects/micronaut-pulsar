@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,13 @@
 package io.micronaut.pulsar
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.core.util.CollectionUtils
-import io.micronaut.core.util.StringUtils
 import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
+
+import static io.micronaut.core.util.StringUtils.EMPTY_STRING_ARRAY
+import static io.micronaut.pulsar.PulsarDefaultContainer.PULSAR_CONTAINER
 
 abstract class PulsarAwareTest extends Specification {
 
@@ -37,10 +38,11 @@ abstract class PulsarAwareTest extends Specification {
     @AutoCleanup
     PulsarDefaultContainer pulsarContainer // will trigger close and dispose containers
 
-    def setupSpec() {
+    void setupSpec() {
         embeddedServer = ApplicationContext.run(EmbeddedServer,
-                CollectionUtils.mapOf("pulsar.service-url", PulsarDefaultContainer.PULSAR_CONTAINER.pulsarBrokerUrl),
-                StringUtils.EMPTY_STRING_ARRAY
+                ['pulsar.service-url': PULSAR_CONTAINER.pulsarBrokerUrl,
+                 'spec.name': getClass().simpleName],
+                EMPTY_STRING_ARRAY
         )
         context = embeddedServer.applicationContext
     }

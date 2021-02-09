@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,6 @@ import io.micronaut.pulsar.annotation.PulsarProducerClient;
 import io.micronaut.pulsar.processor.SchemaResolver;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,16 +51,16 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarClientScope.class);
 
-    private final Map<String, List<Producer<?>>> producersCollection;
+    private final Map<String, List<Producer<?>>> producersCollection = new ConcurrentHashMap<>();
     private final BeanContext beanContext;
     private final SchemaResolver schemaResolver;
     private final PulsarClient pulsarClient;
 
-    public PulsarClientScope(BeanContext beanContext, SchemaResolver schemaResolver, PulsarClient pulsarClient) {
+    public PulsarClientScope(BeanContext beanContext, SchemaResolver schemaResolver,
+                             PulsarClient pulsarClient) {
         this.beanContext = beanContext;
         this.schemaResolver = schemaResolver;
         this.pulsarClient = pulsarClient;
-        producersCollection = new ConcurrentHashMap<>();
     }
 
     @Override
@@ -71,10 +70,11 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
 
     @SuppressWarnings({"unchecked"})
     @Override
-    public <T> T get(BeanResolutionContext resolutionContext, BeanDefinition<T> beanDefinition, BeanIdentifier identifier, Provider<T> provider) {
+    public <T> T get(BeanResolutionContext resolutionContext, BeanDefinition<T> beanDefinition,
+                     BeanIdentifier identifier, Provider<T> provider) {
         List<Producer<?>> producerMethods = new ArrayList<>();
-        for (ExecutableMethod<T, ?> x : beanDefinition.getExecutableMethods()) {
-            AnnotationValue<PulsarProducer> annotation = x.getAnnotation(PulsarProducer.class);
+        for (ExecutableMethod<T, ?> method : beanDefinition.getExecutableMethods()) {
+            AnnotationValue<PulsarProducer> annotation = method.getAnnotation(PulsarProducer.class);
             if (null != annotation) {
                 producerMethods.add(createProducer(annotation));
             }
@@ -88,7 +88,8 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
         if (beanContext.containsBean(Producer.class, Qualifiers.byName(producerId))) {
             return beanContext.getBean(Producer.class, Qualifiers.byName(producerId));
         }
-        return beanContext.createBean(Producer.class, Qualifiers.byName(producerId), pulsarClient, annotationValue, schemaResolver);
+        return beanContext.createBean(Producer.class, Qualifiers.byName(producerId),
+                pulsarClient, annotationValue, schemaResolver);
     }
 
     @SuppressWarnings("unchecked")
@@ -100,9 +101,7 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
             for (Producer<?> producer : producers) {
                 producer.closeAsync().handle((v, ex) -> {
                     if (null != ex) {
-                        if (LOG.isWarnEnabled()) {
-                            LOG.warn("Error shutting down Pulsar producer: " + producer.getProducerName());
-                        }
+                        LOG.warn("Error shutting down Pulsar producer: {}", producer.getProducerName());
                     }
                     return v;
                 });
@@ -118,10 +117,8 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
             for (Producer<?> producer : producers) {
                 try {
                     producer.close();
-                } catch (PulsarClientException e) {
-                    if (LOG.isWarnEnabled()) {
-                        LOG.warn("Error shutting down Pulsar producer: " + e.getMessage(), e);
-                    }
+                } catch (Exception e) {
+                    LOG.warn("Error shutting down Pulsar producer: {}", e.getMessage(), e);
                 }
             }
         }

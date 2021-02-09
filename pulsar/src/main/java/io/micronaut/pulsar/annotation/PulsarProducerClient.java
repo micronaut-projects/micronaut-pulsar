@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,8 +16,8 @@
 package io.micronaut.pulsar.annotation;
 
 import io.micronaut.aop.Introduction;
-import io.micronaut.pulsar.intercept.PulsarClientIntroductionAdvice;
 import io.micronaut.context.annotation.Type;
+import io.micronaut.pulsar.intercept.PulsarClientIntroductionAdvice;
 import io.micronaut.retry.annotation.Recoverable;
 
 import javax.inject.Scope;
@@ -28,7 +28,7 @@ import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Annotation for marking a type as bean containing producer methods.
+ * Marks a type as a bean containing producer methods.
  * To avoid mixing up with PulsarClient interface from official library "Producer" part was introduced.
  *
  * @author Haris Secic

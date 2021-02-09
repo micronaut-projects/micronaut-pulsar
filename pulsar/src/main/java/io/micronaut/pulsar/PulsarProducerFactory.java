@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,13 +15,20 @@
  */
 package io.micronaut.pulsar;
 
-import io.micronaut.pulsar.annotation.PulsarProducer;
-import io.micronaut.pulsar.processor.SchemaResolver;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.annotation.AnnotationValue;
-import org.apache.pulsar.client.api.*;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.processor.SchemaResolver;
+import org.apache.pulsar.client.api.CompressionType;
+import org.apache.pulsar.client.api.HashingScheme;
+import org.apache.pulsar.client.api.MessageRoutingMode;
+import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.ProducerBuilder;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.Schema;
 
 /**
  * Pulsar {@link Producer} factory.
@@ -52,10 +59,15 @@ public class PulsarProducerFactory {
 
         Schema<T> schema = (Schema<T>) schemaResolver.decideSchema(annotationValue, bodyType);
 
-        String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
-        String topic = annotationValue.stringValue("topic").orElseGet(() -> annotationValue.getRequiredValue(String.class));
+        String producerName = annotationValue.stringValue("producerName")
+                .orElse(annotatedMethodName);
+        String topic = annotationValue.stringValue("topic")
+                .orElseGet(() -> annotationValue.getRequiredValue(String.class));
 
-        ProducerBuilder<T> producerBuilder = pulsarClient.newProducer(schema).producerName(producerName).topic(topic);
+        ProducerBuilder<T> producerBuilder = pulsarClient
+                .newProducer(schema)
+                .producerName(producerName)
+                .topic(topic);
 
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);

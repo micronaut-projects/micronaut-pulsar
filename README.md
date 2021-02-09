@@ -3,7 +3,7 @@
 [![Maven Central](https://img.shields.io/maven-central/v/io.micronaut.pulsar/micronaut-pulsar.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22io.micronaut.pulsar%22%20AND%20a:%22micronaut-pulsar%22)
 [![Build Status](https://github.com/micronaut-projects/micronaut-pulsar/workflows/Java%20CI/badge.svg)](https://github.com/micronaut-projects/micronaut-pulsar/actions)
 
-Micronaut Pulsar is integration between Apache Pulsar messaging system and Micronaut framework.
+This project includes integration between Apache Pulsar and Micronaut.
 ## WORK IN PROGRESS
 ## Documentation
 

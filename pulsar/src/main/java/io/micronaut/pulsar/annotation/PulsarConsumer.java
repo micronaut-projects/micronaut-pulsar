@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,21 @@ package io.micronaut.pulsar.annotation;
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.messaging.annotation.MessageListener;
 import io.micronaut.pulsar.MessageSchema;
-import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
 import org.apache.pulsar.client.api.SubscriptionType;
 
 import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
+import static io.micronaut.pulsar.MessageSchema.BYTES;
+import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_PATTERN_VALIDATOR;
+import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR;
+import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import static org.apache.pulsar.client.api.RegexSubscriptionMode.AllTopics;
+import static org.apache.pulsar.client.api.SubscriptionType.Exclusive;
 
 /**
  * Marks a method as a Pulsar Consumer.
@@ -38,7 +42,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Documented
 @Retention(RUNTIME)
-@Target({ElementType.METHOD})
+@Target(METHOD)
 @MessageListener
 public @interface PulsarConsumer {
 
@@ -46,7 +50,7 @@ public @interface PulsarConsumer {
      * @return Same as {@link #topic()}
      */
     @AliasFor(member = "topic")
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     String value() default "";
 
     /**
@@ -55,7 +59,7 @@ public @interface PulsarConsumer {
      *
      * @return Topic name to listen to
      */
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     @AliasFor(member = "value")
     String topic() default "";
 
@@ -63,14 +67,14 @@ public @interface PulsarConsumer {
      * Has precedence over {@code topicPattern}.
      * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.
      */
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)
+    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     String[] topics() default {};
 
     /**
      * Ignored if {@code topics} attribute is set.
      * @return Topics name in form of tenantName/namespace/topic-name-pattern.
      */
-    @Pattern(regexp = AbstractPulsarConfiguration.TOPIC_NAME_PATTERN_VALIDATOR)
+    @Pattern(regexp = TOPIC_NAME_PATTERN_VALIDATOR)
     String topicsPattern() default "";
 
     /**
@@ -78,7 +82,7 @@ public @interface PulsarConsumer {
      *
      * @return Schema to use with pulsar topic consumer
      */
-    MessageSchema schema() default MessageSchema.BYTES;
+    MessageSchema schema() default BYTES;
 
     /**
      * @return Consumer name for more descriptive monitoring
@@ -89,10 +93,11 @@ public @interface PulsarConsumer {
      * @return Subscription name in case consumer was defined outside of the {@link PulsarSubscription} annotated class
      */
     String subscription() default "";
+
     /**
      * @return Subscription type in case consumer was defined outside of {@link PulsarSubscription} annotated class
      */
-    SubscriptionType subscriptionType() default SubscriptionType.Exclusive;
+    SubscriptionType subscriptionType() default Exclusive;
 
     /**
      * Ignored if {@code topics()} attribute is set.
@@ -102,7 +107,7 @@ public @interface PulsarConsumer {
      * <p>
      * @return subscription
      */
-    RegexSubscriptionMode subscriptionTopicsMode() default RegexSubscriptionMode.AllTopics;
+    RegexSubscriptionMode subscriptionTopicsMode() default AllTopics;
 
     /**
      * Used in combination with {@link this#topicsPattern()}. Ignored using {@link this#topics()}. Must be greater than

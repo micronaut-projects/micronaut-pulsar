@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,27 +15,33 @@
  */
 package io.micronaut.pulsar
 
+import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarReader
+import org.apache.pulsar.client.api.Message
+import org.apache.pulsar.client.api.MessageId
+import org.apache.pulsar.client.api.Producer
 import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.Reader
-import org.apache.pulsar.client.api.Schema
 import spock.lang.Stepwise
 
 import javax.inject.Singleton
-import java.util.concurrent.TimeUnit
+
+import static java.util.concurrent.TimeUnit.SECONDS
+import static org.apache.pulsar.client.api.Schema.STRING
 
 @Stepwise
 class PulsarReaderSpec extends PulsarAwareTest {
 
-    static final String PULSAR_READER_TEST_TOPIC = "public/default/simple-reader"
+    private static final String PULSAR_READER_TEST_TOPIC = "public/default/simple-reader"
 
-    static {
-        PulsarDefaultContainer.createNonPartitionedTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
+    void setupSpec() {
+        PulsarDefaultContainer.createNonPartitionedTopic(PULSAR_READER_TEST_TOPIC)
     }
 
     @Singleton
+    @Requires(property = 'spec.name', value = 'PulsarReaderSpec')
     static class ReaderRequester {
-        private Reader<String> stringReader
+        private final Reader<String> stringReader
 
         ReaderRequester(@PulsarReader(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC) Reader<String> stringReader) {
             this.stringReader = stringReader
@@ -44,15 +50,18 @@ class PulsarReaderSpec extends PulsarAwareTest {
 
     void "test simple reader"() {
         given:
-        def topic = "persistent://$PulsarReaderSpec.PULSAR_READER_TEST_TOPIC"
-        def producer = context.getBean(PulsarClient).newProducer(Schema.STRING).topic(topic)
-                .producerName("string-producer").create()
-        def stringReader = context.getBean(ReaderRequester.class).stringReader
-        def message = "This is a message"
-        def messageId = producer.send(message)
+        String topic = "persistent://$PULSAR_READER_TEST_TOPIC"
+        Producer producer = context.getBean(PulsarClient)
+                .newProducer(STRING)
+                .topic(topic)
+                .producerName("string-producer")
+                .create()
+        Reader stringReader = context.getBean(ReaderRequester).stringReader
+        String message = "This is a message"
+        MessageId messageId = producer.send(message)
 
         when:
-        def receivedMessage = stringReader.readNext(60, TimeUnit.SECONDS)
+        Message receivedMessage = stringReader.readNext(60, SECONDS)
 
         then:
         messageId == receivedMessage.messageId

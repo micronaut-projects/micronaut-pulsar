@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@ package io.micronaut.pulsar.processor;
 import org.apache.pulsar.client.api.MessageListener;
 
 /**
- * This interface provides flexibility to implement {@link org.apache.pulsar.client.api.MessageListener} as beans
+ * Provides flexibility to implement {@link org.apache.pulsar.client.api.MessageListener} as beans
  * while still being able to override default listener resolver for Pulsar Consumers.
  *
  * @author Haris Secic

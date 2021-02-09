@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,13 @@ import io.micronaut.inject.FieldInjectionPoint;
 import io.micronaut.inject.InjectionPoint;
 import io.micronaut.pulsar.annotation.PulsarReader;
 import io.micronaut.pulsar.processor.SchemaResolver;
-import org.apache.pulsar.client.api.*;
+import org.apache.pulsar.client.api.MessageId;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.Reader;
+import org.apache.pulsar.client.api.Schema;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Map;
@@ -40,14 +46,15 @@ import java.util.concurrent.ConcurrentHashMap;
 @Factory
 public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry {
 
-    private final Map<String, Reader<?>> readers;
+    private static final Logger LOG = LoggerFactory.getLogger(PulsarReaderFactory.class);
+
+    private final Map<String, Reader<?>> readers = new ConcurrentHashMap<>();
     private final PulsarClient pulsarClient;
     private final SchemaResolver schemaResolver;
 
     public PulsarReaderFactory(PulsarClient pulsarClient, SchemaResolver schemaResolver) {
         this.pulsarClient = pulsarClient;
         this.schemaResolver = schemaResolver;
-        this.readers = new ConcurrentHashMap<>();
     }
 
     /**
@@ -59,8 +66,8 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
      */
     @Prototype
     public Reader<?> createReader(InjectionPoint<?> injectionPoint) throws PulsarClientException {
-        AnnotationValue<PulsarReader> annotation = injectionPoint.getAnnotation(PulsarReader.class);
 
+        AnnotationValue<PulsarReader> annotation = injectionPoint.getAnnotation(PulsarReader.class);
         if (null == annotation) { //is this state possible?
             throw new IllegalStateException("Failed to get value for bean annotated with PulsarReader");
         }
@@ -89,13 +96,22 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         boolean startFromLatestMessage = annotation.getRequiredValue("startMessageLatest", boolean.class);
         MessageId startMessageId = startFromLatestMessage ? MessageId.latest : MessageId.earliest;
 
-        return pulsarClient.newReader(schema).startMessageId(startMessageId).readerName(name).topic(topic).create();
+        return pulsarClient
+                .newReader(schema)
+                .startMessageId(startMessageId)
+                .readerName(name)
+                .topic(topic)
+                .create();
     }
 
     @Override
     public void close() throws Exception {
         for (Reader<?> reader : readers.values()) {
-            reader.close();
+            try {
+                reader.close();
+            } catch (Exception e) {
+                LOG.warn("Error shutting down Pulsar reader: {}", e.getMessage(), e);
+            }
         }
         readers.clear();
     }

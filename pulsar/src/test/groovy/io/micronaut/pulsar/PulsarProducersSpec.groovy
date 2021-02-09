@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,40 +15,35 @@
  */
 package io.micronaut.pulsar
 
+import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
-import io.micronaut.context.ApplicationContext
-import io.micronaut.core.util.CollectionUtils
-import io.micronaut.core.util.StringUtils
-import io.micronaut.runtime.server.EmbeddedServer
 import io.reactivex.Single
-import org.apache.pulsar.client.admin.PulsarAdmin
 import org.apache.pulsar.client.api.MessageId
 import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.Schema
-import org.testcontainers.containers.PulsarContainer
-import spock.lang.AutoCleanup
-import spock.lang.Shared
-import spock.lang.Specification
+import org.apache.pulsar.client.api.Reader
 import spock.lang.Stepwise
 
-import java.util.concurrent.TimeUnit
+import static java.util.concurrent.TimeUnit.SECONDS
+import static org.apache.pulsar.client.api.MessageId.latest
+import static org.apache.pulsar.client.api.Schema.STRING
 
 @Stepwise
 class PulsarProducersSpec extends PulsarAwareTest {
 
-    static final PULSAR_PRODUCER_TEST_TOPIC = "persistent://public/default/test2"
+    private static final String PULSAR_PRODUCER_TEST_TOPIC = "persistent://public/default/test2"
 
     static {
-        PulsarDefaultContainer.createNonPartitionedTopic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
+        PulsarDefaultContainer.createNonPartitionedTopic(PULSAR_PRODUCER_TEST_TOPIC)
     }
 
     void "test simple producer"() {
         when:
         ProducerTester producer = context.getBean(ProducerTester)
-        def reader = context.getBean(PulsarClient).newReader(Schema.STRING)
-                .startMessageId(MessageId.latest)
-                .topic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
+        Reader reader = context.getBean(PulsarClient)
+                .newReader(STRING)
+                .startMessageId(latest)
+                .topic(PULSAR_PRODUCER_TEST_TOPIC)
                 .create()
         String message = "This should be received"
         //messages will be read sequentially
@@ -58,25 +53,37 @@ class PulsarProducersSpec extends PulsarAwareTest {
         Single<MessageId> reactiveMessage = producer.reactiveMessage(message)
 
         then:
-        message == reader.readNext(60, TimeUnit.SECONDS).value
-        paramReturn == reader.readNext(60, TimeUnit.SECONDS).value
-        nextMessage == reader.readNext(60, TimeUnit.SECONDS).messageId
-        reactiveMessage.blockingGet() == reader.readNext(60, TimeUnit.SECONDS).messageId
+        message == reader.readNext(60, SECONDS).value
+        paramReturn == reader.readNext(60, SECONDS).value
+        nextMessage == reader.readNext(60, SECONDS).messageId
+        reactiveMessage.blockingGet() == reader.readNext(60, SECONDS).messageId
 
         cleanup:
         reader.close()
     }
 
+    @Requires(property = 'spec.name', value = 'PulsarProducersSpec')
     @PulsarProducerClient
     static interface ProducerTester {
-        // statics in groovy must be referenced by full class name or else it give empty values on some runtimes
-        @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer")
+
+        @PulsarProducer(
+                topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC,
+                producerName = "test-producer")
         void producer(String message);
-        @PulsarProducer(value = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer-2")
+
+        @PulsarProducer(
+                topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC,
+                producerName = "test-producer-2")
         String returnOnProduce(String message)
-        @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer-3")
+
+        @PulsarProducer(
+                topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC,
+                producerName = "test-producer-3")
         MessageId messageIdOnProduce(String message)
-        @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer-reactive")
+
+        @PulsarProducer(
+                topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC,
+                producerName = "test-producer-reactive")
         Single<MessageId> reactiveMessage(String message)
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2020 original authors
+ * Copyright 2017-2021 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,20 +22,20 @@ class PulsarDefaultContainer implements AutoCloseable {
 
     static PulsarAdmin PULSAR_ADMIN
 
-    static PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.7.0").with {
+    static final PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.7.0").with {
         it.start()
-        Thread.sleep(1000) // for some reason clusters don't get proper boot this delay helps a bit for awaiting clusters
-        PulsarDefaultContainer.PULSAR_ADMIN = PulsarAdmin.builder().serviceHttpUrl(it.httpServiceUrl).build()
+        sleep 1000 // for some reason clusters don't get proper boot this delay helps a bit for awaiting clusters
+        PULSAR_ADMIN = PulsarAdmin.builder().serviceHttpUrl(it.httpServiceUrl).build()
         it
     }
 
     @Override
     void close() throws Exception {
-        PulsarDefaultContainer.PULSAR_ADMIN.close()
-        PulsarDefaultContainer.PULSAR_CONTAINER.close()
+        PULSAR_ADMIN.close()
+        PULSAR_CONTAINER.close()
     }
 
     static void createNonPartitionedTopic(String topic) {
-        PulsarDefaultContainer.PULSAR_ADMIN.topics().createNonPartitionedTopic(topic)
+        PULSAR_ADMIN.topics().createNonPartitionedTopic(topic)
     }
 }
