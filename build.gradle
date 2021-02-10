@@ -11,12 +11,16 @@ buildscript {
 }
 
 subprojects { Project subproject ->
-    group "io.micronaut.xxx"
+    group "io.micronaut.pulsar"
 
     apply plugin: "io.micronaut.build.common"
     apply plugin: "io.micronaut.build.dependency-updates"
 
-    apply plugin: "io.micronaut.build.publishing"
+    if (subproject.parent.name != 'docs-examples' &&
+            subproject.name != 'docs-examples' &&
+            !subproject.name.contains('test')) {
+        apply plugin: "io.micronaut.build.publishing"
+    }
 }
 
 apply plugin: "io.micronaut.build.docs"

@@ -3,5 +3,12 @@ introduction:
 releaseHistory: Release History
 quickStart:
   title: Quick Start
+consumer:
+  title: Pulsar Consumer
+reader:
+  title: Pulsar readers
+producer:
+  title: Pulsar producers
+authentication:
+  title: Authentication
 repository: Repository
-

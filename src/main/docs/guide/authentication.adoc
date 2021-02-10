@@ -1,0 +1,45 @@
+=== JWT
+
+To configure JWT authentication it's sufficient to specify a JWT in `application.yml` under `pulsar.authentication-jwt`, e.g.:
+
+[source,yaml]
+----
+pulsar:
+  authentication:
+    jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...
+----
+
+`io.micronaut.configuration.pulsar.config.AbstractPulsarConfiguration` is left public in case you want to implement more options yourself.
+
+It's planned to support specifying a JWT path, either an HTTP endpoint or URL to retrieve a fresh JWT.
+
+=== OAuth2
+
+To use OAuth2 authentication, configure three parameters like in the example below to connect to a Pulsar service that uses OAuth2:
+
+[source,yaml]
+----
+pulsar:
+    oauth-issuer-url: https://some-sso.io/...
+    oauth-credentials-url: file:///path/to/file.json
+    audience: localhost:6650
+----
+
+The issuer URL is the URL to the OAuth2 server generating tokens and such.
+
+Parameter `oauth-credentials-url` is used for reading a file containing necessary configuration for authenticating to the OAuth2 provider as a client app. The file should contain everything defined in Pulsar documentation, and type is limited to `client_credentials`. Below is an example of what the file should look like.
+
+[source,json]
+----
+{
+    "type": "client_credentials",
+    "client_id": "pulsar",
+    "client_secret": "1234-abcd-5678-9011-ab56ac4564sa56",
+    "issuer_url": "https://my-oauth2-server.com/auth/realms/pulsar-realm"
+}
+----
+
+The example shows something similar that could be set when using KeyCloak or a similar SSO. Audience must be set, but Pulsar service can be configured to ignore this value, and in such case you might put any text with one or more characters. For more details, see the https://pulsar.apache.org/docs/en/security-oauth2/[Apache Pulsar documentation]. Consult Java client to understand more about limitations for `client_credentials`.
+
+The Pulsar library takes care of the OAuth2 JWT refreshing and such. The Pulsar server must be configured to use OAuth2
+and _role_ attribute in its configuration files must be specified for Pulsar to be able to detect which kind of _"user"_ is requesting data.

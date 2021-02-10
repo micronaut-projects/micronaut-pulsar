@@ -1,1 +1,1 @@
-TODO
+This project includes integration between Micronaut and Apache Pulsar.

@@ -1,0 +1,48 @@
+== Readers vs Consumers
+
+Readers can be used to gain more control over message flow. However, they are limited to a single topic in contrast to consumers. On the other hand, you request each message "manually" by explicitly calling next message read. A more useful feature in the  case of Readers might be `seek`, where developers get the ability to position the reader where they want in the message log, thus being able to manually replay messages when required. Simply put, it's more similar to reading a file than reacting to an event, but the file gets modified by an external actor.
+
+== Creating readers
+
+To initialize a reader, declare a field annotated with `@PulsarReader` inside any bean or as a constructor argument.
+
+[source,java]
+----
+import io.micronaut.pulsar.annotation.PulsarProducerClient;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+
+@Singleton
+public class MyReader {
+    @PulsarReader(...)
+    private Reader reader;
+}
+----
+
+Only *topic* is a required parameter. However, it's important to note that if the producer name is not set, it will default to the method name which may cause collisions in case of non-unique method names.
+
+=== Producer return values
+
+If you need the `MessageId` from Pulsar, you can
+specify *MessageId* as the return type instead of *void* as given in examples below. If reactive or async return types are used,
+the method can only return `MessageId` as their return type like `Maybe<MessageId>`. If you have blocking methods,
+`MessageId` or the type of the parameter passed to function can be used as a return type of the method.
+
+Examples:
+[source,java]
+----
+import io.micronaut.pulsar.annotation.PulsarProducerClient;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+
+@PulsarProducerClient
+public interface ProducerTester {
+
+    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-1")
+    String returnParameter(String message);
+
+    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-2")
+    MessageId returnMessageId(String message);
+
+    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-3")
+    Single<MessageId> returnReactive(String message);
+}
+----

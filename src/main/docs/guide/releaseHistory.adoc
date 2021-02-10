@@ -1,3 +1,12 @@
 For this project, you can find a list of releases (with release notes) here:
 
 https://github.com/{githubSlug}/releases[https://github.com/{githubSlug}/releases]
+
+==== 1.0.0
+
+* Micronaut 2.1.3 minimum version
+* Authorization via JWT
+* Service URL Provider resolver
+* Basic support for consumers
+* Basic support for producers
+* Basic support for reader
