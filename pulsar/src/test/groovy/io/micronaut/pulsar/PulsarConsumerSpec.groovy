@@ -49,7 +49,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         context.containsBean(PulsarConsumerTopicListTester)
         PulsarDefaultContainer.PULSAR_ADMIN.topics().getList("public/default").findAll {
             it.contains("test") || it.contains("other2")
-        }.size() == 2
+        }.size() >= 2
     }
 
     void "test consumer read default topic"() {
