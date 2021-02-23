@@ -1,0 +1,6 @@
+applicationType: default
+defaultPackage: io.micronaut.pulsar.example
+testFramework: spock
+sourceLanguage: kotlin
+buildTool: gradle
+features: [annotation-api, app-name, gradle, http-client, kotlin, kotlin-application, logback, netty-server, readme, shade, spock, yaml]
