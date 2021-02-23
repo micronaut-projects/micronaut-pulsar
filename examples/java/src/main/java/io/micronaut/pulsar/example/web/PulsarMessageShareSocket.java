@@ -22,8 +22,10 @@ public class PulsarMessageShareSocket {
     }
 
     @OnMessage
-    public void onMessage(String tenant, String namespace, String topic) {
-        String report = String.format("A message has been received on %s/%s/%s", tenant, namespace, topic);
+    public void onMessage(String tenant, String namespace, String topic, String message, WebSocketSession ws) {
+        String id = "PULSAR";
+        if (null != ws) id = ws.getId();
+        String report = String.format("A message has been received on %s/%s/%s from %s", tenant, namespace, topic, id);
         broadcaster.broadcastAsync(report, this::isReport);
     }
 
