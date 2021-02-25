@@ -1,9 +1,9 @@
-package io.micronaut.pulsar.example.listeners;
+package example.listeners;
 
 import io.micronaut.core.convert.value.ConvertibleValues;
+import example.dto.PulsarMessage;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
-import io.micronaut.pulsar.example.dto.PulsarMessage;
 import io.micronaut.websocket.WebSocketBroadcaster;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;

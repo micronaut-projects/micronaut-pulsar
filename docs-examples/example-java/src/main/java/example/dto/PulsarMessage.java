@@ -1,4 +1,4 @@
-package io.micronaut.pulsar.example.dto;
+package example.dto;
 
 import java.time.OffsetDateTime;
 
