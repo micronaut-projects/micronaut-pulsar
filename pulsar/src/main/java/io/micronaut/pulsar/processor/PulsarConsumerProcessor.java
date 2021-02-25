@@ -93,9 +93,9 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
     @Override
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
-        List<AnnotationValue<PulsarConsumer>> topicAnnotation = method.getDeclaredAnnotation(PulsarConsumer.class);
-        if (null == topicAnnotation) {
-            return; //probably never happens
+        AnnotationValue<PulsarConsumer> topic = method.getDeclaredAnnotation(PulsarConsumer.class);
+        if (null == topic) {
+            return;
         }
 
         AnnotationValue<PulsarSubscription> subscriptionAnnotation = method.getAnnotation(PulsarSubscription.class);
@@ -116,25 +116,23 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
         Object bean = beanContext.getBean(beanDefinition.getBeanType());
 
-        for (AnnotationValue<PulsarConsumer> topic : topicAnnotation) {
-            ConsumerBuilder<?> consumerBuilder = processTopic(topic, subscriptionAnnotation, castMethod, bean);
-            boolean subscribeAsync = topic.getRequiredValue("subscribeAsync", Boolean.class);
-            String name = topic.stringValue("consumerName")
-                    .orElseGet(() -> "pulsar-consumer-" + consumerCounter.get());
-            consumerBuilder.consumerName(name);
-            if (subscribeAsync) {
-                consumerBuilder.subscribeAsync().thenAccept(x -> {
-                    consumers.put(name, x);
-                    applicationEventPublisher.publishEventAsync(new ConsumerSubscribedEvent(x));
-                });
-            } else {
-                try {
-                    Consumer<?> consumer = consumerBuilder.subscribe();
-                    consumers.put(name, consumer);
-                    applicationEventPublisher.publishEvent(new ConsumerSubscribedEvent(consumer));
-                } catch (PulsarClientException e) {
-                    LOG.error("Could not start pulsar producer {}", name, e);
-                }
+        ConsumerBuilder<?> consumerBuilder = processTopic(topic, subscriptionAnnotation, castMethod, bean);
+        boolean subscribeAsync = topic.getRequiredValue("subscribeAsync", Boolean.class);
+        String name = topic.stringValue("consumerName")
+                .orElseGet(() -> "pulsar-consumer-" + consumerCounter.get());
+        consumerBuilder.consumerName(name);
+        if (subscribeAsync) {
+            consumerBuilder.subscribeAsync().thenAccept(x -> {
+                consumers.put(name, x);
+                applicationEventPublisher.publishEventAsync(new ConsumerSubscribedEvent(x));
+            });
+        } else {
+            try {
+                Consumer<?> consumer = consumerBuilder.subscribe();
+                consumers.put(name, consumer);
+                applicationEventPublisher.publishEvent(new ConsumerSubscribedEvent(consumer));
+            } catch (PulsarClientException e) {
+                LOG.error("Could not start pulsar producer {}", name, e);
             }
         }
     }
