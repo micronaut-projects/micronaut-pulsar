@@ -1,4 +1,4 @@
-package io.micronaut.pulsar.example;
+package example;
 
 import io.micronaut.runtime.Micronaut;
 

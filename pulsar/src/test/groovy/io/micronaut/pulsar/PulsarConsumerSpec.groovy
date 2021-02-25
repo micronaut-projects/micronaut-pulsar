@@ -125,7 +125,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "subscribe-2-listeners")
+    @PulsarSubscription(subscriptionName = "subscribe-2-example.listeners")
     static class PulsarConsumerTopicPatternTester {
 
         String latestMessage

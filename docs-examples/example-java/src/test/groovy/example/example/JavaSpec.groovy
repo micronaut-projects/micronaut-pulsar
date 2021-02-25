@@ -1,4 +1,4 @@
-package io.micronaut.pulsar.example
+package example.example
 
 import io.micronaut.runtime.EmbeddedApplication
 import io.micronaut.test.extensions.spock.annotation.MicronautTest

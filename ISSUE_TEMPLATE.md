@@ -30,7 +30,7 @@ Tell us what happens instead
 - **Micronaut Version:** TODO
 - **JDK Version:** TODO
 
-### Example Application
+### Example example.Application
 
 - TODO: link to github repository with example that reproduces the issue
 

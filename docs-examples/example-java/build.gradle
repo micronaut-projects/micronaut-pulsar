@@ -1,39 +1,35 @@
 plugins {
     id("groovy")
+    id("java")
     id("com.github.johnrengelman.shadow") version "6.1.0"
     id("io.micronaut.application") version "1.3.4"
 }
 
 version = "0.1"
-group = "io.micronaut.pulsar.example"
+group = "example"
 
 repositories {
     mavenCentral()
-    maven { url "https://s01.oss.sonatype.org/content/repositories/snapshots/" }
 }
 
 micronaut {
     runtime("netty")
     testRuntime("spock2")
-    processing {
-        incremental(true)
-        annotations("io.micronaut.pulsar.example.*")
-    }
 }
 
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
+    implementation project(":pulsar")
+    implementation "io.micronaut:micronaut-http-server-netty"
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut:micronaut-runtime")
-    implementation("io.micronaut.pulsar:micronaut-pulsar:1.0.0-SNAPSHOT")
-    implementation("javax.annotation:javax.annotation-api")
     implementation("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
 }
 
 
 application {
-    mainClass.set("io.micronaut.pulsar.example.Application")
+    mainClass.set("example.Application")
 }
 
 java {

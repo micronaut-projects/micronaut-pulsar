@@ -85,7 +85,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     /**
-     * @param listenerThreads Number of threads to use with message listeners.
+     * @param listenerThreads Number of threads to use with message example.listeners.
      */
     public void setListenerThreads(Integer listenerThreads) {
         this.listenerThreads = listenerThreads;

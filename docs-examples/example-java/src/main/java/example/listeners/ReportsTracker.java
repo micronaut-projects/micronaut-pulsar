@@ -1,4 +1,4 @@
-package io.micronaut.pulsar.example.listeners;
+package example.listeners;
 
 import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;

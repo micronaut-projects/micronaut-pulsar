@@ -1,4 +1,4 @@
-package io.micronaut.pulsar.example.web;
+package example.web;
 
 import io.micronaut.websocket.WebSocketBroadcaster;
 import io.micronaut.websocket.WebSocketSession;
