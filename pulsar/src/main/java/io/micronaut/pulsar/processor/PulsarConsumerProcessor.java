@@ -93,7 +93,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
     @Override
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
-        AnnotationValue<PulsarConsumer> topicAnnotation = method.getDeclaredAnnotation(PulsarConsumer.class);
+        List<AnnotationValue<PulsarConsumer>> topicAnnotation = method.getDeclaredAnnotation(PulsarConsumer.class);
         if (null == topicAnnotation) {
             return; //probably never happens
         }
