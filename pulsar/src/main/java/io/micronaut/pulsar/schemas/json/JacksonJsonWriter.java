@@ -23,10 +23,11 @@ import org.apache.pulsar.client.api.schema.SchemaWriter;
 /**
  * JSON Schema Writer to allow using {@link ObjectMapper} from Micronaut instead of shaded one in Pulsar library.
  *
+ * @param <T> POJO type to process.
  * @author Haris Secic
  * @since 1.0
  */
-public class JacksonJsonWriter<T> implements SchemaWriter<T> {
+public final class JacksonJsonWriter<T> implements SchemaWriter<T> {
 
     private final ObjectMapper mapper;
 

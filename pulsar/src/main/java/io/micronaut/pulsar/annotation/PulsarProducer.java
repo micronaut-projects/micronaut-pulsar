@@ -15,8 +15,12 @@
  */
 package io.micronaut.pulsar.annotation;
 
+import io.micronaut.aop.Around;
+import io.micronaut.aop.Introduction;
 import io.micronaut.context.annotation.AliasFor;
+import io.micronaut.context.annotation.Type;
 import io.micronaut.pulsar.MessageSchema;
+import io.micronaut.pulsar.intercept.PulsarProducerAdvice;
 import org.apache.pulsar.client.api.CompressionType;
 import org.apache.pulsar.client.api.HashingScheme;
 import org.apache.pulsar.client.api.MessageRoutingMode;
@@ -43,6 +47,9 @@ import static org.apache.pulsar.client.api.MessageRoutingMode.RoundRobinPartitio
 @Documented
 @Retention(RUNTIME)
 @Target(METHOD)
+@Around
+@Introduction
+@Type(PulsarProducerAdvice.class)
 public @interface PulsarProducer {
 
     /**
@@ -131,4 +138,11 @@ public @interface PulsarProducer {
      * @return Change hashing scheme used to choose partition
      */
     HashingScheme hashingScheme() default JavaStringHash;
+
+    /**
+     * Defaults to false.
+     * Will be used to determine whether to send message prior to executing method code or before.
+     * @return Whether to send the message before calling actual implementation.
+     */
+    boolean firstSend() default false;
 }

@@ -29,7 +29,7 @@ import org.apache.pulsar.common.schema.SchemaType;
 
 /**
  * JSON Schema to allow using {@link ObjectMapper} from Micronaut instead of shaded one in Pulsar library.
- *
+ * @param <T> POJO type to send and receive via Pulsar.
  * @author Haris Secic
  * @since 1.0
  */
@@ -44,7 +44,6 @@ public class JsonSchema<T> extends AvroBaseStructSchema<T> {
     public static <T> JsonSchema<T> of(Class<T> pojo, ObjectMapper objectMapper) {
         SchemaReader<T> reader = new JacksonJsonReader<>(objectMapper, pojo);
         SchemaWriter<T> writer = new JacksonJsonWriter<>(objectMapper);
-        //SchemaInfo schema = SchemaUtil.parseSchemaInfo(schemaDefinition, SchemaType.JSON);
         SchemaDefinition<T> schemaDefinition = new SchemaDefinitionBuilderImpl<T>().withPojo(pojo)
                 .withSchemaReader(reader)
                 .withSchemaWriter(writer)

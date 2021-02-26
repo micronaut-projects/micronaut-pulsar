@@ -19,11 +19,9 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.BeanContext;
-import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.type.ReturnType;
-import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.pulsar.PulsarProducerRegistry;
 import io.micronaut.pulsar.annotation.PulsarProducer;
@@ -39,38 +37,37 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Intercepting pulsar {@link Producer} methods.
+ * Intercepting pulsar {@link Producer} methods. It can be used for creating implementation of interface methods or
+ * just to add producer behaviour to existing methods.
  *
  * @author Haris Secic
  * @since 1.0
  */
 @Singleton
-public final class PulsarProducerIntroductionAdvice implements MethodInterceptor<Object, Object>,
-        AutoCloseable,
-        PulsarProducerRegistry, ExecutableMethodProcessor<PulsarProducer> {
+public final class PulsarProducerAdvice implements MethodInterceptor<Object, Object>,
+        AutoCloseable, PulsarProducerRegistry {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PulsarProducerIntroductionAdvice.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PulsarProducerAdvice.class);
 
     private final Map<String, Producer<?>> producers = new ConcurrentHashMap<>();
     private final PulsarClient pulsarClient;
     private final SchemaResolver schemaResolver;
     private final BeanContext beanContext;
 
-    public PulsarProducerIntroductionAdvice(final PulsarClient pulsarClient,
-                                            final SchemaResolver schemaResolver,
-                                            final BeanContext beanContext) {
+    public PulsarProducerAdvice(final PulsarClient pulsarClient,
+                                final SchemaResolver schemaResolver,
+                                final BeanContext beanContext) {
         this.pulsarClient = pulsarClient;
         this.schemaResolver = schemaResolver;
         this.beanContext = beanContext;
     }
 
-    @SuppressWarnings({"unchecked", "rawtypes"})
+    @SuppressWarnings({"rawtypes"})
     public Object intercept(MethodInvocationContext<Object, Object> context) {
         if (!context.hasAnnotation(PulsarProducer.class)) {
             return context.proceed();
@@ -84,36 +81,62 @@ public final class PulsarProducerIntroductionAdvice implements MethodInterceptor
         Producer producer = getOrCreateProducer(method, annotationValue);
         String producerId = producer.getProducerName();
         ReturnType<?> returnType = method.getReturnType();
+        boolean sendBefore = annotationValue.booleanValue("sendBefore").orElse(false);
+        boolean isAbstract = context.isAbstract();
+
+        Object returnValue = null;
+        if (!isAbstract && !sendBefore) {
+            returnValue = context.proceed();
+        }
 
         if (returnType.isAsyncOrReactive()) {
-            if (returnType.isAsync()) {
-                return produce(producer, value);
+            Object abstractValue = sendAsync(value, producer, returnType);
+            if (isAbstract) {
+                return abstractValue;
             }
-            if (returnType.isReactive()) {
-                Flowable<?> resulting = Flowable.fromFuture(produce(producer, value));
-                return Publishers.convertPublisher(resulting, returnType.getType());
+            if (!sendBefore) {
+                return returnValue;
             }
+            return context.proceed();
         }
 
         try {
-            MessageId sent = producer.send(value);
-            if (returnType.isVoid()) {
-                return Void.TYPE;
+            if (!isAbstract) {
+                sendBlocking(value, producer, ReturnType.of(void.class));
+                return returnValue;
             }
-
-            if (returnType.getType() == MessageId.class) {
-                return sent;
-            }
-
-            if (returnType.getType() == value.getClass()) {
-                return value;
-            }
-
-            throw new IllegalArgumentException("Pulsar producers can only return MessageId or body being sent.");
+            return sendBlocking(value, producer, returnType);
         } catch (PulsarClientException e) {
             LOG.error("Failed to produce message on producer {}", producerId, e);
             throw new RuntimeException("Failed to produce a message on " + producerId, e);
         }
+    }
+
+    @SuppressWarnings({"rawtypes"})
+    private Object sendAsync(Object value, Producer producer, ReturnType<?> returnType) {
+        CompletableFuture<?> future = produce(producer, value);
+        if (returnType.isAsync()) {
+            return future;
+        }
+        return Publishers.convertPublisher(Flowable.fromFuture(future), returnType.getType());
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private Object sendBlocking(Object value, Producer producer, ReturnType<?> returnType) throws PulsarClientException {
+        MessageId sent = producer.send(value);
+        if (returnType.isVoid()) {
+            return Void.TYPE;
+        }
+
+        if (returnType.getType() == MessageId.class) {
+            return sent;
+        }
+
+        if (returnType.getType() == value.getClass()) {
+            return value;
+        }
+
+        throw new IllegalArgumentException("Pulsar abstract producers can only return MessageId or body being sent.");
     }
 
     private Producer<?> getOrCreateProducer(ExecutableMethod<?, ?> method,
@@ -126,7 +149,7 @@ public final class PulsarProducerIntroductionAdvice implements MethodInterceptor
                     annotationValue,
                     schemaResolver,
                     method.getMethodName(),
-                    method.getArguments()[0]
+                    method.getArguments()[0].getType()
             );
             producers.put(producerId, producer);
         }
@@ -166,10 +189,5 @@ public final class PulsarProducerIntroductionAdvice implements MethodInterceptor
     @Override
     public Set<String> getProducerIds() {
         return producers.keySet();
-    }
-
-    @Override
-    public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
-        getOrCreateProducer(method, Objects.requireNonNull(method.getDeclaredAnnotation(PulsarProducer.class)));
     }
 }

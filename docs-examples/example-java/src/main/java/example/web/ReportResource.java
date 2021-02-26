@@ -15,7 +15,7 @@ public class ReportResource {
         this.reportsTracker = reportsTracker;
     }
 
-    @Get(produces = MediaType.APPLICATION_JSON_STREAM)
+    @Get(produces = MediaType.TEXT_EVENT_STREAM)
     public Flowable<String> latestReport() {
         return reportsTracker.subscribe();
     }

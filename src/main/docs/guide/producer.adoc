@@ -14,7 +14,9 @@ public interface ProducerTester {
     void producer(String message);
 }
 ----
-Only *topic* is a required parameter. Other parameters are optional. However, it's important to note that if producer name is not set it will default to the method name, which may cause collisions in case of non-unique method names. Message content(body) type will be determined by the first method parameter type.
+Only *topic* is a required parameter. Other parameters are optional. However, it's important to note that if producer name
+is not set it will default to the method name, which may cause collisions in case of non-unique method names. Message content(body)
+type will be determined by the first method parameter type. It will default to JSON schema if not set explicitly.
 
 === Producer return values
 
@@ -42,3 +44,9 @@ public interface ProducerTester {
     Single<MessageId> returnReactive(String message);
 }
 ----
+
+Producers can be used as methods in other beans as well. For example: You can have a class annotated with `@PulsarSubscription`
+which reads messages from one place using methods annotated with `@PulsarConsumer` and decide in that method whether to pass
+on message to method annotated by the `@PulsarProducer`. This brings in flexibility to use code to decide what to send where
+instead of just providing `@SentTo` or alike which sends all messages accepted by the consumer to the defined topic. It's also
+useful as you can define additional logic that follows up sending or happens before it.

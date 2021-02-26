@@ -16,7 +16,6 @@
 package io.micronaut.pulsar.processor;
 
 import io.micronaut.context.BeanContext;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
@@ -30,7 +29,6 @@ import io.micronaut.pulsar.PulsarConsumerRegistry;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
-import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.pulsar.events.ConsumerSubscribedEvent;
 import org.apache.pulsar.client.api.*;
 import org.slf4j.Logger;
@@ -38,22 +36,13 @@ import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import javax.inject.Singleton;
-import javax.swing.text.html.Option;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.*;
 
 /**
  * Processes beans containing methods annotated with @PulsarConsumer.
@@ -171,14 +160,13 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         consumerAnnotation.stringValue("consumerName").ifPresent(consumer::consumerName);
 
         resolveTopic(consumerAnnotation, consumer);
+        resolveDeadLetter(consumerAnnotation, consumer);
 
         if (null != subscription) {
             subscriptionValues(subscription, consumer);
         } else {
             consumerValues(consumerAnnotation, consumer);
         }
-
-        resolveDeadLetter(consumerAnnotation, consumer);
 
         consumerAnnotation.stringValue("ackTimeout").map(Duration::parse).ifPresent(duration -> {
             long millis = duration.toMillis();
@@ -199,7 +187,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     private void resolveDeadLetter(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumerBuilder) {
         Boolean useDeadLetterQueue = this.pulsarClientConfiguration.getUseDeadLetterQueue();
         if (!useDeadLetterQueue) {
-            return; //don't build redelivery if none features were explicitly set;
+            return;
         }
         DeadLetterPolicy.DeadLetterPolicyBuilder builder = DeadLetterPolicy.builder();
         consumerAnnotation.stringValue("deadLetterTopic").ifPresent(builder::deadLetterTopic);

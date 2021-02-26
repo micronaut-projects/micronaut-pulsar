@@ -18,18 +18,13 @@ package io.micronaut.pulsar
 import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
-import org.apache.pulsar.client.api.Consumer
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.MessageId
-import org.apache.pulsar.client.api.Producer
-import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.Reader
+import org.apache.pulsar.client.api.*
+import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.Stepwise
 import spock.util.concurrent.PollingConditions
 
 import static java.util.concurrent.TimeUnit.SECONDS
 import static org.apache.pulsar.client.api.MessageId.latest
-import static org.apache.pulsar.client.api.Schema.STRING
 
 @Stepwise
 class PulsarConsumerSpec extends PulsarAwareTest {
@@ -80,11 +75,11 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         context.destroyBean(PulsarConsumerTopicListTester)
 
         Producer<String> producer = context.getBean(PulsarClient)
-                .newProducer(STRING)
+                .newProducer(new StringSchema())
                 .topic(PULSAR_REGEX_TEST_TOPIC)
                 .create()
         Reader blockingReader = context.getBean(PulsarClient)
-                .newReader(STRING)
+                .newReader(new StringSchema())
                 .startMessageId(latest)
                 .topic(PULSAR_REGEX_TEST_TOPIC)
                 .create()

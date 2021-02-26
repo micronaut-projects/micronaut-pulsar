@@ -18,14 +18,12 @@ package io.micronaut.pulsar.scope;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanResolutionContext;
 import io.micronaut.context.LifeCycle;
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.scope.CustomScope;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.BeanIdentifier;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
-import io.micronaut.pulsar.PulsarProducerFactory;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.annotation.PulsarProducerClient;
 import io.micronaut.pulsar.processor.SchemaResolver;
@@ -49,7 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 @Singleton
-public class PulsarClientScope implements CustomScope<PulsarProducerClient>, LifeCycle<PulsarClientScope> {
+public final class PulsarClientScope implements CustomScope<PulsarProducerClient>, LifeCycle<PulsarClientScope> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarClientScope.class);
 
