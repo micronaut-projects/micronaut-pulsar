@@ -1,13 +1,15 @@
 package example.dto;
 
-import java.time.OffsetDateTime;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class PulsarMessage {
 
     private final String message;
-    private final OffsetDateTime sent;
+    private final String sent;
 
-    public PulsarMessage(String message, OffsetDateTime sent) {
+    @JsonCreator
+    public PulsarMessage(@JsonProperty("sent") String sent, @JsonProperty("message") String message) {
         this.message = message;
         this.sent = sent;
     }
@@ -16,7 +18,11 @@ public class PulsarMessage {
         return message;
     }
 
-    public OffsetDateTime getSent() {
+    public String getSent() {
         return sent;
+    }
+
+    public String toMessage() {
+        return String.format("Message %s sent on %s", message, sent);
     }
 }

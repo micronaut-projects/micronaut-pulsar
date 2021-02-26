@@ -103,3 +103,13 @@ TIP: When using `topicsPattern`, be sure to create topics before the consumer is
 WARNING: When using PulsarConsumer with specific schema other than `byte[]`, make sure topics are created and have the same
 schema the consumer is expecting, especially when using pattern consumer which listens to multiple topics. Otherwise, the consumer
 won't connect and will throw `org.apache.pulsar.client.api.PulsarClientException$IncompatibleSchemaException`.
+
+=== Dead Letter Queue
+
+By default Pulsar Java library does not configure DLQ to be used. Instead it will re-deliver failed messages as long as
+possible which floods the consumer(s) until message if finally received. However, reason for failure of delivery might be
+bad JSON formatting (in case JSON is being used) or such which will create unnecessary traffic to consumer(s) and message
+will never be delivered resulting in either consumers slowing down due to high redelivery count or at the end dropping
+due to high load. For this purpose Micronaut Pulsar is using DLQ by default and it will retry __only__ 3 times. If you wish
+to configure this value please use configuration properties `use-dead-letter-queue` and `default-max-retry-dlq`. These
+properties indicate that the DLQ will be used by default on all Pulsar consumers if not explicitly set otherwise.

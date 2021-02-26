@@ -18,12 +18,14 @@ package io.micronaut.pulsar.scope;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.BeanResolutionContext;
 import io.micronaut.context.LifeCycle;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.scope.CustomScope;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.BeanIdentifier;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.inject.qualifiers.Qualifiers;
+import io.micronaut.pulsar.PulsarProducerFactory;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.annotation.PulsarProducerClient;
 import io.micronaut.pulsar.processor.SchemaResolver;
@@ -76,20 +78,20 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
         for (ExecutableMethod<T, ?> method : beanDefinition.getExecutableMethods()) {
             AnnotationValue<PulsarProducer> annotation = method.getAnnotation(PulsarProducer.class);
             if (null != annotation) {
-                producerMethods.add(createProducer(annotation));
+                producerMethods.add(createProducer(annotation, method));
             }
         }
         return (T) producersCollection.computeIfAbsent(identifier.getName(), key -> producerMethods);
     }
 
-    private Producer<?> createProducer(AnnotationValue<PulsarProducer> annotationValue) {
+    public Producer<?> createProducer(AnnotationValue<PulsarProducer> annotationValue, ExecutableMethod<?, ?> method) {
         String producerId = annotationValue.getRequiredValue("producerName", String.class);
         //Annotation processor for @PulsarProducer will also create such beans. Avoid having duplicates.
         if (beanContext.containsBean(Producer.class, Qualifiers.byName(producerId))) {
             return beanContext.getBean(Producer.class, Qualifiers.byName(producerId));
         }
         return beanContext.createBean(Producer.class, Qualifiers.byName(producerId),
-                pulsarClient, annotationValue, schemaResolver);
+                pulsarClient, annotationValue, schemaResolver, method.getName(), method.getReturnType().getType());
     }
 
     @SuppressWarnings("unchecked")

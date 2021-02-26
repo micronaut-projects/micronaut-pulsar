@@ -7,7 +7,7 @@ import io.micronaut.websocket.annotation.OnMessage;
 import io.micronaut.websocket.annotation.OnOpen;
 import io.micronaut.websocket.annotation.ServerWebSocket;
 
-@ServerWebSocket("/ws/messages/{tenant}/{namespace}/{topic}")
+@ServerWebSocket("/ws/{tenant}/{namespace}/{topic}")
 public class PulsarMessageShareSocket {
     private final WebSocketBroadcaster broadcaster;
 
