@@ -107,9 +107,10 @@ won't connect and will throw `org.apache.pulsar.client.api.PulsarClientException
 === Dead Letter Queue
 
 By default Pulsar Java library does not configure DLQ to be used. Instead it will re-deliver failed messages as long as
-possible which floods the consumer(s) until message if finally received. However, reason for failure of delivery might be
-bad JSON formatting (in case JSON is being used) or such which will create unnecessary traffic to consumer(s) and message
+possible which floods the consumer(s) until message if finally received. Failed means that message was received but consumer
+did negative acknowledgement thus received means delivered and acknowledged by the consumer. However, reason for failure might be
+bad JSON formatting (in the case where JSON is being used) or such which will create unnecessary traffic to consumer(s) and message
 will never be delivered resulting in either consumers slowing down due to high redelivery count or at the end dropping
 due to high load. For this purpose Micronaut Pulsar is using DLQ by default and it will retry __only__ 3 times. If you wish
-to configure this value please use configuration properties `use-dead-letter-queue` and `default-max-retry-dlq`. These
+to configure these options please use configuration properties `use-dead-letter-queue` and `default-max-retry-dlq`. These
 properties indicate that the DLQ will be used by default on all Pulsar consumers if not explicitly set otherwise.

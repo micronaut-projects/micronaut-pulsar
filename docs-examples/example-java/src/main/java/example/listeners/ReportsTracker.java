@@ -31,6 +31,6 @@ public class ReportsTracker {
     }
 
     public Flowable<String> subscribe() {
-        return messageTracker.toFlowable(BackpressureStrategy.BUFFER);
+        return messageTracker.toFlowable(BackpressureStrategy.LATEST);
     }
 }

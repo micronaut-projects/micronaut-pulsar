@@ -17,11 +17,7 @@ package io.micronaut.pulsar
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarReader
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.MessageId
-import org.apache.pulsar.client.api.Producer
-import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.Reader
+import org.apache.pulsar.client.api.*
 import spock.lang.Stepwise
 
 import javax.inject.Singleton

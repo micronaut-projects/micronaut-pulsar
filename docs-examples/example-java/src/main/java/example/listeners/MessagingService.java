@@ -12,12 +12,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @PulsarSubscription(subscriptionName = "pulsar-test-subscription", subscriptionType = SubscriptionType.Shared)
-public class PulsarSubscriber {
+public class MessagingService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(PulsarSubscriber.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(MessagingService.class);
     private final WebSocketBroadcaster broadcaster;
 
-    public PulsarSubscriber(WebSocketBroadcaster broadcaster) {
+    public MessagingService(WebSocketBroadcaster broadcaster) {
         this.broadcaster = broadcaster;
     }
 
@@ -31,8 +31,8 @@ public class PulsarSubscriber {
     // when inside other beans no @PulsarProducerClient is required on the class
     @PulsarProducer(topic = "persistent://private/reports/messages", producerName = "report-producer")
     public String report(String message) {
-        // do something ...
-        LOGGER.info("Reported message {}", message);
+        // should happen before message is being sent to Pulsar by default
+        LOGGER.info("Sending message {}", message);
         return message;
     }
 

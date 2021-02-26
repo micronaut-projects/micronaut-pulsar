@@ -15,5 +15,5 @@ How to start:
 4. Run the project.
 
 If everything is configured properly, WebSocket topic /ws/messages/public/default/messages
-should print out messages from Pulsar while /ws/messages/private/reports/messages should print out all those messages 
-and user actions as simple reports.
+should print out messages from Pulsar while /ws/private/reports/messages should print out all those messages.
+There's an HTTP (stream) endpoint which on access will start printing all new incoming messages into web browser.

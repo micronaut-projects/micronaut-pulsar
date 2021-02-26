@@ -19,6 +19,8 @@ import io.micronaut.context.annotation.Requires;
 import io.micronaut.inject.ExecutableMethod;
 import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Default listener for incoming Pulsar messages.
@@ -29,6 +31,8 @@ import org.apache.pulsar.client.api.Message;
 @Requires(missingBeans = MessageListenerResolver.class)
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class DefaultListener implements MessageListenerResolver {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(DefaultListener.class);
 
     private final boolean useMessageWrapper;
     private final ExecutableMethod<Object, ?> method;
@@ -46,23 +50,23 @@ public class DefaultListener implements MessageListenerResolver {
     @Override
     public void received(Consumer consumer, Message msg) {
         Object any;
-        if (useMessageWrapper) {
-            any = msg;
-        } else {
-            any = msg.getValue();
+        try {
+            any = useMessageWrapper ? msg : msg.getValue(); // .getValue can hit the serialisation exception
+            //trying to provide more flexibility to developers by allowing less care about the order; maybe unnecessary?
+            switch (consumerIndex) {
+                case 0:
+                    method.invoke(invoker, consumer, any);
+                    break;
+                case 1:
+                    method.invoke(invoker, any, consumer);
+                    break;
+                default:
+                    method.invoke(invoker, any);
+            }
+            consumer.acknowledgeAsync(msg);
+        } catch (Exception ex) {
+            consumer.negativeAcknowledge(msg.getMessageId());
+            LOGGER.error("Could not parse message [{}] for [{}] on method [{}]", msg.getMessageId(), consumer.getConsumerName(), method.getName());
         }
-        //trying to provide more flexibility to developers by allowing less care about the order; maybe unnecessary?
-        switch (consumerIndex) {
-            case 0:
-                method.invoke(invoker, consumer, any);
-                break;
-            case 1:
-                method.invoke(invoker, any, consumer);
-                break;
-            default:
-                method.invoke(invoker, any);
-        }
-        //in case invoke has failed but async ack will still happen instead of negative ack
-        consumer.acknowledgeAsync(msg);
     }
 }

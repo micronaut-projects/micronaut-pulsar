@@ -27,13 +27,15 @@ import java.io.InputStream;
 /**
  * JSON Schema Reader to allow using {@link ObjectMapper} from Micronaut instead of shaded one in Pulsar library.
  *
+ * @param <T> POJO type to process.
  * @author Haris Secic
  * @since 1.0
  */
-public class JacksonJsonReader<T> implements SchemaReader<T> {
+public final class JacksonJsonReader<T> implements SchemaReader<T> {
+    private static final Logger LOG = LoggerFactory.getLogger(JacksonJsonReader.class);
+
     private final Class<T> pojo;
     private final ObjectMapper objectMapper;
-    private static final Logger LOG = LoggerFactory.getLogger(JacksonJsonReader.class);
 
     public JacksonJsonReader(ObjectMapper objectMapper, Class<T> pojo) {
         this.pojo = pojo;
