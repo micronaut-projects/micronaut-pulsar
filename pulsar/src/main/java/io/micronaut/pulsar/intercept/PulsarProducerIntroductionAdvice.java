@@ -19,9 +19,12 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.type.ReturnType;
+import io.micronaut.inject.BeanDefinition;
+import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.pulsar.PulsarProducerRegistry;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.processor.SchemaResolver;
@@ -36,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.PreDestroy;
 import javax.inject.Singleton;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -47,18 +51,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 @Singleton
-public final class PulsarClientIntroductionAdvice implements MethodInterceptor<Object, Object>, AutoCloseable, PulsarProducerRegistry {
+public final class PulsarProducerIntroductionAdvice implements MethodInterceptor<Object, Object>,
+        AutoCloseable,
+        PulsarProducerRegistry, ExecutableMethodProcessor<PulsarProducer> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PulsarClientIntroductionAdvice.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PulsarProducerIntroductionAdvice.class);
 
     private final Map<String, Producer<?>> producers = new ConcurrentHashMap<>();
     private final PulsarClient pulsarClient;
     private final SchemaResolver schemaResolver;
     private final BeanContext beanContext;
 
-    public PulsarClientIntroductionAdvice(final PulsarClient pulsarClient,
-                                          final SchemaResolver schemaResolver,
-                                          final BeanContext beanContext) {
+    public PulsarProducerIntroductionAdvice(final PulsarClient pulsarClient,
+                                            final SchemaResolver schemaResolver,
+                                            final BeanContext beanContext) {
         this.pulsarClient = pulsarClient;
         this.schemaResolver = schemaResolver;
         this.beanContext = beanContext;
@@ -73,31 +79,18 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
         AnnotationValue<PulsarProducer> annotationValue = context.findAnnotation(PulsarProducer.class)
                 .orElseThrow(() -> new IllegalStateException("No @PulsarProducer on method: " + context));
 
-        String producerId = annotationValue.stringValue("producerName")
-                .orElse(context.getExecutableMethod().getMethodName());
-        Producer producer = producers.get(producerId);
-
         Object value = context.getParameterValues()[0];
-
-        if (null == producer) {
-            producer = beanContext.createBean(Producer.class,
-                    pulsarClient,
-                    annotationValue,
-                    schemaResolver,
-                    context.getMethodName(),
-                    value.getClass()
-            );
-            producers.put(producerId, producer);
-        }
-
-        ReturnType<?> returnType = context.getReturnType();
+        ExecutableMethod<?, ?> method = context.getExecutableMethod();
+        Producer producer = getOrCreateProducer(method, annotationValue);
+        String producerId = producer.getProducerName();
+        ReturnType<?> returnType = method.getReturnType();
 
         if (returnType.isAsyncOrReactive()) {
             if (returnType.isAsync()) {
                 return produce(producer, value);
             }
             if (returnType.isReactive()) {
-                Flowable resulting = Flowable.fromFuture(produce(producer, value));
+                Flowable<?> resulting = Flowable.fromFuture(produce(producer, value));
                 return Publishers.convertPublisher(resulting, returnType.getType());
             }
         }
@@ -121,6 +114,23 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
             LOG.error("Failed to produce message on producer {}", producerId, e);
             throw new RuntimeException("Failed to produce a message on " + producerId, e);
         }
+    }
+
+    private Producer<?> getOrCreateProducer(ExecutableMethod<?, ?> method,
+                                            AnnotationValue<PulsarProducer> annotationValue) {
+        String producerId = annotationValue.stringValue("producerName").orElse(method.getMethodName());
+        Producer<?> producer = producers.get(producerId);
+        if (null == producer) {
+            producer = beanContext.createBean(Producer.class,
+                    pulsarClient,
+                    annotationValue,
+                    schemaResolver,
+                    method.getMethodName(),
+                    method.getArguments()[0]
+            );
+            producers.put(producerId, producer);
+        }
+        return producer;
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -156,5 +166,10 @@ public final class PulsarClientIntroductionAdvice implements MethodInterceptor<O
     @Override
     public Set<String> getProducerIds() {
         return producers.keySet();
+    }
+
+    @Override
+    public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
+        getOrCreateProducer(method, Objects.requireNonNull(method.getDeclaredAnnotation(PulsarProducer.class)));
     }
 }

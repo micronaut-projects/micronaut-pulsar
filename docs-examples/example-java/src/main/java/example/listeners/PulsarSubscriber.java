@@ -1,8 +1,10 @@
 package example.listeners;
 
-import io.micronaut.core.convert.value.ConvertibleValues;
 import example.dto.PulsarMessage;
+import io.micronaut.core.convert.value.ConvertibleValues;
+import io.micronaut.http.MediaType;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
+import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.websocket.WebSocketBroadcaster;
 import org.apache.pulsar.client.api.SubscriptionType;
@@ -22,16 +24,25 @@ public class PulsarSubscriber {
     @PulsarConsumer(topic = "persistent://public/default/messages", consumerName = "shared-consumer-tester")
     public void messagePrinter(PulsarMessage message) {
         LOGGER.info("A message was received {}. Sent on {}", message.getMessage(), message.getSent());
-        broadcaster.broadcastAsync(message, t -> isPropperChannel(t.getUriVariables()));
+        broadcaster.broadcastAsync(message, MediaType.APPLICATION_JSON_TYPE, t -> isProperChannel(t.getUriVariables()));
+        report(message.toMessage());
     }
 
-    private boolean isPropperChannel(ConvertibleValues<?> uriVariables) {
+    // when inside other beans no @PulsarProducerClient is required on the class
+    @PulsarProducer(topic = "persistent://private/reports/messages", producerName = "report-producer")
+    public String report(String message) {
+        // do something ...
+        LOGGER.info("Reported message {}", message);
+        return message;
+    }
+
+    private boolean isProperChannel(ConvertibleValues<?> uriVariables) {
         if (!"public".equalsIgnoreCase(uriVariables.get("tenant", String.class, null))) {
             return false;
         }
         if (!"default".equalsIgnoreCase(uriVariables.get("namespace", String.class, null))) {
             return false;
         }
-        return "messages".equalsIgnoreCase(uriVariables.get("tenant", String.class, null));
+        return "messages".equalsIgnoreCase(uriVariables.get("topic", String.class, null));
     }
 }

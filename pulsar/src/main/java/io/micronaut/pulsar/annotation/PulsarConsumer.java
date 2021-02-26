@@ -150,4 +150,17 @@ public @interface PulsarConsumer {
      * @see org.apache.pulsar.client.api.ConsumerBuilder#priorityLevel(int)
      */
     int priorityLevel() default -1;
+
+    /**
+     * Dead Letter topic.
+     * Default is fallback to Pulsar Client Java library settings which is
+     * @return
+     */
+    String deadLetterTopic() default "";
+
+    /**
+     * Maximum numbers of retires before sending message to dead letter queue topic
+     * @return
+     */
+    int maxRetriesBeforeDlq() default 3;
 }

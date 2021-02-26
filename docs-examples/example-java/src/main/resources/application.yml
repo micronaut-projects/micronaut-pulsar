@@ -9,3 +9,8 @@ pulsar:
   oauth-issuer-url: http://localhost:9090/auth/realms/master
   oauth-credentials-url: credentials.json
   audience: pulsar
+jackson:
+  serialization:
+    writeDatesAsTimestamps: false
+  deserialization:
+    failOnUnknownProperties: false
