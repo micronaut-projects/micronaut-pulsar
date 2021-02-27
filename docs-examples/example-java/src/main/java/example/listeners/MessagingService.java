@@ -26,14 +26,8 @@ import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Messaging Pulsar consumer with pass on messaging method producer.
- *
- * @author Haris
- * @since 1.0
- */
 @PulsarSubscription(subscriptionName = "pulsar-test-subscription", subscriptionType = SubscriptionType.Shared)
-public final class MessagingService {
+public class MessagingService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(MessagingService.class);
     private final WebSocketBroadcaster broadcaster;
