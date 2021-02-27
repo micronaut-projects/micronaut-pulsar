@@ -21,8 +21,14 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.reactivex.Flowable;
 
+/**
+ * Reports "streaming" endpoint.
+ *
+ * @author Haris
+ * @since 1.0
+ */
 @Controller("reports")
-public class ReportResource {
+public final class ReportResource {
 
     private final ReportsTracker reportsTracker;
 

@@ -22,8 +22,14 @@ import io.micronaut.websocket.annotation.OnMessage;
 import io.micronaut.websocket.annotation.OnOpen;
 import io.micronaut.websocket.annotation.ServerWebSocket;
 
+/**
+ * WebSockets endpoints.
+ *
+ * @author Haris
+ * @since 1.0
+ */
 @ServerWebSocket("/ws/{tenant}/{namespace}/{topic}")
-public class PulsarMessageShareSocket {
+public final class PulsarMessageShareSocket {
     private final WebSocketBroadcaster broadcaster;
 
     public PulsarMessageShareSocket(WebSocketBroadcaster broadcaster) {
@@ -39,7 +45,9 @@ public class PulsarMessageShareSocket {
     @OnMessage
     public void onMessage(String tenant, String namespace, String topic, String message, WebSocketSession ws) {
         String id = "PULSAR";
-        if (null != ws) id = ws.getId();
+        if (null != ws) {
+            id = ws.getId();
+        }
         String report = String.format("A message has been received on %s/%s/%s from %s", tenant, namespace, topic, id);
         broadcaster.broadcastAsync(report, this::isReport);
     }
