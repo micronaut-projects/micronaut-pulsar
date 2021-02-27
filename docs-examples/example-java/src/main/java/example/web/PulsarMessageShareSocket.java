@@ -22,14 +22,8 @@ import io.micronaut.websocket.annotation.OnMessage;
 import io.micronaut.websocket.annotation.OnOpen;
 import io.micronaut.websocket.annotation.ServerWebSocket;
 
-/**
- * WebSockets endpoints.
- *
- * @author Haris
- * @since 1.0
- */
 @ServerWebSocket("/ws/{tenant}/{namespace}/{topic}")
-public final class PulsarMessageShareSocket {
+public class PulsarMessageShareSocket {
     private final WebSocketBroadcaster broadcaster;
 
     public PulsarMessageShareSocket(WebSocketBroadcaster broadcaster) {

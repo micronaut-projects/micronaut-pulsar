@@ -17,12 +17,6 @@ package example;
 
 import io.micronaut.runtime.Micronaut;
 
-/***
- * Javadoc.
- *
- * @author Haris
- * @since 1.0
- */
 public class Application {
 
     public static void main(String[] args) {

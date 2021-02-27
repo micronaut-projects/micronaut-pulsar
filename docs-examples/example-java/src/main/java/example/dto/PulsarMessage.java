@@ -18,13 +18,7 @@ package example.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-/**
- * Simple DTO.
- *
- * @author Haris
- * @since 1.0
- */
-public final class PulsarMessage {
+public class PulsarMessage {
 
     private final String message;
     private final String sent;

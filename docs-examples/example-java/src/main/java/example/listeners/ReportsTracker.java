@@ -24,14 +24,8 @@ import io.reactivex.subjects.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Reports consumer exposing stream.
- *
- * @author Haris
- * @since 1.0
- */
 @PulsarSubscription(subscriptionName = "reports")
-public final class ReportsTracker {
+public class ReportsTracker {
 
     private static final Logger LOG = LoggerFactory.getLogger(ReportsTracker.class);
     private final Subject<String> messageTracker = PublishSubject.create();
