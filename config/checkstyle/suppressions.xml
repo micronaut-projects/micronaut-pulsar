@@ -8,6 +8,7 @@
     <!-- <suppress checks="FileLength" -->
               <!-- files="DefaultBeanContext.java|BeanDefinitionWriter.java|DefaultHttpClient.java"/> -->
 
-    <suppress checks="MissingJavadocType,DesignForExtension" files=".*docs-examples.*" />
+    <suppress checks="MissingJavadocType" files=".*docs-examples.*" />
+    <suppress checks="DesignForExtension" files=".*docs-examples.*" />
     <suppress checks="NoHttp" files=".*docs-examples.example.shared.*Conf.groovy" />
 </suppressions>
