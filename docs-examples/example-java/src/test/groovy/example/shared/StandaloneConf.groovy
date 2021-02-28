@@ -1,4 +1,11 @@
-#
+package example.shared
+
+/**
+ * Due to not being able to use files directly just through HTTPS this is a placeholder for "standalone.conf" text.
+ */
+class StandaloneConf {
+
+    static final String content = """#
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
 # distributed with this work for additional information
@@ -894,3 +901,5 @@ defaultNumPartitions=1
 
 ### --- Transaction config variables --- ###
 transactionMetadataStoreProviderClassName=org.apache.pulsar.transaction.coordinator.impl.InMemTransactionMetadataStoreProvider
+"""
+}

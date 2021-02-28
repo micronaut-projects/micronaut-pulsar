@@ -30,6 +30,7 @@ import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
 import org.testcontainers.images.builder.Transferable
 import org.testcontainers.utility.DockerImageName
+import org.testcontainers.utility.MountableFile
 
 /**
  * Share Pulsar Container class that ensures Pulsar is started after KeyCloak has all necessary configurations.
@@ -78,9 +79,9 @@ final class SharedPulsar implements AutoCloseable {
         // ensure all config files are deployed prior to run
         pulsarContainer.addFileSystemBind(credentialsPath, "/pulsar/credentials.json", BindMode.READ_ONLY)
         pulsarContainer.addFileSystemBind(pubKey.path, "/pulsar/pub.key", BindMode.READ_ONLY)
-        Map<String, File> files = replaceConfigs(keycloak.crossContainerAuthUrl + "/realms/master")
-        pulsarContainer.addFileSystemBind(files["client"].path, "/pulsar/conf/client.conf", BindMode.READ_ONLY)
-        pulsarContainer.addFileSystemBind(files["standalone"].path, "/pulsar/conf/standalone.conf", BindMode.READ_ONLY)
+        Map<String, byte[]> contentBytes = replaceConfigs(keycloak.crossContainerAuthUrl + "/realms/master")
+        pulsarContainer.copyFileToContainer(Transferable.of(contentBytes["client"]),"/pulsar/conf/client.conf")
+        pulsarContainer.copyFileToContainer(Transferable.of(contentBytes["standalone"]),"/pulsar/conf/client.conf")
         pulsarContainer.start()
         createPrivateReports()
     }
@@ -136,18 +137,16 @@ final class SharedPulsar implements AutoCloseable {
         return credentials
     }
 
-    private static Map<String, File> replaceConfigs(String url) {
-        File client = replaceFileLine("src/test/resources/client.conf", 41, url)
-        File standalone = replaceFileLine("src/test/resources/standalone.conf", 404, url)
+    private static Map<String, byte[]> replaceConfigs(String url) {
+        byte[] client = replaceFileLine(ClientConf.content, 41, url)
+        byte[] standalone = replaceFileLine(StandaloneConf.content, 404, url)
         return ["client": client, "standalone": standalone]
     }
 
-    private static File replaceFileLine(String path, int line, String param) {
-        String[] text = new File(path).readLines()
+    private static byte[] replaceFileLine(String content, int line, String param) {
+        String[] text = content.split('\n')
         text[line] = String.format(text[line], param)
-        File tmp = Files.newTemporaryFile()
-        tmp.write(text.join("\n"))
-        return tmp
+        return text.join("\n").bytes
     }
 
     private static void createClient(RealmResource master, String secret) {
