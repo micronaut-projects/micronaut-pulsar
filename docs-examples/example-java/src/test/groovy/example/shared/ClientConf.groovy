@@ -1,3 +1,4 @@
+// CHECKSTYLE:OFF
 package example.shared
 
 class ClientConf {
