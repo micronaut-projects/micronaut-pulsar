@@ -15,11 +15,7 @@
  */
 package example.shared
 
-import io.micronaut.core.type.Argument
-import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
-import io.micronaut.http.HttpStatus
-import io.micronaut.http.client.RxHttpClient
+
 import org.assertj.core.util.Files
 import org.keycloak.admin.client.resource.RealmResource
 import org.keycloak.crypto.Algorithm
@@ -44,7 +40,8 @@ final class SharedPulsar implements AutoCloseable {
   "client_secret": "%s",
   "issuer_url": "%s"
 }'''
-    private final String PULSAR_CLI_CLIENT = "/pulsar/bin/pulsar-client";
+    private final String PULSAR_CLI_CLIENT = "/pulsar/bin/pulsar-client"
+    private final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
     private final SharedKeycloak keycloak
     private final PulsarContainer pulsarContainer
@@ -97,26 +94,8 @@ final class SharedPulsar implements AutoCloseable {
     }
 
     private void createPrivateReports() {
-        RxHttpClient client = RxHttpClient.create(new URL(pulsarContainer.httpServiceUrl))
-        HttpResponse<String> hasTenant = client.exchange(HttpRequest.GET("/admin/v2/tenants"), Argument.of(String.class))
-                .blockingFirst()
-        if (!hasTenant.body().contains("private")) {
-            HttpRequest<?> tenant = HttpRequest.PUT("/admin/v2/tenants/private",
-                    ["allowedClusters": ["standalone"], "allowedRoles": ["superuser"]]
-            )
-            if (HttpStatus.NO_CONTENT != client.exchange(tenant).blockingFirst().status()) {
-                throw new RuntimeException("Could not create pulsar tenant")
-            }
-        }
-
-        HttpResponse<String> hasNamespace = client.exchange(HttpRequest.GET("/admin/v2/namespaces/private"), Argument.of(String.class))
-                .blockingFirst()
-        if (!hasNamespace.body().contains("reports")) {
-            HttpRequest<?> namespace = HttpRequest.PUT("/admin/v2/namespaces/private/reports", [:])
-            if (HttpStatus.NO_CONTENT != client.exchange(namespace).blockingFirst().status()) {
-                throw new RuntimeException("Could not create pulsar tenant")
-            }
-        }
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " tenants create private -r superadmin -c standalone")
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces create private/reports")
     }
 
     private static File generatePubKey(RealmResource master) {
