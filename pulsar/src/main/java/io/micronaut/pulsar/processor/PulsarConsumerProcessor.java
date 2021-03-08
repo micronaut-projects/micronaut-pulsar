@@ -31,6 +31,8 @@ import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.ConsumerSubscribedEvent;
 import org.apache.pulsar.client.api.*;
+import org.apache.pulsar.client.impl.ConsumerBuilderImpl;
+import org.apache.pulsar.client.impl.PulsarClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,6 +42,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
 import static java.util.concurrent.TimeUnit.*;
@@ -156,7 +159,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
             schema = schemaResolver.decideSchema(consumerAnnotation, messageBodyType);
         }
 
-        ConsumerBuilder<?> consumer = pulsarClient.newConsumer(schema);
+        ConsumerBuilder<?> consumer = consumerBuilder(schema);
         consumerAnnotation.stringValue("consumerName").ifPresent(consumer::consumerName);
 
         resolveTopic(consumerAnnotation, consumer);
@@ -182,6 +185,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         consumer.messageListener(new DefaultListener(method, useMessageWrapper, consumerIndex, bean));
 
         return consumer;
+    }
+
+    private <T> ConsumerBuilder<T> consumerBuilder(Schema<T> schema) {
+        return new ConsumerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema);
     }
 
     private void resolveDeadLetter(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumerBuilder) {
