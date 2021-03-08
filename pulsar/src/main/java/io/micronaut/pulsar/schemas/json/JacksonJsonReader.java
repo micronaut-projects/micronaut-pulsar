@@ -45,30 +45,30 @@ public final class JacksonJsonReader<T> implements SchemaReader<T> {
     public T read(byte[] bytes, int offset, int length) {
         try {
             return this.objectMapper.readValue(bytes, offset, length, this.pojo);
-        } catch (IOException var5) {
-            throw new SchemaSerializationException(var5);
+        } catch (IOException ex) {
+            throw new SchemaSerializationException(ex);
         }
     }
 
     public T read(InputStream inputStream) {
-        T var2;
+        T value;
         try {
-            var2 = this.objectMapper.readValue(inputStream, this.pojo);
+            value = this.objectMapper.readValue(inputStream, this.pojo);
             try {
                 inputStream.close();
-            } catch (IOException var10) {
-                LOG.error("JsonReader close inputStream close error", var10);
+            } catch (IOException closeException) {
+                LOG.error("JsonReader close inputStream close error", closeException);
             }
-        } catch (IOException var11) {
+        } catch (IOException ioException) {
             try {
                 inputStream.close();
-            } catch (IOException var10) {
-                LOG.error("JsonReader close inputStream close error", var10);
+            } catch (IOException closeException) {
+                LOG.error("JsonReader close inputStream close error", closeException);
             }
-            throw new SchemaSerializationException(var11);
+            throw new SchemaSerializationException(ioException);
         }
         // avoiding finally as there's no guarantee for how long it takes to close the stream
         // can't use try with resource since resource is passed
-        return var2;
+        return value;
     }
 }
