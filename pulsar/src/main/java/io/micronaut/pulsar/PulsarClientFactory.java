@@ -55,6 +55,10 @@ public final class PulsarClientFactory {
         pulsarClientConfiguration.getIoThreads().ifPresent(clientBuilder::ioThreads);
         pulsarClientConfiguration.getListenerThreads().ifPresent(clientBuilder::listenerThreads);
         pulsarClientConfiguration.getSslProvider().ifPresent(clientBuilder::sslProvider);
+        pulsarClientConfiguration.getTlsTrustStorePath().ifPresent(clientBuilder::tlsTrustStorePath);
+        pulsarClientConfiguration.getTlsCertFilePath().ifPresent(clientBuilder::tlsTrustCertsFilePath);
+        pulsarClientConfiguration.getTlsAllowInsecureConnection().ifPresent(clientBuilder::allowTlsInsecureConnection);
+        pulsarClientConfiguration.getTlsVerifyHostname().ifPresent(clientBuilder::enableTlsHostnameVerification);
 
         return clientBuilder.build();
     }

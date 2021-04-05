@@ -58,6 +58,10 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private String oauthAudience;
     private Boolean useDeadLetterQueue;
     private int defaultMaxRetryDlq = 3;
+    private String tlsTrustStorePath;
+    private String tlsCertFilePath;
+    private Boolean tlsVerifyHostname;
+    private Boolean tlsAllowInsecureConnection;
 
     /**
      * Constructs the default Pulsar Client configuration.
@@ -99,6 +103,34 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
 
     public Optional<String> getSslProvider() {
         return Optional.ofNullable(sslProvider);
+    }
+
+    public void setTlsTrustStorePath(String tlsTrustStorePath) {
+        this.tlsTrustStorePath = tlsTrustStorePath;
+    }
+
+    @Override
+    public Optional<String> getTlsTrustStorePath() {
+        return Optional.ofNullable(tlsTrustStorePath);
+    }
+
+    public void setTlsCertFilePath(String tlsCertFilePath) {
+        this.tlsCertFilePath = tlsCertFilePath;
+    }
+
+    @Override
+    public Optional<String> getTlsCertFilePath() {
+        return Optional.ofNullable(tlsCertFilePath);
+    }
+
+    @Override
+    public Optional<Boolean> getTlsVerifyHostname() {
+        return Optional.ofNullable(tlsVerifyHostname);
+    }
+
+    @Override
+    public Optional<Boolean> getTlsAllowInsecureConnection() {
+        return Optional.ofNullable(tlsAllowInsecureConnection);
     }
 
     /**

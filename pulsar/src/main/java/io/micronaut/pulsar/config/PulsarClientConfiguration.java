@@ -23,8 +23,8 @@ import java.util.Optional;
 /**
  * Basic requirements for custom and default configuration to create Pulsar client.
  *
- * @since 1.0
  * @author Haris Secic
+ * @since 1.0
  */
 public interface PulsarClientConfiguration {
 
@@ -45,4 +45,12 @@ public interface PulsarClientConfiguration {
     }
 
     Optional<String> getSslProvider();
+
+    Optional<String> getTlsTrustStorePath();
+
+    Optional<String> getTlsCertFilePath();
+
+    Optional<Boolean> getTlsVerifyHostname();
+
+    Optional<Boolean> getTlsAllowInsecureConnection();
 }
