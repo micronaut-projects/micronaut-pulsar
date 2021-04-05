@@ -48,6 +48,6 @@ public class JsonSchema<T> extends AvroBaseStructSchema<T> {
                 .withSchemaReader(reader)
                 .withSchemaWriter(writer)
                 .build();
-        return new JsonSchema<T>(SchemaUtil.parseSchemaInfo(schemaDefinition, SchemaType.JSON), reader, writer);
+        return new JsonSchema<>(SchemaUtil.parseSchemaInfo(schemaDefinition, SchemaType.JSON), reader, writer);
     }
 }

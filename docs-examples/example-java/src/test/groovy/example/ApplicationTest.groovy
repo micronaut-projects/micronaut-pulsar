@@ -44,9 +44,10 @@ class ApplicationTest extends SimulateEnv {
         def testMessage = new PulsarMessage(LocalDateTime.now().toString(), "this is a test message")
         def subscription = reportsTracker.subscribe()
         subscription.subscribe()
-        pulsar.send(mapper.writeValueAsString(testMessage))
+        def cmdOut = pulsar.send(mapper.writeValueAsString(testMessage))
 
         expect:
+        0 == cmdOut.exitCode
         def list = subscription.blockingFirst()
         null != list
         list.contains("this is a test message")

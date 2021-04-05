@@ -1,8 +1,7 @@
-## Micronaut Pulsar Java Consumer Example with OAuth2 and TLS
+## Micronaut Pulsar Java Consumer Example with OAuth2
 
 This example shows how to implement simple Pulsar consumers with Micronaut by using most of the features required in a usual 
-use case Pulsar message consuming. It covers OAuth2 in configuration, TLS for encrypted communication, and consuming
-messages of different data types like String and user built classes.
+use case Pulsar message consuming. It covers OAuth2 in configuration, and consuming messages of different data types like String and user built classes.
 
 How to start:
 1. Prepare dependencies:
