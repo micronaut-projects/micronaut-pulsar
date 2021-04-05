@@ -21,6 +21,7 @@ import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import org.apache.pulsar.client.api.ClientBuilder;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.impl.ClientBuilderImpl;
 
 import javax.inject.Singleton;
 
@@ -42,7 +43,8 @@ public final class PulsarClientFactory {
      */
     @Singleton
     public PulsarClient pulsarClient(PulsarClientConfiguration pulsarClientConfiguration) throws PulsarClientException {
-        ClientBuilder clientBuilder = PulsarClient.builder().authentication(pulsarClientConfiguration.getAuthentication());
+        ClientBuilder clientBuilder = new ClientBuilderImpl()
+                .authentication(pulsarClientConfiguration.getAuthentication());
 
         if (pulsarClientConfiguration.getServiceUrlProvider().isPresent()) {
             clientBuilder.serviceUrlProvider(pulsarClientConfiguration.getServiceUrlProvider().get());

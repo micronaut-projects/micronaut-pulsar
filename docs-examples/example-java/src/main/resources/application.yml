@@ -1,0 +1,16 @@
+micronaut:
+  application:
+    name: java
+  server:
+    port: 8081
+pulsar:
+  enabled: true
+  service-url: pulsar://localhost:6650
+  oauth-issuer-url: http://localhost:9090/auth/realms/master
+  oauth-credentials-url: file://src/main/resources/credentials.json
+  audience: pulsar
+jackson:
+  serialization:
+    writeDatesAsTimestamps: false
+  deserialization:
+    failOnUnknownProperties: false

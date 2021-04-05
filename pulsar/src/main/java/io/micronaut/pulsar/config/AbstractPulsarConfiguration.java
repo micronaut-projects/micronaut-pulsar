@@ -21,6 +21,14 @@ import org.apache.pulsar.client.impl.auth.AuthenticationDisabled;
 import javax.annotation.Nonnull;
 import java.util.Properties;
 
+/**
+ * Base template class for configuring pulsar.
+ *
+ * @param <K> key
+ * @param <V> value
+ * @author Haris Secic
+ * @since 1.0
+ */
 public abstract class AbstractPulsarConfiguration<K, V> {
 
     /**

@@ -15,38 +15,30 @@
  */
 package io.micronaut.pulsar.processor;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.GeneratedMessageV3;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.pulsar.MessageSchema;
+import io.micronaut.pulsar.schemas.JsonSchema;
 import org.apache.pulsar.client.api.Schema;
-import org.apache.pulsar.client.impl.schema.AvroSchema;
-import org.apache.pulsar.client.impl.schema.BooleanSchema;
-import org.apache.pulsar.client.impl.schema.ByteBufferSchema;
-import org.apache.pulsar.client.impl.schema.ByteSchema;
-import org.apache.pulsar.client.impl.schema.BytesSchema;
-import org.apache.pulsar.client.impl.schema.DateSchema;
-import org.apache.pulsar.client.impl.schema.DoubleSchema;
-import org.apache.pulsar.client.impl.schema.FloatSchema;
-import org.apache.pulsar.client.impl.schema.IntSchema;
-import org.apache.pulsar.client.impl.schema.JSONSchema;
-import org.apache.pulsar.client.impl.schema.LongSchema;
-import org.apache.pulsar.client.impl.schema.ProtobufSchema;
-import org.apache.pulsar.client.impl.schema.SchemaDefinitionBuilderImpl;
-import org.apache.pulsar.client.impl.schema.ShortSchema;
-import org.apache.pulsar.client.impl.schema.StringSchema;
-import org.apache.pulsar.client.impl.schema.TimeSchema;
-import org.apache.pulsar.client.impl.schema.TimestampSchema;
+import org.apache.pulsar.client.impl.schema.*;
 
 import javax.inject.Singleton;
 
 /**
- * Resolves Pulsar schema.
- *
+ * Message type resolver for Pulsar schema. Uses customised Schema for JSON; otherwise falls back to the ones
+ * from Apache Pulsar Java library.
  * @author Haris Secic
  * @since 1.0
  */
 @Singleton
 public class SchemaResolver {
+
+    private final ObjectMapper objectMapper;
+
+    public SchemaResolver(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
     /**
      * Resolve which schema to use.
@@ -60,9 +52,9 @@ public class SchemaResolver {
         MessageSchema schema = topicAnnotation.getRequiredValue("schema", MessageSchema.class);
         if (MessageSchema.BYTES == schema && byte[].class != messageBodyType) {
             if (String.class == messageBodyType) {
-                return Schema.STRING;
+                return new StringSchema();
             }
-            return Schema.JSON(messageBodyType); //default to JSON for now
+            return JsonSchema.of(messageBodyType, objectMapper); //default to JSON for now
         }
 
         switch (schema) {
@@ -93,7 +85,7 @@ public class SchemaResolver {
             case STRING:
                 return new StringSchema();
             case JSON:
-                return JSONSchema.of(new SchemaDefinitionBuilderImpl().withPojo(messageBodyType).build());
+                return JsonSchema.of(messageBodyType, objectMapper);
             case AVRO:
                 return AvroSchema.of(new SchemaDefinitionBuilderImpl().withPojo(messageBodyType).build());
             case PROTOBUF:

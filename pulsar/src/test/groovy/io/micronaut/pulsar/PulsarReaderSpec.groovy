@@ -17,22 +17,18 @@ package io.micronaut.pulsar
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarReader
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.MessageId
-import org.apache.pulsar.client.api.Producer
-import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.Reader
+import org.apache.pulsar.client.api.*
+import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.Stepwise
 
 import javax.inject.Singleton
 
 import static java.util.concurrent.TimeUnit.SECONDS
-import static org.apache.pulsar.client.api.Schema.STRING
 
 @Stepwise
 class PulsarReaderSpec extends PulsarAwareTest {
 
-    private static final String PULSAR_READER_TEST_TOPIC = "public/default/simple-reader"
+    private static final String PULSAR_READER_TEST_TOPIC = "persistent://public/default/simple-reader"
 
     void setupSpec() {
         PulsarDefaultContainer.createNonPartitionedTopic(PULSAR_READER_TEST_TOPIC)
@@ -50,10 +46,9 @@ class PulsarReaderSpec extends PulsarAwareTest {
 
     void "test simple reader"() {
         given:
-        String topic = "persistent://$PULSAR_READER_TEST_TOPIC"
         Producer producer = context.getBean(PulsarClient)
-                .newProducer(STRING)
-                .topic(topic)
+                .newProducer(new StringSchema())
+                .topic(PULSAR_READER_TEST_TOPIC)
                 .producerName("string-producer")
                 .create()
         Reader stringReader = context.getBean(ReaderRequester).stringReader

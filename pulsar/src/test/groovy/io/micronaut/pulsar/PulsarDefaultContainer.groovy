@@ -22,7 +22,7 @@ class PulsarDefaultContainer implements AutoCloseable {
 
     static PulsarAdmin PULSAR_ADMIN
 
-    static final PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.7.0").with {
+    static final PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.7.1").with {
         it.start()
         sleep 1000 // for some reason clusters don't get proper boot this delay helps a bit for awaiting clusters
         PULSAR_ADMIN = PulsarAdmin.builder().serviceHttpUrl(it.httpServiceUrl).build()

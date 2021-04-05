@@ -17,7 +17,7 @@ package io.micronaut.pulsar.annotation;
 
 import io.micronaut.aop.Introduction;
 import io.micronaut.context.annotation.Type;
-import io.micronaut.pulsar.intercept.PulsarClientIntroductionAdvice;
+import io.micronaut.pulsar.intercept.PulsarProducerAdvice;
 import io.micronaut.retry.annotation.Recoverable;
 
 import javax.inject.Scope;
@@ -38,7 +38,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Retention(RUNTIME)
 @Scope
 @Introduction
-@Type(PulsarClientIntroductionAdvice.class)
+@Type(PulsarProducerAdvice.class)
 @Recoverable
 @Singleton
 public @interface PulsarProducerClient {

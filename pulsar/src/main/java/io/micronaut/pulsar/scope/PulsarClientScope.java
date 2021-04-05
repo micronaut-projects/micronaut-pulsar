@@ -47,7 +47,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 @Singleton
-public class PulsarClientScope implements CustomScope<PulsarProducerClient>, LifeCycle<PulsarClientScope> {
+public final class PulsarClientScope implements CustomScope<PulsarProducerClient>, LifeCycle<PulsarClientScope> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarClientScope.class);
 
@@ -76,20 +76,20 @@ public class PulsarClientScope implements CustomScope<PulsarProducerClient>, Lif
         for (ExecutableMethod<T, ?> method : beanDefinition.getExecutableMethods()) {
             AnnotationValue<PulsarProducer> annotation = method.getAnnotation(PulsarProducer.class);
             if (null != annotation) {
-                producerMethods.add(createProducer(annotation));
+                producerMethods.add(createProducer(annotation, method));
             }
         }
         return (T) producersCollection.computeIfAbsent(identifier.getName(), key -> producerMethods);
     }
 
-    private Producer<?> createProducer(AnnotationValue<PulsarProducer> annotationValue) {
+    public Producer<?> createProducer(AnnotationValue<PulsarProducer> annotationValue, ExecutableMethod<?, ?> method) {
         String producerId = annotationValue.getRequiredValue("producerName", String.class);
         //Annotation processor for @PulsarProducer will also create such beans. Avoid having duplicates.
         if (beanContext.containsBean(Producer.class, Qualifiers.byName(producerId))) {
             return beanContext.getBean(Producer.class, Qualifiers.byName(producerId));
         }
         return beanContext.createBean(Producer.class, Qualifiers.byName(producerId),
-                pulsarClient, annotationValue, schemaResolver);
+                pulsarClient, annotationValue, schemaResolver, method.getName(), method.getReturnType().getType());
     }
 
     @SuppressWarnings("unchecked")

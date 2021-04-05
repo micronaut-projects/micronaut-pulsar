@@ -56,6 +56,8 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private URL oauthIssuerUrl;
     private URL oauthCredentialsUrl;
     private String oauthAudience;
+    private Boolean useDeadLetterQueue;
+    private int defaultMaxRetryDlq = 3;
 
     /**
      * Constructs the default Pulsar Client configuration.
@@ -85,7 +87,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     /**
-     * @param listenerThreads Number of threads to use with message listeners.
+     * @param listenerThreads Number of threads to use with message example.listeners.
      */
     public void setListenerThreads(Integer listenerThreads) {
         this.listenerThreads = listenerThreads;
@@ -168,6 +170,34 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     public void setOauthIssuerUrl(URL oauthIssuerUrl) {
         this.oauthIssuerUrl = oauthIssuerUrl;
         generateAuthenticationOAuth2();
+    }
+
+    public Boolean getUseDeadLetterQueue() {
+        return Optional.ofNullable(useDeadLetterQueue).orElse(true);
+    }
+
+    /**
+     * If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
+     * be resent again.
+     * @param useDeadLetterQueue Use DLQ for Pulsar Consumers by default or not.
+     */
+    public void setUseDeadLetterQueue(Boolean useDeadLetterQueue) {
+        this.useDeadLetterQueue = useDeadLetterQueue;
+    }
+
+    public int getDefaultMaxRetryDlq() {
+        return defaultMaxRetryDlq;
+    }
+
+    /**
+     * If not set defaults to 3. {@code #useDeadLetterQueue} must be enabled or else this value is ignored.
+     * @param defaultMaxRetryDlq Deafult max number of retries before sending message to DLQ for all consumers.
+     */
+    public void setDefaultMaxRetryDlq(int defaultMaxRetryDlq) {
+        if (defaultMaxRetryDlq < 1) {
+            throw new IllegalArgumentException("Default number of max retries for DLQ must be greater than 0");
+        }
+        this.defaultMaxRetryDlq = defaultMaxRetryDlq;
     }
 
     private void generateAuthenticationOAuth2() {

@@ -21,14 +21,9 @@ import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.processor.SchemaResolver;
-import org.apache.pulsar.client.api.CompressionType;
-import org.apache.pulsar.client.api.HashingScheme;
-import org.apache.pulsar.client.api.MessageRoutingMode;
-import org.apache.pulsar.client.api.Producer;
-import org.apache.pulsar.client.api.ProducerBuilder;
-import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.api.Schema;
+import org.apache.pulsar.client.api.*;
+import org.apache.pulsar.client.impl.ProducerBuilderImpl;
+import org.apache.pulsar.client.impl.PulsarClientImpl;
 
 /**
  * Pulsar {@link Producer} factory.
@@ -64,8 +59,7 @@ public class PulsarProducerFactory {
         String topic = annotationValue.stringValue("topic")
                 .orElseGet(() -> annotationValue.getRequiredValue(String.class));
 
-        ProducerBuilder<T> producerBuilder = pulsarClient
-                .newProducer(schema)
+        ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
                 .producerName(producerName)
                 .topic(topic);
 

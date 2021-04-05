@@ -22,11 +22,11 @@ import io.reactivex.Single
 import org.apache.pulsar.client.api.MessageId
 import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.Reader
+import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.Stepwise
 
 import static java.util.concurrent.TimeUnit.SECONDS
 import static org.apache.pulsar.client.api.MessageId.latest
-import static org.apache.pulsar.client.api.Schema.STRING
 
 @Stepwise
 class PulsarProducersSpec extends PulsarAwareTest {
@@ -41,7 +41,7 @@ class PulsarProducersSpec extends PulsarAwareTest {
         when:
         ProducerTester producer = context.getBean(ProducerTester)
         Reader reader = context.getBean(PulsarClient)
-                .newReader(STRING)
+                .newReader(new StringSchema())
                 .startMessageId(latest)
                 .topic(PULSAR_PRODUCER_TEST_TOPIC)
                 .create()
