@@ -112,7 +112,6 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>@Singleton
- @Requires(beans=<a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration.class</a>)
 public final class <span class="typeNameLabel">PulsarConsumerProcessor</span>
 extends java.lang.Object
 implements io.micronaut.context.processor.ExecutableMethodProcessor&lt;<a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html" title="annotation in io.micronaut.pulsar.annotation">PulsarConsumer</a>&gt;, java.lang.AutoCloseable, <a href="../../../../io/micronaut/pulsar/PulsarConsumerRegistry.html" title="interface in io.micronaut.pulsar">PulsarConsumerRegistry</a></pre>
@@ -141,10 +140,11 @@ implements io.micronaut.context.processor.ExecutableMethodProcessor&lt;<a href="
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#PulsarConsumerProcessor-io.micronaut.context.event.ApplicationEventPublisher-io.micronaut.context.BeanContext-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-">PulsarConsumerProcessor</a></span>(io.micronaut.context.event.ApplicationEventPublisher&nbsp;applicationEventPublisher,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#PulsarConsumerProcessor-io.micronaut.context.event.ApplicationEventPublisher-io.micronaut.context.BeanContext-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.pulsar.config.DefaultPulsarClientConfiguration-">PulsarConsumerProcessor</a></span>(io.micronaut.context.event.ApplicationEventPublisher&nbsp;applicationEventPublisher,
                        io.micronaut.context.BeanContext&nbsp;beanContext,
                        org.apache.pulsar.client.api.PulsarClient&nbsp;pulsarClient,
-                       <a href="../../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver)</code>&nbsp;</td>
+                       <a href="../../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver,
+                       <a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a>&nbsp;pulsarClientConfiguration)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -216,7 +216,7 @@ implements io.micronaut.context.processor.ExecutableMethodProcessor&lt;<a href="
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PulsarConsumerProcessor-io.micronaut.context.event.ApplicationEventPublisher-io.micronaut.context.BeanContext-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-">
+<a name="PulsarConsumerProcessor-io.micronaut.context.event.ApplicationEventPublisher-io.micronaut.context.BeanContext-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.pulsar.config.DefaultPulsarClientConfiguration-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -225,7 +225,8 @@ implements io.micronaut.context.processor.ExecutableMethodProcessor&lt;<a href="
 <pre>public&nbsp;PulsarConsumerProcessor(io.micronaut.context.event.ApplicationEventPublisher&nbsp;applicationEventPublisher,
                                io.micronaut.context.BeanContext&nbsp;beanContext,
                                org.apache.pulsar.client.api.PulsarClient&nbsp;pulsarClient,
-                               <a href="../../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver)</pre>
+                               <a href="../../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver,
+                               <a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a>&nbsp;pulsarClientConfiguration)</pre>
 </li>
 </ul>
 </li>

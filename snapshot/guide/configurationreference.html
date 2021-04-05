@@ -75,7 +75,7 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.listener-threads</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Integer</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Number of threads to use with message listeners.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Number of threads to use with message example.listeners.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.ssl-provider</code></p></td>
@@ -101,6 +101,17 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.oauth-audience</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 audience</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.use-dead-letter-queue</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won&#8217;t
+ be resent again.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.default-max-retry-dlq</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to 3. {@code #useDeadLetterQueue} must be enabled or else this value is ignored.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.authentication-jwt</code></p></td>

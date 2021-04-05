@@ -94,6 +94,9 @@
 <pre>@Documented
  @Retention(value=RUNTIME)
  @Target(value=METHOD)
+ @Around
+ @Introduction
+ @Type(value=<a href="../../../../io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice.class</a>)
 public @interface <span class="memberNameLabel">PulsarProducer</span></pre>
 <div class="block">Marks a method that should produce values to Pulsar topics on call.</div>
 <dl>
@@ -157,34 +160,40 @@ public @interface <span class="memberNameLabel">PulsarProducer</span></pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#encryptionKey--">encryptionKey</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#firstSend--">firstSend</a></span></code>
+<div class="block">Defaults to false.</div>
+</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>org.apache.pulsar.client.api.HashingScheme</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#hashingScheme--">hashingScheme</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>long</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#initialSequenceId--">initialSequenceId</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>org.apache.pulsar.client.api.MessageRoutingMode</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#messageRoutingMode--">messageRoutingMode</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#multiSchema--">multiSchema</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#producerName--">producerName</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code><a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#schema--">schema</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#topic--">topic</a></span></code>&nbsp;</td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#value--">value</a></span></code>&nbsp;</td>
 </tr>
@@ -511,7 +520,7 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <li class="blockList"><a name="hashingScheme--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>hashingScheme</h4>
 <pre>public abstract&nbsp;org.apache.pulsar.client.api.HashingScheme&nbsp;hashingScheme</pre>
@@ -522,6 +531,28 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <dl>
 <dt>Default:</dt>
 <dd>org.apache.pulsar.client.api.HashingScheme.JavaStringHash</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="firstSend--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>firstSend</h4>
+<pre>public abstract&nbsp;boolean&nbsp;firstSend</pre>
+<div class="block">Defaults to false.
+ Will be used to determine whether to send message prior to executing method code or before.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Whether to send the message before calling actual implementation.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>false</dd>
 </dl>
 </li>
 </ul>

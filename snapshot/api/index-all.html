@@ -67,13 +67,15 @@
 <!--   -->
 </a></div>
 <!-- ========= END OF TOP NAVBAR ========= -->
-<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a name="I:A">
+<div class="contentContainer"><a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;<a name="I:A">
 <!--   -->
 </a>
 <h2 class="title">A</h2>
 <dl>
 <dt><a href="io/micronaut/pulsar/config/AbstractPulsarConfiguration.html" title="class in io.micronaut.pulsar.config"><span class="typeNameLink">AbstractPulsarConfiguration</span></a>&lt;<a href="io/micronaut/pulsar/config/AbstractPulsarConfiguration.html" title="type parameter in AbstractPulsarConfiguration">K</a>,<a href="io/micronaut/pulsar/config/AbstractPulsarConfiguration.html" title="type parameter in AbstractPulsarConfiguration">V</a>&gt; - Class in <a href="io/micronaut/pulsar/config/package-summary.html">io.micronaut.pulsar.config</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Base template class for configuring pulsar.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/AbstractPulsarConfiguration.html#AbstractPulsarConfiguration-java.util.Properties-">AbstractPulsarConfiguration(Properties)</a></span> - Constructor for class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/AbstractPulsarConfiguration.html" title="class in io.micronaut.pulsar.config">AbstractPulsarConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#annotationType--">annotationType()</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
@@ -84,7 +86,7 @@
 </a>
 <h2 class="title">C</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html#close--">close()</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarClientIntroductionAdvice</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#close--">close()</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#close--">close()</a></span> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
 <dd>&nbsp;</dd>
@@ -100,6 +102,8 @@
 <dd>
 <div class="block">Simple factory method for producing Pulsar <code>Producer</code> beans.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#createProducer-io.micronaut.core.annotation.AnnotationValue-io.micronaut.inject.ExecutableMethod-">createProducer(AnnotationValue&lt;PulsarProducer&gt;, ExecutableMethod&lt;?, ?&gt;)</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarReaderFactory.html#createReader-io.micronaut.inject.InjectionPoint-">createReader(InjectionPoint&lt;?&gt;)</a></span> - Method in class io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarReaderFactory.html" title="class in io.micronaut.pulsar">PulsarReaderFactory</a></dt>
 <dd>
 <div class="block">Create Pulsar Reader for given injection point if missing.</div>
@@ -172,6 +176,8 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarConsumerRegistry.html#getConsumers--">getConsumers()</a></span> - Method in interface io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarConsumerRegistry.html" title="interface in io.micronaut.pulsar">PulsarConsumerRegistry</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getDefaultMaxRetryDlq--">getDefaultMaxRetryDlq()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getIoThreads--">getIoThreads()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getIoThreads--">getIoThreads()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
@@ -188,19 +194,19 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getOauthIssuerUrl--">getOauthIssuerUrl()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html#getProducer-java.lang.String-">getProducer(String)</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarClientIntroductionAdvice</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#getProducer-java.lang.String-">getProducer(String)</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarProducerRegistry.html#getProducer-java.lang.String-">getProducer(String)</a></span> - Method in interface io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarProducerRegistry.html" title="interface in io.micronaut.pulsar">PulsarProducerRegistry</a></dt>
 <dd>
 <div class="block">Get single managed producer by it's name.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html#getProducerIds--">getProducerIds()</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarClientIntroductionAdvice</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#getProducerIds--">getProducerIds()</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarProducerRegistry.html#getProducerIds--">getProducerIds()</a></span> - Method in interface io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarProducerRegistry.html" title="interface in io.micronaut.pulsar">PulsarProducerRegistry</a></dt>
 <dd>
 <div class="block">Get all managed producer identifiers.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html#getProducers--">getProducers()</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarClientIntroductionAdvice</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#getProducers--">getProducers()</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarProducerRegistry.html#getProducers--">getProducers()</a></span> - Method in interface io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarProducerRegistry.html" title="interface in io.micronaut.pulsar">PulsarProducerRegistry</a></dt>
 <dd>
@@ -228,13 +234,15 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getSslProvider--">getSslProvider()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getUseDeadLetterQueue--">getUseDeadLetterQueue()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:I">
 <!--   -->
 </a>
 <h2 class="title">I</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html#intercept-io.micronaut.aop.MethodInvocationContext-">intercept(MethodInvocationContext&lt;Object, Object&gt;)</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarClientIntroductionAdvice</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#intercept-io.micronaut.aop.MethodInvocationContext-">intercept(MethodInvocationContext&lt;Object, Object&gt;)</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/package-summary.html">io.micronaut.pulsar</a> - package io.micronaut.pulsar</dt>
 <dd>&nbsp;</dd>
@@ -248,6 +256,10 @@
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/processor/package-summary.html">io.micronaut.pulsar.processor</a> - package io.micronaut.pulsar.processor</dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/pulsar/schemas/package-summary.html">io.micronaut.pulsar.schemas</a> - package io.micronaut.pulsar.schemas</dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/pulsar/schemas/json/package-summary.html">io.micronaut.pulsar.schemas.json</a> - package io.micronaut.pulsar.schemas.json</dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/scope/package-summary.html">io.micronaut.pulsar.scope</a> - package io.micronaut.pulsar.scope</dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#isPaused-java.lang.String-">isPaused(String)</a></span> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
@@ -255,6 +267,30 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarConsumerRegistry.html#isPaused-java.lang.String-">isPaused(String)</a></span> - Method in interface io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarConsumerRegistry.html" title="interface in io.micronaut.pulsar">PulsarConsumerRegistry</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#isRunning--">isRunning()</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a name="I:J">
+<!--   -->
+</a>
+<h2 class="title">J</h2>
+<dl>
+<dt><a href="io/micronaut/pulsar/schemas/json/JacksonJsonReader.html" title="class in io.micronaut.pulsar.schemas.json"><span class="typeNameLink">JacksonJsonReader</span></a>&lt;<a href="io/micronaut/pulsar/schemas/json/JacksonJsonReader.html" title="type parameter in JacksonJsonReader">T</a>&gt; - Class in <a href="io/micronaut/pulsar/schemas/json/package-summary.html">io.micronaut.pulsar.schemas.json</a></dt>
+<dd>
+<div class="block">JSON Schema Reader to allow using <code>ObjectMapper</code> from Micronaut instead of shaded one in Pulsar library.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/schemas/json/JacksonJsonReader.html#JacksonJsonReader-com.fasterxml.jackson.databind.ObjectMapper-java.lang.Class-">JacksonJsonReader(ObjectMapper, Class&lt;T&gt;)</a></span> - Constructor for class io.micronaut.pulsar.schemas.json.<a href="io/micronaut/pulsar/schemas/json/JacksonJsonReader.html" title="class in io.micronaut.pulsar.schemas.json">JacksonJsonReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/pulsar/schemas/json/JacksonJsonWriter.html" title="class in io.micronaut.pulsar.schemas.json"><span class="typeNameLink">JacksonJsonWriter</span></a>&lt;<a href="io/micronaut/pulsar/schemas/json/JacksonJsonWriter.html" title="type parameter in JacksonJsonWriter">T</a>&gt; - Class in <a href="io/micronaut/pulsar/schemas/json/package-summary.html">io.micronaut.pulsar.schemas.json</a></dt>
+<dd>
+<div class="block">JSON Schema Writer to allow using <code>ObjectMapper</code> from Micronaut instead of shaded one in Pulsar library.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/schemas/json/JacksonJsonWriter.html#JacksonJsonWriter-com.fasterxml.jackson.databind.ObjectMapper-">JacksonJsonWriter(ObjectMapper)</a></span> - Constructor for class io.micronaut.pulsar.schemas.json.<a href="io/micronaut/pulsar/schemas/json/JacksonJsonWriter.html" title="class in io.micronaut.pulsar.schemas.json">JacksonJsonWriter</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="io/micronaut/pulsar/schemas/JsonSchema.html" title="class in io.micronaut.pulsar.schemas"><span class="typeNameLink">JsonSchema</span></a>&lt;<a href="io/micronaut/pulsar/schemas/JsonSchema.html" title="type parameter in JsonSchema">T</a>&gt; - Class in <a href="io/micronaut/pulsar/schemas/package-summary.html">io.micronaut.pulsar.schemas</a></dt>
+<dd>
+<div class="block">JSON Schema to allow using <code>ObjectMapper</code> from Micronaut instead of shaded one in Pulsar library.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/schemas/JsonSchema.html#JsonSchema-org.apache.pulsar.common.schema.SchemaInfo-org.apache.pulsar.client.api.schema.SchemaReader-org.apache.pulsar.client.api.schema.SchemaWriter-">JsonSchema(SchemaInfo, SchemaReader&lt;T&gt;, SchemaWriter&lt;T&gt;)</a></span> - Constructor for class io.micronaut.pulsar.schemas.<a href="io/micronaut/pulsar/schemas/JsonSchema.html" title="class in io.micronaut.pulsar.schemas">JsonSchema</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a name="I:M">
@@ -271,6 +307,14 @@
 <dd>
 <div class="block">Supported schema types.</div>
 </dd>
+</dl>
+<a name="I:O">
+<!--   -->
+</a>
+<h2 class="title">O</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/schemas/JsonSchema.html#of-java.lang.Class-com.fasterxml.jackson.databind.ObjectMapper-">of(Class&lt;T&gt;, ObjectMapper)</a></span> - Static method in class io.micronaut.pulsar.schemas.<a href="io/micronaut/pulsar/schemas/JsonSchema.html" title="class in io.micronaut.pulsar.schemas">JsonSchema</a></dt>
+<dd>&nbsp;</dd>
 </dl>
 <a name="I:P">
 <!--   -->
@@ -301,12 +345,6 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarClientFactory.html#PulsarClientFactory--">PulsarClientFactory()</a></span> - Constructor for class io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarClientFactory.html" title="class in io.micronaut.pulsar">PulsarClientFactory</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html" title="class in io.micronaut.pulsar.intercept"><span class="typeNameLink">PulsarClientIntroductionAdvice</span></a> - Class in <a href="io/micronaut/pulsar/intercept/package-summary.html">io.micronaut.pulsar.intercept</a></dt>
-<dd>
-<div class="block">Intercepting pulsar <code>Producer</code> methods.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html#PulsarClientIntroductionAdvice-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.context.BeanContext-">PulsarClientIntroductionAdvice(PulsarClient, SchemaResolver, BeanContext)</a></span> - Constructor for class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarClientIntroductionAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarClientIntroductionAdvice</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope"><span class="typeNameLink">PulsarClientScope</span></a> - Class in <a href="io/micronaut/pulsar/scope/package-summary.html">io.micronaut.pulsar.scope</a></dt>
 <dd>
 <div class="block">A scope implementation for injecting <a href="io/micronaut/pulsar/annotation/PulsarProducerClient.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarProducerClient</code></a> instances.</div>
@@ -321,7 +359,7 @@
 <dd>
 <div class="block">Processes beans containing methods annotated with @PulsarConsumer.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#PulsarConsumerProcessor-io.micronaut.context.event.ApplicationEventPublisher-io.micronaut.context.BeanContext-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-">PulsarConsumerProcessor(ApplicationEventPublisher, BeanContext, PulsarClient, SchemaResolver)</a></span> - Constructor for class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#PulsarConsumerProcessor-io.micronaut.context.event.ApplicationEventPublisher-io.micronaut.context.BeanContext-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.pulsar.config.DefaultPulsarClientConfiguration-">PulsarConsumerProcessor(ApplicationEventPublisher, BeanContext, PulsarClient, SchemaResolver, DefaultPulsarClientConfiguration)</a></span> - Constructor for class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/PulsarConsumerRegistry.html" title="interface in io.micronaut.pulsar"><span class="typeNameLink">PulsarConsumerRegistry</span></a> - Interface in <a href="io/micronaut/pulsar/package-summary.html">io.micronaut.pulsar</a></dt>
 <dd>
@@ -331,6 +369,12 @@
 <dd>
 <div class="block">Marks a method that should produce values to Pulsar topics on call.</div>
 </dd>
+<dt><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept"><span class="typeNameLink">PulsarProducerAdvice</span></a> - Class in <a href="io/micronaut/pulsar/intercept/package-summary.html">io.micronaut.pulsar.intercept</a></dt>
+<dd>
+<div class="block">Intercepting pulsar <code>Producer</code> methods.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#PulsarProducerAdvice-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.context.BeanContext-">PulsarProducerAdvice(PulsarClient, SchemaResolver, BeanContext)</a></span> - Constructor for class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/annotation/PulsarProducerClient.html" title="annotation in io.micronaut.pulsar.annotation"><span class="typeNameLink">PulsarProducerClient</span></a> - Annotation Type in <a href="io/micronaut/pulsar/annotation/package-summary.html">io.micronaut.pulsar.annotation</a></dt>
 <dd>
 <div class="block">Marks a type as a bean containing producer methods.</div>
@@ -373,6 +417,10 @@
 </a>
 <h2 class="title">R</h2>
 <dl>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/schemas/json/JacksonJsonReader.html#read-byte:A-int-int-">read(byte[], int, int)</a></span> - Method in class io.micronaut.pulsar.schemas.json.<a href="io/micronaut/pulsar/schemas/json/JacksonJsonReader.html" title="class in io.micronaut.pulsar.schemas.json">JacksonJsonReader</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/schemas/json/JacksonJsonReader.html#read-java.io.InputStream-">read(InputStream)</a></span> - Method in class io.micronaut.pulsar.schemas.json.<a href="io/micronaut/pulsar/schemas/json/JacksonJsonReader.html" title="class in io.micronaut.pulsar.schemas.json">JacksonJsonReader</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/DefaultListener.html#received-org.apache.pulsar.client.api.Consumer-org.apache.pulsar.client.api.Message-">received(Consumer, Message)</a></span> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/DefaultListener.html" title="class in io.micronaut.pulsar.processor">DefaultListener</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#remove-io.micronaut.inject.BeanIdentifier-">remove(BeanIdentifier)</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
@@ -389,12 +437,16 @@
 <dl>
 <dt><a href="io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor"><span class="typeNameLink">SchemaResolver</span></a> - Class in <a href="io/micronaut/pulsar/processor/package-summary.html">io.micronaut.pulsar.processor</a></dt>
 <dd>
-<div class="block">Resolves Pulsar schema.</div>
+<div class="block">Message type resolver for Pulsar schema.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/SchemaResolver.html#SchemaResolver--">SchemaResolver()</a></span> - Constructor for class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/SchemaResolver.html#SchemaResolver-com.fasterxml.jackson.databind.ObjectMapper-">SchemaResolver(ObjectMapper)</a></span> - Constructor for class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setAuthenticationJwt-java.lang.String-">setAuthenticationJwt(String)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setDefaultMaxRetryDlq-int-">setDefaultMaxRetryDlq(int)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>
+<div class="block">If not set defaults to 3.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setIoThreads-java.lang.Integer-">setIoThreads(Integer)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setListenerThreads-java.lang.Integer-">setListenerThreads(Integer)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
@@ -410,6 +462,11 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setSslProvider-java.lang.String-">setSslProvider(String)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>
 <div class="block">Defaults to default JVM provider.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setUseDeadLetterQueue-java.lang.Boolean-">setUseDeadLetterQueue(Boolean)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>
+<div class="block">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
+ be resent again.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#stop--">stop()</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
 <dd>&nbsp;</dd>
@@ -443,7 +500,15 @@
 the order they are declared.</div>
 </dd>
 </dl>
-<a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;</div>
+<a name="I:W">
+<!--   -->
+</a>
+<h2 class="title">W</h2>
+<dl>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/schemas/json/JacksonJsonWriter.html#write-T-">write(T)</a></span> - Method in class io.micronaut.pulsar.schemas.json.<a href="io/micronaut/pulsar/schemas/json/JacksonJsonWriter.html" title="class in io.micronaut.pulsar.schemas.json">JacksonJsonWriter</a></dt>
+<dd>&nbsp;</dd>
+</dl>
+<a href="#I:A">A</a>&nbsp;<a href="#I:C">C</a>&nbsp;<a href="#I:D">D</a>&nbsp;<a href="#I:G">G</a>&nbsp;<a href="#I:I">I</a>&nbsp;<a href="#I:J">J</a>&nbsp;<a href="#I:M">M</a>&nbsp;<a href="#I:O">O</a>&nbsp;<a href="#I:P">P</a>&nbsp;<a href="#I:R">R</a>&nbsp;<a href="#I:S">S</a>&nbsp;<a href="#I:T">T</a>&nbsp;<a href="#I:V">V</a>&nbsp;<a href="#I:W">W</a>&nbsp;</div>
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
 <div class="bottomNav"><a name="navbar.bottom">
 <!--   -->

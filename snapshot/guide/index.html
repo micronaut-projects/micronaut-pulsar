@@ -434,6 +434,19 @@ won&#8217;t connect and will throw <code>org.apache.pulsar.client.api.PulsarClie
 </table>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_dead_letter_queue">Dead Letter Queue</h3>
+<div class="paragraph">
+<p>By default Pulsar Java library does not configure DLQ to be used. Instead it will re-deliver failed messages as long as
+possible which floods the consumer(s) until message if finally received. Failed means that message was received but consumer
+did negative acknowledgement thus received means delivered and acknowledged by the consumer. However, reason for failure might be
+bad JSON formatting (in the case where JSON is being used) or such which will create unnecessary traffic to consumer(s) and message
+will never be delivered resulting in either consumers slowing down due to high redelivery count or at the end dropping
+due to high load. For this purpose Micronaut Pulsar is using DLQ by default and it will retry <em>only</em> 3 times. If you wish
+to configure these options please use configuration properties <code>use-dead-letter-queue</code> and <code>default-max-retry-dlq</code>. These
+properties indicate that the DLQ will be used by default on all Pulsar consumers if not explicitly set otherwise.</p>
+</div>
+</div>
 </div>
 </div>
 
@@ -540,7 +553,9 @@ public interface ProducerTester {
 </div>
 </div>
 <div class="paragraph">
-<p>Only <strong>topic</strong> is a required parameter. Other parameters are optional. However, it&#8217;s important to note that if producer name is not set it will default to the method name, which may cause collisions in case of non-unique method names. Message content(body) type will be determined by the first method parameter type.</p>
+<p>Only <strong>topic</strong> is a required parameter. Other parameters are optional. However, it&#8217;s important to note that if producer name
+is not set it will default to the method name, which may cause collisions in case of non-unique method names. Message content(body)
+type will be determined by the first method parameter type. It will default to JSON schema if not set explicitly.</p>
 </div>
 <div class="sect2">
 <h3 id="_producer_return_values">Producer return values</h3>
@@ -571,6 +586,13 @@ public interface ProducerTester {
     Single&lt;MessageId&gt; returnReactive(String message);
 }</code></pre>
 </div>
+</div>
+<div class="paragraph">
+<p>Producers can be used as methods in other beans as well. For example: You can have a class annotated with <code>@PulsarSubscription</code>
+which reads messages from one place using methods annotated with <code>@PulsarConsumer</code> and decide in that method whether to pass
+on message to method annotated by the <code>@PulsarProducer</code>. This brings in flexibility to use code to decide what to send where
+instead of just providing <code>@SentTo</code> or alike which sends all messages accepted by the consumer to the defined topic. It&#8217;s also
+useful as you can define additional logic that follows up sending or happens before it.</p>
 </div>
 </div>
 </div>

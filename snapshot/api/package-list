@@ -4,4 +4,6 @@ io.micronaut.pulsar.config
 io.micronaut.pulsar.events
 io.micronaut.pulsar.intercept
 io.micronaut.pulsar.processor
+io.micronaut.pulsar.schemas
+io.micronaut.pulsar.schemas.json
 io.micronaut.pulsar.scope

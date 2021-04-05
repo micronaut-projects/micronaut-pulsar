@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -112,7 +112,7 @@ var activeTableTab = "activeTableTab";
 <hr>
 <br>
 <pre>@Singleton
-public class <span class="typeNameLabel">PulsarClientScope</span>
+public final class <span class="typeNameLabel">PulsarClientScope</span>
 extends java.lang.Object
 implements io.micronaut.context.scope.CustomScope&lt;<a href="../../../../io/micronaut/pulsar/annotation/PulsarProducerClient.html" title="annotation in io.micronaut.pulsar.annotation">PulsarProducerClient</a>&gt;, io.micronaut.context.LifeCycle&lt;<a href="../../../../io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a>&gt;</pre>
 <div class="block">A scope implementation for injecting <a href="../../../../io/micronaut/pulsar/annotation/PulsarProducerClient.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarProducerClient</code></a> instances.</div>
@@ -164,21 +164,26 @@ implements io.micronaut.context.scope.CustomScope&lt;<a href="../../../../io/mic
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/scope/PulsarClientScope.html#annotationType--">annotationType</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
+<td class="colFirst"><code>org.apache.pulsar.client.api.Producer&lt;?&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/scope/PulsarClientScope.html#createProducer-io.micronaut.core.annotation.AnnotationValue-io.micronaut.inject.ExecutableMethod-">createProducer</a></span>(io.micronaut.core.annotation.AnnotationValue&lt;<a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html" title="annotation in io.micronaut.pulsar.annotation">PulsarProducer</a>&gt;&nbsp;annotationValue,
+              io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</code>&nbsp;</td>
+</tr>
+<tr id="i2" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;T</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/scope/PulsarClientScope.html#get-io.micronaut.context.BeanResolutionContext-io.micronaut.inject.BeanDefinition-io.micronaut.inject.BeanIdentifier-javax.inject.Provider-">get</a></span>(io.micronaut.context.BeanResolutionContext&nbsp;resolutionContext,
    io.micronaut.inject.BeanDefinition&lt;T&gt;&nbsp;beanDefinition,
    io.micronaut.inject.BeanIdentifier&nbsp;identifier,
    javax.inject.Provider&lt;T&gt;&nbsp;provider)</code>&nbsp;</td>
 </tr>
-<tr id="i2" class="altColor">
+<tr id="i3" class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/scope/PulsarClientScope.html#isRunning--">isRunning</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i3" class="rowColor">
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;java.util.Optional&lt;T&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/scope/PulsarClientScope.html#remove-io.micronaut.inject.BeanIdentifier-">remove</a></span>(io.micronaut.inject.BeanIdentifier&nbsp;identifier)</code>&nbsp;</td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code><a href="../../../../io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/scope/PulsarClientScope.html#stop--">stop</a></span>()</code>&nbsp;</td>
 </tr>
@@ -264,6 +269,16 @@ implements io.micronaut.context.scope.CustomScope&lt;<a href="../../../../io/mic
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code>get</code>&nbsp;in interface&nbsp;<code>io.micronaut.context.scope.CustomScope&lt;<a href="../../../../io/micronaut/pulsar/annotation/PulsarProducerClient.html" title="annotation in io.micronaut.pulsar.annotation">PulsarProducerClient</a>&gt;</code></dd>
 </dl>
+</li>
+</ul>
+<a name="createProducer-io.micronaut.core.annotation.AnnotationValue-io.micronaut.inject.ExecutableMethod-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>createProducer</h4>
+<pre>public&nbsp;org.apache.pulsar.client.api.Producer&lt;?&gt;&nbsp;createProducer(io.micronaut.core.annotation.AnnotationValue&lt;<a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html" title="annotation in io.micronaut.pulsar.annotation">PulsarProducer</a>&gt;&nbsp;annotationValue,
+                                                               io.micronaut.inject.ExecutableMethod&lt;?,?&gt;&nbsp;method)</pre>
 </li>
 </ul>
 <a name="remove-io.micronaut.inject.BeanIdentifier-">

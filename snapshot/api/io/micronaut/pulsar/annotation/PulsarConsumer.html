@@ -148,6 +148,16 @@ public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 </td>
 </tr>
 <tr class="rowColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#deadLetterTopic--">deadLetterTopic</a></span></code>
+<div class="block">Default is fallback to Pulsar Client Java library.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#maxRetriesBeforeDlq--">maxRetriesBeforeDlq</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#patternAutoDiscoveryPeriod--">patternAutoDiscoveryPeriod</a></span></code>
 <div class="block">Used in combination with <code>this#topicsPattern()</code>.</div>
@@ -513,7 +523,7 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <li class="blockList"><a name="priorityLevel--">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>priorityLevel</h4>
 <pre>public abstract&nbsp;int&nbsp;priorityLevel</pre>
@@ -528,6 +538,47 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <dl>
 <dt>Default:</dt>
 <dd>-1</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="deadLetterTopic--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>deadLetterTopic</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;deadLetterTopic</pre>
+<div class="block">Default is fallback to Pulsar Client Java library.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Dead Letter topic name.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="maxRetriesBeforeDlq--">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>maxRetriesBeforeDlq</h4>
+<pre>public abstract&nbsp;int&nbsp;maxRetriesBeforeDlq</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Maximum numbers of retires before sending message to dead letter queue topic.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>3</dd>
 </dl>
 </li>
 </ul>

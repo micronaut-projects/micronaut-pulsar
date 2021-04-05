@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -188,71 +188,92 @@ implements <a href="../../../../io/micronaut/pulsar/config/PulsarClientConfigura
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getAuthentication--">getAuthentication</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i1" class="rowColor">
-<td class="colFirst"><code>java.util.Optional&lt;java.lang.Integer&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getIoThreads--">getIoThreads</a></span>()</code>&nbsp;</td>
+<td class="colFirst"><code>int</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getDefaultMaxRetryDlq--">getDefaultMaxRetryDlq</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i2" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.Integer&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getListenerThreads--">getListenerThreads</a></span>()</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getIoThreads--">getIoThreads</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i3" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.Integer&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getListenerThreads--">getListenerThreads</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i4" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getOauthAudience--">getOauthAudience</a></span>()</code>
 <div class="block">Must be set for usage with the OAuth2 authentication.</div>
 </td>
 </tr>
-<tr id="i4" class="altColor">
+<tr id="i5" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.net.URL&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getOauthCredentialsUrl--">getOauthCredentialsUrl</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i5" class="rowColor">
+<tr id="i6" class="altColor">
 <td class="colFirst"><code>java.net.URL</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getOauthIssuerUrl--">getOauthIssuerUrl</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i6" class="altColor">
+<tr id="i7" class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getServiceUrl--">getServiceUrl</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i7" class="rowColor">
+<tr id="i8" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;org.apache.pulsar.client.api.ServiceUrlProvider&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getServiceUrlProvider--">getServiceUrlProvider</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i8" class="altColor">
+<tr id="i9" class="rowColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getSslProvider--">getSslProvider</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i9" class="rowColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setAuthenticationJwt-java.lang.String-">setAuthenticationJwt</a></span>(java.lang.String&nbsp;authenticationJwt)</code>&nbsp;</td>
-</tr>
 <tr id="i10" class="altColor">
-<td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setIoThreads-java.lang.Integer-">setIoThreads</a></span>(java.lang.Integer&nbsp;ioThreads)</code>&nbsp;</td>
+<td class="colFirst"><code>java.lang.Boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getUseDeadLetterQueue--">getUseDeadLetterQueue</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i11" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setListenerThreads-java.lang.Integer-">setListenerThreads</a></span>(java.lang.Integer&nbsp;listenerThreads)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setAuthenticationJwt-java.lang.String-">setAuthenticationJwt</a></span>(java.lang.String&nbsp;authenticationJwt)</code>&nbsp;</td>
 </tr>
 <tr id="i12" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setOauthAudience-java.lang.String-">setOauthAudience</a></span>(java.lang.String&nbsp;oauthAudience)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setDefaultMaxRetryDlq-int-">setDefaultMaxRetryDlq</a></span>(int&nbsp;defaultMaxRetryDlq)</code>
+<div class="block">If not set defaults to 3.</div>
+</td>
 </tr>
 <tr id="i13" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setOauthCredentialsUrl-java.net.URL-">setOauthCredentialsUrl</a></span>(java.net.URL&nbsp;oauthCredentialsUrl)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setIoThreads-java.lang.Integer-">setIoThreads</a></span>(java.lang.Integer&nbsp;ioThreads)</code>&nbsp;</td>
 </tr>
 <tr id="i14" class="altColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setOauthIssuerUrl-java.net.URL-">setOauthIssuerUrl</a></span>(java.net.URL&nbsp;oauthIssuerUrl)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setListenerThreads-java.lang.Integer-">setListenerThreads</a></span>(java.lang.Integer&nbsp;listenerThreads)</code>&nbsp;</td>
 </tr>
 <tr id="i15" class="rowColor">
 <td class="colFirst"><code>void</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setServiceUrl-java.lang.String-">setServiceUrl</a></span>(java.lang.String&nbsp;serviceUrl)</code>&nbsp;</td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setOauthAudience-java.lang.String-">setOauthAudience</a></span>(java.lang.String&nbsp;oauthAudience)</code>&nbsp;</td>
 </tr>
 <tr id="i16" class="altColor">
 <td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setOauthCredentialsUrl-java.net.URL-">setOauthCredentialsUrl</a></span>(java.net.URL&nbsp;oauthCredentialsUrl)</code>&nbsp;</td>
+</tr>
+<tr id="i17" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setOauthIssuerUrl-java.net.URL-">setOauthIssuerUrl</a></span>(java.net.URL&nbsp;oauthIssuerUrl)</code>&nbsp;</td>
+</tr>
+<tr id="i18" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setServiceUrl-java.lang.String-">setServiceUrl</a></span>(java.lang.String&nbsp;serviceUrl)</code>&nbsp;</td>
+</tr>
+<tr id="i19" class="rowColor">
+<td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setSslProvider-java.lang.String-">setSslProvider</a></span>(java.lang.String&nbsp;sslProvider)</code>
 <div class="block">Defaults to default JVM provider.</div>
+</td>
+</tr>
+<tr id="i20" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setUseDeadLetterQueue-java.lang.Boolean-">setUseDeadLetterQueue</a></span>(java.lang.Boolean&nbsp;useDeadLetterQueue)</code>
+<div class="block">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
+ be resent again.</div>
 </td>
 </tr>
 </table>
@@ -357,7 +378,7 @@ implements <a href="../../../../io/micronaut/pulsar/config/PulsarClientConfigura
 <pre>public&nbsp;void&nbsp;setListenerThreads(java.lang.Integer&nbsp;listenerThreads)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
-<dd><code>listenerThreads</code> - Number of threads to use with message listeners.</dd>
+<dd><code>listenerThreads</code> - Number of threads to use with message example.listeners.</dd>
 </dl>
 </li>
 </ul>
@@ -514,13 +535,60 @@ implements <a href="../../../../io/micronaut/pulsar/config/PulsarClientConfigura
 <a name="setOauthIssuerUrl-java.net.URL-">
 <!--   -->
 </a>
-<ul class="blockListLast">
+<ul class="blockList">
 <li class="blockList">
 <h4>setOauthIssuerUrl</h4>
 <pre>public&nbsp;void&nbsp;setOauthIssuerUrl(java.net.URL&nbsp;oauthIssuerUrl)</pre>
 <dl>
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>oauthIssuerUrl</code> - URL of the OAuth2 Token issuer</dd>
+</dl>
+</li>
+</ul>
+<a name="getUseDeadLetterQueue--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getUseDeadLetterQueue</h4>
+<pre>public&nbsp;java.lang.Boolean&nbsp;getUseDeadLetterQueue()</pre>
+</li>
+</ul>
+<a name="setUseDeadLetterQueue-java.lang.Boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setUseDeadLetterQueue</h4>
+<pre>public&nbsp;void&nbsp;setUseDeadLetterQueue(java.lang.Boolean&nbsp;useDeadLetterQueue)</pre>
+<div class="block">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
+ be resent again.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>useDeadLetterQueue</code> - Use DLQ for Pulsar Consumers by default or not.</dd>
+</dl>
+</li>
+</ul>
+<a name="getDefaultMaxRetryDlq--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getDefaultMaxRetryDlq</h4>
+<pre>public&nbsp;int&nbsp;getDefaultMaxRetryDlq()</pre>
+</li>
+</ul>
+<a name="setDefaultMaxRetryDlq-int-">
+<!--   -->
+</a>
+<ul class="blockListLast">
+<li class="blockList">
+<h4>setDefaultMaxRetryDlq</h4>
+<pre>public&nbsp;void&nbsp;setDefaultMaxRetryDlq(int&nbsp;defaultMaxRetryDlq)</pre>
+<div class="block">If not set defaults to 3. <code>#useDeadLetterQueue</code> must be enabled or else this value is ignored.</div>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>defaultMaxRetryDlq</code> - Deafult max number of retries before sending message to DLQ for all consumers.</dd>
 </dl>
 </li>
 </ul>
