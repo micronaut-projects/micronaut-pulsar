@@ -2,7 +2,7 @@ plugins {
     id("groovy")
     id("java")
     id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("io.micronaut.application") version "1.4.1"
+    id("io.micronaut.application") version "1.4.5"
 }
 
 version = "0.1"
