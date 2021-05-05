@@ -22,20 +22,37 @@ import io.micronaut.websocket.annotation.OnMessage;
 import io.micronaut.websocket.annotation.OnOpen;
 import io.micronaut.websocket.annotation.ServerWebSocket;
 
+/**
+ * TODO javadoc.
+ */
 @ServerWebSocket("/ws/{tenant}/{namespace}/{topic}")
 public class PulsarMessageShareSocket {
+
     private final WebSocketBroadcaster broadcaster;
 
     public PulsarMessageShareSocket(WebSocketBroadcaster broadcaster) {
         this.broadcaster = broadcaster;
     }
 
+    /**
+     * @param tenant TODO
+     * @param namespace TODO
+     * @param topic TODO
+     * @param session TODO
+     */
     @OnOpen
     public void onOpen(String tenant, String namespace, String topic, WebSocketSession session) {
         String report = String.format("A user %s has joined %s/%s/%s", session.getId(), tenant, namespace, topic);
         broadcaster.broadcastAsync(report, this::isReport);
     }
 
+    /**
+     * @param tenant TODO
+     * @param namespace TODO
+     * @param topic TODO
+     * @param message TODO
+     * @param ws TODO
+     */
     @OnMessage
     public void onMessage(String tenant, String namespace, String topic, String message, WebSocketSession ws) {
         String id = "PULSAR";
@@ -46,6 +63,9 @@ public class PulsarMessageShareSocket {
         broadcaster.broadcastAsync(report, this::isReport);
     }
 
+    /**
+     * @param session TODO
+     */
     @OnClose
     public void onClose(WebSocketSession session) {
         String message = String.format("A user with session ID %s has Disconnected!", session.getId());
