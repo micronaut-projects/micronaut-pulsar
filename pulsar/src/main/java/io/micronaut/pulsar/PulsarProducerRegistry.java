@@ -15,9 +15,9 @@
  */
 package io.micronaut.pulsar;
 
+import io.micronaut.core.annotation.NonNull;
 import org.apache.pulsar.client.api.Producer;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
@@ -40,7 +40,7 @@ public interface PulsarProducerRegistry {
      * @param id
      * @return Pulsar producer by given name
      */
-    Producer<?> getProducer(@Nonnull String id);
+    Producer<?> getProducer(@NonNull String id);
 
     /**
      * Get all managed producer identifiers.
