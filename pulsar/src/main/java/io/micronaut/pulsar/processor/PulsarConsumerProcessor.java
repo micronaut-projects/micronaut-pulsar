@@ -19,6 +19,7 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.ArrayUtils;
@@ -30,22 +31,35 @@ import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.ConsumerSubscribedEvent;
-import org.apache.pulsar.client.api.*;
+import org.apache.pulsar.client.api.Consumer;
+import org.apache.pulsar.client.api.ConsumerBuilder;
+import org.apache.pulsar.client.api.DeadLetterPolicy;
+import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.PulsarClient;
+import org.apache.pulsar.client.api.PulsarClientException;
+import org.apache.pulsar.client.api.RegexSubscriptionMode;
+import org.apache.pulsar.client.api.Schema;
+import org.apache.pulsar.client.api.SubscriptionType;
 import org.apache.pulsar.client.impl.ConsumerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.Nonnull;
 import javax.inject.Singleton;
 import java.time.Duration;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
+import java.util.OptionalInt;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.function.Predicate;
 import java.util.stream.IntStream;
 
-import static java.util.concurrent.TimeUnit.*;
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.NANOSECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 
 /**
  * Processes beans containing methods annotated with @PulsarConsumer.
@@ -278,10 +292,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         return Collections.unmodifiableMap(consumers);
     }
 
-    @Nonnull
+    @NonNull
     @Override
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public <T> Consumer<T> getConsumer(@Nonnull String id) {
+    public <T> Consumer<T> getConsumer(@NonNull String id) {
         ArgumentUtils.requireNonNull("id", id);
         final Consumer consumer = consumers.get(id);
         if (consumer == null) {
@@ -290,14 +304,14 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         return consumer;
     }
 
-    @Nonnull
+    @NonNull
     @Override
     public Set<String> getConsumerIds() {
         return Collections.unmodifiableSet(consumers.keySet());
     }
 
     @Override
-    public boolean isPaused(@Nonnull String id) {
+    public boolean isPaused(@NonNull String id) {
         if (StringUtils.isEmpty(id) || !consumers.containsKey(id)) {
             throw new IllegalArgumentException("No consumer found for ID: " + id);
         }
@@ -305,7 +319,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     }
 
     @Override
-    public void pause(@Nonnull String id) {
+    public void pause(@NonNull String id) {
         if (StringUtils.isEmpty(id) || !consumers.containsKey(id)) {
             throw new IllegalArgumentException("No consumer found for ID: " + id);
         }
@@ -315,7 +329,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     }
 
     @Override
-    public void resume(@Nonnull String id) {
+    public void resume(@NonNull String id) {
         if (StringUtils.isEmpty(id) || !paused.containsKey(id)) {
             throw new IllegalArgumentException("No paused consumer found for ID: " + id);
         }
