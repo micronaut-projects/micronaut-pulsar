@@ -26,6 +26,9 @@ import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * TODO javadoc.
+ */
 @PulsarSubscription(subscriptionName = "pulsar-test-subscription", subscriptionType = SubscriptionType.Shared)
 public class MessagingService {
 
@@ -36,6 +39,9 @@ public class MessagingService {
         this.broadcaster = broadcaster;
     }
 
+    /**
+     * @param message TODO
+     */
     @PulsarConsumer(topic = "persistent://public/default/messages", consumerName = "shared-consumer-tester")
     public void messagePrinter(PulsarMessage message) {
         LOGGER.info("A message was received {}. Sent on {}", message.getMessage(), message.getSent());
@@ -43,6 +49,10 @@ public class MessagingService {
         report(message.toMessage());
     }
 
+    /**
+     * @param message TODO
+     * @return TODO
+     */
     // when inside other beans no @PulsarProducerClient is required on the class
     @PulsarProducer(topic = "persistent://private/reports/messages", producerName = "report-producer")
     public String report(String message) {
