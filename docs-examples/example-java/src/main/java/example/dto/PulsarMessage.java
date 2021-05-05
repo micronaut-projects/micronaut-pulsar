@@ -18,25 +18,38 @@ package example.dto;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * TODO javadoc.
+ */
 public class PulsarMessage {
 
     private final String message;
     private final String sent;
 
     @JsonCreator
-    public PulsarMessage(@JsonProperty("sent") String sent, @JsonProperty("message") String message) {
+    public PulsarMessage(@JsonProperty("sent") String sent,
+                         @JsonProperty("message") String message) {
         this.message = message;
         this.sent = sent;
     }
 
+    /**
+     * @return TODO
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * @return TODO
+     */
     public String getSent() {
         return sent;
     }
 
+    /**
+     * @return TODO
+     */
     public String toMessage() {
         return String.format("Message %s sent on %s", message, sent);
     }

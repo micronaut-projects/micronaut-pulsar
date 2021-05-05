@@ -21,24 +21,30 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
+/**
+ * TODO javadoc.
+ */
 @PulsarSubscription(subscriptionName = "reports")
 public class ReportsTracker {
 
-    private static final Logger LOG = LoggerFactory.getLogger(ReportsTracker.class);
     private final Subject<String> messageTracker = PublishSubject.create();
 
     public ReportsTracker() {
         messageTracker.subscribe();
     }
 
+    /**
+     * @param message TODO
+     */
     @PulsarConsumer(consumerName = "report-listener", topic = "persistent://private/reports/messages")
     public void report(String message) {
         messageTracker.onNext(message);
     }
 
+    /**
+     * @return TODO
+     */
     public Flowable<String> subscribe() {
         return messageTracker.toFlowable(BackpressureStrategy.LATEST);
     }

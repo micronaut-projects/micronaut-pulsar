@@ -15,10 +15,10 @@
  */
 package io.micronaut.pulsar.config;
 
+import io.micronaut.core.annotation.NonNull;
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.impl.auth.AuthenticationDisabled;
 
-import javax.annotation.Nonnull;
 import java.util.Properties;
 
 /**
@@ -75,7 +75,7 @@ public abstract class AbstractPulsarConfiguration<K, V> {
     /**
      * @return The Pulsar configuration
      */
-    @Nonnull
+    @NonNull
     public Properties getConfig() {
         return config == null ? new Properties() : config;
     }
