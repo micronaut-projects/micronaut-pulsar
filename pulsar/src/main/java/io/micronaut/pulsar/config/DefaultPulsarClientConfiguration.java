@@ -18,6 +18,7 @@ package io.micronaut.pulsar.config;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider;
@@ -26,7 +27,6 @@ import org.apache.pulsar.client.api.ServiceUrlProvider;
 import org.apache.pulsar.client.impl.auth.AuthenticationToken;
 import org.apache.pulsar.client.impl.auth.oauth2.AuthenticationFactoryOAuth2;
 
-import javax.annotation.Nullable;
 import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
