@@ -123,9 +123,17 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
         return Optional.ofNullable(tlsCertFilePath);
     }
 
+    public void setTlsVerifyHostname(Boolean tlsVerifyHostname) {
+        this.tlsVerifyHostname = tlsVerifyHostname;
+    }
+
     @Override
     public Optional<Boolean> getTlsVerifyHostname() {
         return Optional.ofNullable(tlsVerifyHostname);
+    }
+
+    public void setTlsAllowInsecureConnection(Boolean tlsAllowInsecureConnection) {
+        this.tlsAllowInsecureConnection = tlsAllowInsecureConnection;
     }
 
     @Override

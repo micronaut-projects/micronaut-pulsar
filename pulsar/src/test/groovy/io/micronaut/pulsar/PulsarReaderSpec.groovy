@@ -17,6 +17,7 @@ package io.micronaut.pulsar
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarReader
+import io.micronaut.pulsar.shared.PulsarAwareTest
 import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.Stepwise

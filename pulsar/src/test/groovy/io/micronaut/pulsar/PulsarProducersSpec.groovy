@@ -18,6 +18,7 @@ package io.micronaut.pulsar
 import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
+import io.micronaut.pulsar.shared.PulsarAwareTest
 import io.reactivex.Single
 import org.apache.pulsar.client.api.MessageId
 import org.apache.pulsar.client.api.PulsarClient

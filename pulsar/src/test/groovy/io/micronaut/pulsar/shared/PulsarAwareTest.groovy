@@ -13,9 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.pulsar
+package io.micronaut.pulsar.shared
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.pulsar.PulsarDefaultContainer
 import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -40,7 +41,7 @@ abstract class PulsarAwareTest extends Specification {
 
     void setupSpec() {
         embeddedServer = ApplicationContext.run(EmbeddedServer,
-                ['pulsar.service-url': PULSAR_CONTAINER.pulsarBrokerUrl,
+                ['pulsar.service-url': PulsarDefaultContainer.PULSAR_CONTAINER.pulsarBrokerUrl,
                  'spec.name': getClass().simpleName],
                 EMPTY_STRING_ARRAY
         )
