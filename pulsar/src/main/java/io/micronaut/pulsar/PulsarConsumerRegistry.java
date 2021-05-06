@@ -15,9 +15,9 @@
  */
 package io.micronaut.pulsar;
 
+import io.micronaut.core.annotation.NonNull;
 import org.apache.pulsar.client.api.Consumer;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,13 +31,13 @@ public interface PulsarConsumerRegistry {
 
     Map<String, Consumer<?>> getConsumers();
 
-    <T> Consumer<T> getConsumer(@Nonnull String id);
+    <T> Consumer<T> getConsumer(@NonNull String id);
 
     Set<String> getConsumerIds();
 
-    boolean isPaused(@Nonnull String id);
+    boolean isPaused(@NonNull String id);
 
-    void pause(@Nonnull String id);
+    void pause(@NonNull String id);
 
-    void resume(@Nonnull String id);
+    void resume(@NonNull String id);
 }

@@ -21,6 +21,9 @@ import io.micronaut.http.annotation.Controller;
 import io.micronaut.http.annotation.Get;
 import io.reactivex.Flowable;
 
+/**
+ * TODO javadoc.
+ */
 @Controller("reports")
 public class ReportResource {
 
@@ -30,6 +33,9 @@ public class ReportResource {
         this.reportsTracker = reportsTracker;
     }
 
+    /**
+     * @return TODO
+     */
     @Get(produces = MediaType.TEXT_EVENT_STREAM)
     public Flowable<String> latestReport() {
         return reportsTracker.subscribe();
