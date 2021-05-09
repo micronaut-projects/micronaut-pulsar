@@ -24,6 +24,7 @@ import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarTls
 import io.micronaut.runtime.server.EmbeddedServer
 import org.apache.pulsar.client.api.Message
+import org.apache.pulsar.client.api.SubscriptionType
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -72,11 +73,11 @@ class TlsAwareClientTest extends Specification {
 
         then:
         new PollingConditions(timeout: 60, delay: 1).eventually {
-            test == tlsConsumer.lastMessage
+            test == tlsConsumer.getLastMessage()
         }
     }
 
-    @PulsarSubscription(subscriptionName = "tlsSubscription")
+    @PulsarSubscription(subscriptionName = "tlsSubscription", subscriptionType = SubscriptionType.Shared)
     static class TlsConsumer {
         private Deque<Message<String>> messages = new ConcurrentLinkedDeque<Message<String>>()
 
@@ -86,11 +87,11 @@ class TlsAwareClientTest extends Specification {
         }
 
         String getLastMessage() {
-            return messages.last.value
+            return messages.getLast().getValue()
         }
 
         String getLastMessageId() {
-            return messages.last.messageId.toString()
+            return messages.getLast().getMessageId().toString()
         }
     }
 

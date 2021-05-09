@@ -101,7 +101,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "array-subscriber-non-async")
+    @PulsarSubscription(subscriptionName = "array-subscriber-non-async", subscriptionType = SubscriptionType.Shared)
     static class PulsarConsumerTopicListTester {
 
         String latestMessage
@@ -121,7 +121,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "subscribe-2-example.listeners")
+    @PulsarSubscription(subscriptionName = "subscribe-2-example.listeners", subscriptionType = SubscriptionType.Shared)
     static class PulsarConsumerTopicPatternTester {
 
         String latestMessage

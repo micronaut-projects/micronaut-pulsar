@@ -21,11 +21,12 @@ import io.reactivex.BackpressureStrategy;
 import io.reactivex.Flowable;
 import io.reactivex.subjects.PublishSubject;
 import io.reactivex.subjects.Subject;
+import org.apache.pulsar.client.api.SubscriptionType;
 
 /**
- * TODO javadoc.
+ * Reports topic consumer that outputs data as async flow on request.
  */
-@PulsarSubscription(subscriptionName = "reports")
+@PulsarSubscription(subscriptionName = "reports", subscriptionType = SubscriptionType.Shared)
 public class ReportsTracker {
 
     private final Subject<String> messageTracker = PublishSubject.create();
@@ -35,7 +36,7 @@ public class ReportsTracker {
     }
 
     /**
-     * @param message TODO
+     * @param message string to store async
      */
     @PulsarConsumer(consumerName = "report-listener", topic = "persistent://private/reports/messages")
     public void report(String message) {
@@ -43,7 +44,8 @@ public class ReportsTracker {
     }
 
     /**
-     * @return TODO
+     * Consume messages as they come in from pulsar. Creates a "reactive client" that takes in messages as they come in.TO
+     * @return flow of message strings
      */
     public Flowable<String> subscribe() {
         return messageTracker.toFlowable(BackpressureStrategy.LATEST);

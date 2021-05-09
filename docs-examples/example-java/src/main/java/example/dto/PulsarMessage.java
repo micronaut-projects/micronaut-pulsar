@@ -19,7 +19,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * TODO javadoc.
+ * Simple message data structure.
  */
 public class PulsarMessage {
 
@@ -34,21 +34,21 @@ public class PulsarMessage {
     }
 
     /**
-     * @return TODO
+     * @return message
      */
     public String getMessage() {
         return message;
     }
 
     /**
-     * @return TODO
+     * @return sent date time as string
      */
     public String getSent() {
         return sent;
     }
 
     /**
-     * @return TODO
+     * @return string representation of this message for using with pulsar
      */
     public String toMessage() {
         return String.format("Message %s sent on %s", message, sent);
