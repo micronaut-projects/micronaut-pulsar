@@ -31,7 +31,10 @@ import spock.lang.Shared
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
+import java.util.concurrent.BlockingQueue
 import java.util.concurrent.ConcurrentLinkedDeque
+import java.util.concurrent.LinkedBlockingDeque
+import java.util.concurrent.LinkedBlockingQueue
 
 class TlsAwareClientTest extends Specification {
 
@@ -89,11 +92,11 @@ class TlsAwareClientTest extends Specification {
         }
 
         String getLastMessage() {
-            return messages.getLast().getValue()
+            return messages.peekLast()?.getValue()
         }
 
         String getLastMessageId() {
-            return messages.getLast().getMessageId().toString()
+            return messages.peekLast()?.getMessageId()?.toString()
         }
     }
 
