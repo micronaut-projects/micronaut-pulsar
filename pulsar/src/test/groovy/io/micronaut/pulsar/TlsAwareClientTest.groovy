@@ -24,6 +24,7 @@ import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarTls
 import io.micronaut.runtime.server.EmbeddedServer
 import org.apache.pulsar.client.api.Message
+import org.apache.pulsar.client.api.MessageId
 import org.apache.pulsar.client.api.SubscriptionType
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -69,11 +70,12 @@ class TlsAwareClientTest extends Specification {
         TlsProducer tlsProducer = context.getBean(TlsProducer.class)
 
         when:
-        tlsProducer.send(test)
+        MessageId id = tlsProducer.send(test)
 
         then:
         new PollingConditions(timeout: 60, delay: 1).eventually {
             test == tlsConsumer.getLastMessage()
+            id.toString() == tlsConsumer.getLastMessageId()
         }
     }
 
@@ -99,6 +101,6 @@ class TlsAwareClientTest extends Specification {
     static interface TlsProducer {
 
         @PulsarProducer("public/default/test")
-        void send(String message)
+        MessageId send(String message)
     }
 }
