@@ -23,18 +23,14 @@ import io.micronaut.pulsar.annotation.PulsarProducerClient
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarTls
 import io.micronaut.runtime.server.EmbeddedServer
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.MessageId
-import org.apache.pulsar.client.api.SubscriptionType
+import org.apache.pulsar.client.api.*
+import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
-import java.util.concurrent.BlockingQueue
-import java.util.concurrent.ConcurrentLinkedDeque
-import java.util.concurrent.LinkedBlockingDeque
-import java.util.concurrent.LinkedBlockingQueue
+import java.util.concurrent.TimeUnit
 
 class TlsAwareClientTest extends Specification {
 
@@ -69,14 +65,24 @@ class TlsAwareClientTest extends Specification {
     void 'test simple send receive using TLS'() {
         given:
         String test = "This is a test for TLS message"
-        TlsConsumer tlsConsumer = context.getBean(TlsConsumer.class)
         TlsProducer tlsProducer = context.getBean(TlsProducer.class)
+        TlsConsumer tlsConsumer = context.getBean(TlsConsumer.class)
+        Reader<String> blockingReader = context.getBean(PulsarClient.class)
+                .newReader(new StringSchema())
+                .readerName("blocking-tls-reader")
+                .topic("persistent://public/default/test")
+                .startMessageId(MessageId.latest)
+                .startMessageIdInclusive()
+                .create()
 
         when:
         MessageId id = tlsProducer.send(test)
 
         then:
-        new PollingConditions(timeout: 60, delay: 1).eventually {
+        Message<String> block = blockingReader.readNext(1, TimeUnit.MINUTES)
+        id == block.messageId
+        test == block.value
+        new PollingConditions(timeout: 80, delay: 2, initialDelay: 1).eventually {
             test == tlsConsumer.getLastMessage()
             id.toString() == tlsConsumer.getLastMessageId()
         }
@@ -84,9 +90,9 @@ class TlsAwareClientTest extends Specification {
 
     @PulsarSubscription(subscriptionName = "tlsSubscription", subscriptionType = SubscriptionType.Shared)
     static class TlsConsumer {
-        private Deque<Message<String>> messages = new ConcurrentLinkedDeque<Message<String>>()
+        private Deque<Message<String>> messages = new ArrayDeque<>()
 
-        @PulsarConsumer(topic = "public/default/test")
+        @PulsarConsumer(topic = "persistent://public/default/test")
         void receive(Message<String> message) {
             messages.add(message)
         }
@@ -103,7 +109,7 @@ class TlsAwareClientTest extends Specification {
     @PulsarProducerClient
     static interface TlsProducer {
 
-        @PulsarProducer("public/default/test")
+        @PulsarProducer("persistent://public/default/test")
         MessageId send(String message)
     }
 }
