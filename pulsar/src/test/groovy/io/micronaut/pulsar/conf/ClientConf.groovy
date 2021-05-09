@@ -27,6 +27,7 @@ class ClientConf {
 # For TLS:
 # webServiceUrl=https://localhost:8443/
 webServiceUrl=https://localhost:8443/
+useTls=true
 
 # URL for Pulsar Binary Protocol (for produce and consume operations)
 # For TLS:

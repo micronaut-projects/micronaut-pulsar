@@ -287,7 +287,8 @@ maxNumPartitionsPerPartitionedTopic=0
 
 ### --- TLS --- ###
 # Deprecated - Use webServicePortTls and brokerServicePortTls instead
-tlsEnabled=false
+brokerServicePortTls=6651
+webServicePortTls=8443
 
 # Tls cert refresh duration in seconds (set 0 to check on every new connection)
 tlsCertRefreshCheckDurationSec=300
@@ -313,18 +314,18 @@ tlsAllowInsecureConnection=false
 # Specify the tls protocols the broker will use to negotiate during TLS handshake
 # (a comma-separated list of protocol names).
 # Examples:- [TLSv1.2, TLSv1.1, TLSv1]
-tlsProtocols=
+tlsProtocols=TLSv1.2,TLSv1.1
 
 # Specify the tls cipher the broker will use to negotiate during TLS Handshake
 # (a comma-separated list of ciphers).
 # Examples:- [TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
-tlsCiphers=
+tlsCiphers=TLS_DH_RSA_WITH_AES_256_GCM_SHA384,TLS_DH_RSA_WITH_AES_256_CBC_SHA
 
 # Trusted client certificates are required for to connect TLS
 # Reject the Connection if the Client Certificate is not trusted.
 # In effect, this requires that all connecting clients perform TLS client
 # authentication.
-tlsRequireTrustedClientCertOnConnect=false
+tlsRequireTrustedClientCertOnConnect=true
 
 ### --- KeyStore TLS config variables --- ###
 # Enable TLS with KeyStore type configuration in broker.

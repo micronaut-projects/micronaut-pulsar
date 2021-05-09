@@ -21,10 +21,13 @@ import io.micronaut.pulsar.conf.StandaloneConf
 import org.assertj.core.util.Files
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.PulsarContainer
+import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
 final class PulsarTls implements AutoCloseable {
 
+    public static final int HTTPS = 8443
+    public static final int BROKER_SSL = 6651
     static final String caConfPath = "/my-ca";
     final PulsarContainer pulsarContainer
     final ClassLoader resourceLoader
@@ -35,7 +38,6 @@ final class PulsarTls implements AutoCloseable {
     }
 
     void start() {
-        pulsarContainer.withCommand("/bin/bash", "-c", "mkdir -p $caConfPath")
         String standalone = createStandaloneConfFile().path
         String client = createClientConf().path
 
@@ -48,27 +50,23 @@ final class PulsarTls implements AutoCloseable {
 
         pulsarContainer.addFileSystemBind(standalone, "/pulsar/conf/standalone.conf", BindMode.READ_ONLY)
         pulsarContainer.addFileSystemBind(client, "/pulsar/conf/client.conf", BindMode.READ_ONLY)
-        try {
-            pulsarContainer.start()
-        } catch (Exception e) {
-            String logs = pulsarContainer.getLogs()
-            println logs
-            throw e
-        }
+
+        pulsarContainer.withExposedPorts(PulsarContainer.BROKER_HTTP_PORT, HTTPS, BROKER_SSL)
+        //verifying TLS will fail given that it's generated and not a well-known valid one so use HTTP
+        pulsarContainer.waitingFor(Wait.forHttp(PulsarContainer.METRICS_ENDPOINT)
+                .forPort(PulsarContainer.BROKER_HTTP_PORT))
+        pulsarContainer.start()
     }
 
-    String getBrokerUrl() {
-        return pulsarContainer.pulsarBrokerUrl
+    String getPulsarBrokerUrl() {
+        return String.format("pulsar+ssl://%s:%s", pulsarContainer.host, pulsarContainer.getMappedPort(BROKER_SSL));
     }
 
     private static File createStandaloneConfFile() {
         String text = StandaloneConf.getContent()
-        text = text.replace("tlsEnabled=false", "brokerServicePortTls=6651")
         text = text.replace("tlsCertificateFilePath=", "tlsCertificateFilePath=$caConfPath/broker.cert.pem")
         text = text.replace("tlsKeyFilePath=", "tlsKeyFilePath=$caConfPath/broker.key-pk8.pem")
         text = text.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
-        text = text.replace("tlsProtocols=", "tlsProtocols=TLSv1.2,TLSv1.1")
-        text = text.replace("tlsCiphers=", "tlsCiphers=TLS_DH_RSA_WITH_AES_256_GCM_SHA384,TLS_DH_RSA_WITH_AES_256_CBC_SHA")
         File tmp = Files.newTemporaryFile()
         tmp.write(text)
         return tmp
