@@ -40,6 +40,11 @@ final class SharedPulsar implements AutoCloseable {
   "client_secret": "%s",
   "issuer_url": "%s"
 }'''
+    private static final String caConfPath = "/my-ca"
+
+    public static int SSL_PORT = 6651
+    public static int HTTPS_PORT = 8443
+
     private final String PULSAR_CLI_CLIENT = "/pulsar/bin/pulsar-client"
     private final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
@@ -49,11 +54,12 @@ final class SharedPulsar implements AutoCloseable {
 
     SharedPulsar(SharedKeycloak keycloak) {
         this.keycloak = keycloak
-        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.7.1")).dependsOn(keycloak)
+        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.7.1"))
+                .dependsOn(keycloak)
     }
 
     String getUrl() {
-        return pulsarContainer.pulsarBrokerUrl
+        return String.format("pulsar+ssl://%s:%s", pulsarContainer.getHost(), pulsarContainer.getMappedPort(SSL_PORT))
     }
 
     String getCredentialsPath() {
@@ -65,6 +71,7 @@ final class SharedPulsar implements AutoCloseable {
     }
 
     void start() {
+        setupTls()
         String secret = UUID.randomUUID().toString()
         credentialsPath = createCredentialsFile(secret).path
 
@@ -78,6 +85,15 @@ final class SharedPulsar implements AutoCloseable {
         Map<String, File> contentBytes = replaceConfigs(keycloak.crossContainerAuthUrl + "/realms/master")
         pulsarContainer.addFileSystemBind(contentBytes["client"].path, "/pulsar/conf/client.conf", BindMode.READ_ONLY)
         pulsarContainer.addFileSystemBind(contentBytes["standalone"].path, "/pulsar/conf/standalone.conf", BindMode.READ_ONLY)
+
+        //open up encrypted endpoints as well
+        pulsarContainer.withExposedPorts(
+                PulsarContainer.BROKER_HTTP_PORT,
+                PulsarContainer.BROKER_PORT,
+                HTTPS_PORT,
+                SSL_PORT
+        )
+
         pulsarContainer.start()
         createPrivateReports()
     }
@@ -116,17 +132,21 @@ final class SharedPulsar implements AutoCloseable {
     }
 
     private static Map<String, File> replaceConfigs(String url) {
-        File client = replaceFileLine(ClientConf.content, 41, url)
-        File standalone = replaceFileLine(StandaloneConf.content, 404, url)
-        return ["client": client, "standalone": standalone]
-    }
+        String standaloneContent = StandaloneConf.content.replace("tlsCertificateFilePath=", "tlsCertificateFilePath=$caConfPath/broker.cert.pem")
+        standaloneContent = standaloneContent.replace("tlsKeyFilePath=", "tlsKeyFilePath=$caConfPath/broker.key-pk8.pem")
+        standaloneContent = standaloneContent.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
+        standaloneContent = standaloneContent.replace('brokerClientAuthenticationParameters=',
+                "brokerClientAuthenticationParameters={\"issuerUrl\": \"$url\",\"privateKey\": \"/pulsar/credentials.json\",\"audience\": \"pulsar\"}")
+        File standalone = Files.newTemporaryFile()
+        standalone.write(standaloneContent)
 
-    private static File replaceFileLine(String content, int line, String param) {
-        String[] text = content.split('\n')
-        text[line] = String.format(text[line], param)
-        File tmp = Files.newTemporaryFile()
-        tmp.write(text.join("\n"))
-        return tmp
+        String clientContent = ClientConf.content.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
+        clientContent = clientContent.replace('authParams=',
+                "authParams={\"issuerUrl\": \"$url\",\"privateKey\": \"file:///pulsar/credentials.json\",\"audience\": \"pulsar\"}")
+        File client = Files.newTemporaryFile()
+        client.write(clientContent)
+
+        return ["client": client, "standalone": standalone]
     }
 
     private static void createClient(RealmResource master, String secret) {
@@ -153,5 +173,15 @@ final class SharedPulsar implements AutoCloseable {
                         ])
                 ])
         master.clients().create(client)
+    }
+
+    private void setupTls() {
+        ClassLoader resourceLoader = ClassLoader.getSystemClassLoader()
+        String brokerCert = resourceLoader.getResource("broker.cert.pem").path
+        pulsarContainer.addFileSystemBind(new File(brokerCert).path, "$caConfPath/broker.cert.pem", BindMode.READ_ONLY)
+        String brokerKey = resourceLoader.getResource("broker.key-pk8.pem").path
+        pulsarContainer.addFileSystemBind(new File(brokerKey).path, "$caConfPath/broker.key-pk8.pem", BindMode.READ_ONLY)
+        String caCert = resourceLoader.getResource("ca.cert.pem").path
+        pulsarContainer.addFileSystemBind(new File(caCert).path, "$caConfPath/ca.cert.pem", BindMode.READ_ONLY)
     }
 }

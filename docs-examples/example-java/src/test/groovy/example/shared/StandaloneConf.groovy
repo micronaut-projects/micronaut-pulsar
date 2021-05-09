@@ -272,7 +272,8 @@ maxNumPartitionsPerPartitionedTopic=0
 
 ### --- TLS --- ###
 # Deprecated - Use webServicePortTls and brokerServicePortTls instead
-tlsEnabled=false
+brokerServicePortTls=6651
+webServicePortTls=8443
 
 # Tls cert refresh duration in seconds (set 0 to check on every new connection)
 tlsCertRefreshCheckDurationSec=300
@@ -410,7 +411,7 @@ superUserRoles=superuser
 # Authentication settings of the broker itself. Used when the broker connects to other brokers,
 # either in same or other clusters
 brokerClientAuthenticationPlugin=org.apache.pulsar.client.impl.auth.oauth2.AuthenticationOAuth2
-brokerClientAuthenticationParameters={"issuerUrl": "%s","privateKey": "/pulsar/credentials.json","audience": "pulsar"}
+brokerClientAuthenticationParameters=
 tokenPublicKey=file:///pulsar/pub.key
 
 # Supported Athenz provider domain names(comma separated) for authentication
