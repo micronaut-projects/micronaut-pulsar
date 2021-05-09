@@ -19,6 +19,7 @@ import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.ServiceUrlProvider;
 
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Basic requirements for custom and default configuration to create Pulsar client.
@@ -53,4 +54,8 @@ public interface PulsarClientConfiguration {
     Optional<Boolean> getTlsVerifyHostname();
 
     Optional<Boolean> getTlsAllowInsecureConnection();
+
+    Optional<Set<String>> getTlsCiphers();
+
+    Optional<Set<String>> getTlsProtocols();
 }

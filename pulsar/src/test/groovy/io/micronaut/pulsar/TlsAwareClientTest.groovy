@@ -24,18 +24,12 @@ import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarTls
 import io.micronaut.runtime.server.EmbeddedServer
 import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.Reader
-import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.util.concurrent.PollingConditions
 
 import java.util.concurrent.ConcurrentLinkedDeque
-import java.util.concurrent.TimeUnit
-
-import static org.apache.pulsar.client.api.MessageId.latest
 
 class TlsAwareClientTest extends Specification {
 
@@ -59,6 +53,8 @@ class TlsAwareClientTest extends Specification {
         embeddedServer = ApplicationContext.run(EmbeddedServer.class,
                 ['pulsar.service-url'       : pulsarTls.pulsarBrokerUrl,
                  'pulsar.tls-cert-file-path': tlsPathForPulsar,
+                 'pulsar.tls-ciphers'       : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
+                 'pulsar.tls-protocols'     : ['TLSv1.2', 'TLSv1.1'],
                  'spec.name'                : getClass().simpleName],
                 StringUtils.EMPTY_STRING_ARRAY
         ) as EmbeddedServer
@@ -77,7 +73,6 @@ class TlsAwareClientTest extends Specification {
         then:
         new PollingConditions(timeout: 60, delay: 1).eventually {
             test == tlsConsumer.lastMessage
-            message.messageId.toString() == tlsConsumer.lastMessageId
         }
     }
 

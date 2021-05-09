@@ -59,6 +59,8 @@ public final class PulsarClientFactory {
         pulsarClientConfiguration.getTlsCertFilePath().ifPresent(clientBuilder::tlsTrustCertsFilePath);
         pulsarClientConfiguration.getTlsAllowInsecureConnection().ifPresent(clientBuilder::allowTlsInsecureConnection);
         pulsarClientConfiguration.getTlsVerifyHostname().ifPresent(clientBuilder::enableTlsHostnameVerification);
+        pulsarClientConfiguration.getTlsCiphers().ifPresent(clientBuilder::tlsCiphers);
+        pulsarClientConfiguration.getTlsProtocols().ifPresent(clientBuilder::tlsProtocols);
 
         return clientBuilder.build();
     }

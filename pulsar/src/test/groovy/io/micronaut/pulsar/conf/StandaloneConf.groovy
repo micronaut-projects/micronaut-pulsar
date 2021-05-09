@@ -319,13 +319,13 @@ tlsProtocols=TLSv1.2,TLSv1.1
 # Specify the tls cipher the broker will use to negotiate during TLS Handshake
 # (a comma-separated list of ciphers).
 # Examples:- [TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256]
-tlsCiphers=TLS_DH_RSA_WITH_AES_256_GCM_SHA384,TLS_DH_RSA_WITH_AES_256_CBC_SHA
+tlsCiphers=TLS_RSA_WITH_AES_256_GCM_SHA384,TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
 
 # Trusted client certificates are required for to connect TLS
 # Reject the Connection if the Client Certificate is not trusted.
 # In effect, this requires that all connecting clients perform TLS client
 # authentication.
-tlsRequireTrustedClientCertOnConnect=true
+tlsRequireTrustedClientCertOnConnect=false
 
 ### --- KeyStore TLS config variables --- ###
 # Enable TLS with KeyStore type configuration in broker.
