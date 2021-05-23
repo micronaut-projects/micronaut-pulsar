@@ -28,10 +28,12 @@ import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
+import spock.lang.Stepwise
 import spock.util.concurrent.PollingConditions
 
 import java.util.concurrent.TimeUnit
 
+@Stepwise
 class TlsAwareClientTest extends Specification {
 
     @Shared
@@ -50,13 +52,15 @@ class TlsAwareClientTest extends Specification {
         pulsarTls = new PulsarTls()
         pulsarTls.start()
         String tlsPath = ClassLoader.getSystemClassLoader().getResource('ca.cert.pem').path
-        String tlsPathForPulsar = new File(tlsPath).path
+        String tlsPathForPulsar = new File(tlsPath).absolutePath
+        println tlsPathForPulsar
         embeddedServer = ApplicationContext.run(EmbeddedServer.class,
-                ['pulsar.service-url'       : pulsarTls.pulsarBrokerUrl,
-                 'pulsar.tls-cert-file-path': tlsPathForPulsar,
-                 'pulsar.tls-ciphers'       : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
-                 'pulsar.tls-protocols'     : ['TLSv1.2', 'TLSv1.1'],
-                 'spec.name'                : getClass().simpleName],
+                ['pulsar.service-url'                     : pulsarTls.pulsarBrokerUrl,
+                 'pulsar.tls-cert-file-path'              : tlsPathForPulsar,
+                 'pulsar.shutdown-on-subscription-failure': true,
+                 'pulsar.tls-ciphers'                     : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
+                 'pulsar.tls-protocols'                   : ['TLSv1.2', 'TLSv1.1'],
+                 'spec.name'                              : getClass().simpleName],
                 StringUtils.EMPTY_STRING_ARRAY
         ) as EmbeddedServer
         context = embeddedServer.applicationContext
@@ -92,7 +96,10 @@ class TlsAwareClientTest extends Specification {
     static class TlsConsumer {
         private Deque<Message<String>> messages = new ArrayDeque<>()
 
-        @PulsarConsumer(topic = "persistent://public/default/test")
+        @PulsarConsumer(topic = "persistent://public/default/test",
+                subscribeAsync = false,
+                consumerName = "tls-receiver"
+        )
         void receive(Message<String> message) {
             messages.add(message)
         }
@@ -109,7 +116,7 @@ class TlsAwareClientTest extends Specification {
     @PulsarProducerClient
     static interface TlsProducer {
 
-        @PulsarProducer("persistent://public/default/test")
+        @PulsarProducer(topic = "persistent://public/default/test")
         MessageId send(String message)
     }
 }

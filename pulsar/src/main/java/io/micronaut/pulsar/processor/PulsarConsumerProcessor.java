@@ -31,15 +31,8 @@ import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.ConsumerSubscribedEvent;
-import org.apache.pulsar.client.api.Consumer;
-import org.apache.pulsar.client.api.ConsumerBuilder;
-import org.apache.pulsar.client.api.DeadLetterPolicy;
-import org.apache.pulsar.client.api.Message;
-import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.api.RegexSubscriptionMode;
-import org.apache.pulsar.client.api.Schema;
-import org.apache.pulsar.client.api.SubscriptionType;
+import io.micronaut.pulsar.events.ConsumerSubscriptionFailedEvent;
+import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.client.impl.ConsumerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
 import org.slf4j.Logger;
@@ -47,19 +40,12 @@ import org.slf4j.LoggerFactory;
 
 import javax.inject.Singleton;
 import java.time.Duration;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.OptionalInt;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.IntStream;
 
-import static java.util.concurrent.TimeUnit.MILLISECONDS;
-import static java.util.concurrent.TimeUnit.NANOSECONDS;
-import static java.util.concurrent.TimeUnit.SECONDS;
+import static java.util.concurrent.TimeUnit.*;
 
 /**
  * Processes beans containing methods annotated with @PulsarConsumer.
@@ -77,7 +63,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     private final BeanContext beanContext;
     private final PulsarClient pulsarClient;
     private final SchemaResolver schemaResolver;
-    private DefaultPulsarClientConfiguration pulsarClientConfiguration;
+    private final DefaultPulsarClientConfiguration pulsarClientConfiguration;
     private final Map<String, Consumer<?>> consumers = new ConcurrentHashMap<>();
     private final Map<String, Consumer<?>> paused = new ConcurrentHashMap<>();
     private final AtomicInteger consumerCounter = new AtomicInteger(10);
@@ -100,6 +86,12 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         if (null == topic) {
             return;
         }
+        String name = topic.stringValue("consumerName")
+                .orElse("pulsar-consumer-" + consumerCounter.getAndIncrement());
+
+        if (consumers.containsKey(name)) {
+            throw new RuntimeException(String.format("Consumer %s already exists", name));
+        }
 
         AnnotationValue<PulsarSubscription> subscriptionAnnotation = method.getAnnotation(PulsarSubscription.class);
 
@@ -121,13 +113,12 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
         ConsumerBuilder<?> consumerBuilder = processTopic(topic, subscriptionAnnotation, castMethod, bean);
         boolean subscribeAsync = topic.getRequiredValue("subscribeAsync", Boolean.class);
-        String name = topic.stringValue("consumerName")
-                .orElseGet(() -> "pulsar-consumer-" + consumerCounter.get());
         consumerBuilder.consumerName(name);
         if (subscribeAsync) {
             consumerBuilder.subscribeAsync().handle((consumer, ex) -> {
                 if (null != ex) {
-                    LOG.error("Failed subscribing Pulsar consumer {}", name, ex);
+                    LOG.error("Failed subscribing Pulsar consumer {} {}", method.getDescription(false), name, ex);
+                    applicationEventPublisher.publishEventAsync(new ConsumerSubscriptionFailedEvent(ex, name));
                     return ex;
                 }
                 consumers.put(name, consumer);
@@ -139,8 +130,9 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 Consumer<?> consumer = consumerBuilder.subscribe();
                 consumers.put(name, consumer);
                 applicationEventPublisher.publishEvent(new ConsumerSubscribedEvent(consumer));
-            } catch (PulsarClientException e) {
-                LOG.error("Failed subscribing Pulsar consumer {}", name, e);
+            } catch (Exception e) {
+                LOG.error("Failed subscribing Pulsar consumer {} {}", method.getDescription(false), name, e);
+                applicationEventPublisher.publishEvent(new ConsumerSubscriptionFailedEvent(e, name));
             }
         }
     }
@@ -265,8 +257,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
         consumer.subscriptionName(subscriptionName);
 
-        subscription.enumValue("subscriptionType", SubscriptionType.class)
-                .ifPresent(consumer::subscriptionType);
+        subscription.enumValue("subscriptionType", SubscriptionType.class).ifPresent(consumer::subscriptionType);
 
         Optional<String> ackGroupTimeout = subscription.stringValue("ackGroupTimeout");
         if (ackGroupTimeout.isPresent()) {

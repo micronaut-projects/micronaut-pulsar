@@ -15,12 +15,13 @@
  */
 package example.shared
 
-
 import org.assertj.core.util.Files
 import org.keycloak.admin.client.resource.RealmResource
 import org.keycloak.crypto.Algorithm
 import org.keycloak.representations.idm.ClientRepresentation
 import org.keycloak.representations.idm.ProtocolMapperRepresentation
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
@@ -33,6 +34,8 @@ import org.testcontainers.utility.DockerImageName
  * @author Haris* @since 1.0
  */
 final class SharedPulsar implements AutoCloseable {
+
+    private static final Logger LOG = LoggerFactory.getLogger(SharedPulsar.class)
 
     private static final String CLIENT_CREDENTIALS = '''{
   "type": "client_credentials",
@@ -59,7 +62,7 @@ final class SharedPulsar implements AutoCloseable {
     }
 
     String getUrl() {
-        return String.format("pulsar+ssl://%s:%s", pulsarContainer.getHost(), pulsarContainer.getMappedPort(SSL_PORT))
+        return String.format("pulsar+ssl://%s:%s", pulsarContainer.getContainerIpAddress(), pulsarContainer.getMappedPort(SSL_PORT))
     }
 
     String getCredentialsPath() {
@@ -98,20 +101,26 @@ final class SharedPulsar implements AutoCloseable {
         createPrivateReports()
     }
 
+    @Override
     void close() {
         pulsarContainer.stop()
     }
 
     Container.ExecResult send(String message) {
         pulsarContainer.copyFileToContainer(Transferable.of(message.bytes), "/pulsar/testMsg.json")
-        return pulsarContainer.execInContainer("/bin/bash",
-                "-c",
-                PULSAR_CLI_CLIENT + " produce public/default/messages -f testMsg.json")
+        String command = PULSAR_CLI_CLIENT + " produce persistent://public/default/messages -f testMsg.json";
+        Container.ExecResult result = pulsarContainer.execInContainer("/bin/bash", "-c", command)
+        if (0 != result.exitCode) {
+            throw new Exception(result.stderr ?: result.stdout)
+        }
+        return result
     }
 
     private void createPrivateReports() {
-        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " tenants create private -r superadmin -c standalone")
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " tenants create private -r superuser -c standalone")
         pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces create private/reports")
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable private/reports")
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable public/default")
     }
 
     private static File generatePubKey(RealmResource master) {

@@ -47,17 +47,17 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 @Singleton
-public final class PulsarClientScope implements CustomScope<PulsarProducerClient>, LifeCycle<PulsarClientScope> {
+public final class PulsarProducerClientScope implements CustomScope<PulsarProducerClient>, LifeCycle<PulsarProducerClientScope> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PulsarClientScope.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PulsarProducerClientScope.class);
 
     private final Map<String, List<Producer<?>>> producersCollection = new ConcurrentHashMap<>();
     private final BeanContext beanContext;
     private final SchemaResolver schemaResolver;
     private final PulsarClient pulsarClient;
 
-    public PulsarClientScope(BeanContext beanContext, SchemaResolver schemaResolver,
-                             PulsarClient pulsarClient) {
+    public PulsarProducerClientScope(BeanContext beanContext, SchemaResolver schemaResolver,
+                                     PulsarClient pulsarClient) {
         this.beanContext = beanContext;
         this.schemaResolver = schemaResolver;
         this.pulsarClient = pulsarClient;
@@ -112,7 +112,7 @@ public final class PulsarClientScope implements CustomScope<PulsarProducerClient
     }
 
     @Override
-    public PulsarClientScope stop() {
+    public PulsarProducerClientScope stop() {
         for (List<Producer<?>> producers : producersCollection.values()) {
             for (Producer<?> producer : producers) {
                 try {

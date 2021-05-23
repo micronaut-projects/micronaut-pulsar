@@ -27,8 +27,7 @@ import static io.micronaut.core.util.StringUtils.EMPTY_STRING_ARRAY
 /**
  * Generic code required by all components to run prior application being able to run.
  *
- * @author Haris
- * @since 1.0
+ * @author Haris* @since 1.0
  */
 abstract class SimulateEnv extends Specification {
     @Shared
@@ -52,15 +51,16 @@ abstract class SimulateEnv extends Specification {
         pulsar = new SharedPulsar(keycloak)
         pulsar.start()
         String tlsPath = ClassLoader.getSystemClassLoader().getResource('ca.cert.pem').path
-        String tlsPathForPulsar = new File(tlsPath).path
+        String tlsPathForPulsar = new File(tlsPath).absolutePath
         embeddedServer = ApplicationContext.run(EmbeddedServer,
-                ['pulsar.service-url': pulsar.url,
-                 'pulsar.oauth-issuer-url': pulsar.getIssuerUrl(),
-                 'pulsar.oauth-credentials-url': "file:///" + pulsar.credentialsPath,
-                 'pulsar.tls-cert-file-path': tlsPathForPulsar,
-                 'pulsar.tls-ciphers'       : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
-                 'pulsar.tls-protocols'     : ['TLSv1.2', 'TLSv1.1'],
-                 'spec.name'         : getClass().simpleName],
+                ['pulsar.service-url'                     : pulsar.url,
+                 'pulsar.oauth-issuer-url'                : pulsar.getIssuerUrl(),
+                 'pulsar.oauth-credentials-url'           : "file:///" + pulsar.credentialsPath,
+                 'pulsar.tls-cert-file-path'              : tlsPathForPulsar,
+                 'pulsar.tls-ciphers'                     : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
+                 'pulsar.tls-protocols'                   : ['TLSv1.2', 'TLSv1.1'],
+                 'pulsar.shutdown-on-subscription-failure': true,
+                 'spec.name'                              : getClass().simpleName],
                 EMPTY_STRING_ARRAY
         )
         context = embeddedServer.applicationContext

@@ -5,11 +5,10 @@ micronaut:
     port: 8081
 pulsar:
   enabled: true
-  service-url: pulsar+ssl://localhost:6650
+  service-url: pulsar+ssl://localhost:6651
   oauth-issuer-url: http://localhost:9090/auth/realms/master
   oauth-credentials-url: file://src/main/resources/credentials.json
   audience: pulsar
-  tls-cert-file-path: file://src/main/resources/ca.cert.pem
   tls-ciphers:
     - TLS_RSA_WITH_AES_256_GCM_SHA384
     - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256

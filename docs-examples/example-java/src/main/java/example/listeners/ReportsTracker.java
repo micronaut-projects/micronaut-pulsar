@@ -26,7 +26,7 @@ import org.apache.pulsar.client.api.SubscriptionType;
 /**
  * Reports topic consumer that outputs data as async flow on request.
  */
-@PulsarSubscription(subscriptionName = "reports", subscriptionType = SubscriptionType.Shared)
+@PulsarSubscription(subscriptionName = "reports")
 public class ReportsTracker {
 
     private final Subject<String> messageTracker = PublishSubject.create();
@@ -38,13 +38,14 @@ public class ReportsTracker {
     /**
      * @param message string to store async
      */
-    @PulsarConsumer(consumerName = "report-listener", topic = "persistent://private/reports/messages")
+    @PulsarConsumer(consumerName = "report-listener", topic = "persistent://private/reports/messages", subscriptionType = SubscriptionType.Shared)
     public void report(String message) {
         messageTracker.onNext(message);
     }
 
     /**
      * Consume messages as they come in from pulsar. Creates a "reactive client" that takes in messages as they come in.TO
+     *
      * @return flow of message strings
      */
     public Flowable<String> subscribe() {

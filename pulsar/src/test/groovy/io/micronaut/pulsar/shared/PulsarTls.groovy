@@ -83,6 +83,5 @@ final class PulsarTls implements AutoCloseable {
     @Override
     void close() throws Exception {
         pulsarContainer.stop()
-        pulsarContainer.close()
     }
 }

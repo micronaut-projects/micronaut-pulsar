@@ -16,6 +16,7 @@
 package example.listeners;
 
 import example.dto.PulsarMessage;
+import io.micronaut.context.annotation.Context;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.http.MediaType;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
@@ -26,8 +27,13 @@ import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.inject.Scope;
+
 /**
- * TODO javadoc.
+ * Pulsar consumers.
+ *
+ * @author Haris Secic
+ * @since 1.0
  */
 @PulsarSubscription(subscriptionName = "pulsar-test-subscription", subscriptionType = SubscriptionType.Shared)
 public class MessagingService {
@@ -40,7 +46,7 @@ public class MessagingService {
     }
 
     /**
-     * @param message TODO
+     * @param message data received on pulsar topic
      */
     @PulsarConsumer(topic = "persistent://public/default/messages", consumerName = "shared-consumer-tester")
     public void messagePrinter(PulsarMessage message) {
@@ -50,14 +56,14 @@ public class MessagingService {
     }
 
     /**
-     * @param message TODO
-     * @return TODO
+     * @param message text to send to reports topic
+     * @return message string value
      */
     // when inside other beans no @PulsarProducerClient is required on the class
     @PulsarProducer(topic = "persistent://private/reports/messages", producerName = "report-producer")
     public String report(String message) {
         // should happen before message is being sent to Pulsar by default
-        LOGGER.info("Sending message {}", message);
+        LOGGER.info("Sending message \"{}\"", message);
         return message;
     }
 

@@ -17,9 +17,14 @@ package example
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import example.dto.PulsarMessage
+import example.listeners.MessagingService
 import example.listeners.ReportsTracker
 import example.shared.SimulateEnv
+import io.micronaut.pulsar.PulsarConsumerRegistry
+import io.reactivex.subscribers.TestSubscriber
+import org.testcontainers.containers.Container
 import spock.lang.Stepwise
+import spock.util.concurrent.PollingConditions
 
 import java.time.LocalDateTime
 
@@ -35,21 +40,46 @@ class ApplicationTest extends SimulateEnv {
     void 'should start containers and subscribe micronaut app them'() {
         expect:
         context.running
+
+        when:
+        MessagingService messagingService = context.getBean(MessagingService.class)
+        PulsarConsumerRegistry consumers = context.getBean(PulsarConsumerRegistry.class)
+
+        then:
+        null != messagingService
+        null != consumers
+        new PollingConditions(timeout: 20, delay: 2, initialDelay: 1).eventually {
+            !consumers.consumerIds.isEmpty()
+            null != consumers.getConsumer('shared-consumer-tester')
+        }
     }
 
     void 'should receive a message on a report topic'() {
         given:
-        ReportsTracker reportsTracker = context.getBean(ReportsTracker.class)
+        MessagingService messagingService = context.getBean(MessagingService.class)
+        PulsarConsumerRegistry consumers = context.getBean(PulsarConsumerRegistry.class)
+        TestSubscriber<String> reportsTracker = context.getBean(ReportsTracker.class).subscribe().test()
         ObjectMapper mapper = context.getBean(ObjectMapper.class)
-        def testMessage = new PulsarMessage(LocalDateTime.now().toString(), "this is a test message")
-        def subscription = reportsTracker.subscribe()
-        subscription.subscribe()
-        def cmdOut = pulsar.send(mapper.writeValueAsString(testMessage))
+        PulsarMessage testMessage = new PulsarMessage(LocalDateTime.now().toString(), "this is a test message")
 
         expect:
+        null != messagingService
+        null != consumers
+        new PollingConditions(timeout: 20, delay: 2, initialDelay: 1).eventually {
+            !consumers.consumerIds.isEmpty()
+            null != consumers.getConsumer('shared-consumer-tester')
+        }
+
+        when:
+        Container.ExecResult cmdOut = pulsar.send(mapper.writeValueAsString(testMessage))
+
+        then:
         0 == cmdOut.exitCode
-        def list = subscription.blockingFirst()
-        null != list
-        list.contains("this is a test message")
+        consumers.getConsumer('shared-consumer-tester').isConnected()
+        reportsTracker.awaitCount(1)
+        reportsTracker.values().any { it.contains(testMessage.message) }
+
+        cleanup:
+        reportsTracker.dispose()
     }
 }

@@ -51,6 +51,6 @@ public class PulsarMessage {
      * @return string representation of this message for using with pulsar
      */
     public String toMessage() {
-        return String.format("Message %s sent on %s", message, sent);
+        return String.format("Message \"%s\" sent on %s", message, sent);
     }
 }

@@ -61,6 +61,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private Boolean tlsAllowInsecureConnection;
     private Set<String> tlsCiphers;
     private Set<String> tlsProtocols;
+    private Boolean shutdownOnSubscriberError;
 
     /**
      * Constructs the default Pulsar Client configuration.
@@ -188,6 +189,18 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     @Override
     public Authentication getAuthentication() {
         return Optional.ofNullable(pulsarAuthentication).orElse(DEFAULT_PULSAR_AUTHENTICATION);
+    }
+
+    @Override
+    public boolean getShutdownOnSubscriberError() {
+        return Optional.ofNullable(shutdownOnSubscriberError).orElse(false);
+    }
+
+    /**
+     * @param shutdownOnSubscriberError should application shutdown if any of subscriptions fail
+     */
+    public void setShutdownOnSubscriberError(Boolean shutdownOnSubscriberError) {
+        this.shutdownOnSubscriberError = shutdownOnSubscriberError;
     }
 
     /**

@@ -58,4 +58,8 @@ public interface PulsarClientConfiguration {
     Optional<Set<String>> getTlsCiphers();
 
     Optional<Set<String>> getTlsProtocols();
+
+    default boolean getShutdownOnSubscriberError() {
+        return false;
+    }
 }

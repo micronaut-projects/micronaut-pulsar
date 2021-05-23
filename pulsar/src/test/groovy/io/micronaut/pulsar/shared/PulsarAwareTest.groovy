@@ -42,6 +42,7 @@ abstract class PulsarAwareTest extends Specification {
     void setupSpec() {
         embeddedServer = ApplicationContext.run(EmbeddedServer,
                 ['pulsar.service-url': PulsarDefaultContainer.PULSAR_CONTAINER.pulsarBrokerUrl,
+                 'pulsar.shutdown-on-subscription-failure': true,
                  'spec.name': getClass().simpleName],
                 EMPTY_STRING_ARRAY
         )

@@ -12,7 +12,7 @@ How to start:
    - if Pulsar is left to default settings topic will be created automatically; otherwise create a topic _messages_
    - set tenant and namespace to be accessible by public or explicitly allow Pulsar user/role given to this API to subscribe to them
 3. If anything is modified related to SSO user, update it in credentials.json
-4. Copy or link path to certificate used with Pulsar server and change application.yaml accordingly
+4. Copy or link path to certificate used with Pulsar server and change application.yaml accordingly (adjust port if necessary)
 5. Run the project.
 
 If everything is configured properly, WebSocket topic /ws/messages/public/default/messages
