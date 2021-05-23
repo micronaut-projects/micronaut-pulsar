@@ -27,7 +27,8 @@ import static io.micronaut.core.util.StringUtils.EMPTY_STRING_ARRAY
 /**
  * Generic code required by all components to run prior application being able to run.
  *
- * @author Haris* @since 1.0
+ * @author Haris
+ * @since 1.0
  */
 abstract class SimulateEnv extends Specification {
     @Shared
@@ -64,5 +65,9 @@ abstract class SimulateEnv extends Specification {
                 EMPTY_STRING_ARRAY
         )
         context = embeddedServer.applicationContext
+    }
+
+    void cleanupSpec() {
+        embeddedServer.stop()
     }
 }

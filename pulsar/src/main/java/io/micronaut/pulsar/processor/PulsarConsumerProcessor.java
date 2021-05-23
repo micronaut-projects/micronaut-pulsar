@@ -123,6 +123,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 }
                 consumers.put(name, consumer);
                 applicationEventPublisher.publishEventAsync(new ConsumerSubscribedEvent(consumer));
+                if (pulsarClientConfiguration.getShutdownOnSubscriberError()) {
+                    String msg = String.format("Failed to subscribe %s %s", name, method.getDescription(false));
+                    throw new Error(msg);
+                }
                 return consumer;
             });
         } else {
@@ -133,6 +137,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
             } catch (Exception e) {
                 LOG.error("Failed subscribing Pulsar consumer {} {}", method.getDescription(false), name, e);
                 applicationEventPublisher.publishEvent(new ConsumerSubscriptionFailedEvent(e, name));
+                if (pulsarClientConfiguration.getShutdownOnSubscriberError()) {
+                    String msg = String.format("Failed to subscribe %s %s", name, method.getDescription(false));
+                    throw new Error(msg);
+                }
             }
         }
     }

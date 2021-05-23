@@ -21,7 +21,7 @@ package io.micronaut.pulsar.events;
  * @author Haris Secic
  * @since 1.0
  */
-public class ProducerSubscriptionFailedEvent implements PulsarFailureEvent {
+public final class ProducerSubscriptionFailedEvent implements PulsarFailureEvent {
 
     private final String producerName;
     private final String reason;

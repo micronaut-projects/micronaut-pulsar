@@ -19,14 +19,16 @@ micronaut {
 
 dependencies {
     annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor "io.micronaut:micronaut-graal"
     implementation project(":pulsar")
     implementation "io.micronaut:micronaut-http-server-netty"
     implementation("io.micronaut:micronaut-validation")
     implementation("io.micronaut:micronaut-runtime")
     implementation("io.micronaut:micronaut-http-client")
     runtimeOnly("ch.qos.logback:logback-classic")
+    testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation("org.testcontainers:pulsar:1.15.3")
-    testImplementation("org.keycloak:examples-admin-client:13.0.0")
+    testImplementation("org.keycloak:keycloak-admin-client:13.0.0")
 }
 
 

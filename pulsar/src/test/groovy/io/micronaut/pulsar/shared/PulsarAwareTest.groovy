@@ -48,4 +48,8 @@ abstract class PulsarAwareTest extends Specification {
         )
         context = embeddedServer.applicationContext
     }
+
+    void cleanupSpec() {
+        embeddedServer.stop()
+    }
 }

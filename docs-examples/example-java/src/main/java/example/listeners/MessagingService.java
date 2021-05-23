@@ -16,7 +16,6 @@
 package example.listeners;
 
 import example.dto.PulsarMessage;
-import io.micronaut.context.annotation.Context;
 import io.micronaut.core.convert.value.ConvertibleValues;
 import io.micronaut.http.MediaType;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
@@ -26,8 +25,6 @@ import io.micronaut.websocket.WebSocketBroadcaster;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.inject.Scope;
 
 /**
  * Pulsar consumers.
@@ -48,7 +45,7 @@ public class MessagingService {
     /**
      * @param message data received on pulsar topic
      */
-    @PulsarConsumer(topic = "persistent://public/default/messages", consumerName = "shared-consumer-tester")
+    @PulsarConsumer(topic = "persistent://public/default/messages", consumerName = "shared-consumer-tester", subscribeAsync = false)
     public void messagePrinter(PulsarMessage message) {
         LOGGER.info("A message was received {}. Sent on {}", message.getMessage(), message.getSent());
         broadcaster.broadcastAsync(message, MediaType.APPLICATION_JSON_TYPE, t -> isProperChannel(t.getUriVariables()));

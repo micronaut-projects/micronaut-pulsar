@@ -7,6 +7,7 @@ dependencies {
     api "io.micronaut:micronaut-messaging:$micronautVersion"
     api "org.apache.pulsar:pulsar-client:$pulsarVersion"
 
+    testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation("org.spockframework:spock-core:${spockVersion}") {
         exclude module:'groovy-all'
     }

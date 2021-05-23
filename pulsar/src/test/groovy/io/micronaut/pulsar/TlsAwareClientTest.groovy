@@ -53,7 +53,6 @@ class TlsAwareClientTest extends Specification {
         pulsarTls.start()
         String tlsPath = ClassLoader.getSystemClassLoader().getResource('ca.cert.pem').path
         String tlsPathForPulsar = new File(tlsPath).absolutePath
-        println tlsPathForPulsar
         embeddedServer = ApplicationContext.run(EmbeddedServer.class,
                 ['pulsar.service-url'                     : pulsarTls.pulsarBrokerUrl,
                  'pulsar.tls-cert-file-path'              : tlsPathForPulsar,
@@ -118,5 +117,9 @@ class TlsAwareClientTest extends Specification {
 
         @PulsarProducer(topic = "persistent://public/default/test")
         MessageId send(String message)
+    }
+
+    void cleanupSpec() {
+        embeddedServer.stop()
     }
 }
