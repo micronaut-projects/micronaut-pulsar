@@ -17,7 +17,7 @@
     catch(err) {
     }
 //-->
-var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10};
+var methods = {"i0":10,"i1":10,"i2":10,"i3":10,"i4":10,"i5":10,"i6":10,"i7":10,"i8":10,"i9":10,"i10":10,"i11":10,"i12":10,"i13":10,"i14":10,"i15":10,"i16":10,"i17":10,"i18":10,"i19":10,"i20":10,"i21":10,"i22":10,"i23":10,"i24":10,"i25":10,"i26":10,"i27":10,"i28":10,"i29":10,"i30":10,"i31":10,"i32":10,"i33":10,"i34":10};
 var tabs = {65535:["t0","All Methods"],2:["t2","Instance Methods"],8:["t4","Concrete Methods"]};
 var altColor = "altColor";
 var rowColor = "rowColor";
@@ -222,54 +222,110 @@ implements <a href="../../../../io/micronaut/pulsar/config/PulsarClientConfigura
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getServiceUrlProvider--">getServiceUrlProvider</a></span>()</code>&nbsp;</td>
 </tr>
 <tr id="i9" class="rowColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getShutdownOnSubscriberError--">getShutdownOnSubscriberError</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i10" class="altColor">
 <td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getSslProvider--">getSslProvider</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i10" class="altColor">
+<tr id="i11" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.Boolean&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsAllowInsecureConnection--">getTlsAllowInsecureConnection</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i12" class="altColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsCertFilePath--">getTlsCertFilePath</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i13" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.util.Set&lt;java.lang.String&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsCiphers--">getTlsCiphers</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i14" class="altColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.util.Set&lt;java.lang.String&gt;&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsProtocols--">getTlsProtocols</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i15" class="rowColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.String&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsTrustStorePath--">getTlsTrustStorePath</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i16" class="altColor">
+<td class="colFirst"><code>java.util.Optional&lt;java.lang.Boolean&gt;</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsVerifyHostname--">getTlsVerifyHostname</a></span>()</code>&nbsp;</td>
+</tr>
+<tr id="i17" class="rowColor">
 <td class="colFirst"><code>java.lang.Boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getUseDeadLetterQueue--">getUseDeadLetterQueue</a></span>()</code>&nbsp;</td>
 </tr>
-<tr id="i11" class="rowColor">
+<tr id="i18" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setAuthenticationJwt-java.lang.String-">setAuthenticationJwt</a></span>(java.lang.String&nbsp;authenticationJwt)</code>&nbsp;</td>
 </tr>
-<tr id="i12" class="altColor">
+<tr id="i19" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setDefaultMaxRetryDlq-int-">setDefaultMaxRetryDlq</a></span>(int&nbsp;defaultMaxRetryDlq)</code>
 <div class="block">If not set defaults to 3.</div>
 </td>
 </tr>
-<tr id="i13" class="rowColor">
+<tr id="i20" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setIoThreads-java.lang.Integer-">setIoThreads</a></span>(java.lang.Integer&nbsp;ioThreads)</code>&nbsp;</td>
 </tr>
-<tr id="i14" class="altColor">
+<tr id="i21" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setListenerThreads-java.lang.Integer-">setListenerThreads</a></span>(java.lang.Integer&nbsp;listenerThreads)</code>&nbsp;</td>
 </tr>
-<tr id="i15" class="rowColor">
+<tr id="i22" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setOauthAudience-java.lang.String-">setOauthAudience</a></span>(java.lang.String&nbsp;oauthAudience)</code>&nbsp;</td>
 </tr>
-<tr id="i16" class="altColor">
+<tr id="i23" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setOauthCredentialsUrl-java.net.URL-">setOauthCredentialsUrl</a></span>(java.net.URL&nbsp;oauthCredentialsUrl)</code>&nbsp;</td>
 </tr>
-<tr id="i17" class="rowColor">
+<tr id="i24" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setOauthIssuerUrl-java.net.URL-">setOauthIssuerUrl</a></span>(java.net.URL&nbsp;oauthIssuerUrl)</code>&nbsp;</td>
 </tr>
-<tr id="i18" class="altColor">
+<tr id="i25" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setServiceUrl-java.lang.String-">setServiceUrl</a></span>(java.lang.String&nbsp;serviceUrl)</code>&nbsp;</td>
 </tr>
-<tr id="i19" class="rowColor">
+<tr id="i26" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setShutdownOnSubscriberError-java.lang.Boolean-">setShutdownOnSubscriberError</a></span>(java.lang.Boolean&nbsp;shutdownOnSubscriberError)</code>&nbsp;</td>
+</tr>
+<tr id="i27" class="rowColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setSslProvider-java.lang.String-">setSslProvider</a></span>(java.lang.String&nbsp;sslProvider)</code>
 <div class="block">Defaults to default JVM provider.</div>
 </td>
 </tr>
-<tr id="i20" class="altColor">
+<tr id="i28" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsAllowInsecureConnection-java.lang.Boolean-">setTlsAllowInsecureConnection</a></span>(java.lang.Boolean&nbsp;tlsAllowInsecureConnection)</code>&nbsp;</td>
+</tr>
+<tr id="i29" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsCertFilePath-java.lang.String-">setTlsCertFilePath</a></span>(java.lang.String&nbsp;tlsCertFilePath)</code>&nbsp;</td>
+</tr>
+<tr id="i30" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsCiphers-java.util.Set-">setTlsCiphers</a></span>(java.util.Set&lt;java.lang.String&gt;&nbsp;tlsCiphers)</code>&nbsp;</td>
+</tr>
+<tr id="i31" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsProtocols-java.util.Set-">setTlsProtocols</a></span>(java.util.Set&lt;java.lang.String&gt;&nbsp;tlsProtocols)</code>&nbsp;</td>
+</tr>
+<tr id="i32" class="altColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsTrustStorePath-java.lang.String-">setTlsTrustStorePath</a></span>(java.lang.String&nbsp;tlsTrustStorePath)</code>&nbsp;</td>
+</tr>
+<tr id="i33" class="rowColor">
+<td class="colFirst"><code>void</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsVerifyHostname-java.lang.Boolean-">setTlsVerifyHostname</a></span>(java.lang.Boolean&nbsp;tlsVerifyHostname)</code>&nbsp;</td>
+</tr>
+<tr id="i34" class="altColor">
 <td class="colFirst"><code>void</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setUseDeadLetterQueue-java.lang.Boolean-">setUseDeadLetterQueue</a></span>(java.lang.Boolean&nbsp;useDeadLetterQueue)</code>
 <div class="block">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
@@ -405,6 +461,138 @@ implements <a href="../../../../io/micronaut/pulsar/config/PulsarClientConfigura
 </dl>
 </li>
 </ul>
+<a name="setTlsTrustStorePath-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setTlsTrustStorePath</h4>
+<pre>public&nbsp;void&nbsp;setTlsTrustStorePath(java.lang.String&nbsp;tlsTrustStorePath)</pre>
+</li>
+</ul>
+<a name="getTlsTrustStorePath--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTlsTrustStorePath</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getTlsTrustStorePath()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsTrustStorePath--">getTlsTrustStorePath</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="setTlsCertFilePath-java.lang.String-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setTlsCertFilePath</h4>
+<pre>public&nbsp;void&nbsp;setTlsCertFilePath(java.lang.String&nbsp;tlsCertFilePath)</pre>
+</li>
+</ul>
+<a name="getTlsCertFilePath--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTlsCertFilePath</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.lang.String&gt;&nbsp;getTlsCertFilePath()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsCertFilePath--">getTlsCertFilePath</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="setTlsVerifyHostname-java.lang.Boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setTlsVerifyHostname</h4>
+<pre>public&nbsp;void&nbsp;setTlsVerifyHostname(java.lang.Boolean&nbsp;tlsVerifyHostname)</pre>
+</li>
+</ul>
+<a name="getTlsVerifyHostname--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTlsVerifyHostname</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.lang.Boolean&gt;&nbsp;getTlsVerifyHostname()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsVerifyHostname--">getTlsVerifyHostname</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="setTlsAllowInsecureConnection-java.lang.Boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setTlsAllowInsecureConnection</h4>
+<pre>public&nbsp;void&nbsp;setTlsAllowInsecureConnection(java.lang.Boolean&nbsp;tlsAllowInsecureConnection)</pre>
+</li>
+</ul>
+<a name="getTlsAllowInsecureConnection--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTlsAllowInsecureConnection</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.lang.Boolean&gt;&nbsp;getTlsAllowInsecureConnection()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsAllowInsecureConnection--">getTlsAllowInsecureConnection</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="setTlsCiphers-java.util.Set-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setTlsCiphers</h4>
+<pre>public&nbsp;void&nbsp;setTlsCiphers(java.util.Set&lt;java.lang.String&gt;&nbsp;tlsCiphers)</pre>
+</li>
+</ul>
+<a name="getTlsCiphers--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTlsCiphers</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.util.Set&lt;java.lang.String&gt;&gt;&nbsp;getTlsCiphers()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsCiphers--">getTlsCiphers</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="setTlsProtocols-java.util.Set-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setTlsProtocols</h4>
+<pre>public&nbsp;void&nbsp;setTlsProtocols(java.util.Set&lt;java.lang.String&gt;&nbsp;tlsProtocols)</pre>
+</li>
+</ul>
+<a name="getTlsProtocols--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getTlsProtocols</h4>
+<pre>public&nbsp;java.util.Optional&lt;java.util.Set&lt;java.lang.String&gt;&gt;&nbsp;getTlsProtocols()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsProtocols--">getTlsProtocols</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+</dl>
+</li>
+</ul>
 <a name="setSslProvider-java.lang.String-">
 <!--   -->
 </a>
@@ -471,6 +659,32 @@ implements <a href="../../../../io/micronaut/pulsar/config/PulsarClientConfigura
 <dl>
 <dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
 <dd><code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html#getAuthentication--">getAuthentication</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="getShutdownOnSubscriberError--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>getShutdownOnSubscriberError</h4>
+<pre>public&nbsp;boolean&nbsp;getShutdownOnSubscriberError()</pre>
+<dl>
+<dt><span class="overrideSpecifyLabel">Specified by:</span></dt>
+<dd><code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html#getShutdownOnSubscriberError--">getShutdownOnSubscriberError</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+</dl>
+</li>
+</ul>
+<a name="setShutdownOnSubscriberError-java.lang.Boolean-">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>setShutdownOnSubscriberError</h4>
+<pre>public&nbsp;void&nbsp;setShutdownOnSubscriberError(java.lang.Boolean&nbsp;shutdownOnSubscriberError)</pre>
+<dl>
+<dt><span class="paramLabel">Parameters:</span></dt>
+<dd><code>shutdownOnSubscriberError</code> - should application shutdown if any of subscriptions fail</dd>
 </dl>
 </li>
 </ul>

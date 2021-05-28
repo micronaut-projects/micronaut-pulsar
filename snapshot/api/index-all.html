@@ -78,7 +78,7 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/AbstractPulsarConfiguration.html#AbstractPulsarConfiguration-java.util.Properties-">AbstractPulsarConfiguration(Properties)</a></span> - Constructor for class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/AbstractPulsarConfiguration.html" title="class in io.micronaut.pulsar.config">AbstractPulsarConfiguration</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#annotationType--">annotationType()</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html#annotationType--">annotationType()</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarProducerClientScope</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a name="I:C">
@@ -98,11 +98,17 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/ConsumerSubscribedEvent.html#ConsumerSubscribedEvent-org.apache.pulsar.client.api.Consumer-">ConsumerSubscribedEvent(Consumer&lt;?&gt;)</a></span> - Constructor for class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ConsumerSubscribedEvent.html" title="class in io.micronaut.pulsar.events">ConsumerSubscribedEvent</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events"><span class="typeNameLink">ConsumerSubscriptionFailedEvent</span></a> - Class in <a href="io/micronaut/pulsar/events/package-summary.html">io.micronaut.pulsar.events</a></dt>
+<dd>
+<div class="block">Raise error event on failed subscription.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html#ConsumerSubscriptionFailedEvent-java.lang.Throwable-java.lang.String-">ConsumerSubscriptionFailedEvent(Throwable, String)</a></span> - Constructor for class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ConsumerSubscriptionFailedEvent</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarProducerFactory.html#createProducer-org.apache.pulsar.client.api.PulsarClient-io.micronaut.core.annotation.AnnotationValue-io.micronaut.pulsar.processor.SchemaResolver-java.lang.String-java.lang.Class-">createProducer(PulsarClient, AnnotationValue&lt;PulsarProducer&gt;, SchemaResolver, String, Class&lt;T&gt;)</a></span> - Method in class io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarProducerFactory.html" title="class in io.micronaut.pulsar">PulsarProducerFactory</a></dt>
 <dd>
 <div class="block">Simple factory method for producing Pulsar <code>Producer</code> beans.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#createProducer-io.micronaut.core.annotation.AnnotationValue-io.micronaut.inject.ExecutableMethod-">createProducer(AnnotationValue&lt;PulsarProducer&gt;, ExecutableMethod&lt;?, ?&gt;)</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html#createProducer-io.micronaut.core.annotation.AnnotationValue-io.micronaut.inject.ExecutableMethod-">createProducer(AnnotationValue&lt;PulsarProducer&gt;, ExecutableMethod&lt;?, ?&gt;)</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarProducerClientScope</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarReaderFactory.html#createReader-io.micronaut.inject.InjectionPoint-">createReader(InjectionPoint&lt;?&gt;)</a></span> - Method in class io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarReaderFactory.html" title="class in io.micronaut.pulsar">PulsarReaderFactory</a></dt>
 <dd>
@@ -154,7 +160,7 @@
 </a>
 <h2 class="title">G</h2>
 <dl>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#get-io.micronaut.context.BeanResolutionContext-io.micronaut.inject.BeanDefinition-io.micronaut.inject.BeanIdentifier-javax.inject.Provider-">get(BeanResolutionContext, BeanDefinition&lt;T&gt;, BeanIdentifier, Provider&lt;T&gt;)</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html#get-io.micronaut.context.BeanResolutionContext-io.micronaut.inject.BeanDefinition-io.micronaut.inject.BeanIdentifier-javax.inject.Provider-">get(BeanResolutionContext, BeanDefinition&lt;T&gt;, BeanIdentifier, Provider&lt;T&gt;)</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarProducerClientScope</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getAuthentication--">getAuthentication()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -171,6 +177,8 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#getConsumerIds--">getConsumerIds()</a></span> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarConsumerRegistry.html#getConsumerIds--">getConsumerIds()</a></span> - Method in interface io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarConsumerRegistry.html" title="interface in io.micronaut.pulsar">PulsarConsumerRegistry</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html#getConsumerName--">getConsumerName()</a></span> - Method in class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ConsumerSubscriptionFailedEvent</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#getConsumers--">getConsumers()</a></span> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
 <dd>&nbsp;</dd>
@@ -206,6 +214,8 @@
 <dd>
 <div class="block">Get all managed producer identifiers.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html#getProducerName--">getProducerName()</a></span> - Method in class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ProducerSubscriptionFailedEvent</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#getProducers--">getProducers()</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarProducerRegistry.html#getProducers--">getProducers()</a></span> - Method in interface io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarProducerRegistry.html" title="interface in io.micronaut.pulsar">PulsarProducerRegistry</a></dt>
@@ -222,6 +232,12 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarReaderRegistry.html#getReaders--">getReaders()</a></span> - Method in interface io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarReaderRegistry.html" title="interface in io.micronaut.pulsar">PulsarReaderRegistry</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html#getReason--">getReason()</a></span> - Method in class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ConsumerSubscriptionFailedEvent</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html#getReason--">getReason()</a></span> - Method in class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ProducerSubscriptionFailedEvent</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/PulsarFailureEvent.html#getReason--">getReason()</a></span> - Method in interface io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/PulsarFailureEvent.html" title="interface in io.micronaut.pulsar.events">PulsarFailureEvent</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getServiceUrl--">getServiceUrl()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getServiceUrl--">getServiceUrl()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
@@ -230,9 +246,41 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getServiceUrlProvider--">getServiceUrlProvider()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getShutdownOnSubscriberError--">getShutdownOnSubscriberError()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getShutdownOnSubscriberError--">getShutdownOnSubscriberError()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html#getSourceError--">getSourceError()</a></span> - Method in class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ConsumerSubscriptionFailedEvent</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html#getSourceError--">getSourceError()</a></span> - Method in class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ProducerSubscriptionFailedEvent</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getSslProvider--">getSslProvider()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getSslProvider--">getSslProvider()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsAllowInsecureConnection--">getTlsAllowInsecureConnection()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsAllowInsecureConnection--">getTlsAllowInsecureConnection()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsCertFilePath--">getTlsCertFilePath()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsCertFilePath--">getTlsCertFilePath()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsCiphers--">getTlsCiphers()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsCiphers--">getTlsCiphers()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsProtocols--">getTlsProtocols()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsProtocols--">getTlsProtocols()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsTrustStorePath--">getTlsTrustStorePath()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsTrustStorePath--">getTlsTrustStorePath()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsVerifyHostname--">getTlsVerifyHostname()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsVerifyHostname--">getTlsVerifyHostname()</a></span> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getUseDeadLetterQueue--">getUseDeadLetterQueue()</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
@@ -245,28 +293,46 @@
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#intercept-io.micronaut.aop.MethodInvocationContext-">intercept(MethodInvocationContext&lt;Object, Object&gt;)</a></span> - Method in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/package-summary.html">io.micronaut.pulsar</a> - package io.micronaut.pulsar</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Entry point for Micronaut Pulsar integration.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/annotation/package-summary.html">io.micronaut.pulsar.annotation</a> - package io.micronaut.pulsar.annotation</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Annotations for Pulsar consumers, producers, and readers.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/config/package-summary.html">io.micronaut.pulsar.config</a> - package io.micronaut.pulsar.config</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Pulsar client configurations.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/events/package-summary.html">io.micronaut.pulsar.events</a> - package io.micronaut.pulsar.events</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Custom Events for Pulsar consumers, readers, and producers.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/intercept/package-summary.html">io.micronaut.pulsar.intercept</a> - package io.micronaut.pulsar.intercept</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Interceptors for methods annotated with Pulsar annotations.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/processor/package-summary.html">io.micronaut.pulsar.processor</a> - package io.micronaut.pulsar.processor</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Pulsar annotations processors.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/schemas/package-summary.html">io.micronaut.pulsar.schemas</a> - package io.micronaut.pulsar.schemas</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Schema processors for data types by Pulsar consumers, producers, and readers.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/schemas/json/package-summary.html">io.micronaut.pulsar.schemas.json</a> - package io.micronaut.pulsar.schemas.json</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">JSON data type processor for Pulsar.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/scope/package-summary.html">io.micronaut.pulsar.scope</a> - package io.micronaut.pulsar.scope</dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Bean processor for Pulsar scopes.</div>
+</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#isPaused-java.lang.String-">isPaused(String)</a></span> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarConsumerRegistry.html#isPaused-java.lang.String-">isPaused(String)</a></span> - Method in interface io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarConsumerRegistry.html" title="interface in io.micronaut.pulsar">PulsarConsumerRegistry</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#isRunning--">isRunning()</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html#isRunning--">isRunning()</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarProducerClientScope</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a name="I:J">
@@ -331,6 +397,12 @@
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#process-io.micronaut.inject.BeanDefinition-io.micronaut.inject.ExecutableMethod-">process(BeanDefinition&lt;?&gt;, ExecutableMethod&lt;?, ?&gt;)</a></span> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events"><span class="typeNameLink">ProducerSubscriptionFailedEvent</span></a> - Class in <a href="io/micronaut/pulsar/events/package-summary.html">io.micronaut.pulsar.events</a></dt>
+<dd>
+<div class="block">Raise error event on failed producer subscription.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html#ProducerSubscriptionFailedEvent-java.lang.String-java.lang.Throwable-">ProducerSubscriptionFailedEvent(String, Throwable)</a></span> - Constructor for class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ProducerSubscriptionFailedEvent</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarClientFactory.html#pulsarClient-io.micronaut.pulsar.config.PulsarClientConfiguration-">pulsarClient(PulsarClientConfiguration)</a></span> - Method in class io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarClientFactory.html" title="class in io.micronaut.pulsar">PulsarClientFactory</a></dt>
 <dd>
 <div class="block">Simple factory method for building main PulsarClient that serves as a connection to Pulsar cluster.</div>
@@ -344,12 +416,6 @@
 <div class="block">Create bean of PulsarClient type which is required by consumers and producers.</div>
 </dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/PulsarClientFactory.html#PulsarClientFactory--">PulsarClientFactory()</a></span> - Constructor for class io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarClientFactory.html" title="class in io.micronaut.pulsar">PulsarClientFactory</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope"><span class="typeNameLink">PulsarClientScope</span></a> - Class in <a href="io/micronaut/pulsar/scope/package-summary.html">io.micronaut.pulsar.scope</a></dt>
-<dd>
-<div class="block">A scope implementation for injecting <a href="io/micronaut/pulsar/annotation/PulsarProducerClient.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarProducerClient</code></a> instances.</div>
-</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#PulsarClientScope-io.micronaut.context.BeanContext-io.micronaut.pulsar.processor.SchemaResolver-org.apache.pulsar.client.api.PulsarClient-">PulsarClientScope(BeanContext, SchemaResolver, PulsarClient)</a></span> - Constructor for class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/annotation/PulsarConsumer.html" title="annotation in io.micronaut.pulsar.annotation"><span class="typeNameLink">PulsarConsumer</span></a> - Annotation Type in <a href="io/micronaut/pulsar/annotation/package-summary.html">io.micronaut.pulsar.annotation</a></dt>
 <dd>
@@ -365,6 +431,10 @@
 <dd>
 <div class="block">A registry for created Pulsar consumers.</div>
 </dd>
+<dt><a href="io/micronaut/pulsar/events/PulsarFailureEvent.html" title="interface in io.micronaut.pulsar.events"><span class="typeNameLink">PulsarFailureEvent</span></a> - Interface in <a href="io/micronaut/pulsar/events/package-summary.html">io.micronaut.pulsar.events</a></dt>
+<dd>
+<div class="block">Event raised on failure made by Pulsar client connection or reader, consumer, or producer errors.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/annotation/PulsarProducer.html" title="annotation in io.micronaut.pulsar.annotation"><span class="typeNameLink">PulsarProducer</span></a> - Annotation Type in <a href="io/micronaut/pulsar/annotation/package-summary.html">io.micronaut.pulsar.annotation</a></dt>
 <dd>
 <div class="block">Marks a method that should produce values to Pulsar topics on call.</div>
@@ -373,12 +443,18 @@
 <dd>
 <div class="block">Intercepting pulsar <code>Producer</code> methods.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#PulsarProducerAdvice-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.context.BeanContext-">PulsarProducerAdvice(PulsarClient, SchemaResolver, BeanContext)</a></span> - Constructor for class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#PulsarProducerAdvice-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.context.BeanContext-io.micronaut.context.event.ApplicationEventPublisher-">PulsarProducerAdvice(PulsarClient, SchemaResolver, BeanContext, ApplicationEventPublisher)</a></span> - Constructor for class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/annotation/PulsarProducerClient.html" title="annotation in io.micronaut.pulsar.annotation"><span class="typeNameLink">PulsarProducerClient</span></a> - Annotation Type in <a href="io/micronaut/pulsar/annotation/package-summary.html">io.micronaut.pulsar.annotation</a></dt>
 <dd>
 <div class="block">Marks a type as a bean containing producer methods.</div>
 </dd>
+<dt><a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html" title="class in io.micronaut.pulsar.scope"><span class="typeNameLink">PulsarProducerClientScope</span></a> - Class in <a href="io/micronaut/pulsar/scope/package-summary.html">io.micronaut.pulsar.scope</a></dt>
+<dd>
+<div class="block">A scope implementation for injecting <a href="io/micronaut/pulsar/annotation/PulsarProducerClient.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarProducerClient</code></a> instances.</div>
+</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html#PulsarProducerClientScope-io.micronaut.context.BeanContext-io.micronaut.pulsar.processor.SchemaResolver-org.apache.pulsar.client.api.PulsarClient-">PulsarProducerClientScope(BeanContext, SchemaResolver, PulsarClient)</a></span> - Constructor for class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarProducerClientScope</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/PulsarProducerFactory.html" title="class in io.micronaut.pulsar"><span class="typeNameLink">PulsarProducerFactory</span></a> - Class in <a href="io/micronaut/pulsar/package-summary.html">io.micronaut.pulsar</a></dt>
 <dd>
 <div class="block">Pulsar <code>Producer</code> factory.</div>
@@ -423,7 +499,7 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/DefaultListener.html#received-org.apache.pulsar.client.api.Consumer-org.apache.pulsar.client.api.Message-">received(Consumer, Message)</a></span> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/DefaultListener.html" title="class in io.micronaut.pulsar.processor">DefaultListener</a></dt>
 <dd>&nbsp;</dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#remove-io.micronaut.inject.BeanIdentifier-">remove(BeanIdentifier)</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html#remove-io.micronaut.inject.BeanIdentifier-">remove(BeanIdentifier)</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarProducerClientScope</a></dt>
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#resume-java.lang.String-">resume(String)</a></span> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
 <dd>&nbsp;</dd>
@@ -459,16 +535,30 @@
 <dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setServiceUrl-java.lang.String-">setServiceUrl(String)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setShutdownOnSubscriberError-java.lang.Boolean-">setShutdownOnSubscriberError(Boolean)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setSslProvider-java.lang.String-">setSslProvider(String)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>
 <div class="block">Defaults to default JVM provider.</div>
 </dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsAllowInsecureConnection-java.lang.Boolean-">setTlsAllowInsecureConnection(Boolean)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsCertFilePath-java.lang.String-">setTlsCertFilePath(String)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsCiphers-java.util.Set-">setTlsCiphers(Set&lt;String&gt;)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsProtocols-java.util.Set-">setTlsProtocols(Set&lt;String&gt;)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsTrustStorePath-java.lang.String-">setTlsTrustStorePath(String)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setTlsVerifyHostname-java.lang.Boolean-">setTlsVerifyHostname(Boolean)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dd>&nbsp;</dd>
 <dt><span class="memberNameLink"><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setUseDeadLetterQueue-java.lang.Boolean-">setUseDeadLetterQueue(Boolean)</a></span> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>
 <div class="block">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
  be resent again.</div>
 </dd>
-<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarClientScope.html#stop--">stop()</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarClientScope</a></dt>
+<dt><span class="memberNameLink"><a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html#stop--">stop()</a></span> - Method in class io.micronaut.pulsar.scope.<a href="io/micronaut/pulsar/scope/PulsarProducerClientScope.html" title="class in io.micronaut.pulsar.scope">PulsarProducerClientScope</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <a name="I:T">

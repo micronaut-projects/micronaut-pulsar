@@ -69,9 +69,30 @@
 <!-- ========= END OF TOP NAVBAR ========= -->
 <div class="header">
 <h1 title="Package" class="title">Package&nbsp;io.micronaut.pulsar.events</h1>
+<div class="docSummary">
+<div class="block">Custom Events for Pulsar consumers, readers, and producers.</div>
+</div>
+<p>See:&nbsp;<a href="#package.description">Description</a></p>
 </div>
 <div class="contentContainer">
 <ul class="blockList">
+<li class="blockList">
+<table class="typeSummary" border="0" cellpadding="3" cellspacing="0" summary="Interface Summary table, listing interfaces, and an explanation">
+<caption><span>Interface Summary</span><span class="tabEnd">&nbsp;</span></caption>
+<tr>
+<th class="colFirst" scope="col">Interface</th>
+<th class="colLast" scope="col">Description</th>
+</tr>
+<tbody>
+<tr class="altColor">
+<td class="colFirst"><a href="../../../../io/micronaut/pulsar/events/PulsarFailureEvent.html" title="interface in io.micronaut.pulsar.events">PulsarFailureEvent</a></td>
+<td class="colLast">
+<div class="block">Event raised on failure made by Pulsar client connection or reader, consumer, or producer errors.</div>
+</td>
+</tr>
+</tbody>
+</table>
+</li>
 <li class="blockList">
 <table class="typeSummary" border="0" cellpadding="3" cellspacing="0" summary="Class Summary table, listing classes, and an explanation">
 <caption><span>Class Summary</span><span class="tabEnd">&nbsp;</span></caption>
@@ -86,10 +107,33 @@
 <div class="block">Produced when Pulsar consumer connects to a broker and starts listening to specified topics.</div>
 </td>
 </tr>
+<tr class="rowColor">
+<td class="colFirst"><a href="../../../../io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ConsumerSubscriptionFailedEvent</a></td>
+<td class="colLast">
+<div class="block">Raise error event on failed subscription.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><a href="../../../../io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ProducerSubscriptionFailedEvent</a></td>
+<td class="colLast">
+<div class="block">Raise error event on failed producer subscription.</div>
+</td>
+</tr>
 </tbody>
 </table>
 </li>
 </ul>
+<a name="package.description">
+<!--   -->
+</a>
+<h2 title="Package io.micronaut.pulsar.events Description">Package io.micronaut.pulsar.events Description</h2>
+<div class="block">Custom Events for Pulsar consumers, readers, and producers.</div>
+<dl>
+<dt><span class="simpleTagLabel">Since:</span></dt>
+<dd>1.0</dd>
+<dt><span class="simpleTagLabel">Author:</span></dt>
+<dd>Haris Secic</dd>
+</dl>
 </div>
 <!-- ======= START OF BOTTOM NAVBAR ====== -->
 <div class="bottomNav"><a name="navbar.bottom">

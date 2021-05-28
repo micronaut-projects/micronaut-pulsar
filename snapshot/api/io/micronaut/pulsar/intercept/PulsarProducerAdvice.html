@@ -163,9 +163,10 @@ implements io.micronaut.aop.MethodInterceptor&lt;java.lang.Object,java.lang.Obje
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#PulsarProducerAdvice-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.context.BeanContext-">PulsarProducerAdvice</a></span>(org.apache.pulsar.client.api.PulsarClient&nbsp;pulsarClient,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#PulsarProducerAdvice-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.context.BeanContext-io.micronaut.context.event.ApplicationEventPublisher-">PulsarProducerAdvice</a></span>(org.apache.pulsar.client.api.PulsarClient&nbsp;pulsarClient,
                     <a href="../../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver,
-                    io.micronaut.context.BeanContext&nbsp;beanContext)</code>&nbsp;</td>
+                    io.micronaut.context.BeanContext&nbsp;beanContext,
+                    io.micronaut.context.event.ApplicationEventPublisher&nbsp;applicationEventPublisher)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -244,7 +245,7 @@ implements io.micronaut.aop.MethodInterceptor&lt;java.lang.Object,java.lang.Obje
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PulsarProducerAdvice-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.context.BeanContext-">
+<a name="PulsarProducerAdvice-org.apache.pulsar.client.api.PulsarClient-io.micronaut.pulsar.processor.SchemaResolver-io.micronaut.context.BeanContext-io.micronaut.context.event.ApplicationEventPublisher-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -252,7 +253,8 @@ implements io.micronaut.aop.MethodInterceptor&lt;java.lang.Object,java.lang.Obje
 <h4>PulsarProducerAdvice</h4>
 <pre>public&nbsp;PulsarProducerAdvice(org.apache.pulsar.client.api.PulsarClient&nbsp;pulsarClient,
                             <a href="../../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver,
-                            io.micronaut.context.BeanContext&nbsp;beanContext)</pre>
+                            io.micronaut.context.BeanContext&nbsp;beanContext,
+                            io.micronaut.context.event.ApplicationEventPublisher&nbsp;applicationEventPublisher)</pre>
 </li>
 </ul>
 </li>
