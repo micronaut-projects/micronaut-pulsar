@@ -16,13 +16,13 @@
 package example.shared
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.context.env.Environment
+import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration
+import io.micronaut.pulsar.config.PulsarClientConfiguration
 import org.testcontainers.utility.DockerImageName
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
-
-import static io.micronaut.core.util.StringUtils.EMPTY_STRING_ARRAY
 
 /**
  * Generic code required by all components to run prior application being able to run.
@@ -34,10 +34,6 @@ abstract class SimulateEnv extends Specification {
     @Shared
     @AutoCleanup
     ApplicationContext context
-
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer
 
     @Shared
     @AutoCleanup
@@ -53,21 +49,14 @@ abstract class SimulateEnv extends Specification {
         pulsar.start()
         String tlsPath = ClassLoader.getSystemClassLoader().getResource('ca.cert.pem').path
         String tlsPathForPulsar = new File(tlsPath).absolutePath
-        embeddedServer = ApplicationContext.run(EmbeddedServer,
-                ['pulsar.service-url'                     : pulsar.url,
-                 'pulsar.oauth-issuer-url'                : pulsar.getIssuerUrl(),
-                 'pulsar.oauth-credentials-url'           : "file:///" + pulsar.credentialsPath,
-                 'pulsar.tls-cert-file-path'              : tlsPathForPulsar,
-                 'pulsar.tls-ciphers'                     : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
-                 'pulsar.tls-protocols'                   : ['TLSv1.2', 'TLSv1.1'],
-                 'pulsar.shutdown-on-subscription-failure': true,
-                 'spec.name'                              : getClass().simpleName],
-                EMPTY_STRING_ARRAY
+        context = ApplicationContext.run(['pulsar.service-url'          : pulsar.url,
+                                          'pulsar.oauth-issuer-url'     : pulsar.getIssuerUrl(),
+                                          'pulsar.oauth-credentials-url': "file:///" + pulsar.credentialsPath,
+                                          'pulsar.tls-cert-file-path'   : tlsPathForPulsar,
+                                          'pulsar.tls-ciphers'          : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
+                                          'pulsar.tls-protocols'        : ['TLSv1.2', 'TLSv1.1'],
+                                          'spec.name'                   : getClass().simpleName],
+                Environment.TEST
         )
-        context = embeddedServer.applicationContext
-    }
-
-    void cleanupSpec() {
-        embeddedServer.stop()
     }
 }

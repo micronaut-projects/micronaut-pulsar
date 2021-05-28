@@ -22,6 +22,7 @@ import org.keycloak.representations.idm.ClientRepresentation
 import org.keycloak.representations.idm.ProtocolMapperRepresentation
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.testcontainers.Testcontainers
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
@@ -121,6 +122,9 @@ final class SharedPulsar implements AutoCloseable {
         pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces create private/reports")
         pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable private/reports")
         pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable public/default")
+
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://public/default/messages")
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://private/reports/messages")
     }
 
     private static File generatePubKey(RealmResource master) {

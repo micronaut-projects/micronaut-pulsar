@@ -20,6 +20,7 @@ import io.micronaut.pulsar.conf.ClientConf
 import io.micronaut.pulsar.conf.StandaloneConf
 import org.assertj.core.util.Files
 import org.testcontainers.containers.BindMode
+import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
 import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
@@ -31,6 +32,7 @@ final class PulsarTls implements AutoCloseable {
     static final String caConfPath = "/my-ca";
     final PulsarContainer pulsarContainer
     final ClassLoader resourceLoader
+    private final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
     PulsarTls() {
         this.resourceLoader = ClassLoader.getSystemClassLoader()
@@ -56,6 +58,7 @@ final class PulsarTls implements AutoCloseable {
         pulsarContainer.waitingFor(Wait.forHttp(PulsarContainer.METRICS_ENDPOINT)
                 .forPort(PulsarContainer.BROKER_HTTP_PORT))
         pulsarContainer.start()
+        createTopic()
     }
 
     String getPulsarBrokerUrl() {
@@ -78,6 +81,12 @@ final class PulsarTls implements AutoCloseable {
         File tmp = Files.newTemporaryFile()
         tmp.write(text)
         return tmp
+    }
+
+    private void createTopic() {
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable public/default")
+        Container.ExecResult result = pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://public/default/test")
+        if (0 != result.exitCode) throw new RuntimeException("Unable to create test topic for TLS");
     }
 
     @Override

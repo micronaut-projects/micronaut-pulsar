@@ -24,14 +24,14 @@ import io.micronaut.pulsar.PulsarConsumerRegistry
 import io.reactivex.subscribers.TestSubscriber
 import org.testcontainers.containers.Container
 import spock.lang.Stepwise
-import spock.util.concurrent.PollingConditions
 
 import java.time.LocalDateTime
 
 /**
  * Simple check application boots nad listens/receives messages on all ends.
  *
- * @author Haris* @since 1.0
+ * @author Haris
+ * @since 1.0
  */
 @Stepwise
 class ApplicationTest extends SimulateEnv {

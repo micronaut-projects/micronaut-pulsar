@@ -32,11 +32,7 @@ import static org.apache.pulsar.client.api.MessageId.latest
 @Stepwise
 class PulsarProducersSpec extends PulsarAwareTest {
 
-    private static final String PULSAR_PRODUCER_TEST_TOPIC = "persistent://public/default/test2"
-
-    static {
-        PulsarDefaultContainer.createNonPartitionedTopic(PULSAR_PRODUCER_TEST_TOPIC)
-    }
+    public static final String PULSAR_PRODUCER_TEST_TOPIC = "persistent://public/default/test2"
 
     void "test simple producer"() {
         when:

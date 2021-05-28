@@ -22,11 +22,14 @@ class PulsarDefaultContainer implements AutoCloseable {
 
     static PulsarAdmin PULSAR_ADMIN
 
-    static final PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.7.1").with {
-        it.start()
+    static final PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.7.1")
+
+    static void start() {
+        if (PULSAR_CONTAINER.isRunning()) return
+        PULSAR_CONTAINER.start()
         sleep 1000 // for some reason clusters don't get proper boot this delay helps a bit for awaiting clusters
-        PULSAR_ADMIN = PulsarAdmin.builder().serviceHttpUrl(it.httpServiceUrl).build()
-        it
+        PULSAR_ADMIN = PulsarAdmin.builder().serviceHttpUrl(PULSAR_CONTAINER.httpServiceUrl).build()
+        PULSAR_CONTAINER
     }
 
     @Override
@@ -36,6 +39,7 @@ class PulsarDefaultContainer implements AutoCloseable {
     }
 
     static void createNonPartitionedTopic(String topic) {
+        start()
         PULSAR_ADMIN.topics().createNonPartitionedTopic(topic)
     }
 }

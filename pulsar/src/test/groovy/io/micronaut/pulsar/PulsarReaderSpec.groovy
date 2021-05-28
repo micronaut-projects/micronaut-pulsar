@@ -29,11 +29,7 @@ import static java.util.concurrent.TimeUnit.SECONDS
 @Stepwise
 class PulsarReaderSpec extends PulsarAwareTest {
 
-    private static final String PULSAR_READER_TEST_TOPIC = "persistent://public/default/simple-reader"
-
-    void setupSpec() {
-        PulsarDefaultContainer.createNonPartitionedTopic(PULSAR_READER_TEST_TOPIC)
-    }
+    public static final String PULSAR_READER_TEST_TOPIC = "persistent://public/default/simple-reader"
 
     @Singleton
     @Requires(property = 'spec.name', value = 'PulsarReaderSpec')

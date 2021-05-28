@@ -16,7 +16,7 @@
 package io.micronaut.pulsar
 
 import io.micronaut.context.ApplicationContext
-import io.micronaut.core.util.StringUtils
+import io.micronaut.context.env.Environment
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
@@ -44,25 +44,20 @@ class TlsAwareClientTest extends Specification {
     @AutoCleanup
     ApplicationContext context
 
-    @Shared
-    @AutoCleanup
-    EmbeddedServer embeddedServer
-
     void setupSpec() {
         pulsarTls = new PulsarTls()
         pulsarTls.start()
         String tlsPath = ClassLoader.getSystemClassLoader().getResource('ca.cert.pem').path
         String tlsPathForPulsar = new File(tlsPath).absolutePath
-        embeddedServer = ApplicationContext.run(EmbeddedServer.class,
+        context = ApplicationContext.run(
                 ['pulsar.service-url'                     : pulsarTls.pulsarBrokerUrl,
                  'pulsar.tls-cert-file-path'              : tlsPathForPulsar,
                  'pulsar.shutdown-on-subscription-failure': true,
                  'pulsar.tls-ciphers'                     : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
                  'pulsar.tls-protocols'                   : ['TLSv1.2', 'TLSv1.1'],
                  'spec.name'                              : getClass().simpleName],
-                StringUtils.EMPTY_STRING_ARRAY
-        ) as EmbeddedServer
-        context = embeddedServer.applicationContext
+                Environment.TEST
+        )
     }
 
     void 'test simple send receive using TLS'() {
@@ -117,9 +112,5 @@ class TlsAwareClientTest extends Specification {
 
         @PulsarProducer(topic = "persistent://public/default/test")
         MessageId send(String message)
-    }
-
-    void cleanupSpec() {
-        embeddedServer.stop()
     }
 }

@@ -16,14 +16,15 @@
 package io.micronaut.pulsar.shared
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.env.Environment
+import io.micronaut.pulsar.PulsarConsumerSpec
 import io.micronaut.pulsar.PulsarDefaultContainer
+import io.micronaut.pulsar.PulsarProducersSpec
+import io.micronaut.pulsar.PulsarReaderSpec
 import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
-
-import static io.micronaut.core.util.StringUtils.EMPTY_STRING_ARRAY
-import static io.micronaut.pulsar.PulsarDefaultContainer.PULSAR_CONTAINER
 
 abstract class PulsarAwareTest extends Specification {
 
@@ -33,23 +34,21 @@ abstract class PulsarAwareTest extends Specification {
 
     @Shared
     @AutoCleanup
-    EmbeddedServer embeddedServer
-
-    @Shared
-    @AutoCleanup
-    PulsarDefaultContainer pulsarContainer // will trigger close and dispose containers
+    PulsarDefaultContainer pulsarContainer
 
     void setupSpec() {
-        embeddedServer = ApplicationContext.run(EmbeddedServer,
-                ['pulsar.service-url': PulsarDefaultContainer.PULSAR_CONTAINER.pulsarBrokerUrl,
+        PulsarDefaultContainer.start()
+        //avoid static running and context subscribing consumers before pulsar topic creation
+        PulsarDefaultContainer.createNonPartitionedTopic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
+        PulsarDefaultContainer.createNonPartitionedTopic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
+        PulsarDefaultContainer.createNonPartitionedTopic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
+        PulsarDefaultContainer.createNonPartitionedTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
+        context = ApplicationContext.run(
+                ['pulsar.service-url'                     : PulsarDefaultContainer.PULSAR_CONTAINER.pulsarBrokerUrl,
                  'pulsar.shutdown-on-subscription-failure': true,
-                 'spec.name': getClass().simpleName],
-                EMPTY_STRING_ARRAY
+                 'spec.name'                              : getClass().simpleName],
+                Environment.TEST
         )
-        context = embeddedServer.applicationContext
     }
 
-    void cleanupSpec() {
-        embeddedServer.stop()
-    }
 }
