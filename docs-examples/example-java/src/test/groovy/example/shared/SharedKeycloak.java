@@ -37,7 +37,7 @@ public class SharedKeycloak extends GenericContainer<SharedKeycloak> {
     private static final String PASSWORD = "admin";
     private static final int HTTP_PORT = 8080;
     public static final String KEYCLOAK_IMAGE = "quay.io/keycloak/keycloak";
-    public static final String KEYCLOAK_VERSION = "12.0.3";
+    public static final String KEYCLOAK_VERSION = "13.0.0";
     public static final String REALM = "master";
     public static final String ADMIN_CLIENT_ID = "admin-cli";
     public static final String KEYCLOAK_IMAGE_NAME = String.format("%s:%s", KEYCLOAK_IMAGE, KEYCLOAK_VERSION);

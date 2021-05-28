@@ -27,7 +27,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * TODO javadoc.
+ * Pulsar consumers.
+ *
+ * @author Haris Secic
+ * @since 1.0
  */
 @PulsarSubscription(subscriptionName = "pulsar-test-subscription", subscriptionType = SubscriptionType.Shared)
 public class MessagingService {
@@ -40,9 +43,9 @@ public class MessagingService {
     }
 
     /**
-     * @param message TODO
+     * @param message data received on pulsar topic
      */
-    @PulsarConsumer(topic = "persistent://public/default/messages", consumerName = "shared-consumer-tester")
+    @PulsarConsumer(topic = "persistent://public/default/messages", consumerName = "shared-consumer-tester", subscribeAsync = false)
     public void messagePrinter(PulsarMessage message) {
         LOGGER.info("A message was received {}. Sent on {}", message.getMessage(), message.getSent());
         broadcaster.broadcastAsync(message, MediaType.APPLICATION_JSON_TYPE, t -> isProperChannel(t.getUriVariables()));
@@ -50,14 +53,14 @@ public class MessagingService {
     }
 
     /**
-     * @param message TODO
-     * @return TODO
+     * @param message text to send to reports topic
+     * @return message string value
      */
     // when inside other beans no @PulsarProducerClient is required on the class
     @PulsarProducer(topic = "persistent://private/reports/messages", producerName = "report-producer")
     public String report(String message) {
         // should happen before message is being sent to Pulsar by default
-        LOGGER.info("Sending message {}", message);
+        LOGGER.info("Sending message \"{}\"", message);
         return message;
     }
 

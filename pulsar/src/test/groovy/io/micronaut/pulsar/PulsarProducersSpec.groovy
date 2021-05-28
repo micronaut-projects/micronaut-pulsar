@@ -18,6 +18,7 @@ package io.micronaut.pulsar
 import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
+import io.micronaut.pulsar.shared.PulsarAwareTest
 import io.reactivex.Single
 import org.apache.pulsar.client.api.MessageId
 import org.apache.pulsar.client.api.PulsarClient
@@ -31,11 +32,7 @@ import static org.apache.pulsar.client.api.MessageId.latest
 @Stepwise
 class PulsarProducersSpec extends PulsarAwareTest {
 
-    private static final String PULSAR_PRODUCER_TEST_TOPIC = "persistent://public/default/test2"
-
-    static {
-        PulsarDefaultContainer.createNonPartitionedTopic(PULSAR_PRODUCER_TEST_TOPIC)
-    }
+    public static final String PULSAR_PRODUCER_TEST_TOPIC = "persistent://public/default/test2"
 
     void "test simple producer"() {
         when:

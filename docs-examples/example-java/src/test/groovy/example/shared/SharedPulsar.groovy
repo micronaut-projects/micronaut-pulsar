@@ -15,12 +15,14 @@
  */
 package example.shared
 
-
 import org.assertj.core.util.Files
 import org.keycloak.admin.client.resource.RealmResource
 import org.keycloak.crypto.Algorithm
 import org.keycloak.representations.idm.ClientRepresentation
 import org.keycloak.representations.idm.ProtocolMapperRepresentation
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
+import org.testcontainers.Testcontainers
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
@@ -34,12 +36,19 @@ import org.testcontainers.utility.DockerImageName
  */
 final class SharedPulsar implements AutoCloseable {
 
+    private static final Logger LOG = LoggerFactory.getLogger(SharedPulsar.class)
+
     private static final String CLIENT_CREDENTIALS = '''{
   "type": "client_credentials",
   "client_id": "pulsar-client",
   "client_secret": "%s",
   "issuer_url": "%s"
 }'''
+    private static final String caConfPath = "/my-ca"
+
+    public static int SSL_PORT = 6651
+    public static int HTTPS_PORT = 8443
+
     private final String PULSAR_CLI_CLIENT = "/pulsar/bin/pulsar-client"
     private final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
@@ -49,11 +58,12 @@ final class SharedPulsar implements AutoCloseable {
 
     SharedPulsar(SharedKeycloak keycloak) {
         this.keycloak = keycloak
-        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.7.1")).dependsOn(keycloak)
+        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.7.1"))
+                .dependsOn(keycloak)
     }
 
     String getUrl() {
-        return pulsarContainer.pulsarBrokerUrl
+        return String.format("pulsar+ssl://%s:%s", pulsarContainer.getContainerIpAddress(), pulsarContainer.getMappedPort(SSL_PORT))
     }
 
     String getCredentialsPath() {
@@ -65,6 +75,7 @@ final class SharedPulsar implements AutoCloseable {
     }
 
     void start() {
+        setupTls()
         String secret = UUID.randomUUID().toString()
         credentialsPath = createCredentialsFile(secret).path
 
@@ -78,24 +89,42 @@ final class SharedPulsar implements AutoCloseable {
         Map<String, File> contentBytes = replaceConfigs(keycloak.crossContainerAuthUrl + "/realms/master")
         pulsarContainer.addFileSystemBind(contentBytes["client"].path, "/pulsar/conf/client.conf", BindMode.READ_ONLY)
         pulsarContainer.addFileSystemBind(contentBytes["standalone"].path, "/pulsar/conf/standalone.conf", BindMode.READ_ONLY)
+
+        //open up encrypted endpoints as well
+        pulsarContainer.withExposedPorts(
+                PulsarContainer.BROKER_HTTP_PORT,
+                PulsarContainer.BROKER_PORT,
+                HTTPS_PORT,
+                SSL_PORT
+        )
+
         pulsarContainer.start()
         createPrivateReports()
     }
 
+    @Override
     void close() {
         pulsarContainer.stop()
     }
 
     Container.ExecResult send(String message) {
         pulsarContainer.copyFileToContainer(Transferable.of(message.bytes), "/pulsar/testMsg.json")
-        return pulsarContainer.execInContainer("/bin/bash",
-                "-c",
-                PULSAR_CLI_CLIENT + " produce public/default/messages -f testMsg.json")
+        String command = PULSAR_CLI_CLIENT + " produce persistent://public/default/messages -f testMsg.json";
+        Container.ExecResult result = pulsarContainer.execInContainer("/bin/bash", "-c", command)
+        if (0 != result.exitCode) {
+            throw new Exception(result.stderr ?: result.stdout)
+        }
+        return result
     }
 
     private void createPrivateReports() {
-        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " tenants create private -r superadmin -c standalone")
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " tenants create private -r superuser -c standalone")
         pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces create private/reports")
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable private/reports")
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable public/default")
+
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://public/default/messages")
+        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://private/reports/messages")
     }
 
     private static File generatePubKey(RealmResource master) {
@@ -116,17 +145,21 @@ final class SharedPulsar implements AutoCloseable {
     }
 
     private static Map<String, File> replaceConfigs(String url) {
-        File client = replaceFileLine(ClientConf.content, 41, url)
-        File standalone = replaceFileLine(StandaloneConf.content, 404, url)
-        return ["client": client, "standalone": standalone]
-    }
+        String standaloneContent = StandaloneConf.content.replace("tlsCertificateFilePath=", "tlsCertificateFilePath=$caConfPath/broker.cert.pem")
+        standaloneContent = standaloneContent.replace("tlsKeyFilePath=", "tlsKeyFilePath=$caConfPath/broker.key-pk8.pem")
+        standaloneContent = standaloneContent.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
+        standaloneContent = standaloneContent.replace('brokerClientAuthenticationParameters=',
+                "brokerClientAuthenticationParameters={\"issuerUrl\": \"$url\",\"privateKey\": \"/pulsar/credentials.json\",\"audience\": \"pulsar\"}")
+        File standalone = Files.newTemporaryFile()
+        standalone.write(standaloneContent)
 
-    private static File replaceFileLine(String content, int line, String param) {
-        String[] text = content.split('\n')
-        text[line] = String.format(text[line], param)
-        File tmp = Files.newTemporaryFile()
-        tmp.write(text.join("\n"))
-        return tmp
+        String clientContent = ClientConf.content.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
+        clientContent = clientContent.replace('authParams=',
+                "authParams={\"issuerUrl\": \"$url\",\"privateKey\": \"file:///pulsar/credentials.json\",\"audience\": \"pulsar\"}")
+        File client = Files.newTemporaryFile()
+        client.write(clientContent)
+
+        return ["client": client, "standalone": standalone]
     }
 
     private static void createClient(RealmResource master, String secret) {
@@ -153,5 +186,15 @@ final class SharedPulsar implements AutoCloseable {
                         ])
                 ])
         master.clients().create(client)
+    }
+
+    private void setupTls() {
+        ClassLoader resourceLoader = ClassLoader.getSystemClassLoader()
+        String brokerCert = resourceLoader.getResource("broker.cert.pem").path
+        pulsarContainer.addFileSystemBind(new File(brokerCert).path, "$caConfPath/broker.cert.pem", BindMode.READ_ONLY)
+        String brokerKey = resourceLoader.getResource("broker.key-pk8.pem").path
+        pulsarContainer.addFileSystemBind(new File(brokerKey).path, "$caConfPath/broker.key-pk8.pem", BindMode.READ_ONLY)
+        String caCert = resourceLoader.getResource("ca.cert.pem").path
+        pulsarContainer.addFileSystemBind(new File(caCert).path, "$caConfPath/ca.cert.pem", BindMode.READ_ONLY)
     }
 }

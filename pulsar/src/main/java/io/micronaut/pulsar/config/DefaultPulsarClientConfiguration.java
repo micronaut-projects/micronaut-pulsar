@@ -28,10 +28,7 @@ import org.apache.pulsar.client.impl.auth.AuthenticationToken;
 import org.apache.pulsar.client.impl.auth.oauth2.AuthenticationFactoryOAuth2;
 
 import java.net.URL;
-import java.util.Collections;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Properties;
+import java.util.*;
 
 import static io.micronaut.core.naming.conventions.StringConvention.RAW;
 import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.PREFIX;
@@ -58,11 +55,18 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private String oauthAudience;
     private Boolean useDeadLetterQueue;
     private int defaultMaxRetryDlq = 3;
+    private String tlsTrustStorePath;
+    private String tlsCertFilePath;
+    private Boolean tlsVerifyHostname;
+    private Boolean tlsAllowInsecureConnection;
+    private Set<String> tlsCiphers;
+    private Set<String> tlsProtocols;
+    private Boolean shutdownOnSubscriberError;
 
     /**
      * Constructs the default Pulsar Client configuration.
      *
-     * @param environment Environment
+     * @param environment        Environment
      * @param serviceUrlProvider Pulsars service URL provider
      */
     protected DefaultPulsarClientConfiguration(final Environment environment,
@@ -101,8 +105,63 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
         return Optional.ofNullable(sslProvider);
     }
 
+    public void setTlsTrustStorePath(String tlsTrustStorePath) {
+        this.tlsTrustStorePath = tlsTrustStorePath;
+    }
+
+    @Override
+    public Optional<String> getTlsTrustStorePath() {
+        return Optional.ofNullable(tlsTrustStorePath);
+    }
+
+    public void setTlsCertFilePath(String tlsCertFilePath) {
+        this.tlsCertFilePath = tlsCertFilePath;
+    }
+
+    @Override
+    public Optional<String> getTlsCertFilePath() {
+        return Optional.ofNullable(tlsCertFilePath);
+    }
+
+    public void setTlsVerifyHostname(Boolean tlsVerifyHostname) {
+        this.tlsVerifyHostname = tlsVerifyHostname;
+    }
+
+    @Override
+    public Optional<Boolean> getTlsVerifyHostname() {
+        return Optional.ofNullable(tlsVerifyHostname);
+    }
+
+    public void setTlsAllowInsecureConnection(Boolean tlsAllowInsecureConnection) {
+        this.tlsAllowInsecureConnection = tlsAllowInsecureConnection;
+    }
+
+    @Override
+    public Optional<Boolean> getTlsAllowInsecureConnection() {
+        return Optional.ofNullable(tlsAllowInsecureConnection);
+    }
+
+    public void setTlsCiphers(Set<String> tlsCiphers) {
+        this.tlsCiphers = tlsCiphers;
+    }
+
+    @Override
+    public Optional<Set<String>> getTlsCiphers() {
+        return Optional.ofNullable(tlsCiphers);
+    }
+
+    public void setTlsProtocols(Set<String> tlsProtocols) {
+        this.tlsProtocols = tlsProtocols;
+    }
+
+    @Override
+    public Optional<Set<String>> getTlsProtocols() {
+        return Optional.ofNullable(tlsProtocols);
+    }
+
     /**
      * Defaults to default JVM provider.
+     *
      * @param sslProvider The name of the security provider used for SSL connections.
      */
     public void setSslProvider(String sslProvider) {
@@ -132,8 +191,21 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
         return Optional.ofNullable(pulsarAuthentication).orElse(DEFAULT_PULSAR_AUTHENTICATION);
     }
 
+    @Override
+    public boolean getShutdownOnSubscriberError() {
+        return Optional.ofNullable(shutdownOnSubscriberError).orElse(false);
+    }
+
+    /**
+     * @param shutdownOnSubscriberError should application shutdown if any of subscriptions fail
+     */
+    public void setShutdownOnSubscriberError(Boolean shutdownOnSubscriberError) {
+        this.shutdownOnSubscriberError = shutdownOnSubscriberError;
+    }
+
     /**
      * Must be set for usage with the OAuth2 authentication.
+     *
      * @return String representing client application willing to listen to
      */
     public Optional<String> getOauthAudience() {
@@ -179,6 +251,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     /**
      * If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
      * be resent again.
+     *
      * @param useDeadLetterQueue Use DLQ for Pulsar Consumers by default or not.
      */
     public void setUseDeadLetterQueue(Boolean useDeadLetterQueue) {
@@ -191,6 +264,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
 
     /**
      * If not set defaults to 3. {@code #useDeadLetterQueue} must be enabled or else this value is ignored.
+     *
      * @param defaultMaxRetryDlq Deafult max number of retries before sending message to DLQ for all consumers.
      */
     public void setDefaultMaxRetryDlq(int defaultMaxRetryDlq) {

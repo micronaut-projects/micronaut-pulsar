@@ -18,12 +18,8 @@ package io.micronaut.pulsar
 import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
-import org.apache.pulsar.client.api.Consumer
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.MessageId
-import org.apache.pulsar.client.api.Producer
-import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.Reader
+import io.micronaut.pulsar.shared.PulsarAwareTest
+import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.Stepwise
 import spock.util.concurrent.PollingConditions
@@ -34,14 +30,8 @@ import static org.apache.pulsar.client.api.MessageId.latest
 @Stepwise
 class PulsarConsumerSpec extends PulsarAwareTest {
 
-    //topic not listened to explicitly
-    private static final String PULSAR_REGEX_TEST_TOPIC = "persistent://public/default/other2"
-    private static final String PULSAR_STATIC_TOPIC_TEST = "persistent://public/default/test"
-
-    static {
-        PulsarDefaultContainer.createNonPartitionedTopic(PULSAR_REGEX_TEST_TOPIC)
-        PulsarDefaultContainer.createNonPartitionedTopic(PULSAR_STATIC_TOPIC_TEST)
-    }
+    public static final String PULSAR_REGEX_TEST_TOPIC = "persistent://public/default/other2"
+    public static final String PULSAR_STATIC_TOPIC_TEST = "persistent://public/default/test"
 
     void "test create consumer beans"() {
         expect:
@@ -93,7 +83,6 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         then:
         Message<String> controlMessage = blockingReader.readNext(10, SECONDS)
-        messageId
         messageId == controlMessage.messageId
         new PollingConditions(timeout: 65, delay: 1).eventually {
             message == consumerPatternTester.latestMessage
@@ -105,7 +94,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "array-subscriber-non-async")
+    @PulsarSubscription(subscriptionName = "array-subscriber-non-async", subscriptionType = SubscriptionType.Shared)
     static class PulsarConsumerTopicListTester {
 
         String latestMessage
@@ -125,7 +114,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "subscribe-2-example.listeners")
+    @PulsarSubscription(subscriptionName = "subscribe-2-example.listeners", subscriptionType = SubscriptionType.Shared)
     static class PulsarConsumerTopicPatternTester {
 
         String latestMessage
@@ -134,8 +123,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         //testing default order
         //fails to subscribe to test topic because exclusive consumer is connected already so subscribe only to other
-        @PulsarConsumer(
-                topicsPattern = 'persistent://public/default/other.*',
+        @PulsarConsumer(topicsPattern = 'persistent://public/default/other.*',
                 consumerName = "consumer-async")
         void asyncTopicListener(Consumer<String> consumer, Message<String> message) {
             latestMessage = message.value

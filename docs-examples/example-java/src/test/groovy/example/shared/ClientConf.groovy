@@ -26,12 +26,13 @@ class ClientConf {
 # URL for Pulsar REST API (for admin operations)
 # For TLS:
 # webServiceUrl=https://localhost:8443/
-webServiceUrl=http://localhost:8080/
+webServiceUrl=https://localhost:8443/
+useTls=true
 
 # URL for Pulsar Binary Protocol (for produce and consume operations)
 # For TLS:
 # brokerServiceUrl=pulsar+ssl://localhost:6651/
-brokerServiceUrl=pulsar://localhost:6650/
+brokerServiceUrl=pulsar+ssl://localhost:6651/
 
 # Authentication plugin to authenticate with servers
 # e.g. for TLS
@@ -41,9 +42,7 @@ authPlugin=org.apache.pulsar.client.impl.auth.oauth2.AuthenticationOAuth2
 # Parameters passed to authentication plugin.
 # A comma separated list of key:value pairs.
 # Keys depend on the configured authPlugin.
-# e.g. for TLS
-# authParams=tlsCertFile:/path/to/client-cert.pem,tlsKeyFile:/path/to/client-key.pem
-authParams={"issuerUrl": "%s","privateKey": "file:///pulsar/credentials.json","audience": "pulsar"}
+authParams=
 
 # Allow TLS connections to servers whose certificate cannot be
 # be verified to have been signed by a trusted certificate

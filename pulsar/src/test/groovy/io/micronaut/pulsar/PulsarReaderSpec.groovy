@@ -17,11 +17,8 @@ package io.micronaut.pulsar
 
 import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarReader
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.MessageId
-import org.apache.pulsar.client.api.Producer
-import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.Reader
+import io.micronaut.pulsar.shared.PulsarAwareTest
+import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.Stepwise
 
@@ -32,11 +29,7 @@ import static java.util.concurrent.TimeUnit.SECONDS
 @Stepwise
 class PulsarReaderSpec extends PulsarAwareTest {
 
-    private static final String PULSAR_READER_TEST_TOPIC = "persistent://public/default/simple-reader"
-
-    void setupSpec() {
-        PulsarDefaultContainer.createNonPartitionedTopic(PULSAR_READER_TEST_TOPIC)
-    }
+    public static final String PULSAR_READER_TEST_TOPIC = "persistent://public/default/simple-reader"
 
     @Singleton
     @Requires(property = 'spec.name', value = 'PulsarReaderSpec')

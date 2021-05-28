@@ -19,12 +19,14 @@ import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.BeanContext;
+import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.type.ReturnType;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.pulsar.PulsarProducerRegistry;
 import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.events.ProducerSubscriptionFailedEvent;
 import io.micronaut.pulsar.processor.SchemaResolver;
 import io.reactivex.Flowable;
 import org.apache.pulsar.client.api.MessageId;
@@ -58,13 +60,16 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
     private final PulsarClient pulsarClient;
     private final SchemaResolver schemaResolver;
     private final BeanContext beanContext;
+    private final ApplicationEventPublisher applicationEventPublisher;
 
     public PulsarProducerAdvice(final PulsarClient pulsarClient,
                                 final SchemaResolver schemaResolver,
-                                final BeanContext beanContext) {
+                                final BeanContext beanContext,
+                                final ApplicationEventPublisher applicationEventPublisher) {
         this.pulsarClient = pulsarClient;
         this.schemaResolver = schemaResolver;
         this.beanContext = beanContext;
+        this.applicationEventPublisher = applicationEventPublisher;
     }
 
     @SuppressWarnings({"rawtypes"})
@@ -144,14 +149,19 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         String producerId = annotationValue.stringValue("producerName").orElse(method.getMethodName());
         Producer<?> producer = producers.get(producerId);
         if (null == producer) {
-            producer = beanContext.createBean(Producer.class,
-                    pulsarClient,
-                    annotationValue,
-                    schemaResolver,
-                    method.getMethodName(),
-                    method.getArguments()[0].getType()
-            );
-            producers.put(producerId, producer);
+            try {
+                producer = beanContext.createBean(Producer.class,
+                        pulsarClient,
+                        annotationValue,
+                        schemaResolver,
+                        method.getMethodName(),
+                        method.getArguments()[0].getType()
+                );
+                producers.put(producerId, producer);
+            } catch (Exception ex) {
+                LOG.error("Failed to create producer {}", producerId);
+                applicationEventPublisher.publishEventAsync(new ProducerSubscriptionFailedEvent(producerId, ex));
+            }
         }
         return producer;
     }

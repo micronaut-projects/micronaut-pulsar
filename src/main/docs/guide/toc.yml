@@ -11,4 +11,6 @@ producer:
   title: Pulsar producers
 authentication:
   title: Authentication
+tls:
+  title: Transport encryption
 repository: Repository
