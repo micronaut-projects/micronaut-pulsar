@@ -16,6 +16,7 @@
 package io.micronaut.pulsar.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
+import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
 
 import javax.validation.constraints.Pattern;
@@ -45,6 +46,7 @@ public @interface PulsarReader {
      * @see #topic()
      */
     @AliasFor(member = "topic")
+    @AliasFor(annotation = MessageMapping.class, member = "value")
     String value() default "";
 
     /**
@@ -53,6 +55,7 @@ public @interface PulsarReader {
      * @return topic name to listen to
      */
     @AliasFor(member = "value")
+    @AliasFor(annotation = MessageMapping.class, member = "value")
     @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     String topic() default "";
 

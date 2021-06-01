@@ -16,6 +16,7 @@
 package io.micronaut.pulsar
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.messaging.annotation.MessageMapping
 import io.micronaut.pulsar.annotation.PulsarReader
 import io.micronaut.pulsar.shared.PulsarAwareTest
 import org.apache.pulsar.client.api.*
@@ -62,5 +63,18 @@ class PulsarReaderSpec extends PulsarAwareTest {
         cleanup:
         stringReader.close()
         producer.close()
+    }
+
+    void "test reader has MessageMapping annotation with expected topic value"() {
+        given:
+        def definition = context.getBeanDefinition(ReaderRequester)
+
+        when:
+        def constructor = definition.constructor
+        def annotationValue = constructor.arguments.first().annotationMetadata.getValue(MessageMapping, String[])
+
+        then:
+        annotationValue.isPresent()
+        annotationValue.get().contains PULSAR_READER_TEST_TOPIC
     }
 }
