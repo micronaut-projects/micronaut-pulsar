@@ -61,8 +61,7 @@ public class PulsarProducerFactory {
 
         Schema<T> schema = (Schema<T>) schemaResolver.decideSchema(annotationValue, bodyType);
 
-        String producerName = annotationValue.stringValue("producerName")
-                .orElse(annotatedMethodName);
+        String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
         String topic = annotationValue.stringValue("topic")
                 .orElseGet(() -> annotationValue.getRequiredValue(String.class));
 

@@ -58,7 +58,7 @@ final class SharedPulsar implements AutoCloseable {
 
     SharedPulsar(SharedKeycloak keycloak) {
         this.keycloak = keycloak
-        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.7.1"))
+        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.7.2"))
                 .dependsOn(keycloak)
     }
 

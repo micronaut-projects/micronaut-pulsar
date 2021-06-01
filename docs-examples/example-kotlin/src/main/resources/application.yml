@@ -1,0 +1,13 @@
+micronaut:
+  application:
+    name: java
+  server:
+    port: 8081
+pulsar:
+  enabled: true
+  service-url: pulsar://localhost:6651
+jackson:
+  serialization:
+    writeDatesAsTimestamps: false
+  deserialization:
+    failOnUnknownProperties: false
