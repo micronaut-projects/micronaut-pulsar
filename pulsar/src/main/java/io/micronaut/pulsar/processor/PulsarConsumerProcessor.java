@@ -23,9 +23,11 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.ArrayUtils;
+import io.micronaut.core.util.KotlinUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
+import io.micronaut.inject.util.KotlinExecutableMethodUtils;
 import io.micronaut.pulsar.PulsarConsumerRegistry;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
@@ -193,10 +195,8 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 throw new IllegalArgumentException("Acknowledge timeout must be greater than 1 second");
             }
         });
-        int consumerIndex = IntStream.range(0, methodArguments.length)
-                .filter(i -> Consumer.class.isAssignableFrom(methodArguments[i].getType()))
-                .findFirst().orElse(-1);
-        consumer.messageListener(new DefaultListener(method, useMessageWrapper, consumerIndex, bean));
+
+        consumer.messageListener(new DefaultListener(method, useMessageWrapper, bean));
 
         return consumer;
     }
