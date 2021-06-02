@@ -259,7 +259,7 @@ public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 <ul class="blockList">
 <li class="blockList">
 <h4>value</h4>
-<pre>@AliasFor(member="topic")
+<pre>@AliasFor(member="topic") @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,member="value")
  @Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)")
 public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String&nbsp;value</pre>
 <dl>
@@ -282,7 +282,7 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <li class="blockList">
 <h4>topic</h4>
 <pre>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)")
- @AliasFor(member="value")
+ @AliasFor(member="value") @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,member="value")
 public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String&nbsp;topic</pre>
 <div class="block">Has precedence over <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topics--"><code>topics()</code></a> and <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topicsPattern--"><code>topicsPattern()</code></a>.
  Single topic to consume messages from.</div>
@@ -306,6 +306,8 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <li class="blockList">
 <h4>topics</h4>
 <pre>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)")
+ @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,
+          member="value")
 public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String[]&nbsp;topics</pre>
 <div class="block">Has precedence over <code>topicPattern</code>.</div>
 <dl>
@@ -328,6 +330,8 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <li class="blockList">
 <h4>topicsPattern</h4>
 <pre>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}.+")
+ @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,
+          member="value")
 public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}.+") java.lang.String&nbsp;topicsPattern</pre>
 <div class="block">Ignored if <code>topics</code> attribute is set.</div>
 <dl>
