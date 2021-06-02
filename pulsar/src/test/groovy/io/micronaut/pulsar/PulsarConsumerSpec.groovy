@@ -16,6 +16,7 @@
 package io.micronaut.pulsar
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.messaging.annotation.MessageMapping
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarAwareTest
@@ -92,6 +93,55 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         cleanup:
         producer.close()
     }
+
+    void "test consumer has MessageMapping annotation with expected topic value"() {
+        when:
+        def definition = context.getBeanDefinition(PulsarConsumerTopicTester)
+        def method = definition.getRequiredMethod('topicListener', Message, Consumer)
+        def annotationValue = method.getValue(MessageMapping, String[])
+
+        then:
+        annotationValue.isPresent()
+        annotationValue.get().contains 'persistent://public/default/simple'
+
+        when:
+        definition = context.getBeanDefinition(PulsarConsumerTopicListTester)
+        method = definition.getRequiredMethod('topicListener', Message, Consumer)
+        annotationValue = method.getValue(MessageMapping, String[])
+
+        then:
+        annotationValue.isPresent()
+        annotationValue.get().contains 'persistent://public/default/test'
+
+        when:
+        definition = context.getBeanDefinition(PulsarConsumerTopicPatternTester)
+        method = definition.getRequiredMethod('asyncTopicListener', Consumer, Message)
+        annotationValue = method.getValue(MessageMapping, String[])
+
+        then:
+        annotationValue.isPresent()
+        annotationValue.get().contains 'persistent://public/default/other.*'
+    }
+
+    @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
+    @PulsarSubscription(subscriptionName = "subscriber-simple")
+    static class PulsarConsumerTopicTester {
+
+        String latestMessage
+        MessageId latestMessageId
+        Consumer<byte[]> latestConsumer
+
+        @PulsarConsumer(
+                topic = 'persistent://public/default/simple',
+                consumerName = 'simple-topic-consumer',
+                subscribeAsync = false)
+        void topicListener(Message<byte[]> message, Consumer<byte[]> consumer) {
+            latestMessageId = message.messageId
+            latestMessage = new String(message.value)
+            latestConsumer = consumer
+        }
+    }
+
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
     @PulsarSubscription(subscriptionName = "array-subscriber-non-async", subscriptionType = SubscriptionType.Shared)
