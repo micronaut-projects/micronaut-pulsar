@@ -17,6 +17,7 @@ package io.micronaut.pulsar.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.messaging.annotation.MessageListener;
+import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
 import org.apache.pulsar.client.api.SubscriptionType;
@@ -51,6 +52,7 @@ public @interface PulsarConsumer {
      */
     @AliasFor(member = "topic")
     @Pattern(regexp = TOPIC_NAME_VALIDATOR)
+    @AliasFor(annotation = MessageMapping.class, member = "value")
     String value() default "";
 
     /**
@@ -61,6 +63,7 @@ public @interface PulsarConsumer {
      */
     @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     @AliasFor(member = "value")
+    @AliasFor(annotation = MessageMapping.class, member = "value")
     String topic() default "";
 
     /**
@@ -68,6 +71,7 @@ public @interface PulsarConsumer {
      * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.
      */
     @Pattern(regexp = TOPIC_NAME_VALIDATOR)
+    @AliasFor(annotation = MessageMapping.class, member = "value")
     String[] topics() default {};
 
     /**
@@ -75,6 +79,7 @@ public @interface PulsarConsumer {
      * @return Topics name in form of tenantName/namespace/topic-name-pattern.
      */
     @Pattern(regexp = TOPIC_NAME_PATTERN_VALIDATOR)
+    @AliasFor(annotation = MessageMapping.class, member = "value")
     String topicsPattern() default "";
 
     /**
