@@ -61,7 +61,6 @@ public class DefaultListener implements MessageListenerResolver {
     @Override
     public void received(Consumer consumer, Message msg) {
         Object any;
-        Object continuation = null;
         try {
             any = useMessageWrapper ? msg : msg.getValue(); // .getValue can hit the serialisation exception
             //trying to provide more flexibility to developers by allowing less care about the order; maybe unnecessary

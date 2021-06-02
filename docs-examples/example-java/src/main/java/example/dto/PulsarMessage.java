@@ -17,10 +17,12 @@ package example.dto;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import io.micronaut.core.annotation.Introspected;
 
 /**
  * Simple message data structure.
  */
+@Introspected
 public class PulsarMessage {
 
     private final String message;
