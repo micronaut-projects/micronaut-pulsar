@@ -41,9 +41,4 @@ java {
     targetCompatibility = JavaVersion.toVersion("11")
 }
 
-nativeImage {
-    verbose(true)
-    enableServerBuild(true)
-}
-
 
