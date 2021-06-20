@@ -46,7 +46,7 @@ application {
     mainClass.set("example.ApplicationKt")
 }
 java {
-    sourceCompatibility = JavaVersion.toVersion("11")
+    sourceCompatibility = JavaVersion.toVersion("1.8")
 }
 
 tasks {
