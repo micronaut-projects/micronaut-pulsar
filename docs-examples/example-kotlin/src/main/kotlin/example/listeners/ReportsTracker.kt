@@ -18,7 +18,6 @@ package example.listeners
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.reactivex.subjects.PublishSubject
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.rx2.awaitFirstOrNull
 import org.apache.pulsar.client.api.SubscriptionType
 

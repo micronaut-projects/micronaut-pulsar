@@ -1,12 +1,12 @@
-## Micronaut 2.5.5-SNAPSHOT Documentation
+## Micronaut Pulsar Kotlin Consumer Example
 
-- [User Guide](https://docs.micronaut.io/snapshot/guide/index.html)
-- [API Reference](https://docs.micronaut.io/snapshot/api/index.html)
-- [Configuration Reference](https://docs.micronaut.io/snapshot/guide/configurationreference.html)
-- [Micronaut Guides](https://guides.micronaut.io/index.html)
----
+Basic example of Kotlin consumers.
 
-## Feature http-client documentation
+How to start:
+1. Prepare dependencies:
+    - A running instance of Apache Pulsar 2.6+
+    - Non SSL connections allowed (this test app does not use SSL)
+2. Default tenant "public" should be available
+3. Proper configuration for application.yaml - change properties like pulsar URL
 
-- [Micronaut HTTP Client documentation](https://docs.micronaut.io/latest/guide/index.html#httpClient)
-
+Once everything is configured properly 
