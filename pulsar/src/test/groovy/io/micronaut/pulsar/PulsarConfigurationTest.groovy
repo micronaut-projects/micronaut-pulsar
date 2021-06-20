@@ -18,6 +18,7 @@ package io.micronaut.pulsar
 import io.micronaut.pulsar.config.PulsarClientConfiguration
 import io.micronaut.pulsar.processor.PulsarConsumerProcessor
 import io.micronaut.pulsar.shared.PulsarAwareTest
+import io.micronaut.pulsar.shared.PulsarDefaultContainer
 import org.apache.pulsar.client.api.PulsarClient
 import spock.lang.Stepwise
 

@@ -18,10 +18,8 @@ package io.micronaut.pulsar.shared
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.pulsar.PulsarConsumerSpec
-import io.micronaut.pulsar.PulsarDefaultContainer
 import io.micronaut.pulsar.PulsarProducersSpec
 import io.micronaut.pulsar.PulsarReaderSpec
-import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification

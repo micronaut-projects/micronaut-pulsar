@@ -22,21 +22,25 @@ import org.keycloak.representations.idm.ClientRepresentation
 import org.keycloak.representations.idm.ProtocolMapperRepresentation
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import org.testcontainers.Testcontainers
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
+import org.testcontainers.containers.wait.strategy.WaitStrategy
+import org.testcontainers.containers.wait.strategy.WaitStrategyTarget
 import org.testcontainers.images.builder.Transferable
 import org.testcontainers.utility.DockerImageName
+
+import java.time.Duration
 
 /**
  * Share Pulsar Container class that ensures Pulsar is started after KeyCloak has all necessary configurations.
  *
- * @author Haris* @since 1.0
+ * @author Haris
+ * @since 1.0
  */
 final class SharedPulsar implements AutoCloseable {
 
-    private static final Logger LOG = LoggerFactory.getLogger(SharedPulsar.class)
+    private static final Logger LOG = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
 
     private static final String CLIENT_CREDENTIALS = '''{
   "type": "client_credentials",
@@ -58,12 +62,15 @@ final class SharedPulsar implements AutoCloseable {
 
     SharedPulsar(SharedKeycloak keycloak) {
         this.keycloak = keycloak
-        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.7.2"))
-                .dependsOn(keycloak)
+        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.8.0"))
+                .dependsOn(keycloak) // leave non-ssl ports for metrics test and such
+        pulsarContainer.addExposedPorts(SSL_PORT, HTTPS_PORT)
     }
 
     String getUrl() {
-        return String.format("pulsar+ssl://%s:%s", pulsarContainer.getContainerIpAddress(), pulsarContainer.getMappedPort(SSL_PORT))
+        String brokerUrl = String.format("pulsar+ssl://%s:%s", pulsarContainer.getContainerIpAddress(),
+                pulsarContainer.getMappedPort(SSL_PORT))
+        return brokerUrl
     }
 
     String getCredentialsPath() {
@@ -71,7 +78,7 @@ final class SharedPulsar implements AutoCloseable {
     }
 
     String getIssuerUrl() {
-        return keycloak.getCrossContainerAuthUrl().replace("host.testcontainers.internal", keycloak.getContainerIpAddress())
+        return keycloak.crossContainerAuthUrl
     }
 
     void start() {
@@ -86,17 +93,9 @@ final class SharedPulsar implements AutoCloseable {
         // ensure all config files are deployed prior to run
         pulsarContainer.addFileSystemBind(credentialsPath, "/pulsar/credentials.json", BindMode.READ_ONLY)
         pulsarContainer.addFileSystemBind(pubKey.path, "/pulsar/pub.key", BindMode.READ_ONLY)
-        Map<String, File> contentBytes = replaceConfigs(keycloak.crossContainerAuthUrl + "/realms/master")
+        Map<String, File> contentBytes = replaceConfigs(getIssuerUrl() + "/realms/master")
         pulsarContainer.addFileSystemBind(contentBytes["client"].path, "/pulsar/conf/client.conf", BindMode.READ_ONLY)
         pulsarContainer.addFileSystemBind(contentBytes["standalone"].path, "/pulsar/conf/standalone.conf", BindMode.READ_ONLY)
-
-        //open up encrypted endpoints as well
-        pulsarContainer.withExposedPorts(
-                PulsarContainer.BROKER_HTTP_PORT,
-                PulsarContainer.BROKER_PORT,
-                HTTPS_PORT,
-                SSL_PORT
-        )
 
         pulsarContainer.start()
         createPrivateReports()

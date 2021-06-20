@@ -34,7 +34,7 @@ public class ReportResource {
     }
 
     /**
-     * @return TODO
+     * @return SSE stream of newest pulsar messages that keeps alive until client close or server drop
      */
     @Get(produces = MediaType.TEXT_EVENT_STREAM)
     public Flowable<String> latestReport() {

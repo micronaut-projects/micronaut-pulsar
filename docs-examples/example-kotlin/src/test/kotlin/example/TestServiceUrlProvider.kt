@@ -5,16 +5,17 @@ import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.ServiceUrlProvider
 
 @PulsarServiceUrlProvider
-open class TestServiceUrlProvider : ServiceUrlProvider {
+open class TestServiceUrlProvider : ServiceUrlProvider, AutoCloseable {
     private lateinit var client: PulsarClient
-    private val pulsarWrapper = PulsarWrapper()
-
     override fun initialize(client: PulsarClient) {
         this.client = client
     }
 
     override fun getServiceUrl(): String {
-        return pulsarWrapper.pulsarBroker
+        return PulsarWrapper.pulsarBroker
     }
 
+    override fun close() {
+        PulsarWrapper.pulsar.close()
+    }
 }

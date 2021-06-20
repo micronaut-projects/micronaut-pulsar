@@ -13,22 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.pulsar
+package io.micronaut.pulsar.shared
 
 import org.apache.pulsar.client.admin.PulsarAdmin
+import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
 
 class PulsarDefaultContainer implements AutoCloseable {
 
     static PulsarAdmin PULSAR_ADMIN
 
-    static final PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.7.1")
+    static final PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.8.0")
+    private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
     static void start() {
         if (PULSAR_CONTAINER.isRunning()) return
         PULSAR_CONTAINER.start()
         sleep 1000 // for some reason clusters don't get proper boot this delay helps a bit for awaiting clusters
-        PULSAR_ADMIN = PulsarAdmin.builder().serviceHttpUrl(PULSAR_CONTAINER.httpServiceUrl).build()
         PULSAR_CONTAINER
     }
 
@@ -40,6 +41,12 @@ class PulsarDefaultContainer implements AutoCloseable {
 
     static void createNonPartitionedTopic(String topic) {
         start()
-        PULSAR_ADMIN.topics().createNonPartitionedTopic(topic)
+        Container.ExecResult result = PULSAR_CONTAINER.execInContainer("/bin/bash", "-c",
+                PULSAR_CLI_ADMIN + " topics create $topic")
+        if (0 != result.exitCode) {
+            String reason = result.stderr ?: result.stdout
+            if (!reason.startsWith("This topic already exists"))
+                throw new RuntimeException("Unable to create test topic for TLS: $reason")
+        }
     }
 }

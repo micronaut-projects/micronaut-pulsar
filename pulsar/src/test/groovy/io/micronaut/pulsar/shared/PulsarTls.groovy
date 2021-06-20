@@ -36,7 +36,7 @@ final class PulsarTls implements AutoCloseable {
 
     PulsarTls() {
         this.resourceLoader = ClassLoader.getSystemClassLoader()
-        this.pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.7.1"))
+        this.pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.8.0"))
     }
 
     void start() {
@@ -53,10 +53,7 @@ final class PulsarTls implements AutoCloseable {
         pulsarContainer.addFileSystemBind(standalone, "/pulsar/conf/standalone.conf", BindMode.READ_ONLY)
         pulsarContainer.addFileSystemBind(client, "/pulsar/conf/client.conf", BindMode.READ_ONLY)
 
-        pulsarContainer.withExposedPorts(PulsarContainer.BROKER_HTTP_PORT, HTTPS, BROKER_SSL)
-        //verifying TLS will fail given that it's generated and not a well-known valid one so use HTTP
-        pulsarContainer.waitingFor(Wait.forHttp(PulsarContainer.METRICS_ENDPOINT)
-                .forPort(PulsarContainer.BROKER_HTTP_PORT))
+        pulsarContainer.addExposedPorts(HTTPS, BROKER_SSL)
         pulsarContainer.start()
         createTopic()
     }
