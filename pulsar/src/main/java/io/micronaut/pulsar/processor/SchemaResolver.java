@@ -17,12 +17,16 @@ package io.micronaut.pulsar.processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.beans.BeanWrapper;
+import io.micronaut.core.naming.Named;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.schemas.JsonSchema;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.impl.schema.*;
 
 import javax.inject.Singleton;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Message type resolver for Pulsar schema. Uses customised Schema for JSON; otherwise falls back to the ones
@@ -88,7 +92,11 @@ public class SchemaResolver {
             case AVRO:
                 return AvroSchema.of(new SchemaDefinitionBuilderImpl().withPojo(messageBodyType).build());
             case PROTOBUF:
-                throw new UnsupportedOperationException("Missing implementation for Protobuf schema message");
+                Map<String, String> properties = BeanWrapper.getWrapper(messageBodyType).getBeanProperties().stream()
+                        .collect(Collectors.toMap(Named::getName, x -> x.getType().getName()));
+                properties.put("__jsr310ConversionEnabled", "true");
+                properties.put("__alwaysAllowNull", "true");
+                return ProtobufNativeSchema.ofGenericClass(messageBodyType, properties);
             case KEY_VALUE:
                 throw new UnsupportedOperationException("Missing implementation for KEY_VALUE schema message");
             default:
