@@ -5,6 +5,8 @@ import example.listeners.ReportsTracker
 import io.kotest.core.spec.style.StringSpec
 import io.micronaut.runtime.EmbeddedApplication
 import io.micronaut.test.extensions.kotest.annotation.MicronautTest
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
 @MicronautTest
@@ -13,7 +15,9 @@ class AppTest(private val application: EmbeddedApplication<*>) : StringSpec({
         assert(application.isRunning)
         val tracker = application.applicationContext.getBean(ReportsTracker::class.java)
         val producer = application.applicationContext.getBean(TestProducer::class.java)
-        val messageId = producer.produce(PulsarMessage(LocalDateTime.now().toString(), "test"))
+        val messageId = withContext(Dispatchers.Default) {
+            producer.produce(PulsarMessage(LocalDateTime.now().toString(), "test"))
+        }
         assert(tracker.latest()?.startsWith(messageId.toString()) ?: false)
     }
 })
