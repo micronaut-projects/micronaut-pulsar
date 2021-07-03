@@ -16,6 +16,7 @@
 package io.micronaut.pulsar.intercept;
 
 import edu.umd.cs.findbugs.annotations.NonNull;
+import io.micronaut.aop.InterceptorBean;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.BeanContext;
@@ -26,9 +27,9 @@ import io.micronaut.core.type.ReturnType;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.pulsar.PulsarProducerRegistry;
 import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarProducerClient;
 import io.micronaut.pulsar.events.ProducerSubscriptionFailedEvent;
 import io.micronaut.pulsar.processor.SchemaResolver;
-import io.reactivex.Flowable;
 import org.apache.pulsar.client.api.MessageId;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
@@ -51,6 +52,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @since 1.0
  */
 @Singleton
+@InterceptorBean(PulsarProducerClient.class)
 public final class PulsarProducerAdvice implements MethodInterceptor<Object, Object>,
         AutoCloseable, PulsarProducerRegistry {
 
@@ -123,7 +125,8 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         if (returnType.isAsync()) {
             return future;
         }
-        return Publishers.convertPublisher(Flowable.fromFuture(future), returnType.getType());
+
+        return Publishers.convertPublisher(Publishers.fromCompletableFuture(future.toCompletableFuture()), returnType.getType());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

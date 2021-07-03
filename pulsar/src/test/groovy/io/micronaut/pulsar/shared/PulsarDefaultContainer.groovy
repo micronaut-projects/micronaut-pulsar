@@ -15,13 +15,11 @@
  */
 package io.micronaut.pulsar.shared
 
-import org.apache.pulsar.client.admin.PulsarAdmin
+
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
 
-class PulsarDefaultContainer implements AutoCloseable {
-
-    static PulsarAdmin PULSAR_ADMIN
+class PulsarDefaultContainer {
 
     static final PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.8.0")
     private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
@@ -31,12 +29,6 @@ class PulsarDefaultContainer implements AutoCloseable {
         PULSAR_CONTAINER.start()
         sleep 1000 // for some reason clusters don't get proper boot this delay helps a bit for awaiting clusters
         PULSAR_CONTAINER
-    }
-
-    @Override
-    void close() throws Exception {
-        PULSAR_ADMIN.close()
-        PULSAR_CONTAINER.close()
     }
 
     static void createNonPartitionedTopic(String topic) {
@@ -49,4 +41,5 @@ class PulsarDefaultContainer implements AutoCloseable {
                 throw new RuntimeException("Unable to create test topic for TLS: $reason")
         }
     }
+
 }

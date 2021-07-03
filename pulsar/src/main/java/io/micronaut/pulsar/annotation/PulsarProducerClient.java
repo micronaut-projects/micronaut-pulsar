@@ -16,15 +16,13 @@
 package io.micronaut.pulsar.annotation;
 
 import io.micronaut.aop.Introduction;
-import io.micronaut.context.annotation.Type;
-import io.micronaut.pulsar.intercept.PulsarProducerAdvice;
-import io.micronaut.retry.annotation.Recoverable;
+import io.micronaut.context.annotation.Bean;
 
-import javax.inject.Scope;
-import javax.inject.Singleton;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
+import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
@@ -36,10 +34,8 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Documented
 @Retention(RUNTIME)
-@Scope
 @Introduction
-@Type(PulsarProducerAdvice.class)
-@Recoverable
-@Singleton
+@Bean
+@Target({TYPE})
 public @interface PulsarProducerClient {
 }
