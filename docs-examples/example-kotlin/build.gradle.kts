@@ -39,7 +39,7 @@ dependencies {
     implementation(project(":pulsar"))
 
     runtimeOnly("com.fasterxml.jackson.module:jackson-module-kotlin")
-    testImplementation("org.testcontainers:pulsar:1.15.3")
+    testImplementation("org.testcontainers:pulsar:1.16.0")
 
 }
 
