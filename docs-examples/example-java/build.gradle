@@ -2,7 +2,7 @@ plugins {
     id("groovy")
     id("java")
     id("com.github.johnrengelman.shadow") version "7.0.0"
-    id("io.micronaut.application") version "2.0.2"
+    id("io.micronaut.application") version "2.0.3"
 }
 
 version = "0.1"
@@ -29,8 +29,8 @@ dependencies {
     runtimeOnly("ch.qos.logback:logback-classic")
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation("io.projectreactor:reactor-test:3.4.8")
-    testImplementation("org.testcontainers:pulsar:1.15.3")
-    testImplementation("org.keycloak:keycloak-admin-client:14.0.0")
+    testImplementation("org.testcontainers:pulsar:1.16.0")
+    testImplementation("org.keycloak:keycloak-admin-client:15.0.1")
 }
 
 
