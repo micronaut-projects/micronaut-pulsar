@@ -18,8 +18,9 @@ package io.micronaut.pulsar.shared
 
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
+import spock.lang.Specification
 
-class PulsarDefaultContainer {
+abstract class PulsarDefaultContainer extends Specification {
 
     static final PulsarContainer PULSAR_CONTAINER = new PulsarContainer("2.8.0")
     private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"

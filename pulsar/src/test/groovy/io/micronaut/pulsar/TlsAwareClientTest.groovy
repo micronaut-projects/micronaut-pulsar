@@ -68,7 +68,7 @@ class TlsAwareClientTest extends Specification {
         Reader<String> blockingReader = context.getBean(PulsarClient.class)
                 .newReader(new StringSchema())
                 .readerName("blocking-tls-reader")
-                .topic("persistent://public/default/test")
+                .topic("persistent://public/default/test-tls")
                 .startMessageId(MessageId.latest)
                 .startMessageIdInclusive()
                 .create()
@@ -90,7 +90,7 @@ class TlsAwareClientTest extends Specification {
     static class TlsConsumer {
         private Deque<Message<String>> messages = new ArrayDeque<>()
 
-        @PulsarConsumer(topic = "persistent://public/default/test",
+        @PulsarConsumer(topic = "persistent://public/default/test-tls",
                 subscribeAsync = false,
                 consumerName = "tls-receiver"
         )

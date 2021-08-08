@@ -125,7 +125,9 @@ public @interface PulsarConsumer {
     /**
      * By default consumer should subscribe in non-blocking manner using default {@link java.util.concurrent.CompletableFuture} of {@link org.apache.pulsar.client.api.ConsumerBuilder#subscribeAsync()}.
      * <p>
-     * If blocking set to false application will block until consumer is successfully subscribed
+     * If blocking set to false application will block until consumer is successfully subscribed. This is differenet
+     * from the actual process of consuming the messages which still happens in separate thread managed by the
+     * underlying Pulsar Client library.
      *
      * @return Should the consumer subscribe in async manner or blocking
      */

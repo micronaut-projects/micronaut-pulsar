@@ -1,6 +1,6 @@
 micronaut:
   application:
-    name: java
+    name: kotlin
   server:
     port: 8081
 pulsar:

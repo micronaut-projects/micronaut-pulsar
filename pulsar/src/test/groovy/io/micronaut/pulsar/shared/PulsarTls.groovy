@@ -82,7 +82,7 @@ final class PulsarTls implements AutoCloseable {
 
     private void createTopic() {
         pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable public/default")
-        Container.ExecResult result = pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://public/default/test")
+        Container.ExecResult result = pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://public/default/test-tls")
         if (0 != result.exitCode) throw new RuntimeException("Unable to create test topic for TLS");
     }
 

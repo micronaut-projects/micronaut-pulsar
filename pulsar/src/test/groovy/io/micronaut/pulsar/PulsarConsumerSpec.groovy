@@ -20,7 +20,6 @@ import io.micronaut.messaging.annotation.MessageMapping
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarAwareTest
-import io.micronaut.pulsar.shared.PulsarDefaultContainer
 import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.Stepwise
@@ -162,7 +161,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "subscribe-2-example.listeners", subscriptionType = SubscriptionType.Shared)
+    @PulsarSubscription(subscriptionName = "subscribe-2-example.java.listeners", subscriptionType = SubscriptionType.Shared)
     static class PulsarConsumerTopicPatternTester {
 
         String latestMessage
