@@ -43,12 +43,12 @@ class TlsAwareClientTest extends Specification {
         String tlsPath = ClassLoader.getSystemClassLoader().getResource('ca.cert.pem').path
         String tlsPathForPulsar = new File(tlsPath).absolutePath
         this.context = ApplicationContext.run(
-                ['pulsar.service-url'                     : PulsarTls.pulsarBrokerTlsUrl,
-                 'pulsar.tls-cert-file-path'              : tlsPathForPulsar,
+                ['pulsar.service-url'                 : PulsarTls.pulsarBrokerTlsUrl,
+                 'pulsar.tls-cert-file-path'          : tlsPathForPulsar,
                  'pulsar.shutdown-on-subscriber-error': true,
-                 'pulsar.tls-ciphers'                     : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
-                 'pulsar.tls-protocols'                   : ['TLSv1.3', 'TLSv1.2', 'TLSv1.1'],
-                 'spec.name'                              : getClass().simpleName],
+                 'pulsar.tls-ciphers'                 : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
+                 'pulsar.tls-protocols'               : ['TLSv1.3', 'TLSv1.2', 'TLSv1.1'],
+                 'spec.name'                          : getClass().simpleName],
                 Environment.TEST
         )
     }
@@ -73,7 +73,7 @@ class TlsAwareClientTest extends Specification {
         Message<String> block = blockingReader.readNext(1, TimeUnit.MINUTES)
         id == block.messageId
         test == block.value
-        new PollingConditions(timeout: 80, delay: 2, initialDelay: 1).eventually {
+        new PollingConditions(timeout: 240, factor: 1.2, initialDelay: 1).eventually {
             test == tlsConsumer.getLastMessage()
             id.toString() == tlsConsumer.getLastMessageId()
         }
@@ -83,10 +83,7 @@ class TlsAwareClientTest extends Specification {
     static class TlsConsumer {
         private Deque<Message<String>> messages = new ArrayDeque<>()
 
-        @PulsarConsumer(topic = "persistent://public/default/test-tls",
-                subscribeAsync = false,
-                consumerName = "tls-receiver"
-        )
+        @PulsarConsumer(topic = "persistent://public/default/test-tls", subscribeAsync = false, consumerName = "tls-receiver")
         void receive(Message<String> message) {
             messages.add(message)
         }

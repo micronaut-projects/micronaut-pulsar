@@ -85,14 +85,14 @@ abstract class PulsarTls {
         Container.ExecResult result = PULSAR_CONTAINER.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://public/default/test-tls")
         if (0 != result.exitCode) throw new RuntimeException("Unable to create test topic for TLS");
         Container.ExecResult list = PULSAR_CONTAINER.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics list public/default")
-        int retries = 100;
+        int retries = 10
         while (!list.stdout.contains("persistent://public/default/test-tls")) {
             --retries;
             if (0 == retries) throw new RuntimeException("Could not get pulsar topics to create")
         }
     }
 
-    public static createTopic(String topic) {
+    static createTopic(String topic) {
         Container.ExecResult result = PULSAR_CONTAINER.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create $topic")
         if (0 != result.exitCode) {
             String reason = result.stderr ?: result.stdout
