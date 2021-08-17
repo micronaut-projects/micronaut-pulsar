@@ -13,9 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.kotlin.listeners
+package kotlinexample.listeners
 
-import example.kotlin.dto.PulsarMessage
+import kotlinexample.dto.PulsarMessage
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarSubscription

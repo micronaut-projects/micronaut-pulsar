@@ -15,51 +15,51 @@
  */
 package io.micronaut.pulsar.shared
 
-
 import io.micronaut.pulsar.conf.ClientConf
 import io.micronaut.pulsar.conf.StandaloneConf
 import org.assertj.core.util.Files
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
-import org.testcontainers.containers.wait.strategy.Wait
 import org.testcontainers.utility.DockerImageName
 
-final class PulsarTls implements AutoCloseable {
+abstract class PulsarTls {
 
     public static final int HTTPS = 8443
     public static final int BROKER_SSL = 6651
-    static final String caConfPath = "/my-ca";
-    final PulsarContainer pulsarContainer
-    final ClassLoader resourceLoader
-    private final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
+    private static final String caConfPath = "/my-ca";
+    private static final PulsarContainer PULSAR_CONTAINER =
+            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.8.0"))
+    private static ClassLoader resourceLoader
+    private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
-    PulsarTls() {
-        this.resourceLoader = ClassLoader.getSystemClassLoader()
-        this.pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.8.0"))
-    }
+    static {
+        resourceLoader = ClassLoader.getSystemClassLoader()
 
-    void start() {
         String standalone = createStandaloneConfFile().path
         String client = createClientConf().path
 
         String brokerCert = resourceLoader.getResource("broker.cert.pem").path
-        pulsarContainer.addFileSystemBind(new File(brokerCert).path, "$caConfPath/broker.cert.pem", BindMode.READ_ONLY)
+        PULSAR_CONTAINER.addFileSystemBind(new File(brokerCert).path, "$caConfPath/broker.cert.pem", BindMode.READ_ONLY)
         String brokerKey = resourceLoader.getResource("broker.key-pk8.pem").path
-        pulsarContainer.addFileSystemBind(new File(brokerKey).path, "$caConfPath/broker.key-pk8.pem", BindMode.READ_ONLY)
+        PULSAR_CONTAINER.addFileSystemBind(new File(brokerKey).path, "$caConfPath/broker.key-pk8.pem", BindMode.READ_ONLY)
         String caCert = resourceLoader.getResource("ca.cert.pem").path
-        pulsarContainer.addFileSystemBind(new File(caCert).path, "$caConfPath/ca.cert.pem", BindMode.READ_ONLY)
+        PULSAR_CONTAINER.addFileSystemBind(new File(caCert).path, "$caConfPath/ca.cert.pem", BindMode.READ_ONLY)
 
-        pulsarContainer.addFileSystemBind(standalone, "/pulsar/conf/standalone.conf", BindMode.READ_ONLY)
-        pulsarContainer.addFileSystemBind(client, "/pulsar/conf/client.conf", BindMode.READ_ONLY)
+        PULSAR_CONTAINER.addFileSystemBind(standalone, "/pulsar/conf/standalone.conf", BindMode.READ_ONLY)
+        PULSAR_CONTAINER.addFileSystemBind(client, "/pulsar/conf/client.conf", BindMode.READ_ONLY)
 
-        pulsarContainer.addExposedPorts(HTTPS, BROKER_SSL)
-        pulsarContainer.start()
-        createTopic()
+        PULSAR_CONTAINER.addExposedPorts(HTTPS, BROKER_SSL)
+        PULSAR_CONTAINER.start()
+        createTlsTopic()
     }
 
-    String getPulsarBrokerUrl() {
-        return String.format("pulsar+ssl://%s:%s", pulsarContainer.host, pulsarContainer.getMappedPort(BROKER_SSL));
+    static String getPulsarBrokerTlsUrl() {
+        return String.format("pulsar+ssl://%s:%s", PULSAR_CONTAINER.host, PULSAR_CONTAINER.getMappedPort(BROKER_SSL));
+    }
+
+    static String getPulsarBrokerUrl() {
+        return PULSAR_CONTAINER.pulsarBrokerUrl
     }
 
     private static File createStandaloneConfFile() {
@@ -80,14 +80,24 @@ final class PulsarTls implements AutoCloseable {
         return tmp
     }
 
-    private void createTopic() {
-        pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable public/default")
-        Container.ExecResult result = pulsarContainer.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://public/default/test-tls")
+    private static void createTlsTopic() {
+        PULSAR_CONTAINER.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " namespaces set-is-allow-auto-update-schema --enable public/default")
+        Container.ExecResult result = PULSAR_CONTAINER.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create persistent://public/default/test-tls")
         if (0 != result.exitCode) throw new RuntimeException("Unable to create test topic for TLS");
+        Container.ExecResult list = PULSAR_CONTAINER.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics list public/default")
+        int retries = 100;
+        while (!list.stdout.contains("persistent://public/default/test-tls")) {
+            --retries;
+            if (0 == retries) throw new RuntimeException("Could not get pulsar topics to create")
+        }
     }
 
-    @Override
-    void close() throws Exception {
-        pulsarContainer.stop()
+    public static createTopic(String topic) {
+        Container.ExecResult result = PULSAR_CONTAINER.execInContainer("/bin/bash", "-c", PULSAR_CLI_ADMIN + " topics create $topic")
+        if (0 != result.exitCode) {
+            String reason = result.stderr ?: result.stdout
+            if (!reason.startsWith("This topic already exists"))
+                throw new RuntimeException("Unable to create test topic for TLS: $reason")
+        }
     }
 }

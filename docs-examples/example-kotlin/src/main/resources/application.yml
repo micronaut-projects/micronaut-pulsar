@@ -5,6 +5,7 @@ micronaut:
     port: 8081
 pulsar:
   enabled: true
+  shutdown-on-subscriber-error: true
 jackson:
   serialization:
     writeDatesAsTimestamps: false

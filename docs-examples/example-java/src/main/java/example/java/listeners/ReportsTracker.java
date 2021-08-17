@@ -32,7 +32,7 @@ public class ReportsTracker implements AutoCloseable {
     /**
      * @param message string to store async
      */
-    @PulsarConsumer(consumerName = "report-listener", topic = "persistent://private/reports/messages-java-docs", subscribeAsync = false)
+    @PulsarConsumer(consumerName = "report-listener-java", topic = "persistent://private/reports/messages-java-docs", subscribeAsync = false)
     public void report(String message) {
         tracker.tryEmitNext(message).orThrow();
     }

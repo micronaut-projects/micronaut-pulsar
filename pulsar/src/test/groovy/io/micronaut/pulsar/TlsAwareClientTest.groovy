@@ -22,7 +22,6 @@ import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarTls
-import io.micronaut.runtime.server.EmbeddedServer
 import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.AutoCleanup
@@ -38,23 +37,17 @@ class TlsAwareClientTest extends Specification {
 
     @Shared
     @AutoCleanup
-    PulsarTls pulsarTls
-
-    @Shared
-    @AutoCleanup
     ApplicationContext context
 
     void setupSpec() {
-        pulsarTls = new PulsarTls()
-        pulsarTls.start()
         String tlsPath = ClassLoader.getSystemClassLoader().getResource('ca.cert.pem').path
         String tlsPathForPulsar = new File(tlsPath).absolutePath
-        context = ApplicationContext.run(
-                ['pulsar.service-url'                     : pulsarTls.pulsarBrokerUrl,
+        this.context = ApplicationContext.run(
+                ['pulsar.service-url'                     : PulsarTls.pulsarBrokerTlsUrl,
                  'pulsar.tls-cert-file-path'              : tlsPathForPulsar,
-                 'pulsar.shutdown-on-subscription-failure': true,
+                 'pulsar.shutdown-on-subscriber-error': true,
                  'pulsar.tls-ciphers'                     : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
-                 'pulsar.tls-protocols'                   : ['TLSv1.2', 'TLSv1.1'],
+                 'pulsar.tls-protocols'                   : ['TLSv1.3', 'TLSv1.2', 'TLSv1.1'],
                  'spec.name'                              : getClass().simpleName],
                 Environment.TEST
         )
@@ -110,7 +103,7 @@ class TlsAwareClientTest extends Specification {
     @PulsarProducerClient
     static interface TlsProducer {
 
-        @PulsarProducer(topic = "persistent://public/default/test")
+        @PulsarProducer(topic = "persistent://public/default/test-tls")
         MessageId send(String message)
     }
 }

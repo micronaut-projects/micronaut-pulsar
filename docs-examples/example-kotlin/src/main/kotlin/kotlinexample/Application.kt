@@ -13,15 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.kotlin.web
+package kotlinexample
 
-import example.kotlin.listeners.ReportsTracker
-import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Get
-
-@Controller("reports")
-class ReportsResource(private val reports: ReportsTracker) {
-
-    @Get
-    fun reports() = reports.latest()
+import io.micronaut.runtime.Micronaut.*
+fun main(args: Array<String>) {
+	build().args(*args).packages("kotlinexample").start()
 }
+

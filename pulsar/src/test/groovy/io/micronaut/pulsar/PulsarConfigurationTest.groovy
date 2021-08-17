@@ -18,7 +18,7 @@ package io.micronaut.pulsar
 import io.micronaut.pulsar.config.PulsarClientConfiguration
 import io.micronaut.pulsar.processor.PulsarConsumerProcessor
 import io.micronaut.pulsar.shared.PulsarAwareTest
-import io.micronaut.pulsar.shared.PulsarDefaultContainer
+import io.micronaut.pulsar.shared.PulsarTls
 import org.apache.pulsar.client.api.PulsarClient
 import spock.lang.Stepwise
 
@@ -31,6 +31,6 @@ class PulsarConfigurationTest extends PulsarAwareTest {
         context.containsBean(PulsarClientConfiguration)
         context.containsBean(PulsarClient)
         context.containsBean(PulsarConsumerProcessor)
-        PulsarDefaultContainer.PULSAR_CONTAINER.pulsarBrokerUrl == context.getBean(PulsarClientConfiguration).serviceUrl
+        PulsarTls.pulsarBrokerUrl == context.getBean(PulsarClientConfiguration).serviceUrl
     }
 }

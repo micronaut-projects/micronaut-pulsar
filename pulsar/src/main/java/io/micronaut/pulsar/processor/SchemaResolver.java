@@ -21,16 +21,17 @@ import io.micronaut.core.beans.BeanWrapper;
 import io.micronaut.core.naming.Named;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.schemas.JsonSchema;
+import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.impl.schema.*;
 
-import javax.inject.Singleton;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
  * Message type resolver for Pulsar schema. Uses customised Schema for JSON; otherwise falls back to the ones
  * from Apache Pulsar Java library.
+ *
  * @author Haris Secic
  * @since 1.0
  */
@@ -45,6 +46,7 @@ public class SchemaResolver {
 
     /**
      * Resolve which schema to use.
+     *
      * @param topicAnnotation either producer or consumer annotation
      * @param messageBodyType type of message body used with Pulsar topic
      * @return new Schema

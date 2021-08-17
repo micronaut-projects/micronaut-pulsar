@@ -9,6 +9,7 @@ pulsar:
   oauth-issuer-url: https://localhost:9090/auth/realms/master
   oauth-credentials-url: file://src/main/resources/credentials.json
   audience: pulsar
+  shutdown-on-subscriber-error: true
   tls-ciphers:
     - TLS_RSA_WITH_AES_256_GCM_SHA384
     - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256

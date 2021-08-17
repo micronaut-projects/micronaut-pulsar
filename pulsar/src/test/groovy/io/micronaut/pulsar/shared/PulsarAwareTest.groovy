@@ -24,23 +24,21 @@ import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 
-abstract class PulsarAwareTest extends PulsarDefaultContainer {
+abstract class PulsarAwareTest extends Specification {
 
     @Shared
     @AutoCleanup
     ApplicationContext context
 
     void setupSpec() {
-        start()
-        //avoid static running and context subscribing consumers before pulsar topic creation
-        createNonPartitionedTopic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
-        createNonPartitionedTopic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
-        createNonPartitionedTopic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
-        createNonPartitionedTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
+        PulsarTls.createTopic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
+        PulsarTls.createTopic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
+        PulsarTls.createTopic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
+        PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
         context = ApplicationContext.run(
-                ['pulsar.service-url'                     : PULSAR_CONTAINER.pulsarBrokerUrl,
-                 'pulsar.shutdown-on-subscription-failure': true,
-                 'spec.name'                              : getClass().simpleName],
+                ['pulsar.service-url'                 : PulsarTls.pulsarBrokerUrl,
+                 'pulsar.shutdown-on-subscriber-error': true,
+                 'spec.name'                          : getClass().simpleName],
                 Environment.TEST
         )
     }

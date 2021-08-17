@@ -13,23 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.kotlin.listeners
+package kotlinexample.listeners
 
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
+import kotlinx.coroutines.*
+import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.channels.ConflatedBroadcastChannel
+import kotlinx.coroutines.flow.receiveAsFlow
 import org.apache.pulsar.client.api.SubscriptionType
-import kotlinx.coroutines.flow.*
 
 @PulsarSubscription(subscriptionName = "kreports", subscriptionType = SubscriptionType.Shared)
-class ReportsTracker {
+class ReportsTracker : AutoCloseable {
 
-    private val messageTracker = Channel<String>()
+    @ExperimentalCoroutinesApi
+    private val messageTracker = ConflatedBroadcastChannel<String>()
 
-    @PulsarConsumer(consumerName = "report-listener", topic = "persistent://public/default/reports-kotlin-docs", subscribeAsync = false)
-    suspend fun report(message: String) { //suspend to enable non-blocking approach for pulsar receiver
+    @ExperimentalCoroutinesApi
+    @PulsarConsumer(consumerName = "report-listener-kotlin", topic = "persistent://public/default/reports-kotlin-docs", subscribeAsync = false)
+    suspend fun report(message: String) {
         messageTracker.send(message)
     }
 
-    fun latest() = messageTracker.consumeAsFlow()
+    @ExperimentalCoroutinesApi
+    fun latest() = messageTracker.openSubscription()
+
+    @ExperimentalCoroutinesApi
+    override fun close() {
+        messageTracker.close()
+    }
 }

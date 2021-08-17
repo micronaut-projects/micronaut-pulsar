@@ -13,10 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.kotlin
+package kotlinexample.dto
 
-import io.micronaut.runtime.Micronaut.*
-fun main(args: Array<String>) {
-	build().args(*args).packages("example.kotlin").start()
+import io.micronaut.core.annotation.Introspected
+import io.micronaut.core.annotation.TypeHint
+import org.apache.pulsar.client.api.MessageId
+
+/**
+ * Simple message data structure.
+ */
+@Introspected
+@TypeHint
+data class PulsarMessage(val sent: String, val message: String) {
+
+    /**
+     * @return string representation of this message for using with pulsar
+     */
+    fun toMessage(id: MessageId): String {
+        return "$id Message $message sent on $sent"
+    }
 }
-

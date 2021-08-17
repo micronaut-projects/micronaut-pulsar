@@ -13,23 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package example.kotlin.dto
+package kotlinexample.web
 
-import io.micronaut.core.annotation.Introspected
-import io.micronaut.core.annotation.TypeHint
-import org.apache.pulsar.client.api.MessageId
+import kotlinexample.listeners.ReportsTracker
+import io.micronaut.http.annotation.Controller
+import io.micronaut.http.annotation.Get
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 
-/**
- * Simple message data structure.
- */
-@Introspected
-@TypeHint
-data class PulsarMessage(val sent: String, val message: String) {
+@Controller("reports")
+class ReportsResource(private val reports: ReportsTracker) {
 
-    /**
-     * @return string representation of this message for using with pulsar
-     */
-    fun toMessage(id: MessageId): String {
-        return "$id Message $message sent on $sent"
-    }
+    @ExperimentalCoroutinesApi
+    @Get
+    fun reports() = reports.latest()
 }

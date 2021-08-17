@@ -21,8 +21,6 @@ import example.java.listeners.MessagingService
 import example.java.listeners.ReportsTracker
 import example.java.shared.SimulateEnv
 import io.micronaut.pulsar.PulsarConsumerRegistry
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.testcontainers.containers.Container
 import reactor.test.StepVerifier
 import spock.lang.Stepwise
@@ -38,8 +36,6 @@ import java.time.LocalDateTime
  */
 @Stepwise
 class ApplicationTest extends SimulateEnv {
-
-    static final Logger LOG = LoggerFactory.getLogger(Logger.ROOT_LOGGER_NAME)
 
     void 'should start containers and subscribe micronaut app to them'() {
         expect:
@@ -76,12 +72,7 @@ class ApplicationTest extends SimulateEnv {
         null != consumers.getConsumer('shared-consumer-tester')
         consumers.getConsumer('shared-consumer-tester').isConnected()
         StepVerifier.create(reportsTracker.subscribe())
-                .expectNextCount(1)
-                .expectNextMatches(x -> {
-                    LOG.error("test")
-                    LOG.error(x)
-                    x.contains(testMessage.message)
-                })
+                .assertNext(x -> x.contains(testMessage.message))
                 .thenCancel()
                 .verify(Duration.ofSeconds(10))
     }

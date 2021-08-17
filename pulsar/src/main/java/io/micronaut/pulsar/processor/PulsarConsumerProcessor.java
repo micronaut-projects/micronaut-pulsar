@@ -32,13 +32,13 @@ import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.ConsumerSubscribedEvent;
 import io.micronaut.pulsar.events.ConsumerSubscriptionFailedEvent;
+import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.client.impl.ConsumerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
@@ -137,7 +137,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 LOG.error("Failed subscribing Pulsar consumer {} {}", method.getDescription(false), name, e);
                 applicationEventPublisher.publishEvent(new ConsumerSubscriptionFailedEvent(e, name));
                 if (pulsarClientConfiguration.getShutdownOnSubscriberError()) {
-                    String msg = String.format("Failed to subscribe %s %s", name, method.getDescription(false));
+                    String msg = String.format("Failed to subscribe %s %s with cause %s", name, method.getDescription(false), e.getMessage());
                     throw new Error(msg);
                 }
             }
