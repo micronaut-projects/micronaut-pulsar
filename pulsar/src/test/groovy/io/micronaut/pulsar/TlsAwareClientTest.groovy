@@ -16,6 +16,7 @@
 package io.micronaut.pulsar
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarProducer
@@ -28,9 +29,15 @@ import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
+import spock.util.concurrent.AsyncConditions
+import spock.util.concurrent.BlockingVariable
+import spock.util.concurrent.BlockingVariables
 import spock.util.concurrent.PollingConditions
 
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReadWriteLock
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 @Stepwise
 class TlsAwareClientTest extends Specification {
@@ -65,6 +72,7 @@ class TlsAwareClientTest extends Specification {
                 .startMessageId(MessageId.latest)
                 .startMessageIdInclusive()
                 .create()
+        tlsConsumer.blocking = new BlockingVariables(60);
 
         when:
         MessageId id = tlsProducer.send(test)
@@ -73,30 +81,46 @@ class TlsAwareClientTest extends Specification {
         Message<String> block = blockingReader.readNext(1, TimeUnit.MINUTES)
         id == block.messageId
         test == block.value
-        new PollingConditions(timeout: 240, factor: 1.2, initialDelay: 1).eventually {
-            test == tlsConsumer.getLastMessage()
-            id.toString() == tlsConsumer.getLastMessageId()
-        }
+        id == tlsConsumer.blocking.getProperty("id")
+        test == tlsConsumer.blocking.getProperty("value")
+
+        cleanup:
+        blockingReader.closeAsync()
     }
 
-    @PulsarSubscription(subscriptionName = "tlsSubscription", subscriptionType = SubscriptionType.Shared)
+    @Requires(property = 'spec.name', value = 'TlsAwareClientTest')
+    @PulsarSubscription(subscriptionName = "tlsSubscription")
     static class TlsConsumer {
-        private Deque<Message<String>> messages = new ArrayDeque<>()
+        private Message<String> latest
+        private BlockingVariables blocking
+        private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
-        @PulsarConsumer(topic = "persistent://public/default/test-tls", subscribeAsync = false, consumerName = "tls-receiver")
+        @PulsarConsumer(topic = "persistent://public/default/test-tls", consumerName = "tls-receiver")
         void receive(Message<String> message) {
-            messages.add(message)
+            if (null != latest) return
+            lock.writeLock().lock()
+            latest = message
+            if (blocking != null) {
+                blocking.setProperty("id", latest.messageId)
+                blocking.setProperty("value", latest.value)
+            }
+            lock.writeLock().unlock()
         }
 
-        String getLastMessage() {
-            return messages.peekLast()?.getValue()
+        void setBlocking(BlockingVariables blocking) {
+            this.blocking = blocking
+            if (null != latest) {
+                this.blocking.setProperty("id", latest.messageId)
+                this.blocking.setProperty("value", latest.value)
+            }
         }
 
-        String getLastMessageId() {
-            return messages.peekLast()?.getMessageId()?.toString()
+        BlockingVariables getBlocking() {
+            return blocking
         }
     }
 
+    @Requires(property = 'spec.name', value = 'TlsAwareClientTest')
     @PulsarProducerClient
     static interface TlsProducer {
 

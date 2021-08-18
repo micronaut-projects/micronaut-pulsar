@@ -63,24 +63,16 @@ class PulsarProducersSpec extends PulsarAwareTest {
     @PulsarProducerClient
     static interface ProducerTester {
 
-        @PulsarProducer(
-                topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC,
-                producerName = "test-producer")
+        @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer")
         void producer(String message);
 
-        @PulsarProducer(
-                topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC,
-                producerName = "test-producer-2")
+        @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer-2")
         String returnOnProduce(String message)
 
-        @PulsarProducer(
-                topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC,
-                producerName = "test-producer-3")
+        @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer-3")
         MessageId messageIdOnProduce(String message)
 
-        @PulsarProducer(
-                topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC,
-                producerName = "test-producer-reactive")
+        @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer-reactive")
         Single<MessageId> reactiveMessage(String message)
     }
 }
