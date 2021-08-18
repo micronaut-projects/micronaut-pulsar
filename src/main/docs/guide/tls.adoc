@@ -11,8 +11,8 @@ pulsar:
         - TLS_RSA_WITH_AES_256_GCM_SHA384
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
     tls-protocols:
+        - TLSv1.3
         - TLSv1.2
-        - TLSv1.1
 ----
 
 It's necessary to ensure that both server and client certificates match with supported ciphers and protocols. By default

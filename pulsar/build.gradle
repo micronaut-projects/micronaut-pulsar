@@ -7,17 +7,20 @@ dependencies {
     api "io.micronaut:micronaut-messaging:$micronautVersion"
     api "org.apache.pulsar:pulsar-client:$pulsarVersion"
 
+    compileOnly "jakarta.inject:jakarta.inject-api:2.0.0"
+    compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
+
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation("org.spockframework:spock-core:${spockVersion}") {
-        exclude module:'groovy-all'
+        exclude module: 'groovy-all'
     }
     testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
     testImplementation "org.testcontainers:spock:1.16.0"
     testImplementation "org.testcontainers:pulsar:1.16.0"
     testImplementation "io.micronaut.cache:micronaut-cache-core:2.4.0"
-    testImplementation "org.apache.pulsar:pulsar-client-admin:$pulsarVersion"
     testRuntimeOnly "io.micronaut:micronaut-runtime"
     testRuntimeOnly "io.micronaut:micronaut-http-server-netty"
+    testImplementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2'
 }
 
 test {

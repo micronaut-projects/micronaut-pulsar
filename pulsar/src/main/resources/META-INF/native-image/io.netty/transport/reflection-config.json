@@ -166,12 +166,6 @@
     "allDeclaredConstructors": true
   },
   {
-    "name": "org.apache.pulsar.client.impl.schema.ProtobufSchema",
-    "allDeclaredFields": true,
-    "allDeclaredMethods": true,
-    "allDeclaredConstructors": true
-  },
-  {
     "name": "org.apache.pulsar.client.impl.schema.AvroSchema",
     "allDeclaredFields": true,
     "allDeclaredMethods": true,
@@ -259,5 +253,17 @@
         "name": "touch"
       }
     ]
+  },
+  {
+    "name": "org.apache.pulsar.shade.org.apache.avro.io.FastReaderBuilder",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true
+  },
+  {
+    "name": "org.apache.pulsar.shade.org.apache.avro.io.FastReaderBuilder$FieldReader",
+    "allDeclaredFields": true,
+    "allDeclaredMethods": true,
+    "allDeclaredConstructors": true
   }
 ]

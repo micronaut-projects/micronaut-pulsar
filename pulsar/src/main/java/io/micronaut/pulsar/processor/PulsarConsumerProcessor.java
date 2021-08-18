@@ -32,18 +32,17 @@ import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.ConsumerSubscribedEvent;
 import io.micronaut.pulsar.events.ConsumerSubscriptionFailedEvent;
+import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.client.impl.ConsumerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.inject.Singleton;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.IntStream;
 
 import static java.util.concurrent.TimeUnit.*;
 
@@ -138,7 +137,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 LOG.error("Failed subscribing Pulsar consumer {} {}", method.getDescription(false), name, e);
                 applicationEventPublisher.publishEvent(new ConsumerSubscriptionFailedEvent(e, name));
                 if (pulsarClientConfiguration.getShutdownOnSubscriberError()) {
-                    String msg = String.format("Failed to subscribe %s %s", name, method.getDescription(false));
+                    String msg = String.format("Failed to subscribe %s %s with cause %s", name, method.getDescription(false), e.getMessage());
                     throw new Error(msg);
                 }
             }
@@ -193,10 +192,8 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 throw new IllegalArgumentException("Acknowledge timeout must be greater than 1 second");
             }
         });
-        int consumerIndex = IntStream.range(0, methodArguments.length)
-                .filter(i -> Consumer.class.isAssignableFrom(methodArguments[i].getType()))
-                .findFirst().orElse(-1);
-        consumer.messageListener(new DefaultListener(method, useMessageWrapper, consumerIndex, bean));
+
+        consumer.messageListener(new DefaultListener(method, useMessageWrapper, bean));
 
         return consumer;
     }

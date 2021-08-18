@@ -18,10 +18,8 @@ package io.micronaut.pulsar.shared
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.pulsar.PulsarConsumerSpec
-import io.micronaut.pulsar.PulsarDefaultContainer
 import io.micronaut.pulsar.PulsarProducersSpec
 import io.micronaut.pulsar.PulsarReaderSpec
-import io.micronaut.runtime.server.EmbeddedServer
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -32,21 +30,15 @@ abstract class PulsarAwareTest extends Specification {
     @AutoCleanup
     ApplicationContext context
 
-    @Shared
-    @AutoCleanup
-    PulsarDefaultContainer pulsarContainer
-
     void setupSpec() {
-        PulsarDefaultContainer.start()
-        //avoid static running and context subscribing consumers before pulsar topic creation
-        PulsarDefaultContainer.createNonPartitionedTopic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
-        PulsarDefaultContainer.createNonPartitionedTopic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
-        PulsarDefaultContainer.createNonPartitionedTopic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
-        PulsarDefaultContainer.createNonPartitionedTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
+        PulsarTls.createTopic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
+        PulsarTls.createTopic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
+        PulsarTls.createTopic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
+        PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
         context = ApplicationContext.run(
-                ['pulsar.service-url'                     : PulsarDefaultContainer.PULSAR_CONTAINER.pulsarBrokerUrl,
-                 'pulsar.shutdown-on-subscription-failure': true,
-                 'spec.name'                              : getClass().simpleName],
+                ['pulsar.service-url'                 : PulsarTls.pulsarBrokerUrl,
+                 'pulsar.shutdown-on-subscriber-error': true,
+                 'spec.name'                          : getClass().simpleName],
                 Environment.TEST
         )
     }

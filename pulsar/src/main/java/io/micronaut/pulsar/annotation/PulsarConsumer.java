@@ -123,16 +123,19 @@ public @interface PulsarConsumer {
     int patternAutoDiscoveryPeriod() default -1;
 
     /**
-     * By default consumer should subscribe in non-blocking manner using default {@link java.util.concurrent.CompletableFuture} of {@link org.apache.pulsar.client.api.ConsumerBuilder#subscribeAsync()}.
+     * By default, consumer should subscribe in non-blocking manner using default {@link java.util.concurrent.CompletableFuture}
+     * of {@link org.apache.pulsar.client.api.ConsumerBuilder#subscribeAsync()}.
      * <p>
-     * If blocking set to false application will block until consumer is successfully subscribed
+     * If blocking set to false application will block until consumer is successfully subscribed. This is different
+     * from the actual process of consuming the messages which still happens in separate thread managed by the
+     * underlying Pulsar Client library.
      *
      * @return Should the consumer subscribe in async manner or blocking
      */
     boolean subscribeAsync() default true;
 
     /**
-     * By default it will use default value of {@link org.apache.pulsar.client.api.ConsumerBuilder} which is disabled
+     * By default, it will use default value of {@link org.apache.pulsar.client.api.ConsumerBuilder} which is disabled
      * and no redelivery happens unless consumer crashed.
      * <p>
      * Must be greater than 1s.
@@ -143,9 +146,9 @@ public @interface PulsarConsumer {
     String ackTimeout() default "";
 
     /**
-     * @return Number of items allowed in the queue. Default -1 as in Pulsar Java Client
+     * @return Number of items allowed in the queue. Default 1000 as in Pulsar Java Client
      */
-    int receiverQueueSize() default -1;
+    int receiverQueueSize() default 1000;
 
     /**
      * By default no priority is set.

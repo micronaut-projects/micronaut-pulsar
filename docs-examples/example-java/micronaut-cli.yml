@@ -1,5 +1,5 @@
 applicationType: default
-defaultPackage: io.micronaut.pulsar.example
+defaultPackage: example.java
 testFramework: spock
 sourceLanguage: java
 buildTool: gradle

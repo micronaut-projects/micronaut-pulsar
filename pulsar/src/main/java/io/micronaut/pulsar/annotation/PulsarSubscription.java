@@ -28,7 +28,7 @@ import static org.apache.pulsar.client.api.SubscriptionType.Exclusive;
 
 /**
  * Mark a class that contains Pulsar consumers. Each method in class should be
- * isolated consumer. However Pulsar provides multiple consumers via single
+ * isolated consumer. However, Pulsar provides multiple consumers via single
  * subscription if they are set to Failover, Share, or such.
  *
  * @author Haris Secic

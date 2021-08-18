@@ -38,9 +38,6 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         expect:
         context.isRunning()
         context.containsBean(PulsarConsumerTopicListTester)
-        PulsarDefaultContainer.PULSAR_ADMIN.topics().getList("public/default").findAll {
-            it.contains("test") || it.contains("other2")
-        }.size() >= 2
     }
 
     void "test consumer read default topic"() {
@@ -164,7 +161,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "subscribe-2-example.listeners", subscriptionType = SubscriptionType.Shared)
+    @PulsarSubscription(subscriptionName = "subscribe-2-example.java.listeners", subscriptionType = SubscriptionType.Shared)
     static class PulsarConsumerTopicPatternTester {
 
         String latestMessage

@@ -16,33 +16,22 @@
 package io.micronaut.pulsar.processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.protobuf.GeneratedMessageV3;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.beans.BeanWrapper;
+import io.micronaut.core.naming.Named;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.schemas.JsonSchema;
+import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.Schema;
-import org.apache.pulsar.client.impl.schema.AvroSchema;
-import org.apache.pulsar.client.impl.schema.BooleanSchema;
-import org.apache.pulsar.client.impl.schema.ByteBufferSchema;
-import org.apache.pulsar.client.impl.schema.ByteSchema;
-import org.apache.pulsar.client.impl.schema.BytesSchema;
-import org.apache.pulsar.client.impl.schema.DateSchema;
-import org.apache.pulsar.client.impl.schema.DoubleSchema;
-import org.apache.pulsar.client.impl.schema.FloatSchema;
-import org.apache.pulsar.client.impl.schema.IntSchema;
-import org.apache.pulsar.client.impl.schema.LongSchema;
-import org.apache.pulsar.client.impl.schema.ProtobufSchema;
-import org.apache.pulsar.client.impl.schema.SchemaDefinitionBuilderImpl;
-import org.apache.pulsar.client.impl.schema.ShortSchema;
-import org.apache.pulsar.client.impl.schema.StringSchema;
-import org.apache.pulsar.client.impl.schema.TimeSchema;
-import org.apache.pulsar.client.impl.schema.TimestampSchema;
+import org.apache.pulsar.client.impl.schema.*;
 
-import javax.inject.Singleton;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Message type resolver for Pulsar schema. Uses customised Schema for JSON; otherwise falls back to the ones
  * from Apache Pulsar Java library.
+ *
  * @author Haris Secic
  * @since 1.0
  */
@@ -57,6 +46,7 @@ public class SchemaResolver {
 
     /**
      * Resolve which schema to use.
+     *
      * @param topicAnnotation either producer or consumer annotation
      * @param messageBodyType type of message body used with Pulsar topic
      * @return new Schema
@@ -104,11 +94,11 @@ public class SchemaResolver {
             case AVRO:
                 return AvroSchema.of(new SchemaDefinitionBuilderImpl().withPojo(messageBodyType).build());
             case PROTOBUF:
-                if (GeneratedMessageV3.class.isAssignableFrom(messageBodyType)) {
-                    Class<? extends GeneratedMessageV3> asProtobuf = (Class<? extends GeneratedMessageV3>) messageBodyType;
-                    return ProtobufSchema.of(new SchemaDefinitionBuilderImpl().withPojo(asProtobuf).build());
-                }
-                throw new ClassCastException(messageBodyType.toString());
+                Map<String, String> properties = BeanWrapper.getWrapper(messageBodyType).getBeanProperties().stream()
+                        .collect(Collectors.toMap(Named::getName, x -> x.getType().getName()));
+                properties.put("__jsr310ConversionEnabled", "true");
+                properties.put("__alwaysAllowNull", "true");
+                return ProtobufNativeSchema.ofGenericClass(messageBodyType, properties);
             case KEY_VALUE:
                 throw new UnsupportedOperationException("Missing implementation for KEY_VALUE schema message");
             default:

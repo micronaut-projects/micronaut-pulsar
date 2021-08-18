@@ -18,12 +18,11 @@ package io.micronaut.pulsar;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.pulsar.config.PulsarClientConfiguration;
+import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.ClientBuilder;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.PulsarClientException;
 import org.apache.pulsar.client.impl.ClientBuilderImpl;
-
-import javax.inject.Singleton;
 
 /**
  * Create bean of PulsarClient type which is required by consumers and producers.

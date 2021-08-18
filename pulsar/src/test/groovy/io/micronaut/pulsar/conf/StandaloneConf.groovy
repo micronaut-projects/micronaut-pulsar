@@ -314,7 +314,7 @@ tlsAllowInsecureConnection=false
 # Specify the tls protocols the broker will use to negotiate during TLS handshake
 # (a comma-separated list of protocol names).
 # Examples:- [TLSv1.2, TLSv1.1, TLSv1]
-tlsProtocols=TLSv1.2,TLSv1.1
+tlsProtocols=TLSv1.3,TLSv1.2,TLSv1.1
 
 # Specify the tls cipher the broker will use to negotiate during TLS Handshake
 # (a comma-separated list of ciphers).

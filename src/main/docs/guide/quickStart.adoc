@@ -12,7 +12,7 @@ pulsar:
 ----
 NOTE: As this module is based on the official Java client from Apache Pulsar, see the link:https://pulsar.apache.org/docs/en/client-libraries-java/#connection-urls[official documentation] for detailed information on service URL format.
 
-Alternatively, `pulsar.service-url-provider` can be set using either `@PulsarServiceUrlProvider` or by setting the provider name
+Alternatively, `pulsar.service-url-provider` can be set using either `@kotlinexample.PulsarServiceUrlProvider` or by setting the provider name
 in `application.yml` as such:
 
 [source,yaml]

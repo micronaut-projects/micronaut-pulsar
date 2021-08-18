@@ -16,46 +16,46 @@
 package io.micronaut.pulsar
 
 import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarTls
-import io.micronaut.runtime.server.EmbeddedServer
 import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
+import spock.util.concurrent.AsyncConditions
+import spock.util.concurrent.BlockingVariable
+import spock.util.concurrent.BlockingVariables
 import spock.util.concurrent.PollingConditions
 
 import java.util.concurrent.TimeUnit
+import java.util.concurrent.locks.Lock
+import java.util.concurrent.locks.ReadWriteLock
+import java.util.concurrent.locks.ReentrantReadWriteLock
 
 @Stepwise
 class TlsAwareClientTest extends Specification {
 
     @Shared
     @AutoCleanup
-    PulsarTls pulsarTls
-
-    @Shared
-    @AutoCleanup
     ApplicationContext context
 
     void setupSpec() {
-        pulsarTls = new PulsarTls()
-        pulsarTls.start()
         String tlsPath = ClassLoader.getSystemClassLoader().getResource('ca.cert.pem').path
         String tlsPathForPulsar = new File(tlsPath).absolutePath
-        context = ApplicationContext.run(
-                ['pulsar.service-url'                     : pulsarTls.pulsarBrokerUrl,
-                 'pulsar.tls-cert-file-path'              : tlsPathForPulsar,
-                 'pulsar.shutdown-on-subscription-failure': true,
-                 'pulsar.tls-ciphers'                     : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
-                 'pulsar.tls-protocols'                   : ['TLSv1.2', 'TLSv1.1'],
-                 'spec.name'                              : getClass().simpleName],
+        this.context = ApplicationContext.run(
+                ['pulsar.service-url'                 : PulsarTls.pulsarBrokerTlsUrl,
+                 'pulsar.tls-cert-file-path'          : tlsPathForPulsar,
+                 'pulsar.shutdown-on-subscriber-error': true,
+                 'pulsar.tls-ciphers'                 : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
+                 'pulsar.tls-protocols'               : ['TLSv1.3', 'TLSv1.2', 'TLSv1.1'],
+                 'spec.name'                          : getClass().simpleName],
                 Environment.TEST
         )
     }
@@ -68,10 +68,11 @@ class TlsAwareClientTest extends Specification {
         Reader<String> blockingReader = context.getBean(PulsarClient.class)
                 .newReader(new StringSchema())
                 .readerName("blocking-tls-reader")
-                .topic("persistent://public/default/test")
+                .topic("persistent://public/default/test-tls")
                 .startMessageId(MessageId.latest)
                 .startMessageIdInclusive()
                 .create()
+        tlsConsumer.blocking = new BlockingVariables(60);
 
         when:
         MessageId id = tlsProducer.send(test)
@@ -80,37 +81,50 @@ class TlsAwareClientTest extends Specification {
         Message<String> block = blockingReader.readNext(1, TimeUnit.MINUTES)
         id == block.messageId
         test == block.value
-        new PollingConditions(timeout: 80, delay: 2, initialDelay: 1).eventually {
-            test == tlsConsumer.getLastMessage()
-            id.toString() == tlsConsumer.getLastMessageId()
-        }
+        id == tlsConsumer.blocking.getProperty("id")
+        test == tlsConsumer.blocking.getProperty("value")
+
+        cleanup:
+        blockingReader.closeAsync()
     }
 
-    @PulsarSubscription(subscriptionName = "tlsSubscription", subscriptionType = SubscriptionType.Shared)
+    @Requires(property = 'spec.name', value = 'TlsAwareClientTest')
+    @PulsarSubscription(subscriptionName = "tlsSubscription")
     static class TlsConsumer {
-        private Deque<Message<String>> messages = new ArrayDeque<>()
+        private Message<String> latest
+        private BlockingVariables blocking
+        private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
-        @PulsarConsumer(topic = "persistent://public/default/test",
-                subscribeAsync = false,
-                consumerName = "tls-receiver"
-        )
+        @PulsarConsumer(topic = "persistent://public/default/test-tls", consumerName = "tls-receiver")
         void receive(Message<String> message) {
-            messages.add(message)
+            if (null != latest) return
+            lock.writeLock().lock()
+            latest = message
+            if (blocking != null) {
+                blocking.setProperty("id", latest.messageId)
+                blocking.setProperty("value", latest.value)
+            }
+            lock.writeLock().unlock()
         }
 
-        String getLastMessage() {
-            return messages.peekLast()?.getValue()
+        void setBlocking(BlockingVariables blocking) {
+            this.blocking = blocking
+            if (null != latest) {
+                this.blocking.setProperty("id", latest.messageId)
+                this.blocking.setProperty("value", latest.value)
+            }
         }
 
-        String getLastMessageId() {
-            return messages.peekLast()?.getMessageId()?.toString()
+        BlockingVariables getBlocking() {
+            return blocking
         }
     }
 
+    @Requires(property = 'spec.name', value = 'TlsAwareClientTest')
     @PulsarProducerClient
     static interface TlsProducer {
 
-        @PulsarProducer(topic = "persistent://public/default/test")
+        @PulsarProducer(topic = "persistent://public/default/test-tls")
         MessageId send(String message)
     }
 }

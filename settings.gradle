@@ -2,3 +2,4 @@ rootProject.name = 'pulsar'
 
 include 'pulsar'
 include 'docs-examples:example-java'
+include 'docs-examples:example-kotlin'
