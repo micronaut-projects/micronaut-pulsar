@@ -72,7 +72,7 @@ class TlsAwareClientTest extends Specification {
                 .startMessageId(MessageId.latest)
                 .startMessageIdInclusive()
                 .create()
-        tlsConsumer.blocking = new BlockingVariables(65)
+        tlsConsumer.blocking = new BlockingVariables(120)
 
         when:
         MessageId id = tlsProducer.send(test)
