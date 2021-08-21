@@ -9,6 +9,7 @@ dependencies {
 
     compileOnly "jakarta.inject:jakarta.inject-api:2.0.0"
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
+    compileOnly "com.google.code.findbugs:jsr305"
 
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation("org.spockframework:spock-core:${spockVersion}") {
@@ -21,6 +22,7 @@ dependencies {
     testRuntimeOnly "io.micronaut:micronaut-runtime"
     testRuntimeOnly "io.micronaut:micronaut-http-server-netty"
     testImplementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2'
+    testImplementation 'io.projectreactor:reactor-core:3.4.8'
 }
 
 test {

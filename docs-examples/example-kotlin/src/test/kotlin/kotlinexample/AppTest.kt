@@ -24,6 +24,8 @@ import io.kotest.matchers.string.shouldBeEqualIgnoringCase
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider
 import io.micronaut.test.extensions.kotest.annotation.MicronautTest
+import jakarta.inject.Named
+import jakarta.inject.Singleton
 import kotlinexample.dto.PulsarMessage
 import kotlinexample.listeners.ReportsTracker
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,8 +33,6 @@ import org.apache.pulsar.client.api.Producer
 import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.ServiceUrlProvider
 import java.time.LocalDateTime
-import javax.inject.Named
-import javax.inject.Singleton
 
 @ExperimentalCoroutinesApi
 @MicronautTest

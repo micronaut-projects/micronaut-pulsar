@@ -15,13 +15,13 @@
  */
 package io.micronaut.pulsar.intercept;
 
-import edu.umd.cs.findbugs.annotations.NonNull;
 import io.micronaut.aop.InterceptorBean;
 import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.type.ReturnType;
 import io.micronaut.inject.ExecutableMethod;
@@ -30,6 +30,7 @@ import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.annotation.PulsarProducerClient;
 import io.micronaut.pulsar.events.ProducerSubscriptionFailedEvent;
 import io.micronaut.pulsar.processor.SchemaResolver;
+import jakarta.annotation.PreDestroy;
 import org.apache.pulsar.client.api.MessageId;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
@@ -37,7 +38,6 @@ import org.apache.pulsar.client.api.PulsarClientException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import java.util.Map;
 import java.util.Set;
@@ -147,6 +147,7 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         throw new IllegalArgumentException("Pulsar abstract producers can only return MessageId or body being sent.");
     }
 
+    @SuppressWarnings({"unchecked"})
     private Producer<?> getOrCreateProducer(ExecutableMethod<?, ?> method,
                                             AnnotationValue<PulsarProducer> annotationValue) {
         String producerId = annotationValue.stringValue("producerName").orElse(method.getMethodName());

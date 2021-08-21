@@ -19,11 +19,11 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
 import io.micronaut.pulsar.shared.PulsarAwareTest
-import io.reactivex.Single
 import org.apache.pulsar.client.api.MessageId
 import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.Reader
 import org.apache.pulsar.client.impl.schema.StringSchema
+import reactor.core.publisher.Mono
 import spock.lang.Stepwise
 
 import static java.util.concurrent.TimeUnit.SECONDS
@@ -47,13 +47,13 @@ class PulsarProducersSpec extends PulsarAwareTest {
         producer.producer(message)
         String paramReturn = producer.returnOnProduce(message)
         MessageId nextMessage = producer.messageIdOnProduce(message)
-        Single<MessageId> reactiveMessage = producer.reactiveMessage(message)
+        Mono<MessageId> reactiveMessage = producer.reactiveMessage(message)
 
         then:
         message == reader.readNext(60, SECONDS).value
         paramReturn == reader.readNext(60, SECONDS).value
         nextMessage == reader.readNext(60, SECONDS).messageId
-        reactiveMessage.blockingGet() == reader.readNext(60, SECONDS).messageId
+        reactiveMessage.block() == reader.readNext(60, SECONDS).messageId
 
         cleanup:
         reader.close()
@@ -73,6 +73,6 @@ class PulsarProducersSpec extends PulsarAwareTest {
         MessageId messageIdOnProduce(String message)
 
         @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer-reactive")
-        Single<MessageId> reactiveMessage(String message)
+        Mono<MessageId> reactiveMessage(String message)
     }
 }

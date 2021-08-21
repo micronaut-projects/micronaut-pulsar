@@ -45,7 +45,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         def consumerTester = context.getBean(PulsarConsumerTopicListTester)
         Producer producer = context.getBean(PulsarClient)
                 .newProducer()
-                .topic(PULSAR_STATIC_TOPIC_TEST)
+                .topic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
                 .producerName("test-producer")
                 .create()
         //simple consumer with topic list and blocking
@@ -53,7 +53,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         MessageId messageId = producer.send(message.bytes)
 
         then:
-        new PollingConditions(timeout: 60, delay: 1).eventually {
+        new PollingConditions(timeout: 65, delay: 1).eventually {
             message == consumerTester.latestMessage
             messageId == consumerTester.latestMessageId
         }
@@ -170,8 +170,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         //testing default order
         //fails to subscribe to test topic because exclusive consumer is connected already so subscribe only to other
-        @PulsarConsumer(topicsPattern = 'persistent://public/default/other.*',
-                consumerName = "consumer-async")
+        @PulsarConsumer(topicsPattern = 'persistent://public/default/other.*', consumerName = "consumer-async")
         void asyncTopicListener(Consumer<String> consumer, Message<String> message) {
             latestMessage = message.value
             latestConsumer = consumer

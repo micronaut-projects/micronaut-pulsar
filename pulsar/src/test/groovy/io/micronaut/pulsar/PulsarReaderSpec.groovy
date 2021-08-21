@@ -19,11 +19,10 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.messaging.annotation.MessageMapping
 import io.micronaut.pulsar.annotation.PulsarReader
 import io.micronaut.pulsar.shared.PulsarAwareTest
+import jakarta.inject.Singleton
 import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.Stepwise
-
-import javax.inject.Singleton
 
 import static java.util.concurrent.TimeUnit.SECONDS
 

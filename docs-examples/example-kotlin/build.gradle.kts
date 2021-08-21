@@ -29,7 +29,7 @@ dependencies {
     implementation("io.micronaut.kotlin:micronaut-kotlin-runtime")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${kotlinVersion}")
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:${kotlinVersion}")
-    runtimeOnly("ch.qos.logback:logback-classic")
+    implementation("ch.qos.logback:logback-classic")
     compileOnly("jakarta.inject:jakarta.inject-api:2.0.0")
     implementation("io.micronaut:micronaut-validation")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
