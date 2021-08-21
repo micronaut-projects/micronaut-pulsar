@@ -126,7 +126,7 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
             return future;
         }
 
-        return Publishers.convertPublisher(Publishers.fromCompletableFuture(future.toCompletableFuture()), returnType.getType());
+        return Publishers.convertPublisher(future, returnType.getType());
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})

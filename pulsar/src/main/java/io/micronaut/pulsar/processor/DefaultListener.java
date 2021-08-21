@@ -24,6 +24,7 @@ import org.apache.pulsar.client.api.Message;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.function.BiConsumer;
 import java.util.stream.IntStream;
 
 /**
@@ -38,25 +39,45 @@ public class DefaultListener implements MessageListenerResolver {
 
     private final Logger LOGGER = LoggerFactory.getLogger(DefaultListener.class);
 
-    private final boolean isSuspend;
     private final boolean useMessageWrapper;
     private final ExecutableMethod<Object, ?> method;
-    private final int consumerIndex;
-    private final Object invoker;
+    private final BiConsumer<Object, Object> receive;
 
     public DefaultListener(ExecutableMethod method, boolean useMessageWrapper, Object invoker) {
         this.method = method;
         this.useMessageWrapper = useMessageWrapper;
-        this.invoker = invoker;
+        boolean isSuspend;
         if (method instanceof DelegatingExecutableMethod) {
-            this.isSuspend = ((DelegatingExecutableMethod) method).getTarget().isSuspend();
+            isSuspend = ((DelegatingExecutableMethod) method).getTarget().isSuspend();
         } else {
-            this.isSuspend = method.isSuspend();
+            isSuspend = method.isSuspend();
         }
         Argument[] args = method.getArguments();
-        this.consumerIndex = IntStream.range(0, args.length)
+        int consumerIndex = IntStream.range(0, args.length)
                 .filter(i -> Consumer.class.isAssignableFrom(args[i].getType()))
                 .findFirst().orElse(-1);
+        switch (consumerIndex) {
+            case 0:
+                if (isSuspend) {
+                    receive = (c, v) -> ListenerKotlinHelper.run(method, invoker, c, v);
+                } else {
+                    receive = (c, v) -> method.invoke(invoker, c, v);
+                }
+                break;
+            case 1:
+                if (isSuspend) {
+                    receive = (c, v) -> ListenerKotlinHelper.run(method, invoker, v, c);
+                } else {
+                    receive = (c, v) -> method.invoke(invoker, v, c);
+                }
+                break;
+            default:
+                if (!isSuspend) {
+                    receive = (c, v) -> method.invoke(invoker, v);
+                } else {
+                    receive = (c, v) -> ListenerKotlinHelper.run(method, invoker, v);
+                }
+        }
     }
 
     //Pulsar Java lib uses CompletableFutures and has no context/continuation upon the arrival of the message
@@ -64,11 +85,11 @@ public class DefaultListener implements MessageListenerResolver {
 
     @Override
     public void received(Consumer consumer, Message msg) {
-        Object any;
         try {
-            any = useMessageWrapper ? msg : msg.getValue(); // .getValue can hit the serialisation exception
+            // .getValue can hit the serialisation exception
+            Object any = useMessageWrapper ? msg : msg.getValue();
             //trying to provide more flexibility to developers by allowing less care about the order; maybe unnecessary
-            Object result = invoke(any, consumer);
+            receive.accept(consumer, any);
             consumer.acknowledgeAsync(msg);
         } catch (Exception ex) {
             consumer.negativeAcknowledge(msg.getMessageId());
@@ -76,16 +97,4 @@ public class DefaultListener implements MessageListenerResolver {
         }
     }
 
-    private Object invoke(Object value, Object consumer) {
-        switch (consumerIndex) {
-            case 0:
-                return isSuspend ? ListenerKotlinHelper.run(method, invoker, consumer, value)
-                        : method.invoke(invoker, consumer, value);
-            case 1:
-                return isSuspend ? ListenerKotlinHelper.run(method, invoker, value, consumer)
-                        : method.invoke(invoker, value, consumer);
-            default:
-                return isSuspend ? ListenerKotlinHelper.run(method, invoker, value) : method.invoke(invoker, value);
-        }
-    }
 }

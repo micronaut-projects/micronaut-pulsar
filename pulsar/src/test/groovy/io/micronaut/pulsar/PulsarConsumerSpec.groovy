@@ -23,6 +23,7 @@ import io.micronaut.pulsar.shared.PulsarAwareTest
 import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.Stepwise
+import spock.util.concurrent.BlockingVariables
 import spock.util.concurrent.PollingConditions
 
 import static java.util.concurrent.TimeUnit.SECONDS
@@ -34,29 +35,26 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     public static final String PULSAR_REGEX_TEST_TOPIC = "persistent://public/default/other2"
     public static final String PULSAR_STATIC_TOPIC_TEST = "persistent://public/default/test"
 
-    void "test create consumer beans"() {
-        expect:
-        context.isRunning()
-        context.containsBean(PulsarConsumerTopicListTester)
-    }
-
     void "test consumer read default topic"() {
+        given:
+        BlockingVariables vars = new BlockingVariables(65)
+
         when:
-        def consumerTester = context.getBean(PulsarConsumerTopicListTester)
+        PulsarConsumerTopicListTester consumerTester = context.getBean(PulsarConsumerTopicListTester.class)
+        consumerTester.blockers = vars
         Producer producer = context.getBean(PulsarClient)
                 .newProducer()
-                .topic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
-                .producerName("test-producer")
+                .topic(PULSAR_STATIC_TOPIC_TEST)
+                .producerName("test-producer-simple")
                 .create()
         //simple consumer with topic list and blocking
         String message = "This should be received"
         MessageId messageId = producer.send(message.bytes)
 
         then:
-        new PollingConditions(timeout: 65, delay: 1).eventually {
-            message == consumerTester.latestMessage
-            messageId == consumerTester.latestMessageId
-        }
+        null != messageId
+        messageId == vars.getProperty("messageId")
+        message == vars.getProperty("value")
 
         cleanup:
         producer.close()
@@ -65,14 +63,14 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     void "test defined schema consumer read async with regex"() {
         when:
         def consumerPatternTester = context.getBean(PulsarConsumerTopicPatternTester)
-        context.destroyBean(PulsarConsumerTopicListTester)
-
         Producer<String> producer = context.getBean(PulsarClient)
                 .newProducer(new StringSchema())
+                .producerName("simple-producer-regex")
                 .topic(PULSAR_REGEX_TEST_TOPIC)
                 .create()
         Reader blockingReader = context.getBean(PulsarClient)
                 .newReader(new StringSchema())
+                .readerName("simple-reader-blocker")
                 .startMessageId(latest)
                 .topic(PULSAR_REGEX_TEST_TOPIC)
                 .create()
@@ -89,6 +87,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         cleanup:
         producer.close()
+        blockingReader.close()
     }
 
     void "test consumer has MessageMapping annotation with expected topic value"() {
@@ -141,27 +140,25 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "array-subscriber-non-async", subscriptionType = SubscriptionType.Shared)
+    @PulsarSubscription(subscriptionName = "array-subscriber-non-async")
     static class PulsarConsumerTopicListTester {
-
-        String latestMessage
-        MessageId latestMessageId
         Consumer<byte[]> latestConsumer
+        BlockingVariables blockers
 
         //testing reverse order to ensure processor will do correct call
         @PulsarConsumer(
-                topics = ['persistent://public/default/test'],
+                topics = [PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST],
                 consumerName = 'single-topic-consumer',
                 subscribeAsync = false)
         void topicListener(Message<byte[]> message, Consumer<byte[]> consumer) {
-            latestMessageId = message.messageId
-            latestMessage = new String(message.value)
+            blockers.setProperty("messageId", message.messageId)
+            blockers.setProperty("value", new String(message.value))
             latestConsumer = consumer
         }
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "subscribe-2-example.java.listeners", subscriptionType = SubscriptionType.Shared)
+    @PulsarSubscription(subscriptionName = "example-java-listeners", subscriptionType = SubscriptionType.Shared)
     static class PulsarConsumerTopicPatternTester {
 
         String latestMessage

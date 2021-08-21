@@ -1,9 +1,9 @@
 plugins {
-    id("org.jetbrains.kotlin.jvm") version "1.4.32"
-    id("org.jetbrains.kotlin.kapt") version "1.4.32"
+    id("org.jetbrains.kotlin.jvm") version "1.5.21"
+    id("org.jetbrains.kotlin.kapt") version "1.5.21"
     id("com.github.johnrengelman.shadow") version "7.0.0"
     id("io.micronaut.application") version "1.5.4"
-    id("org.jetbrains.kotlin.plugin.allopen") version "1.4.32"
+    id("org.jetbrains.kotlin.plugin.allopen") version "1.5.21"
 }
 
 version = "0.1"
@@ -32,10 +32,10 @@ dependencies {
     implementation("ch.qos.logback:logback-classic")
     compileOnly("jakarta.inject:jakarta.inject-api:2.0.0")
     implementation("io.micronaut:micronaut-validation")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.4.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1")
     implementation(project(":pulsar"))
-    implementation("io.projectreactor:reactor-core:3.4.8")
+    implementation("io.projectreactor:reactor-core")
 
     kaptTest("io.micronaut:micronaut-inject-java")
     testImplementation("org.testcontainers:junit-jupiter:1.16.0")
