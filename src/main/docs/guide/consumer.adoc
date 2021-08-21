@@ -8,7 +8,7 @@ import io.micronaut.pulsar.annotation.PulsarConsumer;
 
 @PulsarSubscription
 public class SampleListener {
-    @PulsarConsumer(topics = ["persistant://public/default/test"])
+    @PulsarConsumer(topics = {"persistant://public/default/test"})
     public void receive(String msg) {
         System.out.println("Received: " + msg);
     }
