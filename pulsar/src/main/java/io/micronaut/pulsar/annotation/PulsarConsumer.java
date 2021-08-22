@@ -16,7 +16,7 @@
 package io.micronaut.pulsar.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
-import io.micronaut.messaging.annotation.MessageListener;
+import io.micronaut.context.annotation.Executable;
 import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
@@ -44,7 +44,7 @@ import static org.apache.pulsar.client.api.SubscriptionType.Exclusive;
 @Documented
 @Retention(RUNTIME)
 @Target(METHOD)
-@MessageListener
+@Executable
 public @interface PulsarConsumer {
 
     /**
@@ -68,6 +68,7 @@ public @interface PulsarConsumer {
 
     /**
      * Has precedence over {@code topicPattern}.
+     *
      * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.
      */
     @Pattern(regexp = TOPIC_NAME_VALIDATOR)
@@ -76,6 +77,7 @@ public @interface PulsarConsumer {
 
     /**
      * Ignored if {@code topics} attribute is set.
+     *
      * @return Topics name in form of tenantName/namespace/topic-name-pattern.
      */
     @Pattern(regexp = TOPIC_NAME_PATTERN_VALIDATOR)
@@ -110,13 +112,14 @@ public @interface PulsarConsumer {
      * <p>
      * Whether to read topics from persistent, or non-persistent storage, or both.
      * <p>
+     *
      * @return subscription
      */
     RegexSubscriptionMode subscriptionTopicsMode() default AllTopics;
 
     /**
      * Used in combination with {@link this#topicsPattern()}. Ignored using {@link this#topics()}. Must be greater than
-     * 1. Low values should avoided. Pulsar default value is 1 minute
+     * 1. Low values should be avoided. Pulsar default value is 1 minute
      *
      * @return Amount of delay between checks, in seconds, for new topic matching given pattern.
      */
@@ -161,6 +164,7 @@ public @interface PulsarConsumer {
 
     /**
      * Default is fallback to Pulsar Client Java library.
+     *
      * @return Dead Letter topic name.
      */
     String deadLetterTopic() default "";
