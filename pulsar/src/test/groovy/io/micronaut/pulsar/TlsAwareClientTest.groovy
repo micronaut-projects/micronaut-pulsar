@@ -73,6 +73,10 @@ class TlsAwareClientTest extends Specification {
                 .startMessageIdInclusive()
                 .create()
         tlsConsumer.blocking = new BlockingVariables(120)
+        Consumer<String> consumer = context.getBean(PulsarConsumerRegistry.class).getConsumer("tls-receiver")
+
+        expect:
+        consumer.isConnected()
 
         when:
         MessageId id = tlsProducer.send(test)
@@ -95,7 +99,7 @@ class TlsAwareClientTest extends Specification {
         private BlockingVariables blocking
         private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
-        @PulsarConsumer(topic = "persistent://public/default/test-tls", consumerName = "tls-receiver")
+        @PulsarConsumer(topic = "persistent://public/default/test-tls", consumerName = "tls-receiver", subscribeAsync = false)
         void receive(Message<String> message) {
             if (null != latest) return
             lock.writeLock().lock()
