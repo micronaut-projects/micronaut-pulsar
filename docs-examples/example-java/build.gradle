@@ -28,7 +28,7 @@ dependencies {
     implementation("io.projectreactor:reactor-core:3.4.8")
     runtimeOnly("ch.qos.logback:logback-classic")
     testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation("io.projectreactor:reactor-test:3.4.8")
+    testImplementation("io.projectreactor:reactor-test:3.4.9")
     testImplementation("org.testcontainers:pulsar:1.16.0")
     testImplementation("org.keycloak:keycloak-admin-client:15.0.1")
 }
