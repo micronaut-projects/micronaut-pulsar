@@ -17,30 +17,20 @@ package kotlinexample.listeners
 
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
-import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.flow.receiveAsFlow
+import kotlinx.coroutines.channels.BufferOverflow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.conflate
 import org.apache.pulsar.client.api.SubscriptionType
 
 @PulsarSubscription(subscriptionName = "kreports", subscriptionType = SubscriptionType.Shared)
-class ReportsTracker : AutoCloseable {
+class ReportsTracker {
 
-    @ExperimentalCoroutinesApi
-    private val messageTracker = ConflatedBroadcastChannel<String>()
+    private val messageTracker = MutableSharedFlow<String>(1, 1, BufferOverflow.DROP_OLDEST)
 
-    @ExperimentalCoroutinesApi
     @PulsarConsumer(consumerName = "report-listener-kotlin", topic = "persistent://public/default/reports-kotlin-docs", subscribeAsync = false)
     suspend fun report(message: String) {
-        messageTracker.send(message)
+        messageTracker.emit(message)
     }
 
-    @ExperimentalCoroutinesApi
-    fun latest() = messageTracker.openSubscription()
-
-    @ExperimentalCoroutinesApi
-    override fun close() {
-        messageTracker.close()
-    }
+    fun subscribe() = messageTracker.conflate()
 }

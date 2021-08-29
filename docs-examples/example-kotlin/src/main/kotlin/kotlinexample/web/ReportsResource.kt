@@ -15,15 +15,13 @@
  */
 package kotlinexample.web
 
-import kotlinexample.listeners.ReportsTracker
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinexample.listeners.ReportsTracker
 
 @Controller("reports")
 class ReportsResource(private val reports: ReportsTracker) {
 
-    @ExperimentalCoroutinesApi
     @Get
-    fun reports() = reports.latest()
+    fun reports() = reports
 }

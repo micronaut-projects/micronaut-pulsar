@@ -61,13 +61,13 @@ tasks {
     compileKotlin {
         kotlinOptions {
             jvmTarget = "1.8"
+            javaParameters = true
         }
     }
     compileTestKotlin {
         kotlinOptions {
             jvmTarget = "1.8"
+            javaParameters = true
         }
     }
-
-
 }
