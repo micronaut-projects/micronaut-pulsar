@@ -49,7 +49,7 @@ dependencies {
 application {
     mainClass.set("kotlinexample.ApplicationKt")
     // due to this being subproject and parent is ignoring child gradle.properties this is a workaround
-    if (JavaVersion.VERSION_16 >= JavaVersion.current()) {
+    if (JavaVersion.VERSION_16 <= JavaVersion.current()) {
         applicationDefaultJvmArgs = applicationDefaultJvmArgs.plus("org.gradle.jvmargs=--illegal-access=permit")
     }
 }
@@ -61,13 +61,13 @@ tasks {
     compileKotlin {
         kotlinOptions {
             jvmTarget = "1.8"
+            javaParameters = true
         }
     }
     compileTestKotlin {
         kotlinOptions {
             jvmTarget = "1.8"
+            javaParameters = true
         }
     }
-
-
 }
