@@ -21,53 +21,46 @@ package kotlinexample
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.string.shouldBeEqualIgnoringCase
 import io.micronaut.context.ApplicationContext
-import io.micronaut.pulsar.PulsarProducerRegistry
+import io.micronaut.context.env.Environment
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
-import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider
-import io.micronaut.test.extensions.kotest.annotation.MicronautTest
-import jakarta.inject.Singleton
 import kotlinexample.dto.PulsarMessage
 import kotlinexample.listeners.ReportsTracker
 import kotlinx.coroutines.flow.first
 import org.apache.pulsar.client.api.MessageId
-import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.ServiceUrlProvider
 import java.time.LocalDateTime
 
-@MicronautTest
-open class AppTest(private val context: ApplicationContext, private val tracker: ReportsTracker) : BehaviorSpec({
-    given("message") {
+class AppTest() : BehaviorSpec({
+    val specName = javaClass.simpleName
+    given("A producer and a message") {
+        val ctx = startContext(specName)
+        val producer = ctx.getBean(ProducerHolder::class.java)
         if (!PulsarWrapper.isRunning()) throw Exception("Pulsar failed to start")
-        val subscription = tracker.subscribe()
-        val producer = context.getBean(ProducerHolder::class.java)
+        val subscription = ctx.getBean(ReportsTracker::class.java).subscribe()
         val message = PulsarMessage(LocalDateTime.now().toString(), "test")
-        `when`("is sent") {
+        `when`("Message is sent") {
             val messageId = producer.send(message)
-            then("should stream latest") {
+            then("Message should arrive at stream endpoint") {
                 val received = subscription.first()
                 message.toMessage(messageId) shouldBeEqualIgnoringCase received
             }
         }
     }
 }) {
+    companion object {
 
-    @PulsarProducerClient
-    interface ProducerHolder {
-        @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer")
-        suspend fun send(message: PulsarMessage): MessageId
-    }
-
-    @Singleton
-    @PulsarServiceUrlProvider
-    fun urlProvider(): ServiceUrlProvider = object : ServiceUrlProvider {
-        private var pulsarClient: PulsarClient? = null
-
-        override fun initialize(client: PulsarClient) {
-            pulsarClient = client
+        fun startContext(specName: String): ApplicationContext {
+            return ApplicationContext.run(mapOf(
+                    "pulsar.service-url" to PulsarWrapper.pulsarBroker,
+                    "spec.name" to specName
+            ), Environment.TEST)
         }
 
-        override fun getServiceUrl(): String = PulsarWrapper.pulsarBroker
+        @PulsarProducerClient
+        interface ProducerHolder {
+            @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer")
+            suspend fun send(message: PulsarMessage): MessageId
+        }
     }
 }
 
