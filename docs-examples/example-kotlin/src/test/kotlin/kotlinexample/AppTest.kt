@@ -21,7 +21,6 @@ package kotlinexample
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.string.shouldBeEqualIgnoringCase
 import io.micronaut.context.ApplicationContext
-import io.micronaut.pulsar.PulsarProducerRegistry
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
 import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider

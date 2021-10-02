@@ -53,7 +53,6 @@ jobs:
         env:
            TESTCONTAINERS_RYUK_DISABLED: true
            GRADLE_ENTERPRISE_ACCESS_KEY: ${{ secrets.GRADLE_ENTERPRISE_ACCESS_KEY }}
-           GRADLE_OPTS: -Dkotlin.compiler.execution.strategy=in-process
       - name: Publish Test Report
         if: always()
         uses: mikepenz/action-junit-report@v2
