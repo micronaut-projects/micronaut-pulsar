@@ -1,52 +1,41 @@
 == Creating producers
 
 To initialize a producer it's sufficient to annotate an interface with `@PulsarProducerClient` and annotate methods with `@PulsarProducer`.
+First method parameter will be taken as a message body. Others are ignored. It's possible to annotate non-abstract methods
+in which case it's important to ensure that the first method parameter is what should be sent to Pulsar as rest will be
+ignored.
 
-[source,java]
-----
-import io.micronaut.pulsar.annotation.PulsarProducerClient;
-import io.micronaut.pulsar.annotation.PulsarProducer;
+snippet::example.Producer[project-base="doc-examples/example", indent="0"]
 
-@PulsarProducerClient
-public interface ProducerTester {
+<1> Annotate interface with @PulsarProducerClient to notify Micronaut for processing it without implementation
+<2> Methods are the actual producers so annotate them with @PulsarProducer
+<3> Return decides whether to send message in a blocking or non-blocking manner.
+<4> A blocking send that waits until message is successfully sent or throws an exception on failure.
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer")
-    void producer(String message);
-}
-----
-Only *topic* is a required parameter. Other parameters are optional. However, it's important to note that if producer name
-is not set it will default to the method name, which may cause collisions in case of non-unique method names. Message content(body)
-type will be determined by the first method parameter type. It will default to JSON schema if not set explicitly.
+Producers can be used in other beans as well.
 
 === Producer return values
 
-If you need the `MessageId` from Pulsar, you can
-specify *MessageId* as the return type instead of *void* as given in examples below. If reactive or async return types are used,
-the method can only return `MessageId` as their return type like `Maybe<MessageId>`. If you have blocking methods,
-`MessageId` or the type of the parameter passed to function can be used as a return type of the method.
+Not counting wrappers for async behaviour (CompletableFuture, RxJava, reactor cor), abstract methods can only have 2 return
+types: void or MessageId since nothing more than sending will be done.
 
-Examples:
-[source,java]
-----
-import io.micronaut.pulsar.annotation.PulsarProducerClient;
-import io.micronaut.pulsar.annotation.PulsarProducer;
+Non-abstract methods can have any return type except for `MessageId` in the sense that it will not be filled by Pulsars
+resulting value. This is because return value must be defined within the method body so there is no reliable way to know
+what was the intended return value - was it MessageID from the Pulsar or was it some other MessageID value generated
+within the body.
 
-@PulsarProducerClient
-public interface ProducerTester {
+Methods can be invoked before or after sending the message by setting the property `sendBefore` to `true` or `false` respectively.
+Default is false which will execute method invoke message body before calling send message part.
+In async approach behaviour is unpredicted as calling the method and sending the message has no blocking
+thus message may still be sent before the execution of the method finishes or even starts properly because those can run
+on separate threads. This is mainly useful for blocking approach where it's possible to execute the method body
+before sending the message an if execution throws exception, sending will be skipped. *First parameter of the method is
+still used as a message body*.
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-1")
-    String returnParameter(String message);
+snippet::example.ConsumerProducer[project-base="doc-examples/example", indent="0"]
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-2")
-    MessageId returnMessageId(String message);
-
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-3")
-    Single<MessageId> returnReactive(String message);
-}
-----
-
-Producers can be used as methods in other beans as well. For example: You can have a class annotated with `@PulsarSubscription`
-which reads messages from one place using methods annotated with `@PulsarConsumer` and decide in that method whether to pass
-on message to method annotated by the `@PulsarProducer`. This brings in flexibility to use code to decide what to send where
-instead of just providing `@SentTo` or alike which sends all messages accepted by the consumer to the defined topic. It's also
-useful as you can define additional logic that follows up sending or happens before it.
+<1> For Kotlin, open is required in non-interface (abstract) classes because of AOT
+<5> Annotating method as a producer
+<6> A non-abstract async method. In Kotlin case we need open to allow Micronaut AOT interception.
+<7> CompletableFuture or suspend will trigger immediate execution but reactor or RxJava need subscription and will rely
+on caller or upper layers to provide it.

@@ -80,6 +80,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
         AnnotationValue<PulsarConsumer> topic = method.getDeclaredAnnotation(PulsarConsumer.class);
         if (null == topic) {
@@ -104,13 +105,11 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                     "one for message body and one for " + Consumer.class.getName());
         }
 
-        //because of processTopic requirements
-        @SuppressWarnings("unchecked")
         ExecutableMethod<Object, ?> castMethod = (ExecutableMethod<Object, ?>) method;
 
         Object bean = beanContext.getBean(beanDefinition.getBeanType());
 
-        ConsumerBuilder<?> consumerBuilder = processTopic(topic, subscriptionAnnotation, castMethod, bean);
+        ConsumerBuilder<?> consumerBuilder = processConsumerAnnotation(topic, subscriptionAnnotation, castMethod, bean);
         boolean subscribeAsync = topic.getRequiredValue("subscribeAsync", Boolean.class);
         consumerBuilder.consumerName(name);
         if (subscribeAsync) {
@@ -145,11 +144,11 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     }
 
     @SuppressWarnings({"unchecked"})
-    private ConsumerBuilder<?> processTopic(AnnotationValue<PulsarConsumer> consumerAnnotation,
-                                            AnnotationValue<PulsarSubscription> subscription,
-                                            //? will mess up IntelliJ and compiler so use Object to enable method.invoke
-                                            ExecutableMethod<Object, ?> method,
-                                            Object bean) {
+    private ConsumerBuilder<?> processConsumerAnnotation(AnnotationValue<PulsarConsumer> consumerAnnotation,
+                                                         AnnotationValue<PulsarSubscription> subscription,
+                                                         //? will mess up IntelliJ and compiler so use Object to enable method.invoke
+                                                         ExecutableMethod<Object, ?> method,
+                                                         Object bean) {
 
         Argument<?>[] methodArguments = method.getArguments();
 
