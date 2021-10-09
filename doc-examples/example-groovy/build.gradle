@@ -1,0 +1,13 @@
+plugins {
+    id "groovy"
+}
+dependencies {
+    annotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    testAnnotationProcessor platform("io.micronaut:micronaut-bom:$micronautVersion")
+    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
+    annotationProcessor "io.micronaut:micronaut-inject-java"
+    compileOnly "io.micronaut:micronaut-inject-groovy"
+    implementation project(":pulsar")
+    testImplementation 'jakarta.inject:jakarta.inject-api:2.0.0'
+    testImplementation "org.codehaus.groovy:groovy-all:$groovyVersion"
+}

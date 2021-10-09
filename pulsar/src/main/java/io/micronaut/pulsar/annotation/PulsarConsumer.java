@@ -97,7 +97,7 @@ public @interface PulsarConsumer {
     String consumerName();
 
     /**
-     * @return Subscription name in case consumer was defined outside of the {@link PulsarSubscription} annotated class
+     * @return Subscription name in case consumer was defined outside the {@link PulsarSubscription} annotated class
      */
     String subscription() default "";
 

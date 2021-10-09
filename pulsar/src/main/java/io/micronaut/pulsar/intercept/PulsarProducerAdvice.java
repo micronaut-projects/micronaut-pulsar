@@ -83,18 +83,19 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         AnnotationValue<PulsarProducer> annotationValue = context.findAnnotation(PulsarProducer.class)
                 .orElseThrow(() -> new IllegalStateException("No @PulsarProducer on method: " + context));
 
-        Object value = context.getParameterValues()[0];
-        ExecutableMethod<?, ?> method = context.getExecutableMethod();
-        Producer producer = getOrCreateProducer(method, annotationValue);
-        String producerId = producer.getProducerName();
-        ReturnType<?> returnType = method.getReturnType();
         boolean sendBefore = annotationValue.booleanValue("sendBefore").orElse(false);
         boolean isAbstract = context.isAbstract();
 
-        Object returnValue = null;
+        Object returnValue = null; // store value of the call before
         if (!isAbstract && !sendBefore) {
             returnValue = context.proceed();
         }
+
+        // regardless of the method return value, method parameter is the only message that will be sent
+        Object value = context.getParameterValues()[0];
+        ExecutableMethod<?, ?> method = context.getExecutableMethod();
+        Producer producer = getOrCreateProducer(method, annotationValue);
+        ReturnType<?> returnType = method.getReturnType();
 
         if (returnType.isAsyncOrReactive()) {
             Object abstractValue = sendAsync(value, producer, returnType);
@@ -114,6 +115,7 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
             }
             return sendBlocking(value, producer, returnType);
         } catch (PulsarClientException e) {
+            String producerId = producer.getProducerName();
             LOG.error("Failed to produce message on producer {}", producerId, e);
             throw new RuntimeException("Failed to produce a message on " + producerId, e);
         }

@@ -141,8 +141,8 @@ public @interface PulsarProducer {
 
     /**
      * Defaults to false.
-     * Will be used to determine whether to send message prior to executing method code or before.
+     * Will be used to determine whether to send message prior to executing method code or after.
      * @return Whether to send the message before calling actual implementation.
      */
-    boolean firstSend() default false;
+    boolean sendBefore() default false;
 }
