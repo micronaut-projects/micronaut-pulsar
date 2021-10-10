@@ -93,11 +93,9 @@
 <br>
 <pre>@Documented
  @Retention(value=RUNTIME)
- @Scope
  @Introduction
- @Type(value=<a href="../../../../io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice.class</a>)
- @Recoverable
- @Singleton
+ @Bean
+ @Target(value=TYPE)
 public @interface <span class="memberNameLabel">PulsarProducerClient</span></pre>
 <div class="block">Marks a type as a bean containing producer methods.
  To avoid mixing up with PulsarClient interface from official library "Producer" part was introduced.</div>

@@ -160,37 +160,37 @@ public @interface <span class="memberNameLabel">PulsarProducer</span></pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#encryptionKey--">encryptionKey</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>org.apache.pulsar.client.api.HashingScheme</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#hashingScheme--">hashingScheme</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code>long</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#initialSequenceId--">initialSequenceId</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>org.apache.pulsar.client.api.MessageRoutingMode</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#messageRoutingMode--">messageRoutingMode</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#firstSend--">firstSend</a></span></code>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#multiSchema--">multiSchema</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#producerName--">producerName</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#schema--">schema</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>boolean</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#sendBefore--">sendBefore</a></span></code>
 <div class="block">Defaults to false.</div>
 </td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>org.apache.pulsar.client.api.HashingScheme</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#hashingScheme--">hashingScheme</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>long</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#initialSequenceId--">initialSequenceId</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>org.apache.pulsar.client.api.MessageRoutingMode</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#messageRoutingMode--">messageRoutingMode</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>boolean</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#multiSchema--">multiSchema</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#producerName--">producerName</a></span></code>&nbsp;</td>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code><a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a></code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#schema--">schema</a></span></code>&nbsp;</td>
-</tr>
-<tr class="rowColor">
-<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String</code></td>
+<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#topic--">topic</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
@@ -260,8 +260,8 @@ public abstract&nbsp;java.lang.String&nbsp;value</pre>
 <li class="blockList">
 <h4>topic</h4>
 <pre>@AliasFor(member="value")
- @Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)")
-public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String&nbsp;topic</pre>
+ @Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w")
+public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String&nbsp;topic</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Topic to produce messages to</dd>
@@ -537,15 +537,15 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 </li>
 </ul>
 <ul class="blockList">
-<li class="blockList"><a name="firstSend--">
+<li class="blockList"><a name="sendBefore--">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
-<h4>firstSend</h4>
-<pre>public abstract&nbsp;boolean&nbsp;firstSend</pre>
+<h4>sendBefore</h4>
+<pre>public abstract&nbsp;boolean&nbsp;sendBefore</pre>
 <div class="block">Defaults to false.
- Will be used to determine whether to send message prior to executing method code or before.</div>
+ Will be used to determine whether to send message prior to executing method code or after.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Whether to send the message before calling actual implementation.</dd>

@@ -67,7 +67,7 @@
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.optional.element.summary">Optional</a></li>
 </ul>
 <ul class="subNavList">
@@ -108,25 +108,6 @@ public @interface <span class="memberNameLabel">PulsarReader</span></pre>
 <div class="summary">
 <ul class="blockList">
 <li class="blockList">
-<!-- =========== ANNOTATION TYPE REQUIRED MEMBER SUMMARY =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="annotation.type.required.element.summary">
-<!--   -->
-</a>
-<h3>Required Element Summary</h3>
-<table class="memberSummary" border="0" cellpadding="3" cellspacing="0" summary="Required Element Summary table, listing required elements, and an explanation">
-<caption><span>Required Elements</span><span class="tabEnd">&nbsp;</span></caption>
-<tr>
-<th class="colFirst" scope="col">Modifier and Type</th>
-<th class="colLast" scope="col">Required Element and Description</th>
-</tr>
-<tr class="altColor">
-<td class="colFirst"><code>java.lang.String</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#readerName--">readerName</a></span></code>&nbsp;</td>
-</tr>
-</table>
-</li>
-</ul>
 <!-- =========== ANNOTATION TYPE OPTIONAL MEMBER SUMMARY =========== -->
 <ul class="blockList">
 <li class="blockList"><a name="annotation.type.optional.element.summary">
@@ -140,28 +121,33 @@ public @interface <span class="memberNameLabel">PulsarReader</span></pre>
 <th class="colLast" scope="col">Optional Element and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>java.lang.String</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#readerName--">readerName</a></span></code>&nbsp;</td>
+</tr>
+<tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#schema--">schema</a></span></code>
 <div class="block">Defaults to <a href="../../../../io/micronaut/pulsar/MessageSchema.html#BYTES"><code>MessageSchema.BYTES</code></a> as default value for Pulsar <code>Schema</code> is <code>byte[]</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
+<tr class="altColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#startMessageLatest--">startMessageLatest</a></span></code>&nbsp;</td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#subscribeAsync--">subscribeAsync</a></span></code>
-<div class="block">By default reader should subscribe in non-blocking manner using default <code>CompletableFuture</code> of <code>ConsumerBuilder.subscribeAsync()</code>.</div>
+<div class="block">By default, reader should subscribe in non-blocking manner using default <code>CompletableFuture</code>
+ of <code>ConsumerBuilder.subscribeAsync()</code>.</div>
 </td>
 </tr>
-<tr class="rowColor">
-<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String</code></td>
+<tr class="altColor">
+<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#topic--">topic</a></span></code>
 <div class="block">Only single topic subscription possible for readers.</div>
 </td>
 </tr>
-<tr class="altColor">
+<tr class="rowColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#value--">value</a></span></code>&nbsp;</td>
 </tr>
@@ -180,24 +166,7 @@ public @interface <span class="memberNameLabel">PulsarReader</span></pre>
 <!--   -->
 </a>
 <h3>Element Detail</h3>
-<a name="readerName--">
-<!--   -->
-</a>
-<ul class="blockListLast">
-<li class="blockList">
-<h4>readerName</h4>
-<pre>public abstract&nbsp;java.lang.String&nbsp;readerName</pre>
-<dl>
-<dt><span class="returnLabel">Returns:</span></dt>
-<dd>Consumer name.</dd>
-</dl>
-</li>
-</ul>
-</li>
-</ul>
-<!-- ============ ANNOTATION TYPE MEMBER DETAIL =========== -->
-<ul class="blockList">
-<li class="blockList"><a name="value--">
+<a name="value--">
 <!--   -->
 </a>
 <ul class="blockList">
@@ -227,8 +196,8 @@ public abstract&nbsp;java.lang.String&nbsp;value</pre>
 <li class="blockList">
 <h4>topic</h4>
 <pre>@AliasFor(member="value") @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,member="value")
- @Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)")
-public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String&nbsp;topic</pre>
+ @Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w")
+public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String&nbsp;topic</pre>
 <div class="block">Only single topic subscription possible for readers.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -264,6 +233,26 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 </li>
 </ul>
 <ul class="blockList">
+<li class="blockList"><a name="readerName--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>readerName</h4>
+<pre>public abstract&nbsp;java.lang.String&nbsp;readerName</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Reader name.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>""</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
 <li class="blockList"><a name="subscribeAsync--">
 <!--   -->
 </a>
@@ -271,9 +260,10 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <li class="blockList">
 <h4>subscribeAsync</h4>
 <pre>public abstract&nbsp;boolean&nbsp;subscribeAsync</pre>
-<div class="block">By default reader should subscribe in non-blocking manner using default <code>CompletableFuture</code> of <code>ConsumerBuilder.subscribeAsync()</code>.
+<div class="block">By default, reader should subscribe in non-blocking manner using default <code>CompletableFuture</code>
+ of <code>ConsumerBuilder.subscribeAsync()</code>.
  <p>
- If blocking set to false application will block until consumer is successfully subscribed</div>
+ If blocking is set to false, application thread initializing it will block until consumer is successfully subscribed.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Should the consumer subscribe in async manner or blocking</dd>
@@ -296,7 +286,7 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <pre>public abstract&nbsp;boolean&nbsp;startMessageLatest</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>Whether to position reader to newest available message in queue or not.</dd>
+<dd>Whether to position reader to the newest available message in queue or not.</dd>
 </dl>
 <dl>
 <dt>Default:</dt>
@@ -357,7 +347,7 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <ul class="subNavList">
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
-<li><a href="#annotation.type.required.element.summary">Required</a>&nbsp;|&nbsp;</li>
+<li>Required&nbsp;|&nbsp;</li>
 <li><a href="#annotation.type.optional.element.summary">Optional</a></li>
 </ul>
 <ul class="subNavList">

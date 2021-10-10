@@ -94,7 +94,7 @@
 <pre>@Documented
  @Retention(value=RUNTIME)
  @Target(value=METHOD)
- @MessageListener
+ @Executable
 public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 <div class="block">Marks a method as a Pulsar Consumer.</div>
 <dl>
@@ -143,7 +143,7 @@ public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 <tr class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#ackTimeout--">ackTimeout</a></span></code>
-<div class="block">By default it will use default value of <code>ConsumerBuilder</code> which is disabled
+<div class="block">By default, it will use default value of <code>ConsumerBuilder</code> which is disabled
  and no redelivery happens unless consumer crashed.</div>
 </td>
 </tr>
@@ -160,7 +160,7 @@ public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 <tr class="rowColor">
 <td class="colFirst"><code>int</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#patternAutoDiscoveryPeriod--">patternAutoDiscoveryPeriod</a></span></code>
-<div class="block">Used in combination with <code>this#topicsPattern()</code>.</div>
+<div class="block">Used in combination with <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topicsPattern--"><code>topicsPattern()</code></a>.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -182,7 +182,8 @@ public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 <tr class="rowColor">
 <td class="colFirst"><code>boolean</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#subscribeAsync--">subscribeAsync</a></span></code>
-<div class="block">By default consumer should subscribe in non-blocking manner using default <code>CompletableFuture</code> of <code>ConsumerBuilder.subscribeAsync()</code>.</div>
+<div class="block">By default, consumer should subscribe in non-blocking manner using default <code>CompletableFuture</code>
+ of <code>ConsumerBuilder.subscribeAsync()</code>.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -200,13 +201,13 @@ public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#subscriptionType--">subscriptionType</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
-<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String</code></td>
+<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topic--">topic</a></span></code>
 <div class="block">Has precedence over <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topics--"><code>topics()</code></a> and <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topicsPattern--"><code>topicsPattern()</code></a>.</div>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String[]</code></td>
+<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String[]</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topics--">topics</a></span></code>
 <div class="block">Has precedence over <code>topicPattern</code>.</div>
 </td>
@@ -218,7 +219,7 @@ public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 </td>
 </tr>
 <tr class="altColor">
-<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String</code></td>
+<td class="colFirst"><code>@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#value--">value</a></span></code>&nbsp;</td>
 </tr>
 </table>
@@ -260,8 +261,8 @@ public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 <li class="blockList">
 <h4>value</h4>
 <pre>@AliasFor(member="topic") @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,member="value")
- @Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)")
-public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String&nbsp;value</pre>
+ @Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w")
+public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String&nbsp;value</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Same as <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topic--"><code>topic()</code></a></dd>
@@ -281,9 +282,9 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <ul class="blockList">
 <li class="blockList">
 <h4>topic</h4>
-<pre>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)")
+<pre>@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w")
  @AliasFor(member="value") @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,member="value")
-public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String&nbsp;topic</pre>
+public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String&nbsp;topic</pre>
 <div class="block">Has precedence over <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topics--"><code>topics()</code></a> and <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topicsPattern--"><code>topicsPattern()</code></a>.
  Single topic to consume messages from.</div>
 <dl>
@@ -305,10 +306,10 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <ul class="blockList">
 <li class="blockList">
 <h4>topics</h4>
-<pre>@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)")
+<pre>@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w")
  @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,
           member="value")
-public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}(\\w+(-?\\w+)?)") java.lang.String[]&nbsp;topics</pre>
+public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w") java.lang.String[]&nbsp;topics</pre>
 <div class="block">Has precedence over <code>topicPattern</code>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
@@ -377,7 +378,7 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <pre>public abstract&nbsp;java.lang.String&nbsp;subscription</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>Subscription name in case consumer was defined outside of the <a href="../../../../io/micronaut/pulsar/annotation/PulsarSubscription.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarSubscription</code></a> annotated class</dd>
+<dd>Subscription name in case consumer was defined outside the <a href="../../../../io/micronaut/pulsar/annotation/PulsarSubscription.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarSubscription</code></a> annotated class</dd>
 </dl>
 <dl>
 <dt>Default:</dt>
@@ -440,8 +441,8 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <li class="blockList">
 <h4>patternAutoDiscoveryPeriod</h4>
 <pre>public abstract&nbsp;int&nbsp;patternAutoDiscoveryPeriod</pre>
-<div class="block">Used in combination with <code>this#topicsPattern()</code>. Ignored using <code>this#topics()</code>. Must be greater than
- 1. Low values should avoided. Pulsar default value is 1 minute</div>
+<div class="block">Used in combination with <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topicsPattern--"><code>topicsPattern()</code></a>. Ignored using <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#topics--"><code>topics()</code></a>. Must be greater than
+ 1. Low values should be avoided. Pulsar default value is 1 minute</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Amount of delay between checks, in seconds, for new topic matching given pattern.</dd>
@@ -462,9 +463,12 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <li class="blockList">
 <h4>subscribeAsync</h4>
 <pre>public abstract&nbsp;boolean&nbsp;subscribeAsync</pre>
-<div class="block">By default consumer should subscribe in non-blocking manner using default <code>CompletableFuture</code> of <code>ConsumerBuilder.subscribeAsync()</code>.
+<div class="block">By default, consumer should subscribe in non-blocking manner using default <code>CompletableFuture</code>
+ of <code>ConsumerBuilder.subscribeAsync()</code>.
  <p>
- If blocking set to false application will block until consumer is successfully subscribed</div>
+ If blocking set to false application will block until consumer is successfully subscribed. This is different
+ from the actual process of consuming the messages which still happens in separate thread managed by the
+ underlying Pulsar Client library.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Should the consumer subscribe in async manner or blocking</dd>
@@ -485,7 +489,7 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <li class="blockList">
 <h4>ackTimeout</h4>
 <pre>public abstract&nbsp;java.lang.String&nbsp;ackTimeout</pre>
-<div class="block">By default it will use default value of <code>ConsumerBuilder</code> which is disabled
+<div class="block">By default, it will use default value of <code>ConsumerBuilder</code> which is disabled
  and no redelivery happens unless consumer crashed.
  <p>
  Must be greater than 1s.</div>
@@ -513,11 +517,11 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <pre>public abstract&nbsp;int&nbsp;receiverQueueSize</pre>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
-<dd>Number of items allowed in the queue. Default -1 as in Pulsar Java Client</dd>
+<dd>Number of items allowed in the queue. Default 1000 as in Pulsar Java Client</dd>
 </dl>
 <dl>
 <dt>Default:</dt>
-<dd>-1</dd>
+<dd>1000</dd>
 </dl>
 </li>
 </ul>

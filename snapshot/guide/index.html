@@ -49,7 +49,7 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#consumer"><strong>4</strong><span>Pulsar Consumer</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#consumer"><strong>4</strong><span>Pulsar consumers</span></a></div>
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#reader"><strong>5</strong><span>Pulsar readers</span></a></div>
                                 
@@ -96,7 +96,7 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-quickStart"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-consumer"><a href="#consumer"><strong>4</strong><span>Pulsar Consumer</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-consumer"><a href="#consumer"><strong>4</strong><span>Pulsar consumers</span></a></div>
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-reader"><a href="#reader"><strong>5</strong><span>Pulsar readers</span></a></div>
         
@@ -116,7 +116,7 @@
         <h1>Micronaut Pulsar</h1>
         <p></p>
         <p>Integration between Micronaut and Apache Pulsar</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-pulsar/snapshot/guide/index.html'>SNAPSHOT</option></select></p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-pulsar/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0/guide/index.html'>1.0.0</option></select></p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -225,7 +225,7 @@ As this module is based on the official Java client from Apache Pulsar, see the 
 </table>
 </div>
 <div class="paragraph">
-<p>Alternatively, <code>pulsar.service-url-provider</code> can be set using either <code>@PulsarServiceUrlProvider</code> or by setting the provider name
+<p>Alternatively, <code>pulsar.service-url-provider</code> can be set using either <code>@kotlinexample.PulsarServiceUrlProvider</code> or by setting the provider name
 in <code>application.yml</code> as such:</p>
 </div>
 <div class="listingblock">
@@ -241,7 +241,7 @@ in <code>application.yml</code> as such:</p>
 <p>After configuring the Pulsar cluster URL, the Micronaut Pulsar module will be able to produce a bean of type <code>org.apache.pulsar.client.api.PulsarClient</code>. This bean will be a <code>Singleton</code> from which all producers and consumers can be created. Since <code>PulsarClient</code> supports an URL provider which can switch URLs to clusters on demand, there&#8217;s no need to have multiple clients.</p>
 </div>
 
-<h1 id="consumer"><a class="anchor" href="#consumer"></a>4 Pulsar Consumer</h1>
+<h1 id="consumer"><a class="anchor" href="#consumer"></a>4 Pulsar consumers</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/consumer.adoc"'>
@@ -254,42 +254,146 @@ in <code>application.yml</code> as such:</p>
 <h2 id="_creating_consumers">Creating consumers</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To create a consumer simply create a class annotated with <code>@PulsarConsumer</code> that specifies topics.</p>
+<p>To create a consumer annotate any bean method with a <code>@PulsarConsumer</code> and define a topic. Methods that are part of
+beans annotated with a <code>@PulsarSubscription</code> will try to fetch subscription name from it. Otherwise, make sure to put
+<code>subscriptionName</code> property value in the <code>@PulsarConsumer</code> annotation. Subscription beans are singletons.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.pulsar.annotation.PulsarSubscription;
-import io.micronaut.pulsar.annotation.PulsarConsumer;
+<pre class="highlight"><code class="language-java" data-lang="java">package example;
 
-@PulsarSubscription
-public class SampleListener {
-    @PulsarConsumer(topics = ["persistant://public/default/test"])
-    public void receive(String msg) {
-        System.out.println("Received: " + msg);
+import io.micronaut.pulsar.annotation.PulsarConsumer;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarSubscription;
+import org.apache.pulsar.client.api.SubscriptionType;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+@PulsarSubscription(subscriptionName = "pulsar-jtest-subscription", subscriptionType = SubscriptionType.Shared) <b class="conum">(1)</b>
+public class ConsumerProducer { <b class="conum">(2)</b>
+    @PulsarConsumer(topic = "persistent://public/default/messages-java-docs", consumerName = "shared-consumer-jtester") <b class="conum">(3)</b>
+    public void messagePrinter(String message) { <b class="conum">(4)</b>
+        try {
+            String changed = report(message).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-java-docs", producerName = "report-producer-java") <b class="conum">(5)</b>
+    public CompletableFuture&lt;String&gt; report(String message) { <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); <b class="conum">(7)</b>
     }
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">package example;
+
+import io.micronaut.pulsar.annotation.PulsarConsumer;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarSubscription;
+import org.apache.pulsar.client.api.SubscriptionType;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+@PulsarSubscription(subscriptionName = "pulsar-jtest-subscription", subscriptionType = SubscriptionType.Shared) <b class="conum">(1)</b>
+class ConsumerProducer { <b class="conum">(2)</b>
+    @PulsarConsumer(topic = "persistent://public/default/messages-groovy-docs", consumerName = "shared-consumer-gtester") <b class="conum">(3)</b>
+    void messagePrinter(String message) { <b class="conum">(4)</b>
+        try {
+            String changed = report(message).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-groovy-docs", producerName = "report-producer-groovy") <b class="conum">(5)</b>
+    CompletableFuture&lt;String&gt; report(String message) { <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarConsumer
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarSubscription
+import org.apache.pulsar.client.api.SubscriptionType
+
+@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) <b class="conum">(1)</b>
+open class ConsumerProducer { <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") <b class="conum">(3)</b>
+    suspend fun messagePrinter(message: String) { <b class="conum">(4)</b>
+        val changed = report(message)
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") <b class="conum">(5)</b>
+    open suspend fun report(message: String): String { <b class="conum">(6)</b>
+        return "Reporting message '$message'" <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The class holding consumers can be annotated with api:pulsar.annotation.PulsarSubscription. It&#8217;s also allowed to set
+subscription from the <code>@PulsarConsumer</code>. By that, consumer can be located in other beans like <code>@Singleton</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Methods that will process the message, in other words consumers, must be annotated with <code>@PulsarConsumer</code> and one
+of the <em>topic</em> options must be specified.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Using CompletableFeature, reactor-core, RxJava return types, or Kotlin suspend, allows the body of the method to be
+executed in an async manner. Method invocations will be async always as underlying Pulsar library uses CompletableFuture.
+Async return type is mostly for developers control over execution flow from the method body or external callers</td>
+</tr>
+</table>
+</div>
 <div class="sect2">
 <h3 id="_using_pulsarsubscription_annotation">Using @PulsarSubscription annotation</h3>
 <div class="paragraph">
-<p>This annotation marks a class as a bean which will process Pulsar consumer messages. Here you can set non-required properties:</p>
+<p>This annotation marks a class as a singleton bean that contains one or more methods serving as Pulsar consumers under
+same subscription.</p>
+</div>
+<div class="paragraph">
+<p>Non-required properties:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p><code>name</code>, which sets the Pulsar consumer subscription name to a custom string</p>
+<p><code>name</code>, which sets the Pulsar subscription name to a custom string; recommended to always set manually</p>
 </li>
 <li>
-<p><code>type</code>, one of Pulsar&#8217;s subscription types <code>Exclusive</code>, <code>Failover</code>, <code>Shared</code>, <code>Key_Shared</code></p>
+<p><code>type</code>, one of Pulsar&#8217;s subscription types. Subscription types can be read in Apache Pulsar
+<a href="http://pulsar.apache.org/docs/en/concepts-messaging/#subscriptions">official documentation</a>.</p>
 </li>
 <li>
-<p><code>ackGroupTimeout</code>, the acknowledgment group timeout</p>
+<p><code>ackGroupTimeout</code>, the acknowledgment group timeout for shared subscriptions</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>If not set, these default to Pulsar default values except <code>name</code> which is generated by this module.</p>
+<p>Type and acknowledgment group timeout default to Pulsar Java client library values if not set. Name will be generated
+by this module in a "counter manner" (pulsar-subscription-1,2,3,4&#8230;&#8203;).</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -336,7 +440,10 @@ public class SampleListener {
 <div class="sect2">
 <h3 id="_using_pulsarconsumer_annotation">Using @PulsarConsumer annotation</h3>
 <div class="paragraph">
-<p>This is a method annotation. To use it you must specify either <code>String[] topics</code> option or <code>String topicsPattern</code>. The <code>topics</code> option is parsed first, so setting both values will cause  <code>topicsPattern</code> to be ignored.</p>
+<p>This is a method annotation. To use it you must specify one of the <code>value</code>, <code>topic</code>, <code>topics</code>, <code>topicsPattern</code>.
+Properties are processed in order <code>topic</code> (alias <code>value</code>), <code>topics</code>, <code>topicsPattern</code> so setting more than one will ignore
+rest depending on the order. Other properties might be omitted, however it&#8217;s good to always specify consumer name manually
+as it can be used later for debugging or injection points for Pulsar <code>Consumer&lt;T&gt;</code> which are generated for each method.</p>
 </div>
 <table class="tableblock frame-all grid-all spread">
 <colgroup>
@@ -414,7 +521,8 @@ public class SampleListener {
 <i class="fa icon-tip" title="Tip"></i>
 </td>
 <td class="content">
-When using <code>topicsPattern</code>, be sure to create topics before the consumer is started, since Pulsar refresh on new topics tends to take a long time by default.
+When using <code>topicsPattern</code>, be sure to create topics before the consumer is started, since Pulsar refresh on new
+topics tends to take a long time by default.
 </td>
 </tr>
 </table>
@@ -428,7 +536,7 @@ When using <code>topicsPattern</code>, be sure to create topics before the consu
 <td class="content">
 When using PulsarConsumer with specific schema other than <code>byte[]</code>, make sure topics are created and have the same
 schema the consumer is expecting, especially when using pattern consumer which listens to multiple topics. Otherwise, the consumer
-won&#8217;t connect and will throw <code>org.apache.pulsar.client.api.PulsarClientException$IncompatibleSchemaException</code>.
+might not connect and could throw <code>org.apache.pulsar.client.api.PulsarClientException$IncompatibleSchemaException</code>.
 </td>
 </tr>
 </table>
@@ -460,10 +568,11 @@ properties indicate that the DLQ will be used by default on all Pulsar consumers
 
 
 <div class="sect1">
-<h2 id="_readers_vs_consumers">Readers vs Consumers</h2>
+<h2 id="_readers">Readers</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>Readers can be used to gain more control over message flow. However, they are limited to a single topic in contrast to consumers. On the other hand, you request each message "manually" by explicitly calling next message read. A more useful feature in the  case of Readers might be <code>seek</code>, where developers get the ability to position the reader where they want in the message log, thus being able to manually replay messages when required. Simply put, it&#8217;s more similar to reading a file than reacting to an event, but the file gets modified by an external actor.</p>
+<p>Pulsar supports both "Consumers" and "Readers". More can be read in their
+<a href="https://pulsar.apache.org/docs/en/concepts-clients/#reader-interface">documentation</a></p>
 </div>
 </div>
 </div>
@@ -473,51 +582,97 @@ properties indicate that the DLQ will be used by default on all Pulsar consumers
 <div class="paragraph">
 <p>To initialize a reader, declare a field annotated with <code>@PulsarReader</code> inside any bean or as a constructor argument.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.pulsar.annotation.PulsarProducerClient;
-import io.micronaut.pulsar.annotation.PulsarProducer;
+<pre class="highlight"><code class="language-java" data-lang="java">package example;
+
+import io.micronaut.pulsar.annotation.PulsarReader;
+import jakarta.inject.Singleton;
+import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.Reader;
+
+import java.util.concurrent.CompletableFuture;
+
 
 @Singleton
-public class MyReader {
-    @PulsarReader(...)
-    private Reader reader;
+public class ReaderExample {
+
+    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-j-reader") <b class="conum">(1)</b>
+    private Reader&lt;String&gt; reader; <b class="conum">(2)</b>
+
+    public CompletableFuture&lt;Message&lt;String&gt;&gt; readNext() { <b class="conum">(3)</b>
+        return reader.readNextAsync(); <b class="conum">(4)</b>
+    }
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Only <strong>topic</strong> is a required parameter. However, it&#8217;s important to note that if the producer name is not set, it will default to the method name which may cause collisions in case of non-unique method names.</p>
-</div>
-<div class="sect2">
-<h3 id="_producer_return_values">Producer return values</h3>
-<div class="paragraph">
-<p>If you need the <code>MessageId</code> from Pulsar, you can
-specify <strong>MessageId</strong> as the return type instead of <strong>void</strong> as given in examples below. If reactive or async return types are used,
-the method can only return <code>MessageId</code> as their return type like <code>Maybe&lt;MessageId&gt;</code>. If you have blocking methods,
-<code>MessageId</code> or the type of the parameter passed to function can be used as a return type of the method.</p>
-</div>
-<div class="paragraph">
-<p>Examples:</p>
-</div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.pulsar.annotation.PulsarProducerClient;
-import io.micronaut.pulsar.annotation.PulsarProducer;
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">package example;
 
-@PulsarProducerClient
-public interface ProducerTester {
+import io.micronaut.pulsar.annotation.PulsarReader;
+import jakarta.inject.Singleton;
+import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.Reader;
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-1")
-    String returnParameter(String message);
+import java.util.concurrent.CompletableFuture;
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-2")
-    MessageId returnMessageId(String message);
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-3")
-    Single&lt;MessageId&gt; returnReactive(String message);
+@Singleton
+class ReaderExample {
+
+    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-g-reader") <b class="conum">(1)</b>
+    private Reader&lt;String&gt; reader <b class="conum">(2)</b>
+
+    CompletableFuture&lt;Message&lt;String&gt;&gt; readNext() { <b class="conum">(3)</b>
+        return reader.readNextAsync() <b class="conum">(4)</b>
+    }
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarReader
+import jakarta.inject.Singleton
+import kotlinx.coroutines.future.await
+import org.apache.pulsar.client.api.Message
+import org.apache.pulsar.client.api.Reader
+
+@Singleton
+class ReaderExample {
+    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-k-reader") <b class="conum">(1)</b>
+    private lateinit var reader: Reader&lt;String&gt; <b class="conum">(2)</b>
+
+    suspend fun readNext(): Message&lt;String&gt; { <b class="conum">(3)</b>
+        return reader.readNextAsync().await() <b class="conum">(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Reader annotation with the topic and the reader name</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Reader must be of type api:org.apache.pulsar.client.api.Reader</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Using readAsync requires <code>CompletableFeature</code> or in Kotlin awaiting is possible</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Calling the read will move the cursor to the next message or give null in case there are no more messages</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Reader <code>name</code> can be autogenerated but <code>topic</code> argument must be set.</p>
 </div>
 </div>
 </div>
@@ -535,62 +690,222 @@ public interface ProducerTester {
 <h2 id="_creating_producers">Creating producers</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To initialize a producer it&#8217;s sufficient to annotate an interface with <code>@PulsarProducerClient</code> and annotate methods with <code>@PulsarProducer</code>.</p>
+<p>To initialize a producer it&#8217;s sufficient to annotate an interface with <code>@PulsarProducerClient</code> and annotate methods with <code>@PulsarProducer</code>.
+First method parameter will be taken as a message body. Others are ignored. It&#8217;s possible to annotate non-abstract methods
+in which case it&#8217;s important to ensure that the first method parameter is what should be sent to Pulsar as rest will be
+ignored.</p>
 </div>
-<div class="listingblock">
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.pulsar.annotation.PulsarProducerClient;
+<pre class="highlight"><code class="language-java" data-lang="java">package example;
+
 import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarProducerClient;
+import org.apache.pulsar.client.api.MessageId;
 
-@PulsarProducerClient
-public interface ProducerTester {
+import java.util.concurrent.CompletableFuture;
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer")
-    void producer(String message);
+@PulsarProducerClient <b class="conum">(1)</b>
+public interface Producer {
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") <b class="conum">(2)</b>
+    CompletableFuture&lt;MessageId&gt; send(String message); <b class="conum">(3)</b>
+
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    void sendBlocking(String message); <b class="conum">(4)</b>
 }</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">package example;
+
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarProducerClient;
+import org.apache.pulsar.client.api.MessageId;
+
+import java.util.concurrent.CompletableFuture;
+
+@PulsarProducerClient <b class="conum">(1)</b>
+interface Producer {
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") <b class="conum">(2)</b>
+    CompletableFuture&lt;MessageId&gt; send(String message); <b class="conum">(3)</b>
+
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    void sendBlocking(String message); <b class="conum">(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarProducerClient
+import org.apache.pulsar.client.api.MessageId
+
+@PulsarProducerClient <b class="conum">(1)</b>
+interface Producer {
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") <b class="conum">(2)</b>
+    suspend fun send(message: String): MessageId <b class="conum">(3)</b>
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    fun sendBlocking(message: String) <b class="conum">(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Annotate interface with @PulsarProducerClient to notify Micronaut for processing it without implementation</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Methods are the actual producers so annotate them with @PulsarProducer</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Return decides whether to send message in a blocking or non-blocking manner.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>A blocking send that waits until message is successfully sent or throws an exception on failure.</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
-<p>Only <strong>topic</strong> is a required parameter. Other parameters are optional. However, it&#8217;s important to note that if producer name
-is not set it will default to the method name, which may cause collisions in case of non-unique method names. Message content(body)
-type will be determined by the first method parameter type. It will default to JSON schema if not set explicitly.</p>
+<p>Producers can be used in other beans as well.</p>
 </div>
 <div class="sect2">
 <h3 id="_producer_return_values">Producer return values</h3>
 <div class="paragraph">
-<p>If you need the <code>MessageId</code> from Pulsar, you can
-specify <strong>MessageId</strong> as the return type instead of <strong>void</strong> as given in examples below. If reactive or async return types are used,
-the method can only return <code>MessageId</code> as their return type like <code>Maybe&lt;MessageId&gt;</code>. If you have blocking methods,
-<code>MessageId</code> or the type of the parameter passed to function can be used as a return type of the method.</p>
+<p>Not counting wrappers for async behaviour (CompletableFuture, RxJava, reactor cor), abstract methods can only have 2 return
+types: void or MessageId since nothing more than sending will be done.</p>
 </div>
 <div class="paragraph">
-<p>Examples:</p>
+<p>Non-abstract methods can have any return type except for <code>MessageId</code> in the sense that it will not be filled by Pulsars
+resulting value. This is because return value must be defined within the method body so there is no reliable way to know
+what was the intended return value - was it MessageID from the Pulsar or was it some other MessageID value generated
+within the body.</p>
 </div>
-<div class="listingblock">
+<div class="paragraph">
+<p>Methods can be invoked before or after sending the message by setting the property <code>sendBefore</code> to <code>true</code> or <code>false</code> respectively.
+Default is false which will execute method invoke message body before calling send message part.
+In async approach behaviour is unpredicted as calling the method and sending the message has no blocking
+thus message may still be sent before the execution of the method finishes or even starts properly because those can run
+on separate threads. This is mainly useful for blocking approach where it&#8217;s possible to execute the method body
+before sending the message an if execution throws exception, sending will be skipped. <strong>First parameter of the method is
+still used as a message body</strong>.</p>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import io.micronaut.pulsar.annotation.PulsarProducerClient;
+<pre class="highlight"><code class="language-java" data-lang="java">package example;
+
+import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarSubscription;
+import org.apache.pulsar.client.api.SubscriptionType;
 
-@PulsarProducerClient
-public interface ProducerTester {
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-1")
-    String returnParameter(String message);
+@PulsarSubscription(subscriptionName = "pulsar-jtest-subscription", subscriptionType = SubscriptionType.Shared) <b class="conum">(1)</b>
+public class ConsumerProducer { <b class="conum">(2)</b>
+    @PulsarConsumer(topic = "persistent://public/default/messages-java-docs", consumerName = "shared-consumer-jtester") <b class="conum">(3)</b>
+    public void messagePrinter(String message) { <b class="conum">(4)</b>
+        try {
+            String changed = report(message).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //...
+    }
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-2")
-    MessageId returnMessageId(String message);
 
-    @PulsarProducer(topic = "public/default/test", producerName = "test-producer-3")
-    Single&lt;MessageId&gt; returnReactive(String message);
+    @PulsarProducer(topic = "persistent://public/default/reports-java-docs", producerName = "report-producer-java") <b class="conum">(5)</b>
+    public CompletableFuture&lt;String&gt; report(String message) { <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); <b class="conum">(7)</b>
+    }
 }</code></pre>
 </div>
 </div>
-<div class="paragraph">
-<p>Producers can be used as methods in other beans as well. For example: You can have a class annotated with <code>@PulsarSubscription</code>
-which reads messages from one place using methods annotated with <code>@PulsarConsumer</code> and decide in that method whether to pass
-on message to method annotated by the <code>@PulsarProducer</code>. This brings in flexibility to use code to decide what to send where
-instead of just providing <code>@SentTo</code> or alike which sends all messages accepted by the consumer to the defined topic. It&#8217;s also
-useful as you can define additional logic that follows up sending or happens before it.</p>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-groovy" data-lang="groovy">package example;
+
+import io.micronaut.pulsar.annotation.PulsarConsumer;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarSubscription;
+import org.apache.pulsar.client.api.SubscriptionType;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+@PulsarSubscription(subscriptionName = "pulsar-jtest-subscription", subscriptionType = SubscriptionType.Shared) <b class="conum">(1)</b>
+class ConsumerProducer { <b class="conum">(2)</b>
+    @PulsarConsumer(topic = "persistent://public/default/messages-groovy-docs", consumerName = "shared-consumer-gtester") <b class="conum">(3)</b>
+    void messagePrinter(String message) { <b class="conum">(4)</b>
+        try {
+            String changed = report(message).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-groovy-docs", producerName = "report-producer-groovy") <b class="conum">(5)</b>
+    CompletableFuture&lt;String&gt; report(String message) { <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlight"><code class="language-kotlin" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarConsumer
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarSubscription
+import org.apache.pulsar.client.api.SubscriptionType
+
+@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) <b class="conum">(1)</b>
+open class ConsumerProducer { <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") <b class="conum">(3)</b>
+    suspend fun messagePrinter(message: String) { <b class="conum">(4)</b>
+        val changed = report(message)
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") <b class="conum">(5)</b>
+    open suspend fun report(message: String): String { <b class="conum">(6)</b>
+        return "Reporting message '$message'" <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>For Kotlin, open is required in non-interface (abstract) classes because of AOT</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Annotating method as a producer</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>A non-abstract async method. In Kotlin case we need open to allow Micronaut AOT interception.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>CompletableFuture or suspend will trigger immediate execution but reactor or RxJava need subscription and will rely
+on caller or upper layers to provide it.</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -688,8 +1003,8 @@ certificate path, ciphers, and protocols as shown in example below.</p>
         - TLS_RSA_WITH_AES_256_GCM_SHA384
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
     tls-protocols:
-        - TLSv1.2
-        - TLSv1.1</code></pre>
+        - TLSv1.3
+        - TLSv1.2</code></pre>
 </div>
 </div>
 <div class="paragraph">
