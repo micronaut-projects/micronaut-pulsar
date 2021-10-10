@@ -36,8 +36,8 @@ public interface PulsarProducerRegistry {
     Map<String, Producer<?>> getProducers();
 
     /**
-     * Get single managed producer by it's name.
-     * @param id
+     * Get single managed producer by its name.
+     * @param id unique identifier
      * @return Pulsar producer by given name
      */
     Producer<?> getProducer(@NonNull String id);

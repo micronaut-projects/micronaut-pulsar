@@ -4,7 +4,6 @@ beans annotated with a `@PulsarSubscription` will try to fetch subscription name
 `subscriptionName` property value in the `@PulsarConsumer` annotation. Subscription beans are singletons.
 
 snippet::example.ConsumerProducer[project-base="doc-examples/example", indent="0"]
-
 <1> The class holding consumers can be annotated with api:pulsar.annotation.PulsarSubscription. It's also allowed to set
 subscription from the `@PulsarConsumer`. By that, consumer can be located in other beans like `@Singleton`.
 <3> Methods that will process the message, in other words consumers, must be annotated with `@PulsarConsumer` and one
