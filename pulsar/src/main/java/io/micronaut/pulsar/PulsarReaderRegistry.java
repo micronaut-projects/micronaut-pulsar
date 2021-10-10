@@ -30,8 +30,8 @@ public interface PulsarReaderRegistry {
     /**
      * If not specified explicitly, reader name will default to property/field name.
      *
-     * @param identifier
-     * @return Pulsar Reader by it's name
+     * @param identifier unique identifier for a reader
+     * @return Pulsar Reader if found for a given name
      */
     Reader<?> getReader(String identifier);
 

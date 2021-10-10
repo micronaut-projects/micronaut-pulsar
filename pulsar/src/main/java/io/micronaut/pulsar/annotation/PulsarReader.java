@@ -67,21 +67,22 @@ public @interface PulsarReader {
     MessageSchema schema() default BYTES;
 
     /**
-     * @return Consumer name.
+     * @return Reader name.
      */
-    String readerName();
+    String readerName() default "";
 
     /**
-     * By default reader should subscribe in non-blocking manner using default {@link java.util.concurrent.CompletableFuture} of {@link org.apache.pulsar.client.api.ConsumerBuilder#subscribeAsync()}.
+     * By default, reader should subscribe in non-blocking manner using default {@link java.util.concurrent.CompletableFuture}
+     * of {@link org.apache.pulsar.client.api.ConsumerBuilder#subscribeAsync()}.
      * <p>
-     * If blocking set to false application will block until consumer is successfully subscribed
+     * If blocking is set to false, application thread initializing it will block until consumer is successfully subscribed.
      *
      * @return Should the consumer subscribe in async manner or blocking
      */
     boolean subscribeAsync() default true;
 
     /**
-     * @return Whether to position reader to newest available message in queue or not.
+     * @return Whether to position reader to the newest available message in queue or not.
      */
     boolean startMessageLatest() default true;
 }

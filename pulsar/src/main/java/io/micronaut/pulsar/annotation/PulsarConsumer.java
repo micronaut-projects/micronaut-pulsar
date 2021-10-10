@@ -118,7 +118,7 @@ public @interface PulsarConsumer {
     RegexSubscriptionMode subscriptionTopicsMode() default AllTopics;
 
     /**
-     * Used in combination with {@link this#topicsPattern()}. Ignored using {@link this#topics()}. Must be greater than
+     * Used in combination with {@link #topicsPattern()}. Ignored using {@link #topics()}. Must be greater than
      * 1. Low values should be avoided. Pulsar default value is 1 minute
      *
      * @return Amount of delay between checks, in seconds, for new topic matching given pattern.

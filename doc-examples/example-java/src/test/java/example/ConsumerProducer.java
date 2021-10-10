@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutionException;
 
 @PulsarSubscription(subscriptionName = "pulsar-jtest-subscription", subscriptionType = SubscriptionType.Shared) // <1>
 public class ConsumerProducer { // <2>
-    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <3>
+    @PulsarConsumer(topic = "persistent://public/default/messages-java-docs", consumerName = "shared-consumer-jtester") // <3>
     public void messagePrinter(String message) { // <4>
         try {
             String changed = report(message).get();
@@ -21,7 +21,7 @@ public class ConsumerProducer { // <2>
     }
 
 
-    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <5>
+    @PulsarProducer(topic = "persistent://public/default/reports-java-docs", producerName = "report-producer-java") // <5>
     public CompletableFuture<String> report(String message) { // <6>
         return CompletableFuture.supplyAsync(() -> String.format("Reporting message %s", message)); // <7>
     }
