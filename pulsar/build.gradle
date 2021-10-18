@@ -7,7 +7,7 @@ dependencies {
     api "io.micronaut:micronaut-messaging:$micronautVersion"
     api "org.apache.pulsar:pulsar-client:$pulsarVersion"
 
-    compileOnly "jakarta.inject:jakarta.inject-api:2.0.0"
+    compileOnly "jakarta.inject:jakarta.inject-api:2.0.1"
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     compileOnly "com.google.code.findbugs:jsr305"
     compileOnly 'com.google.protobuf:protobuf-java:3.18.1'
