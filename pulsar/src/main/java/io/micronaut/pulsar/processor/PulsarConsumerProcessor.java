@@ -26,6 +26,7 @@ import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
+import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.pulsar.PulsarConsumerRegistry;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
@@ -90,7 +91,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 .orElse("pulsar-consumer-" + consumerCounter.getAndIncrement());
 
         if (consumers.containsKey(name)) {
-            throw new RuntimeException(String.format("Consumer %s already exists", name));
+            throw new MessageListenerException(String.format("Consumer %s already exists", name));
         }
 
         AnnotationValue<PulsarSubscription> subscriptionAnnotation = method.getAnnotation(PulsarSubscription.class);
@@ -98,10 +99,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         Argument<?>[] arguments = method.getArguments();
 
         if (ArrayUtils.isEmpty(arguments)) {
-            throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept at least 1 parameter");
+            throw new MessageListenerException("Method annotated with PulsarConsumer must accept at least 1 parameter");
         }
         if (arguments.length > 2) {
-            throw new IllegalArgumentException("Method annotated with PulsarConsumer must accept maximum of 2 parameters, " +
+            throw new MessageListenerException("Method annotated with PulsarConsumer must accept maximum of 2 parameters, " +
                     "one for message body and one for " + Consumer.class.getName());
         }
 
@@ -117,7 +118,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 if (null != ex) {
                     LOG.error("Failed subscribing Pulsar consumer {} {}", method.getDescription(false), name, ex);
                     applicationEventPublisher.publishEventAsync(new ConsumerSubscriptionFailedEvent(ex, name));
-                    return ex;
+                    return new MessageListenerException("Failed to subscribe", ex);
                 }
                 consumers.put(name, consumer);
                 applicationEventPublisher.publishEventAsync(new ConsumerSubscribedEvent(consumer));
@@ -139,6 +140,8 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                     String msg = String.format("Failed to subscribe %s %s with cause %s", name, method.getDescription(false), e.getMessage());
                     throw new Error(msg);
                 }
+                final String message = String.format("Failed to subscribe %s", name);
+                throw new MessageListenerException(message, e);
             }
         }
     }
@@ -156,7 +159,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 .filter(x -> !Consumer.class.isAssignableFrom(x.getType()))
                 .findFirst();
         if (!bodyType.isPresent()) {
-            throw new IllegalArgumentException("Method annotated with pulsar consumer must accept 1 parameter that's of" +
+            throw new MessageListenerException("Method annotated with pulsar consumer must accept 1 parameter that's of" +
                     " type other than " + Consumer.class.getName() + " class which can be used to accept pulsar message.");
         }
 
@@ -188,7 +191,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
             if (1000 < millis) { // pulsar lib demands gt 1 second not gte
                 consumer.ackTimeout(millis, MILLISECONDS);
             } else {
-                throw new IllegalArgumentException("Acknowledge timeout must be greater than 1 second");
+                throw new MessageListenerException("Acknowledge timeout must be greater than 1 second");
             }
         });
 
@@ -226,7 +229,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         } else if (StringUtils.isNotEmpty(topicsPattern)) {
             resolveTopicsPattern(consumerAnnotation, consumer, topicsPattern);
         } else {
-            throw new IllegalArgumentException("Pulsar consumer requires topics or topicsPattern value");
+            throw new MessageListenerException("Pulsar consumer requires topics or topicsPattern value");
         }
     }
 
@@ -239,7 +242,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         OptionalInt topicsRefresh = consumerAnnotation.intValue("patternAutoDiscoveryPeriod");
         if (topicsRefresh.isPresent()) {
             if (topicsRefresh.getAsInt() < 1) {
-                throw new IllegalArgumentException("Topic " + topicsPattern + " refresh time cannot be below 1 second.");
+                throw new MessageListenerException("Topic " + topicsPattern + " refresh time cannot be below 1 second.");
             }
             consumer.patternAutoDiscoveryPeriod(topicsRefresh.getAsInt(), SECONDS);
         }

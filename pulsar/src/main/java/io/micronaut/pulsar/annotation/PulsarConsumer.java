@@ -17,6 +17,7 @@ package io.micronaut.pulsar.annotation;
 
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.context.annotation.Executable;
+import io.micronaut.messaging.annotation.MessageListener;
 import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
@@ -45,6 +46,7 @@ import static org.apache.pulsar.client.api.SubscriptionType.Exclusive;
 @Retention(RUNTIME)
 @Target(METHOD)
 @Executable
+@MessageListener
 public @interface PulsarConsumer {
 
     /**
