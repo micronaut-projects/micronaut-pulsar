@@ -17,6 +17,7 @@ package io.micronaut.pulsar;
 
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
+import io.micronaut.messaging.exceptions.MessagingClientException;
 import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.ClientBuilder;
@@ -61,6 +62,10 @@ public final class PulsarClientFactory {
         pulsarClientConfiguration.getTlsCiphers().ifPresent(clientBuilder::tlsCiphers);
         pulsarClientConfiguration.getTlsProtocols().ifPresent(clientBuilder::tlsProtocols);
 
-        return clientBuilder.build();
+        try {
+            return clientBuilder.build();
+        } catch (Exception ex) {
+            throw new MessagingClientException("Failed to initialize Pulsar Client", ex);
+        }
     }
 }

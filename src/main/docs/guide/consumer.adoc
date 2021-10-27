@@ -6,11 +6,15 @@ beans annotated with a `@PulsarSubscription` will try to fetch subscription name
 snippet::example.ConsumerProducer[project-base="doc-examples/example", indent="0"]
 <1> The class holding consumers can be annotated with api:pulsar.annotation.PulsarSubscription. It's also allowed to set
 subscription from the `@PulsarConsumer`. By that, consumer can be located in other beans like `@Singleton`.
+<2> -
 <3> Methods that will process the message, in other words consumers, must be annotated with `@PulsarConsumer` and one
 of the _topic_ options must be specified.
 <4> Using CompletableFeature, reactor-core, RxJava return types, or Kotlin suspend, allows the body of the method to be
 executed in an async manner. Method invocations will be async always as underlying Pulsar library uses CompletableFuture.
 Async return type is mostly for developers control over execution flow from the method body or external callers
+<5> -
+<6> -
+<7> -
 
 === Using @PulsarSubscription annotation
 

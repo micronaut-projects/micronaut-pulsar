@@ -33,6 +33,9 @@ still used as a message body*.
 
 snippet::example.ConsumerProducer[project-base="doc-examples/example", indent="0"]
 <1> For Kotlin, open is required in non-interface (abstract) classes because of AOT
+<2> -
+<3> -
+<4> -
 <5> Annotating method as a producer
 <6> A non-abstract async method. In Kotlin case we need open to allow Micronaut AOT interception.
 <7> CompletableFuture or suspend will trigger immediate execution but reactor or RxJava need subscription and will rely

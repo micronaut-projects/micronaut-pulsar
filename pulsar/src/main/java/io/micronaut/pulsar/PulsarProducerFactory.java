@@ -20,6 +20,7 @@ import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.messaging.exceptions.MessagingClientException;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.processor.SchemaResolver;
 import org.apache.pulsar.client.api.*;
@@ -91,6 +92,11 @@ public class PulsarProducerFactory {
         annotationValue.enumValue("messageRoutingMode", MessageRoutingMode.class)
                 .ifPresent(producerBuilder::messageRoutingMode);
 
-        return producerBuilder.create();
+        try {
+            return producerBuilder.create();
+        } catch (Exception ex) {
+            final String message = String.format("Failed to initialize Pulsar producer %s on topic %s", producerName, topic);
+            throw new MessagingClientException(message, ex);
+        }
     }
 }
