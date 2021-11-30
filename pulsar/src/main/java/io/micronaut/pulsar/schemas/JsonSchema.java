@@ -16,6 +16,8 @@
 package io.micronaut.pulsar.schemas;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micronaut.jackson.databind.JacksonDatabindMapper;
+import io.micronaut.json.JsonMapper;
 import io.micronaut.pulsar.schemas.json.JacksonJsonReader;
 import io.micronaut.pulsar.schemas.json.JacksonJsonWriter;
 import org.apache.pulsar.client.api.schema.SchemaDefinition;
@@ -41,9 +43,28 @@ public class JsonSchema<T> extends AvroBaseStructSchema<T> {
         this.setReader(reader);
     }
 
+    /**
+     * @param pojo         The pojo class to map
+     * @param objectMapper The jackson object mapper to use for mapping
+     * @param <T>          The pojo class to map
+     * @return The parsed json schema
+     * @deprecated Use {@link #of(Class, JsonMapper)} instead
+     */
+    @Deprecated
     public static <T> JsonSchema<T> of(Class<T> pojo, ObjectMapper objectMapper) {
-        SchemaReader<T> reader = new JacksonJsonReader<>(objectMapper, pojo);
-        SchemaWriter<T> writer = new JacksonJsonWriter<>(objectMapper);
+        return of(pojo, new JacksonDatabindMapper(objectMapper));
+    }
+
+    /**
+     * @param pojo       The pojo class to map
+     * @param jsonMapper The json mapper to use for mapping
+     * @param <T>        The pojo class to map
+     * @return The parsed json schema
+     * @since 1.1.0
+     */
+    public static <T> JsonSchema<T> of(Class<T> pojo, JsonMapper jsonMapper) {
+        SchemaReader<T> reader = new JacksonJsonReader<>(jsonMapper, pojo);
+        SchemaWriter<T> writer = new JacksonJsonWriter<>(jsonMapper);
         SchemaDefinition<T> schemaDefinition = new SchemaDefinitionBuilderImpl<T>().withPojo(pojo)
                 .withSchemaReader(reader)
                 .withSchemaWriter(writer)
