@@ -19,6 +19,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.beans.BeanWrapper;
 import io.micronaut.core.naming.Named;
+import io.micronaut.jackson.databind.JacksonDatabindMapper;
+import io.micronaut.json.JsonMapper;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.schemas.JsonSchema;
 import jakarta.inject.Singleton;
@@ -38,10 +40,23 @@ import java.util.stream.Collectors;
 @Singleton
 public class SchemaResolver {
 
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
+    /**
+     * @param objectMapper The jackson object mapper
+     * @deprecated Use {@link #SchemaResolver(JsonMapper)} instead
+     */
+    @Deprecated
     public SchemaResolver(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+        this(new JacksonDatabindMapper(objectMapper));
+    }
+
+    /**
+     * @param jsonMapper The JSON mapper to use
+     * @since 1.1.0
+     */
+    public SchemaResolver(JsonMapper jsonMapper) {
+        this.jsonMapper = jsonMapper;
     }
 
     /**
@@ -59,7 +74,7 @@ public class SchemaResolver {
             if (String.class == messageBodyType) {
                 return new StringSchema();
             }
-            return JsonSchema.of(messageBodyType, objectMapper); //default to JSON for now
+            return JsonSchema.of(messageBodyType, jsonMapper); //default to JSON for now
         }
 
         switch (schema) {
@@ -90,7 +105,7 @@ public class SchemaResolver {
             case STRING:
                 return new StringSchema();
             case JSON:
-                return JsonSchema.of(messageBodyType, objectMapper);
+                return JsonSchema.of(messageBodyType, jsonMapper);
             case AVRO:
                 return AvroSchema.of(new SchemaDefinitionBuilderImpl().withPojo(messageBodyType).build());
             case PROTOBUF:

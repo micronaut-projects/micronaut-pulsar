@@ -15,10 +15,13 @@
  */
 package io.micronaut.pulsar.schemas.json;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micronaut.jackson.databind.JacksonDatabindMapper;
+import io.micronaut.json.JsonMapper;
 import org.apache.pulsar.client.api.SchemaSerializationException;
 import org.apache.pulsar.client.api.schema.SchemaWriter;
+
+import java.io.IOException;
 
 /**
  * JSON Schema Writer to allow using {@link ObjectMapper} from Micronaut instead of shaded one in Pulsar library.
@@ -29,9 +32,17 @@ import org.apache.pulsar.client.api.schema.SchemaWriter;
  */
 public final class JacksonJsonWriter<T> implements SchemaWriter<T> {
 
-    private final ObjectMapper mapper;
+    private final JsonMapper mapper;
 
+    @Deprecated
     public JacksonJsonWriter(ObjectMapper mapper) {
+        this(new JacksonDatabindMapper(mapper));
+    }
+
+    /**
+     * @since 1.1.0
+     */
+    public JacksonJsonWriter(JsonMapper mapper) {
         this.mapper = mapper;
     }
 
@@ -39,7 +50,7 @@ public final class JacksonJsonWriter<T> implements SchemaWriter<T> {
     public byte[] write(T message) {
         try {
             return mapper.writeValueAsBytes(message);
-        } catch (JsonProcessingException e) {
+        } catch (IOException e) {
             throw new SchemaSerializationException(e);
         }
     }

@@ -16,11 +16,15 @@
 package io.micronaut.pulsar.schemas.json;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.micronaut.core.type.Argument;
+import io.micronaut.jackson.databind.JacksonDatabindMapper;
+import io.micronaut.json.JsonMapper;
 import org.apache.pulsar.client.api.SchemaSerializationException;
 import org.apache.pulsar.client.api.schema.SchemaReader;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -35,16 +39,31 @@ public final class JacksonJsonReader<T> implements SchemaReader<T> {
     private static final Logger LOG = LoggerFactory.getLogger(JacksonJsonReader.class);
 
     private final Class<T> pojo;
-    private final ObjectMapper objectMapper;
+    private final JsonMapper jsonMapper;
 
+    /**
+     * @param objectMapper The jackson object mapper to use for reading
+     * @param pojo         The pojo type to read
+     * @deprecated Use {@link #JacksonJsonReader(JsonMapper, Class)} instead
+     */
+    @Deprecated
     public JacksonJsonReader(ObjectMapper objectMapper, Class<T> pojo) {
+        this(new JacksonDatabindMapper(objectMapper), pojo);
+    }
+
+    /**
+     * @param jsonMapper The json mapper to use for reading
+     * @param pojo       The pojo type to read
+     * @since 1.1.0
+     */
+    public JacksonJsonReader(JsonMapper jsonMapper, Class<T> pojo) {
         this.pojo = pojo;
-        this.objectMapper = objectMapper;
+        this.jsonMapper = jsonMapper;
     }
 
     public T read(byte[] bytes, int offset, int length) {
         try {
-            return this.objectMapper.readValue(bytes, offset, length, this.pojo);
+            return this.jsonMapper.readValue(new ByteArrayInputStream(bytes, offset, length), Argument.of(this.pojo));
         } catch (IOException ex) {
             throw new SchemaSerializationException(ex);
         }
@@ -53,7 +72,7 @@ public final class JacksonJsonReader<T> implements SchemaReader<T> {
     public T read(InputStream inputStream) {
         T value;
         try {
-            value = this.objectMapper.readValue(inputStream, this.pojo);
+            value = this.jsonMapper.readValue(inputStream, Argument.of(this.pojo));
             try {
                 inputStream.close();
             } catch (IOException closeException) {
