@@ -29,13 +29,13 @@ import org.apache.pulsar.client.api.Message;
 import java.util.*;
 
 /**
- * Helper processor class for arguments and headers on Pulsar consumers / processors
+ * Helper processor class for arguments and headers on Pulsar consumers / processors.
  *
  * @author Haris Secic
  * @since 1.1
  */
 @Internal
-final public class PulsarArgumentHandler {
+public final class PulsarArgumentHandler {
     private final LinkedHashMap<String, Argument<?>> methodArguments;
     private final Map<String, Integer> headers;
 

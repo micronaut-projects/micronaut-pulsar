@@ -23,7 +23,6 @@ import io.micronaut.core.naming.Named;
 import io.micronaut.core.type.Argument;
 import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
-import io.micronaut.messaging.annotation.MessageBody;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.schemas.JsonSchema;
 import jakarta.inject.Singleton;
@@ -32,7 +31,6 @@ import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.impl.schema.*;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
-import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 

@@ -15,26 +15,20 @@
  */
 package io.micronaut.pulsar.processor;
 
-import com.sun.org.apache.xpath.internal.Arg;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.NonNull;
-import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
-import io.micronaut.messaging.annotation.MessageBody;
-import io.micronaut.messaging.annotation.MessageHeader;
 import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.pulsar.PulsarConsumerRegistry;
-import io.micronaut.pulsar.annotation.MessageProperties;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
-import io.micronaut.pulsar.annotation.MessageKey;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.ConsumerSubscribedEvent;
@@ -50,7 +44,6 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 import static java.util.concurrent.TimeUnit.*;
 

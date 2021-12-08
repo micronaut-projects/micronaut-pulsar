@@ -16,7 +16,6 @@
 package io.micronaut.pulsar.annotation;
 
 import io.micronaut.core.bind.annotation.Bindable;
-import io.micronaut.pulsar.MessageSchema;
 
 import java.lang.annotation.*;
 
