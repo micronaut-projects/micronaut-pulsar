@@ -13,6 +13,14 @@ snippet::example.Producer[project-base="doc-examples/example", indent="0"]
 
 Producers can be used in other beans as well.
 
+=== Producer method
+
+It's important to note that if the method contains more than 1 argument, `@MessageBody` must be specified on argument
+intended for message body as well as `@MessageKey`, `@MessageProperties`, `@MessageHeader` depending on desired mapping.
+
+WARNING: As with Consumers it's important to spot `@MessageProperties` for collection of headers value but `@MessageHeader`
+for single header mapping on method argument. More details in consumer warning.
+
 === Producer return values
 
 Not counting wrappers for async behaviour (CompletableFuture, RxJava, reactor cor), abstract methods can only have 2 return

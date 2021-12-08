@@ -15,61 +15,50 @@
  */
 package io.micronaut.pulsar;
 
-import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.type.Argument;
 import io.micronaut.messaging.exceptions.MessagingClientException;
 import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.processor.PulsarArgumentHandler;
 import io.micronaut.pulsar.processor.SchemaResolver;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.client.impl.ProducerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
 
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
 /**
  * Pulsar {@link Producer} factory.
+ *
  * @author Haris Secic
  * @since 1.0
  */
 @Factory
 public class PulsarProducerFactory {
 
-    private final Map<String, List<Producer<?>>> producersCollection = new ConcurrentHashMap<>();
-    private final BeanContext beanContext;
-    private final SchemaResolver schemaResolver;
-    private final PulsarClient pulsarClient;
-
-    public PulsarProducerFactory(BeanContext beanContext, SchemaResolver schemaResolver, PulsarClient pulsarClient) {
-        this.beanContext = beanContext;
-        this.schemaResolver = schemaResolver;
-        this.pulsarClient = pulsarClient;
-    }
-
     /**
      * Simple factory method for producing Pulsar {@link Producer} beans.
-     * @param pulsarClient main Pulsar Client bean
-     * @param annotationValue method annotation to read properties from
-     * @param schemaResolver schema resolver bean
-     * @param <T> type of message body for pulsar producer
+     *
+     * @param pulsarClient        main Pulsar Client bean
+     * @param annotationValue     method annotation to read properties from
+     * @param methodArguments     arguments passed to method annotated with @PulsarProducer
+     * @param schemaResolver      schema resolver bean
+     * @param <T>                 type of message body for pulsar producer
      * @param annotatedMethodName method name on which annotation for Pulsar Producer was set
-     * @param bodyType class defining desired content type of a message passed to pulsar producer
      * @return new Pulsar producer
-     * @throws PulsarClientException in case of not being able to create such Producer
+     * @throws MessagingClientException in case Producer cannot be created
      */
     @SuppressWarnings("unchecked")
     @Prototype
     public <T> Producer<T> createProducer(@Parameter PulsarClient pulsarClient,
                                           @Parameter AnnotationValue<PulsarProducer> annotationValue,
+                                          @Parameter Argument<?>[] methodArguments,
                                           @Parameter SchemaResolver schemaResolver,
-                                          @Parameter String annotatedMethodName,
-                                          @Parameter Class<T> bodyType) throws PulsarClientException {
+                                          @Parameter String annotatedMethodName) throws MessagingClientException {
 
-        Schema<T> schema = (Schema<T>) schemaResolver.decideSchema(annotationValue, bodyType);
+        final PulsarArgumentHandler argsHandler = new PulsarArgumentHandler(methodArguments, annotatedMethodName);
+        Schema<T> schema = (Schema<T>) schemaResolver.decideSchema(argsHandler.getBodyArgument(), argsHandler.getKeyArgument(), annotationValue);
 
         String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
         String topic = annotationValue.stringValue("topic")

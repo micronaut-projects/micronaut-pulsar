@@ -24,6 +24,7 @@ import io.micronaut.pulsar.intercept.PulsarProducerAdvice;
 import org.apache.pulsar.client.api.CompressionType;
 import org.apache.pulsar.client.api.HashingScheme;
 import org.apache.pulsar.client.api.MessageRoutingMode;
+import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
 import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
@@ -74,6 +75,19 @@ public @interface PulsarProducer {
      * @return Type of message serialization.
      */
     MessageSchema schema() default BYTES;
+
+    /**
+     * @return Type of message key serialization.
+     */
+    MessageSchema keySchema() default BYTES;
+
+    /**
+     * If no {@link MessageKey} annotated method argument is detected this attribute is ignored and message is treated
+     * as simple - without a key.
+     *
+     * @return Whether key will be in the message payload or separate.
+     */
+    KeyValueEncodingType keyEncoding() default KeyValueEncodingType.INLINE;
 
     /**
      * @return Compression type.

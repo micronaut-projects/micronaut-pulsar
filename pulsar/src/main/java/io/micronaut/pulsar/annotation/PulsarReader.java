@@ -18,6 +18,7 @@ package io.micronaut.pulsar.annotation;
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
+import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
 import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
@@ -60,11 +61,28 @@ public @interface PulsarReader {
     String topic() default "";
 
     /**
-     * Defaults to {@link MessageSchema#BYTES} as default value for Pulsar {@link org.apache.pulsar.client.api.Schema} is {@code byte[]}.
+     * Defaults to {@link MessageSchema#BYTES} as default value for Pulsar {@link org.apache.pulsar.client.api.Schema}
+     * is {@code byte[]}.
      *
      * @return Schema to use with pulsar topic consumer
      */
     MessageSchema schema() default BYTES;
+
+    /**
+     * If argument annotated with {@link PulsarReader} is of {@link org.apache.pulsar.common.schema.KeyValue} it's
+     * possible to choose different schema for key transfer.
+     *
+     * @return Schema to use while parsing message key from Pulsar message
+     */
+    MessageSchema keySchema() default BYTES;
+
+    /**
+     * If argument annotated with {@link PulsarReader} is of {@link org.apache.pulsar.common.schema.KeyValue}
+     * it's possible to choose where to get the message key from. Otherwise, this attribute is ignored.
+     *
+     * @return Whether to read key from the message payload or separately.
+     */
+    KeyValueEncodingType keyEncoding() default KeyValueEncodingType.INLINE;
 
     /**
      * @return Reader name.

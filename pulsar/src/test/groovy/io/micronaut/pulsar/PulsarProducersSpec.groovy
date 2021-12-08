@@ -16,9 +16,12 @@
 package io.micronaut.pulsar
 
 import io.micronaut.context.annotation.Requires
+import io.micronaut.messaging.annotation.MessageBody
+import io.micronaut.pulsar.annotation.MessageProperties
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
 import io.micronaut.pulsar.shared.PulsarAwareTest
+import org.apache.pulsar.client.api.Message
 import org.apache.pulsar.client.api.MessageId
 import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.Reader
@@ -48,12 +51,16 @@ class PulsarProducersSpec extends PulsarAwareTest {
         String paramReturn = producer.returnOnProduce(message)
         MessageId nextMessage = producer.messageIdOnProduce(message)
         Mono<MessageId> reactiveMessage = producer.reactiveMessage(message)
+        MessageId withHeaders = producer.withHeaders(message, ["test": "header", "other": "header2"])
 
         then:
         message == reader.readNext(60, SECONDS).value
         paramReturn == reader.readNext(60, SECONDS).value
         nextMessage == reader.readNext(60, SECONDS).messageId
         reactiveMessage.block() == reader.readNext(60, SECONDS).messageId
+        Message<String> messageWithHeaders = reader.readNext(60, SECONDS)
+        messageWithHeaders.hasProperty("test")
+        messageWithHeaders.getProperty("test") == "header"
 
         cleanup:
         reader.close()
@@ -74,5 +81,8 @@ class PulsarProducersSpec extends PulsarAwareTest {
 
         @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer-reactive")
         Mono<MessageId> reactiveMessage(String message)
+
+        @PulsarProducer(topic = PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC, producerName = "test-producer-headers")
+        MessageId withHeaders(@MessageBody String message, @MessageProperties Map<String, String> properties)
     }
 }
