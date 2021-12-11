@@ -385,6 +385,40 @@ Async return type is mostly for developers control over execution flow from the 
 </table>
 </div>
 <div class="sect2">
+<h3 id="_consumer_method">Consumer method</h3>
+<div class="paragraph">
+<p>Simple approach is to provide just 1 parameter in the method arguments list which will default to it being detected as a
+message body (payload). This can also resolve <code>Message&lt;&gt;</code> type from Pulsar and thus detect whether to inject parsed body
+or to inject the whole Pulsar message. In case of multiple argument it&#8217;s important to annotate argument which will be used
+for passing message payload with <code>@MessageBody</code> as well as other parameters with one of the <code>MessageKey</code> (message key) or
+<code>@MessageProperties</code> of type <code>Map&lt;String,String&gt;</code> which represents all message properties/headers to be injected. For headers listed
+as method arguments use <code>@MessageHeader(*headerName)</code> on each argument representing message header. Due to Pulsar underlying
+library headers must be strings (and their corresponding keys).</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Don&#8217;t confuse <code>@MessageHeader*s*</code> with <code>@MessageProperties</code>. Former is used by Micronaut messaging and not applicable
+to method argument thus latter was created to support mapping all headers/properties on a single method argument. Still,
+<code>@MessageHeader()</code> from the same package (messaging) was used for method argument, which maps single header value, to
+utilize as much existing annotations.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Extra parameter of <code>org.apache.pulsar.client.api.Consumer</code> type does not need any annotation. It is a consumer passed by
+default from underlying Pulsar library. If not present on the method annotated with <code>@PulsarConsumer</code> it will be omitted.</p>
+</div>
+<div class="paragraph">
+<p>This is especially important for messages that should be of KeyValue type.</p>
+</div>
+</div>
+<div class="sect2">
 <h3 id="_using_pulsarsubscription_annotation">Using @PulsarSubscription annotation</h3>
 <div class="paragraph">
 <p>This annotation marks a class as a singleton bean that contains one or more methods serving as Pulsar consumers under
@@ -498,7 +532,22 @@ as it can be used later for debugging or injection points for Pulsar <code>Consu
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSchema</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSchema.BYTES</code> or <code>MessageSchema.JSON</code>*</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If body is different from <code>byte[]</code> but <code>MessageSchema</code> is <code>Byte</code>, will fallback to JSON. Currently <code>KEY_VALUE</code> is not supported and will throw an exception.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If body is different from <code>byte[]</code> but <code>MessageSchema</code> is <code>Byte</code>, will default to JSON.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keySchema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSchema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSchema.BYTES</code> or <code>MessageSchema.JSON</code>*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If message is of key-value type this must be set or default will be used with same resolution style as the schema</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keyEncoding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyValueEncodingType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyValueEncodingType.INLINE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If message is of key-value type it is frequent that the key is sent separately from the payload in which case this value
+should be set to <code>KeyValueEncodingType.SEPARATED</code>; otherwise Pulsar will try to extract key from the message payload (body)</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">consumerName</p></td>
@@ -561,7 +610,7 @@ might not connect and could throw <code>org.apache.pulsar.client.api.PulsarClien
 <div class="sect2">
 <h3 id="_dead_letter_queue">Dead Letter Queue</h3>
 <div class="paragraph">
-<p>By default Pulsar Java library does not configure DLQ to be used. Instead it will re-deliver failed messages as long as
+<p>By default, Pulsar Java library does not configure DLQ to be used. Instead it will re-deliver failed messages as long as
 possible which floods the consumer(s) until message if finally received. Failed means that message was received but consumer
 did negative acknowledgement thus received means delivered and acknowledged by the consumer. However, reason for failure might be
 bad JSON formatting (in the case where JSON is being used) or such which will create unnecessary traffic to consumer(s) and message
@@ -691,6 +740,15 @@ class ReaderExample {
 <p>Reader <code>name</code> can be autogenerated but <code>topic</code> argument must be set. Reader injections cause blocking behaviour as
 Reader instances will start creation and wait until Pulsar replies with a successful status.</p>
 </div>
+<div class="sect2">
+<h3 id="_keyvalue_readers">KeyValue readers</h3>
+<div class="paragraph">
+<p>In order to use KeyValue with a reader injection, reader argument type must be of <code>org.apache.pulsar.common.schema.KeyValue</code>.
+It is possible then to set attributes in <code>@PulsarReader</code> like <code>keyType</code> which defines what type of data
+serializer will be used to extract key, and <code>keyEncoding</code> which defines how will the key be extracted: <code>INLINE</code> - key
+is part of the message payload or <code>SEPARATED</code> - key is stored as a message key.</p>
+</div>
+</div>
 </div>
 </div>
 
@@ -791,6 +849,26 @@ interface Producer {
 </div>
 <div class="paragraph">
 <p>Producers can be used in other beans as well.</p>
+</div>
+<div class="sect2">
+<h3 id="_producer_method">Producer method</h3>
+<div class="paragraph">
+<p>It&#8217;s important to note that if the method contains more than 1 argument, <code>@MessageBody</code> must be specified on argument
+intended for message body as well as <code>@MessageKey</code>, <code>@MessageProperties</code>, <code>@MessageHeader</code> depending on desired mapping.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+As with Consumers it&#8217;s important to spot <code>@MessageProperties</code> for collection of headers value but <code>@MessageHeader</code>
+for single header mapping on method argument. More details in consumer warning.
+</td>
+</tr>
+</table>
+</div>
 </div>
 <div class="sect2">
 <h3 id="_producer_return_values">Producer return values</h3>

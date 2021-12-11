@@ -111,8 +111,7 @@ var activeTableTab = "activeTableTab";
 </dl>
 <hr>
 <br>
-<pre>@Requires(missingBeans=<a href="../../../../io/micronaut/pulsar/processor/MessageListenerResolver.html" title="interface in io.micronaut.pulsar.processor">MessageListenerResolver.class</a>)
-public class <span class="typeNameLabel">DefaultListener</span>
+<pre>public class <span class="typeNameLabel">DefaultListener</span>
 extends java.lang.Object
 implements <a href="../../../../io/micronaut/pulsar/processor/MessageListenerResolver.html" title="interface in io.micronaut.pulsar.processor">MessageListenerResolver</a></pre>
 <div class="block">Default listener for incoming Pulsar messages.</div>
@@ -142,9 +141,10 @@ implements <a href="../../../../io/micronaut/pulsar/processor/MessageListenerRes
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/processor/DefaultListener.html#DefaultListener-io.micronaut.inject.ExecutableMethod-boolean-java.lang.Object-">DefaultListener</a></span>(io.micronaut.inject.ExecutableMethod&nbsp;method,
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/processor/DefaultListener.html#DefaultListener-io.micronaut.inject.ExecutableMethod-boolean-java.lang.Object-io.micronaut.pulsar.processor.PulsarArgumentHandler-">DefaultListener</a></span>(io.micronaut.inject.ExecutableMethod&nbsp;method,
                boolean&nbsp;useMessageWrapper,
-               java.lang.Object&nbsp;invoker)</code>&nbsp;</td>
+               java.lang.Object&nbsp;invoker,
+               <a href="../../../../io/micronaut/pulsar/processor/PulsarArgumentHandler.html" title="class in io.micronaut.pulsar.processor">PulsarArgumentHandler</a>&nbsp;argumentHandler)</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -195,7 +195,7 @@ implements <a href="../../../../io/micronaut/pulsar/processor/MessageListenerRes
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="DefaultListener-io.micronaut.inject.ExecutableMethod-boolean-java.lang.Object-">
+<a name="DefaultListener-io.micronaut.inject.ExecutableMethod-boolean-java.lang.Object-io.micronaut.pulsar.processor.PulsarArgumentHandler-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -203,7 +203,8 @@ implements <a href="../../../../io/micronaut/pulsar/processor/MessageListenerRes
 <h4>DefaultListener</h4>
 <pre>public&nbsp;DefaultListener(io.micronaut.inject.ExecutableMethod&nbsp;method,
                        boolean&nbsp;useMessageWrapper,
-                       java.lang.Object&nbsp;invoker)</pre>
+                       java.lang.Object&nbsp;invoker,
+                       <a href="../../../../io/micronaut/pulsar/processor/PulsarArgumentHandler.html" title="class in io.micronaut.pulsar.processor">PulsarArgumentHandler</a>&nbsp;argumentHandler)</pre>
 </li>
 </ul>
 </li>

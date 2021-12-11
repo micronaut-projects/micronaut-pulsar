@@ -168,6 +168,17 @@ public @interface <span class="memberNameLabel">PulsarProducer</span></pre>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#initialSequenceId--">initialSequenceId</a></span></code>&nbsp;</td>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>org.apache.pulsar.common.schema.KeyValueEncodingType</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#keyEncoding--">keyEncoding</a></span></code>
+<div class="block">If no <a href="../../../../io/micronaut/pulsar/annotation/MessageKey.html" title="annotation in io.micronaut.pulsar.annotation"><code>MessageKey</code></a> annotated method argument is detected this attribute is ignored and message is treated
+ as simple - without a key.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#keySchema--">keySchema</a></span></code>&nbsp;</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>org.apache.pulsar.client.api.MessageRoutingMode</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html#messageRoutingMode--">messageRoutingMode</a></span></code>&nbsp;</td>
 </tr>
@@ -289,6 +300,48 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/)
 <dl>
 <dt>Default:</dt>
 <dd>io.micronaut.pulsar.MessageSchema.BYTES</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="keySchema--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keySchema</h4>
+<pre>public abstract&nbsp;<a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a>&nbsp;keySchema</pre>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Type of message key serialization.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>io.micronaut.pulsar.MessageSchema.BYTES</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="keyEncoding--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keyEncoding</h4>
+<pre>public abstract&nbsp;org.apache.pulsar.common.schema.KeyValueEncodingType&nbsp;keyEncoding</pre>
+<div class="block">If no <a href="../../../../io/micronaut/pulsar/annotation/MessageKey.html" title="annotation in io.micronaut.pulsar.annotation"><code>MessageKey</code></a> annotated method argument is detected this attribute is ignored and message is treated
+ as simple - without a key.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Whether key will be in the message payload or separate.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>org.apache.pulsar.common.schema.KeyValueEncodingType.INLINE</dd>
 </dl>
 </li>
 </ul>

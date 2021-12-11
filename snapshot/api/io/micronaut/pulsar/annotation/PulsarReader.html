@@ -121,13 +121,28 @@ public @interface <span class="memberNameLabel">PulsarReader</span></pre>
 <th class="colLast" scope="col">Optional Element and Description</th>
 </tr>
 <tr class="altColor">
+<td class="colFirst"><code>org.apache.pulsar.common.schema.KeyValueEncodingType</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#keyEncoding--">keyEncoding</a></span></code>
+<div class="block">If argument annotated with <a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarReader</code></a> is of <code>KeyValue</code>
+ it's possible to choose where to get the message key from.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#keySchema--">keySchema</a></span></code>
+<div class="block">If argument annotated with <a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarReader</code></a> is of <code>KeyValue</code> it's
+ possible to choose different schema for key transfer.</div>
+</td>
+</tr>
+<tr class="altColor">
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#readerName--">readerName</a></span></code>&nbsp;</td>
 </tr>
 <tr class="rowColor">
 <td class="colFirst"><code><a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a></code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html#schema--">schema</a></span></code>
-<div class="block">Defaults to <a href="../../../../io/micronaut/pulsar/MessageSchema.html#BYTES"><code>MessageSchema.BYTES</code></a> as default value for Pulsar <code>Schema</code> is <code>byte[]</code>.</div>
+<div class="block">Defaults to <a href="../../../../io/micronaut/pulsar/MessageSchema.html#BYTES"><code>MessageSchema.BYTES</code></a> as default value for Pulsar <code>Schema</code>
+ is <code>byte[]</code>.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -219,7 +234,8 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/)
 <li class="blockList">
 <h4>schema</h4>
 <pre>public abstract&nbsp;<a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a>&nbsp;schema</pre>
-<div class="block">Defaults to <a href="../../../../io/micronaut/pulsar/MessageSchema.html#BYTES"><code>MessageSchema.BYTES</code></a> as default value for Pulsar <code>Schema</code> is <code>byte[]</code>.</div>
+<div class="block">Defaults to <a href="../../../../io/micronaut/pulsar/MessageSchema.html#BYTES"><code>MessageSchema.BYTES</code></a> as default value for Pulsar <code>Schema</code>
+ is <code>byte[]</code>.</div>
 <dl>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>Schema to use with pulsar topic consumer</dd>
@@ -227,6 +243,50 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-|\\w+)*\\w/)
 <dl>
 <dt>Default:</dt>
 <dd>io.micronaut.pulsar.MessageSchema.BYTES</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="keySchema--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keySchema</h4>
+<pre>public abstract&nbsp;<a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a>&nbsp;keySchema</pre>
+<div class="block">If argument annotated with <a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarReader</code></a> is of <code>KeyValue</code> it's
+ possible to choose different schema for key transfer.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Schema to use while parsing message key from Pulsar message</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>io.micronaut.pulsar.MessageSchema.BYTES</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="keyEncoding--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keyEncoding</h4>
+<pre>public abstract&nbsp;org.apache.pulsar.common.schema.KeyValueEncodingType&nbsp;keyEncoding</pre>
+<div class="block">If argument annotated with <a href="../../../../io/micronaut/pulsar/annotation/PulsarReader.html" title="annotation in io.micronaut.pulsar.annotation"><code>PulsarReader</code></a> is of <code>KeyValue</code>
+ it's possible to choose where to get the message key from. Otherwise, this attribute is ignored.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Whether to read key from the message payload or separately.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>org.apache.pulsar.common.schema.KeyValueEncodingType.INLINE</dd>
 </dl>
 </li>
 </ul>

@@ -135,9 +135,7 @@ extends java.lang.Object</pre>
 <th class="colOne" scope="col">Constructor and Description</th>
 </tr>
 <tr class="altColor">
-<td class="colOne"><code><span class="memberNameLink"><a href="../../../io/micronaut/pulsar/PulsarProducerFactory.html#PulsarProducerFactory-io.micronaut.context.BeanContext-io.micronaut.pulsar.processor.SchemaResolver-org.apache.pulsar.client.api.PulsarClient-">PulsarProducerFactory</a></span>(io.micronaut.context.BeanContext&nbsp;beanContext,
-                     <a href="../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver,
-                     org.apache.pulsar.client.api.PulsarClient&nbsp;pulsarClient)</code>&nbsp;</td>
+<td class="colOne"><code><span class="memberNameLink"><a href="../../../io/micronaut/pulsar/PulsarProducerFactory.html#PulsarProducerFactory--">PulsarProducerFactory</a></span>()</code>&nbsp;</td>
 </tr>
 </table>
 </li>
@@ -156,11 +154,11 @@ extends java.lang.Object</pre>
 </tr>
 <tr id="i0" class="altColor">
 <td class="colFirst"><code>&lt;T&gt;&nbsp;org.apache.pulsar.client.api.Producer&lt;T&gt;</code></td>
-<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/micronaut/pulsar/PulsarProducerFactory.html#createProducer-org.apache.pulsar.client.api.PulsarClient-io.micronaut.core.annotation.AnnotationValue-io.micronaut.pulsar.processor.SchemaResolver-java.lang.String-java.lang.Class-">createProducer</a></span>(org.apache.pulsar.client.api.PulsarClient&nbsp;pulsarClient,
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../io/micronaut/pulsar/PulsarProducerFactory.html#createProducer-org.apache.pulsar.client.api.PulsarClient-io.micronaut.core.annotation.AnnotationValue-io.micronaut.core.type.Argument:A-io.micronaut.pulsar.processor.SchemaResolver-java.lang.String-">createProducer</a></span>(org.apache.pulsar.client.api.PulsarClient&nbsp;pulsarClient,
               io.micronaut.core.annotation.AnnotationValue&lt;<a href="../../../io/micronaut/pulsar/annotation/PulsarProducer.html" title="annotation in io.micronaut.pulsar.annotation">PulsarProducer</a>&gt;&nbsp;annotationValue,
+              io.micronaut.core.type.Argument&lt;?&gt;[]&nbsp;methodArguments,
               <a href="../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver,
-              java.lang.String&nbsp;annotatedMethodName,
-              java.lang.Class&lt;T&gt;&nbsp;bodyType)</code>
+              java.lang.String&nbsp;annotatedMethodName)</code>
 <div class="block">Simple factory method for producing Pulsar <code>Producer</code> beans.</div>
 </td>
 </tr>
@@ -186,15 +184,13 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Constructor Detail</h3>
-<a name="PulsarProducerFactory-io.micronaut.context.BeanContext-io.micronaut.pulsar.processor.SchemaResolver-org.apache.pulsar.client.api.PulsarClient-">
+<a name="PulsarProducerFactory--">
 <!--   -->
 </a>
 <ul class="blockListLast">
 <li class="blockList">
 <h4>PulsarProducerFactory</h4>
-<pre>public&nbsp;PulsarProducerFactory(io.micronaut.context.BeanContext&nbsp;beanContext,
-                             <a href="../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver,
-                             org.apache.pulsar.client.api.PulsarClient&nbsp;pulsarClient)</pre>
+<pre>public&nbsp;PulsarProducerFactory()</pre>
 </li>
 </ul>
 </li>
@@ -205,7 +201,7 @@ extends java.lang.Object</pre>
 <!--   -->
 </a>
 <h3>Method Detail</h3>
-<a name="createProducer-org.apache.pulsar.client.api.PulsarClient-io.micronaut.core.annotation.AnnotationValue-io.micronaut.pulsar.processor.SchemaResolver-java.lang.String-java.lang.Class-">
+<a name="createProducer-org.apache.pulsar.client.api.PulsarClient-io.micronaut.core.annotation.AnnotationValue-io.micronaut.core.type.Argument:A-io.micronaut.pulsar.processor.SchemaResolver-java.lang.String-">
 <!--   -->
 </a>
 <ul class="blockListLast">
@@ -217,12 +213,12 @@ public&nbsp;&lt;T&gt;&nbsp;org.apache.pulsar.client.api.Producer&lt;T&gt;&nbsp;c
                                                                               @Parameter
                                                                               io.micronaut.core.annotation.AnnotationValue&lt;<a href="../../../io/micronaut/pulsar/annotation/PulsarProducer.html" title="annotation in io.micronaut.pulsar.annotation">PulsarProducer</a>&gt;&nbsp;annotationValue,
                                                                               @Parameter
+                                                                              io.micronaut.core.type.Argument&lt;?&gt;[]&nbsp;methodArguments,
+                                                                              @Parameter
                                                                               <a href="../../../io/micronaut/pulsar/processor/SchemaResolver.html" title="class in io.micronaut.pulsar.processor">SchemaResolver</a>&nbsp;schemaResolver,
                                                                               @Parameter
-                                                                              java.lang.String&nbsp;annotatedMethodName,
-                                                                              @Parameter
-                                                                              java.lang.Class&lt;T&gt;&nbsp;bodyType)
-                                                                       throws org.apache.pulsar.client.api.PulsarClientException</pre>
+                                                                              java.lang.String&nbsp;annotatedMethodName)
+                                                                       throws io.micronaut.messaging.exceptions.MessagingClientException</pre>
 <div class="block">Simple factory method for producing Pulsar <code>Producer</code> beans.</div>
 <dl>
 <dt><span class="paramLabel">Type Parameters:</span></dt>
@@ -230,13 +226,13 @@ public&nbsp;&lt;T&gt;&nbsp;org.apache.pulsar.client.api.Producer&lt;T&gt;&nbsp;c
 <dt><span class="paramLabel">Parameters:</span></dt>
 <dd><code>pulsarClient</code> - main Pulsar Client bean</dd>
 <dd><code>annotationValue</code> - method annotation to read properties from</dd>
+<dd><code>methodArguments</code> - arguments passed to method annotated with @PulsarProducer</dd>
 <dd><code>schemaResolver</code> - schema resolver bean</dd>
 <dd><code>annotatedMethodName</code> - method name on which annotation for Pulsar Producer was set</dd>
-<dd><code>bodyType</code> - class defining desired content type of a message passed to pulsar producer</dd>
 <dt><span class="returnLabel">Returns:</span></dt>
 <dd>new Pulsar producer</dd>
 <dt><span class="throwsLabel">Throws:</span></dt>
-<dd><code>org.apache.pulsar.client.api.PulsarClientException</code> - in case of not being able to create such Producer</dd>
+<dd><code>io.micronaut.messaging.exceptions.MessagingClientException</code> - in case Producer cannot be created</dd>
 </dl>
 </li>
 </ul>

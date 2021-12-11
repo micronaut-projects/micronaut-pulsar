@@ -41,7 +41,7 @@
 </div>
 <div class="subNav">
 <ul class="navList">
-<li>Prev&nbsp;Class</li>
+<li><a href="../../../../io/micronaut/pulsar/annotation/MessageProperties.html" title="annotation in io.micronaut.pulsar.annotation"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html" title="annotation in io.micronaut.pulsar.annotation"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
@@ -152,6 +152,19 @@ public @interface <span class="memberNameLabel">PulsarConsumer</span></pre>
 <td class="colFirst"><code>java.lang.String</code></td>
 <td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#deadLetterTopic--">deadLetterTopic</a></span></code>
 <div class="block">Default is fallback to Pulsar Client Java library.</div>
+</td>
+</tr>
+<tr class="altColor">
+<td class="colFirst"><code>org.apache.pulsar.common.schema.KeyValueEncodingType</code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#keyEncoding--">keyEncoding</a></span></code>
+<div class="block">Ignored if annotated method does not contain parameter annotated with <a href="../../../../io/micronaut/pulsar/annotation/MessageKey.html" title="annotation in io.micronaut.pulsar.annotation"><code>MessageKey</code></a>.</div>
+</td>
+</tr>
+<tr class="rowColor">
+<td class="colFirst"><code><a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a></code></td>
+<td class="colLast"><code><span class="memberNameLink"><a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#keySchema--">keySchema</a></span></code>
+<div class="block">Ignored if <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#keyEncoding--"><code>keyEncoding()</code></a> is <code>KeyValueEncodingType.INLINE</code> or if <a href="../../../../io/micronaut/pulsar/annotation/MessageKey.html" title="annotation in io.micronaut.pulsar.annotation"><code>MessageKey</code></a> is missing
+ on one of the attributes of the annotated method.</div>
 </td>
 </tr>
 <tr class="altColor">
@@ -364,6 +377,52 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 <dl>
 <dt>Default:</dt>
 <dd>io.micronaut.pulsar.MessageSchema.BYTES</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="keySchema--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keySchema</h4>
+<pre>public abstract&nbsp;<a href="../../../../io/micronaut/pulsar/MessageSchema.html" title="enum in io.micronaut.pulsar">MessageSchema</a>&nbsp;keySchema</pre>
+<div class="block">Ignored if <a href="../../../../io/micronaut/pulsar/annotation/PulsarConsumer.html#keyEncoding--"><code>keyEncoding()</code></a> is <code>KeyValueEncodingType.INLINE</code> or if <a href="../../../../io/micronaut/pulsar/annotation/MessageKey.html" title="annotation in io.micronaut.pulsar.annotation"><code>MessageKey</code></a> is missing
+ on one of the attributes of the annotated method.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Schema to use while parsing message key from Pulsar message</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>io.micronaut.pulsar.MessageSchema.BYTES</dd>
+</dl>
+</li>
+</ul>
+</li>
+</ul>
+<ul class="blockList">
+<li class="blockList"><a name="keyEncoding--">
+<!--   -->
+</a>
+<ul class="blockList">
+<li class="blockList">
+<h4>keyEncoding</h4>
+<pre>public abstract&nbsp;org.apache.pulsar.common.schema.KeyValueEncodingType&nbsp;keyEncoding</pre>
+<div class="block">Ignored if annotated method does not contain parameter annotated with <a href="../../../../io/micronaut/pulsar/annotation/MessageKey.html" title="annotation in io.micronaut.pulsar.annotation"><code>MessageKey</code></a>. Indicates to message
+ processor is the key inside message payload or stored separately in which case key can have different schema
+ from message body. Type <code>KeyValueEncodingType.INLINE</code> can only work for JSON or Avro schemas; otherwise
+ throws exception while reading.</div>
+<dl>
+<dt><span class="returnLabel">Returns:</span></dt>
+<dd>Whether to read key from the message payload or separately.</dd>
+</dl>
+<dl>
+<dt>Default:</dt>
+<dd>org.apache.pulsar.common.schema.KeyValueEncodingType.INLINE</dd>
 </dl>
 </li>
 </ul>
@@ -618,7 +677,7 @@ public abstract&nbsp;@Pattern(regexp="((non-)?persistent://)?(\\w+(-?\\w+)?/){2}
 </div>
 <div class="subNav">
 <ul class="navList">
-<li>Prev&nbsp;Class</li>
+<li><a href="../../../../io/micronaut/pulsar/annotation/MessageProperties.html" title="annotation in io.micronaut.pulsar.annotation"><span class="typeNameLink">Prev&nbsp;Class</span></a></li>
 <li><a href="../../../../io/micronaut/pulsar/annotation/PulsarProducer.html" title="annotation in io.micronaut.pulsar.annotation"><span class="typeNameLink">Next&nbsp;Class</span></a></li>
 </ul>
 <ul class="navList">
