@@ -63,9 +63,9 @@ public class JsonSchema<T> extends AvroBaseStructSchema<T> {
      * @since 1.1.0
      */
     public static <T> JsonSchema<T> of(Class<T> pojo, JsonMapper jsonMapper) {
-        SchemaReader<T> reader = new JacksonJsonReader<>(jsonMapper, pojo);
-        SchemaWriter<T> writer = new JacksonJsonWriter<>(jsonMapper);
-        SchemaDefinition<T> schemaDefinition = new SchemaDefinitionBuilderImpl<T>().withPojo(pojo)
+        final SchemaReader<T> reader = new JacksonJsonReader<>(jsonMapper, pojo);
+        final SchemaWriter<T> writer = new JacksonJsonWriter<>(jsonMapper);
+        final SchemaDefinition<T> schemaDefinition = new SchemaDefinitionBuilderImpl<T>().withPojo(pojo)
                 .withSchemaReader(reader)
                 .withSchemaWriter(writer)
                 .build();

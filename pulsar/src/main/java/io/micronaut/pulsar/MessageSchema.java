@@ -101,10 +101,5 @@ public enum MessageSchema {
     /**
      * A schema for Protocol Buffer generated messages.
      */
-    PROTOBUF,
-
-    /**
-     * Key/Value pair schema.
-     */
-    KEY_VALUE
+    PROTOBUF
 }

@@ -22,6 +22,7 @@ import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
 import org.apache.pulsar.client.api.SubscriptionType;
+import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
 import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
@@ -92,6 +93,24 @@ public @interface PulsarConsumer {
      * @return Schema to use with pulsar topic consumer
      */
     MessageSchema schema() default BYTES;
+
+    /**
+     * Ignored if {@link #keyEncoding()} is {@link KeyValueEncodingType#INLINE} or if {@link MessageKey} is missing
+     * on one of the attributes of the annotated method.
+     *
+     * @return Schema to use while parsing message key from Pulsar message
+     */
+    MessageSchema keySchema() default BYTES;
+
+    /**
+     * Ignored if annotated method does not contain parameter annotated with {@link MessageKey}. Indicates to message
+     * processor is the key inside message payload or stored separately in which case key can have different schema
+     * from message body. Type {@link KeyValueEncodingType#INLINE} can only work for JSON or Avro schemas; otherwise
+     * throws exception while reading.
+     *
+     * @return Whether to read key from the message payload or separately.
+     */
+    KeyValueEncodingType keyEncoding() default KeyValueEncodingType.INLINE;
 
     /**
      * @return Consumer name for more descriptive monitoring

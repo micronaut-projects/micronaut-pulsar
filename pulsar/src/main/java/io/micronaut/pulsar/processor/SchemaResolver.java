@@ -17,15 +17,19 @@ package io.micronaut.pulsar.processor;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.beans.BeanWrapper;
 import io.micronaut.core.naming.Named;
+import io.micronaut.core.type.Argument;
 import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.schemas.JsonSchema;
 import jakarta.inject.Singleton;
+import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.impl.schema.*;
+import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -47,7 +51,7 @@ public class SchemaResolver {
      * @deprecated Use {@link #SchemaResolver(JsonMapper)} instead
      */
     @Deprecated
-    public SchemaResolver(ObjectMapper objectMapper) {
+    public SchemaResolver(final ObjectMapper objectMapper) {
         this(new JacksonDatabindMapper(objectMapper));
     }
 
@@ -55,26 +59,43 @@ public class SchemaResolver {
      * @param jsonMapper The JSON mapper to use
      * @since 1.1.0
      */
-    public SchemaResolver(JsonMapper jsonMapper) {
+    public SchemaResolver(final JsonMapper jsonMapper) {
         this.jsonMapper = jsonMapper;
     }
 
     /**
-     * Resolve which schema to use.
+     * Resolve which schema to use for ser/der.
      *
-     * @param topicAnnotation either producer or consumer annotation
-     * @param messageBodyType type of message body used with Pulsar topic
+     * @param topicAnnotation annotation corresponding to one of the Pulsar annotations: consumer, reader, producer.
+     * @param body argument that represents message body
+     * @param key if message is of type key-value a key should be passed; otherwise use null
      * @return new Schema
      */
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public Schema<?> decideSchema(final AnnotationValue<?> topicAnnotation, Class<?> messageBodyType) {
+    public Schema<?> decideSchema(final Argument<?> body, @Nullable final Argument<?> key, final AnnotationValue<?> topicAnnotation) {
+        final boolean isKeyValue = key != null;
+        final Class<?> bodyClass = bodyType(body);
+        final MessageSchema schema = topicAnnotation.getRequiredValue("schema", MessageSchema.class);
+        if (!isKeyValue) {
+            return resolve(schema, bodyClass);
+        }
+        final KeyValueEncodingType type = topicAnnotation.getRequiredValue(KeyValueEncodingType.class);
+        final Schema<?> bodyType = resolve(schema, bodyClass);
+        final Schema<?> keyType;
+        if (type == KeyValueEncodingType.INLINE) {
+            keyType = resolve(schema, key.getType());
+        } else {
+            keyType = resolve(topicAnnotation.getRequiredValue("keySchema", MessageSchema.class),
+                    key.getType());
+        }
+        return KeyValueSchemaImpl.of(bodyType, keyType, type);
+    }
 
-        MessageSchema schema = topicAnnotation.getRequiredValue("schema", MessageSchema.class);
-        if (MessageSchema.BYTES == schema && byte[].class != messageBodyType) {
-            if (String.class == messageBodyType) {
+    private Schema<?> resolve(final MessageSchema schema, final Class<?> type) {
+        if (MessageSchema.BYTES == schema && byte[].class != type) {
+            if (String.class == type) {
                 return new StringSchema();
             }
-            return JsonSchema.of(messageBodyType, jsonMapper); //default to JSON for now
+            return JsonSchema.of(type, jsonMapper); //default to JSON for now
         }
 
         switch (schema) {
@@ -105,19 +126,24 @@ public class SchemaResolver {
             case STRING:
                 return new StringSchema();
             case JSON:
-                return JsonSchema.of(messageBodyType, jsonMapper);
+                return JsonSchema.of(type, jsonMapper);
             case AVRO:
-                return AvroSchema.of(new SchemaDefinitionBuilderImpl().withPojo(messageBodyType).build());
+                return AvroSchema.of(new SchemaDefinitionBuilderImpl<>().withPojo(type).build());
             case PROTOBUF:
-                Map<String, String> properties = BeanWrapper.getWrapper(messageBodyType).getBeanProperties().stream()
+                Map<String, String> properties = BeanWrapper.getWrapper(type).getBeanProperties().stream()
                         .collect(Collectors.toMap(Named::getName, x -> x.getType().getName()));
                 properties.put("__jsr310ConversionEnabled", "true");
                 properties.put("__alwaysAllowNull", "true");
-                return ProtobufNativeSchema.ofGenericClass(messageBodyType, properties);
-            case KEY_VALUE:
-                throw new UnsupportedOperationException("Missing implementation for KEY_VALUE schema message");
+                return ProtobufNativeSchema.ofGenericClass(type, properties);
             default:
                 throw new IllegalStateException("Unexpected value: " + schema);
         }
+    }
+
+    private static Class<?> bodyType(final Argument<?> body) {
+        if (Message.class.isAssignableFrom(body.getType())) {
+            return body.getTypeParameters()[0].getType();
+        }
+        return body.getType();
     }
 }

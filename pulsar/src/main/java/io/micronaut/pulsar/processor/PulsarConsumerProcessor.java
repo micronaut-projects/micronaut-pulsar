@@ -101,10 +101,6 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         if (ArrayUtils.isEmpty(arguments)) {
             throw new MessageListenerException("Method annotated with PulsarConsumer must accept at least 1 parameter");
         }
-        if (arguments.length > 2) {
-            throw new MessageListenerException("Method annotated with PulsarConsumer must accept maximum of 2 parameters, " +
-                    "one for message body and one for " + Consumer.class.getName());
-        }
 
         ExecutableMethod<Object, ?> castMethod = (ExecutableMethod<Object, ?>) method;
 
@@ -152,29 +148,12 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                                                          //? will mess up IntelliJ and compiler so use Object to enable method.invoke
                                                          ExecutableMethod<Object, ?> method,
                                                          Object bean) {
+        final PulsarArgumentHandler argHandler = new PulsarArgumentHandler(method.getArguments(), method.getDescription(false));
+        final Schema<?> schema = schemaResolver.decideSchema(argHandler.getBodyArgument(),
+                argHandler.getKeyArgument(),
+                consumerAnnotation);
 
-        Argument<?>[] methodArguments = method.getArguments();
-
-        Optional<Argument<?>> bodyType = Arrays.stream(methodArguments)
-                .filter(x -> !Consumer.class.isAssignableFrom(x.getType()))
-                .findFirst();
-        if (!bodyType.isPresent()) {
-            throw new MessageListenerException("Method annotated with pulsar consumer must accept 1 parameter that's of" +
-                    " type other than " + Consumer.class.getName() + " class which can be used to accept pulsar message.");
-        }
-
-        Class<?> messageBodyType = bodyType.get().getType();
-        boolean useMessageWrapper = Message.class.isAssignableFrom(messageBodyType); //users can consume only message body and ignore the rest
-
-        Schema<?> schema;
-        if (useMessageWrapper) {
-            Argument<?> messageWrapper = bodyType.get().getTypeParameters()[0];
-            schema = schemaResolver.decideSchema(consumerAnnotation, messageWrapper.getType());
-        } else {
-            schema = schemaResolver.decideSchema(consumerAnnotation, messageBodyType);
-        }
-
-        ConsumerBuilder<?> consumer = consumerBuilder(schema);
+        ConsumerBuilder<?> consumer = new ConsumerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema);
         consumerAnnotation.stringValue("consumerName").ifPresent(consumer::consumerName);
 
         resolveTopic(consumerAnnotation, consumer);
@@ -195,13 +174,9 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
             }
         });
 
-        consumer.messageListener(new DefaultListener(method, useMessageWrapper, bean));
+        consumer.messageListener(new DefaultListener(method, argHandler.isMessageWrapper(), bean, argHandler));
 
         return consumer;
-    }
-
-    private <T> ConsumerBuilder<T> consumerBuilder(Schema<T> schema) {
-        return new ConsumerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema);
     }
 
     private void resolveDeadLetter(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumerBuilder) {

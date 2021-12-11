@@ -24,17 +24,13 @@ import io.micronaut.inject.FieldInjectionPoint;
 import io.micronaut.inject.InjectionPoint;
 import io.micronaut.pulsar.annotation.PulsarReader;
 import io.micronaut.pulsar.processor.SchemaResolver;
-import org.apache.pulsar.client.api.MessageId;
-import org.apache.pulsar.client.api.PulsarClient;
-import org.apache.pulsar.client.api.PulsarClientException;
-import org.apache.pulsar.client.api.Reader;
-import org.apache.pulsar.client.api.Schema;
+import org.apache.pulsar.client.api.*;
+import org.apache.pulsar.common.schema.KeyValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -72,26 +68,38 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
             throw new IllegalStateException("Failed to get value for bean annotated with PulsarReader");
         }
 
-        Optional<Argument<?>> messageBodyType = Optional.empty();
+        final Argument<?> messageBodyType;
+        final Argument<?> keyClass;
+        final Argument<?> readerArgument;
         String declaredName = null;
 
         if (injectionPoint instanceof ArgumentInjectionPoint) {
             @SuppressWarnings({"unchecked"})
             ArgumentInjectionPoint<?, Reader<?>> argumentInjection = (ArgumentInjectionPoint<?, Reader<?>>) injectionPoint;
-            messageBodyType = argumentInjection.getArgument().getFirstTypeVariable();
+            readerArgument = argumentInjection.getArgument().getFirstTypeVariable()
+                    .orElse(Argument.of(byte[].class));
             declaredName = argumentInjection.getArgument().getName();
         } else if (injectionPoint instanceof FieldInjectionPoint) {
             @SuppressWarnings({"unchecked"})
             FieldInjectionPoint<?, Reader<?>> fieldInjection = (FieldInjectionPoint<?, Reader<?>>) injectionPoint;
-            messageBodyType = fieldInjection.asArgument().getFirstTypeVariable();
+            readerArgument = fieldInjection.asArgument().getFirstTypeVariable()
+                    .orElse(Argument.of(byte[].class));
             declaredName = fieldInjection.getName();
+        } else {
+            readerArgument = Argument.of(byte[].class);
         }
 
-        Class<?> bodyType = messageBodyType.orElse(Argument.of(byte[].class)).getType();
+        if (KeyValue.class.isAssignableFrom(readerArgument.getType())) {
+            keyClass = readerArgument.getTypeParameters()[0];
+            messageBodyType = readerArgument.getTypeParameters()[1];
+        } else {
+            messageBodyType = readerArgument;
+            keyClass = null;
+        }
 
-        Schema<?> schema = schemaResolver.decideSchema(annotation, bodyType);
-        String name = annotation.stringValue("readerName").orElse(declaredName);
-        String topic = annotation.getRequiredValue(String.class);
+        final Schema<?> schema = schemaResolver.decideSchema(messageBodyType, keyClass, annotation);
+        final String name = annotation.stringValue("readerName").orElse(declaredName);
+        final String topic = annotation.getRequiredValue(String.class);
 
         boolean startFromLatestMessage = annotation.getRequiredValue("startMessageLatest", boolean.class);
         MessageId startMessageId = startFromLatestMessage ? MessageId.latest : MessageId.earliest;

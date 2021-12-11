@@ -16,6 +16,26 @@ Async return type is mostly for developers control over execution flow from the 
 <6> -
 <7> -
 
+=== Consumer method
+
+Simple approach is to provide just 1 parameter in the method arguments list which will default to it being detected as a
+message body (payload). This can also resolve `Message<>` type from Pulsar and thus detect whether to inject parsed body
+or to inject the whole Pulsar message. In case of multiple argument it's important to annotate argument which will be used
+for passing message payload with `@MessageBody` as well as other parameters with one of the `MessageKey` (message key) or
+`@MessageProperties` of type `Map<String,String>` which represents all message properties/headers to be injected. For headers listed
+as method arguments use `@MessageHeader(*headerName)` on each argument representing message header. Due to Pulsar underlying
+library headers must be strings (and their corresponding keys).
+
+WARNING: Don't confuse `@MessageHeader*s*` with `@MessageProperties`. Former is used by Micronaut messaging and not applicable
+to method argument thus latter was created to support mapping all headers/properties on a single method argument. Still,
+`@MessageHeader()` from the same package (messaging) was used for method argument, which maps single header value, to
+utilize as much existing annotations.
+
+Extra parameter of `org.apache.pulsar.client.api.Consumer` type does not need any annotation. It is a consumer passed by
+default from underlying Pulsar library. If not present on the method annotated with `@PulsarConsumer` it will be omitted.
+
+This is especially important for messages that should be of KeyValue type.
+
 === Using @PulsarSubscription annotation
 
 This annotation marks a class as a singleton bean that contains one or more methods serving as Pulsar consumers under
@@ -79,7 +99,20 @@ as it can be used later for debugging or injection points for Pulsar `Consumer<T
 |`MessageSchema`
 |`MessageSchema.BYTES` or `MessageSchema.JSON`*
 |No
-|If body is different from `byte[]` but `MessageSchema` is `Byte`, will fallback to JSON. Currently `KEY_VALUE` is not supported and will throw an exception.
+|If body is different from `byte[]` but `MessageSchema` is `Byte`, will default to JSON.
+
+|keySchema
+|`MessageSchema`
+|`MessageSchema.BYTES` or `MessageSchema.JSON`*
+|No
+|If message is of key-value type this must be set or default will be used with same resolution style as the schema
+
+|keyEncoding
+|`KeyValueEncodingType`
+|`KeyValueEncodingType.INLINE`
+|No
+|If message is of key-value type it is frequent that the key is sent separately from the payload in which case this value
+should be set to `KeyValueEncodingType.SEPARATED`; otherwise Pulsar will try to extract key from the message payload (body)
 
 |consumerName
 |`java.lang.String`
@@ -114,9 +147,10 @@ WARNING: When using PulsarConsumer with specific schema other than `byte[]`, mak
 schema the consumer is expecting, especially when using pattern consumer which listens to multiple topics. Otherwise, the consumer
 might not connect and could throw `org.apache.pulsar.client.api.PulsarClientException$IncompatibleSchemaException`.
 
+
 === Dead Letter Queue
 
-By default Pulsar Java library does not configure DLQ to be used. Instead it will re-deliver failed messages as long as
+By default, Pulsar Java library does not configure DLQ to be used. Instead it will re-deliver failed messages as long as
 possible which floods the consumer(s) until message if finally received. Failed means that message was received but consumer
 did negative acknowledgement thus received means delivered and acknowledged by the consumer. However, reason for failure might be
 bad JSON formatting (in the case where JSON is being used) or such which will create unnecessary traffic to consumer(s) and message

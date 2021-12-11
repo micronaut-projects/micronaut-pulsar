@@ -70,7 +70,7 @@ public final class JacksonJsonReader<T> implements SchemaReader<T> {
     }
 
     public T read(InputStream inputStream) {
-        T value;
+        final T value;
         try {
             value = this.jsonMapper.readValue(inputStream, Argument.of(this.pojo));
             try {

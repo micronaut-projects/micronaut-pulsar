@@ -40,6 +40,8 @@ public final class JacksonJsonWriter<T> implements SchemaWriter<T> {
     }
 
     /**
+     *
+     * @param mapper new json mapper
      * @since 1.1.0
      */
     public JacksonJsonWriter(JsonMapper mapper) {
