@@ -13,6 +13,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2'
     implementation project(":pulsar")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.0"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.0"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
     testImplementation 'jakarta.inject:jakarta.inject-api:2.0.1'
 }
