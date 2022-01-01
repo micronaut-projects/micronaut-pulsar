@@ -10,7 +10,7 @@ dependencies {
     compileOnly "io.micronaut:micronaut-inject-groovy"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.0"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.2'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0'
     implementation project(":pulsar")
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
     implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
