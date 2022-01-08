@@ -51,7 +51,7 @@ class PulsarProducersSpec extends PulsarAwareTest {
         String paramReturn = producer.returnOnProduce(message)
         MessageId nextMessage = producer.messageIdOnProduce(message)
         Mono<MessageId> reactiveMessage = producer.reactiveMessage(message)
-        MessageId withHeaders = producer.withHeaders(message, ["test": "header", "other": "header2"])
+        producer.withHeaders(message, ["test": "header", "other": "header2"])
 
         then:
         message == reader.readNext(60, SECONDS).value

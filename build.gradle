@@ -1,19 +1,4 @@
-subprojects { Project subproject ->
-    group "io.micronaut.pulsar"
-
-    apply plugin: "io.micronaut.build.internal.common"
-    apply plugin: "io.micronaut.build.internal.dependency-updates"
-
-    if (!subproject.name.contains('example')) {
-        apply plugin: "io.micronaut.build.internal.publishing"
-    }
-    dependencies {
-        testImplementation("org.spockframework:spock-core:${spockVersion}") {
-            exclude module:'groovy-all'
-        }
-        testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
-    }
+plugins {
+    id 'io.micronaut.build.internal.docs'
+    id 'io.micronaut.build.internal.dependency-updates'
 }
-
-apply plugin: "io.micronaut.build.internal.docs"
-apply plugin: "io.micronaut.build.internal.dependency-updates"
