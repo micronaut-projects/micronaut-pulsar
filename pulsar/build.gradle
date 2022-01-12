@@ -10,7 +10,7 @@ dependencies {
     compileOnly "jakarta.inject:jakarta.inject-api:2.0.1"
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     compileOnly "com.google.code.findbugs:jsr305"
-    compileOnly 'com.google.protobuf:protobuf-java:3.19.1'
+    compileOnly 'com.google.protobuf:protobuf-java:3.19.2'
 
     testImplementation "io.micronaut:micronaut-inject-groovy"
     testImplementation("org.spockframework:spock-core:${spockVersion}") {
