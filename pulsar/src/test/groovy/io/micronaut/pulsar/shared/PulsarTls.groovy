@@ -29,7 +29,7 @@ abstract class PulsarTls {
     public static final int BROKER_SSL = 6651
     private static final String caConfPath = "/my-ca";
     private static final PulsarContainer PULSAR_CONTAINER =
-            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.8.0"))
+            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.9.1"))
     private static ClassLoader resourceLoader
     private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 

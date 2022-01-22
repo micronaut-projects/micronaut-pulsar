@@ -1,0 +1,9 @@
+plugins {
+    id 'io.micronaut.build.internal.pulsar-base'
+    id 'io.micronaut.application'
+}
+
+dependencies {
+    testImplementation projects.pulsar
+    testImplementation mn.reactor
+}

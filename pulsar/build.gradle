@@ -1,29 +1,31 @@
+plugins {
+    id 'io.micronaut.build.internal.pulsar-module'
+}
+
 dependencies {
-    annotationProcessor "io.micronaut:micronaut-inject-java"
+    annotationProcessor mn.micronaut.inject.java
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
-    annotationProcessor "io.micronaut:micronaut-graal"
 
-    api "io.micronaut:micronaut-inject"
-    api "io.micronaut:micronaut-messaging:$micronautVersion"
-    api "org.apache.pulsar:pulsar-client:$pulsarVersion"
+    api mn.micronaut.inject
+    api mn.micronaut.messaging
+    api libs.pulsar
 
-    compileOnly "jakarta.inject:jakarta.inject-api:2.0.1"
+    compileOnly "jakarta.inject:jakarta.inject-api"
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
-    compileOnly "com.google.code.findbugs:jsr305"
     compileOnly 'com.google.protobuf:protobuf-java:3.19.3'
+    compileOnly 'io.micronaut.reactor:micronaut-reactor'
 
-    testImplementation "io.micronaut:micronaut-inject-groovy"
-    testImplementation("org.spockframework:spock-core:${spockVersion}") {
-        exclude module: 'groovy-all'
-    }
-    testImplementation "io.micronaut.test:micronaut-test-spock:$micronautTestVersion"
-    testImplementation "org.testcontainers:spock:1.16.2"
-    testImplementation "org.testcontainers:pulsar:1.16.2"
-    testImplementation "io.micronaut.cache:micronaut-cache-core:3.0.0"
-    testRuntimeOnly "io.micronaut:micronaut-runtime"
-    testRuntimeOnly "io.micronaut:micronaut-http-server-netty"
-    testImplementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2'
+    testImplementation mn.micronaut.inject.groovy
+    testImplementation mn.micronaut.inject.java
+
+    testRuntimeOnly 'io.micronaut:micronaut-http-server-netty'
+    testRuntimeOnly 'io.micronaut:micronaut-runtime'
     testImplementation 'io.micronaut.reactor:micronaut-reactor'
+    testImplementation mn.micronaut.test.spock
+    testImplementation mn.spock
+    testImplementation libs.testcontainers.spock
+    testImplementation libs.testcontainers.pulsar
+    testImplementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2'
 }
 
 test {
@@ -34,4 +36,8 @@ test {
         exceptionFormat = 'full'
     }
     failFast = true
+}
+
+repositories {
+    mavenCentral()
 }

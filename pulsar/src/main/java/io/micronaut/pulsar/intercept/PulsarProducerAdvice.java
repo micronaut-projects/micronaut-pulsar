@@ -41,6 +41,7 @@ import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.common.schema.KeyValue;
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -151,10 +152,9 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
 
     private <T, V> Object sendAsync(V value, Producer<T> producer, ReturnType<?> returnType, @Nullable Object key, Map<String, String> headers) {
         final CompletableFuture<?> future = buildMessage(producer, value, key, headers).sendAsync();
-        if (returnType.isAsync()) {
+        if (CompletableFuture.class == returnType.getType()) {
             return future;
         }
-
         return Publishers.convertPublisher(future, returnType.getType());
     }
 

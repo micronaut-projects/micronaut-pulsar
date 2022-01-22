@@ -1,18 +1,32 @@
 plugins {
-    id "org.jetbrains.kotlin.jvm" version "1.6.10"
-    id "org.jetbrains.kotlin.kapt" version "1.6.10"
+    id 'io.micronaut.build.internal.pulsar-module'
+    alias libs.plugins.kotlin.jvm
+    alias libs.plugins.kotlin.kapt
 }
 
 dependencies {
-    kapt platform("io.micronaut:micronaut-bom:$micronautVersion")
-    kaptTest platform("io.micronaut:micronaut-bom:$micronautVersion")
-    implementation platform("io.micronaut:micronaut-bom:$micronautVersion")
-    compileOnly "io.micronaut:micronaut-inject-groovy"
+    kaptTest enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion")
+    kaptTest mn.micronaut.inject.java
+
+    testImplementation projects.pulsar
+    testImplementation libs.kotest
+    testImplementation libs.kotlin.reflect
+    testImplementation libs.kotlin.stdlib
+    testImplementation libs.testcontainers
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.0"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.0"
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0'
-    implementation project(":pulsar")
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.6.10"
-    implementation "org.jetbrains.kotlin:kotlin-reflect:1.6.10"
-    testImplementation 'jakarta.inject:jakarta.inject-api:2.0.1'
+}
+
+test {
+    systemProperties['junit.jupiter.execution.parallel.enabled'] = true
+    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
+    forkEvery = 1
+}
+
+compileTestKotlin {
+    kotlinOptions {
+        jvmTarget = '1.8'
+        javaParameters = true
+    }
 }
