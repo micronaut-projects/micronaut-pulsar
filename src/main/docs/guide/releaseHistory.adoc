@@ -2,6 +2,15 @@ For this project, you can find a list of releases (with release notes) here:
 
 https://github.com/{githubSlug}/releases[https://github.com/{githubSlug}/releases]
 
+==== 1.1.0
+
+* Micronaut 3.2.3 minimum version
+* Using new JSON mapper
+* Key-Value messages support
+* Message Headers support
+* Protobuf native messages support using micronaut protobuf dependency
+* Apache Pulsar dependency upgraded to 2.9.1
+
 ==== 1.0.0
 
 * Micronaut 2.1.3 minimum version

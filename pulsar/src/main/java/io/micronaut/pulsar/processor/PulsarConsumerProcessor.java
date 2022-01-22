@@ -59,24 +59,24 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarConsumerProcessor.class);
 
-    private final ApplicationEventPublisher applicationEventPublisher;
+    private final ApplicationEventPublisher<Object> applicationEventPublisher;
     private final BeanContext beanContext;
     private final PulsarClient pulsarClient;
-    private final SchemaResolver schemaResolver;
+    private final DefaultSchemaHandler simpleSchemaResolver;
     private final DefaultPulsarClientConfiguration pulsarClientConfiguration;
     private final Map<String, Consumer<?>> consumers = new ConcurrentHashMap<>();
     private final Map<String, Consumer<?>> paused = new ConcurrentHashMap<>();
     private final AtomicInteger consumerCounter = new AtomicInteger(10);
 
-    public PulsarConsumerProcessor(ApplicationEventPublisher applicationEventPublisher,
-                                   BeanContext beanContext,
-                                   PulsarClient pulsarClient,
-                                   SchemaResolver schemaResolver,
-                                   DefaultPulsarClientConfiguration pulsarClientConfiguration) {
+    public PulsarConsumerProcessor(final ApplicationEventPublisher<Object> applicationEventPublisher,
+                                   final BeanContext beanContext,
+                                   final PulsarClient pulsarClient,
+                                   final DefaultSchemaHandler simpleSchemaResolver,
+                                   final DefaultPulsarClientConfiguration pulsarClientConfiguration) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.beanContext = beanContext;
         this.pulsarClient = pulsarClient;
-        this.schemaResolver = schemaResolver;
+        this.simpleSchemaResolver = simpleSchemaResolver;
         this.pulsarClientConfiguration = pulsarClientConfiguration;
     }
 
@@ -149,9 +149,10 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                                                          ExecutableMethod<Object, ?> method,
                                                          Object bean) {
         final PulsarArgumentHandler argHandler = new PulsarArgumentHandler(method.getArguments(), method.getDescription(false));
-        final Schema<?> schema = schemaResolver.decideSchema(argHandler.getBodyArgument(),
+        final Schema<?> schema = simpleSchemaResolver.decideSchema(argHandler.getBodyArgument(),
                 argHandler.getKeyArgument(),
-                consumerAnnotation);
+                consumerAnnotation,
+                method.getDescription(false));
 
         ConsumerBuilder<?> consumer = new ConsumerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema);
         consumerAnnotation.stringValue("consumerName").ifPresent(consumer::consumerName);

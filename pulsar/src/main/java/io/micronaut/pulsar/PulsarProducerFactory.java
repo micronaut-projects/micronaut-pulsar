@@ -22,8 +22,9 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.type.Argument;
 import io.micronaut.messaging.exceptions.MessagingClientException;
 import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.pulsar.processor.PulsarArgumentHandler;
-import io.micronaut.pulsar.processor.SchemaResolver;
+import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.client.impl.ProducerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
@@ -37,13 +38,19 @@ import org.apache.pulsar.client.impl.PulsarClientImpl;
 @Factory
 public class PulsarProducerFactory {
 
+    private final PulsarClientConfiguration configuration;
+
+    public PulsarProducerFactory(final PulsarClientConfiguration configuration) {
+        this.configuration = configuration;
+    }
+
     /**
      * Simple factory method for producing Pulsar {@link Producer} beans.
      *
      * @param pulsarClient        main Pulsar Client bean
      * @param annotationValue     method annotation to read properties from
      * @param methodArguments     arguments passed to method annotated with @PulsarProducer
-     * @param schemaResolver      schema resolver bean
+     * @param simpleSchemaResolver      schema resolver bean
      * @param <T>                 type of message body for pulsar producer
      * @param annotatedMethodName method name on which annotation for Pulsar Producer was set
      * @return new Pulsar producer
@@ -54,13 +61,22 @@ public class PulsarProducerFactory {
     public <T> Producer<T> createProducer(@Parameter PulsarClient pulsarClient,
                                           @Parameter AnnotationValue<PulsarProducer> annotationValue,
                                           @Parameter Argument<?>[] methodArguments,
-                                          @Parameter SchemaResolver schemaResolver,
+                                          @Parameter DefaultSchemaHandler simpleSchemaResolver,
                                           @Parameter String annotatedMethodName) throws MessagingClientException {
 
         final PulsarArgumentHandler argsHandler = new PulsarArgumentHandler(methodArguments, annotatedMethodName);
-        Schema<T> schema = (Schema<T>) schemaResolver.decideSchema(argsHandler.getBodyArgument(), argsHandler.getKeyArgument(), annotationValue);
+        final Schema<T> schema = (Schema<T>) simpleSchemaResolver.decideSchema(argsHandler.getBodyArgument(),
+                argsHandler.getKeyArgument(),
+                annotationValue,
+                annotatedMethodName);
 
-        String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
+        final String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
+        if (!annotationValue.stringValue("topic").isPresent() && !annotationValue.getValue(String.class).isPresent()){
+            if (configuration.getShutdownOnSubscriberError()) {
+                throw new Error("Failed to instantiate Pulsar producer " + producerName + " due to missing topic");
+            }
+            throw new MessagingClientException("Topic value missing for producer " + producerName);
+        }
         String topic = annotationValue.stringValue("topic")
                 .orElseGet(() -> annotationValue.getRequiredValue(String.class));
 

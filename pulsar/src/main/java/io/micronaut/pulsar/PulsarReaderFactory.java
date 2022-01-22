@@ -23,7 +23,7 @@ import io.micronaut.inject.ArgumentInjectionPoint;
 import io.micronaut.inject.FieldInjectionPoint;
 import io.micronaut.inject.InjectionPoint;
 import io.micronaut.pulsar.annotation.PulsarReader;
-import io.micronaut.pulsar.processor.SchemaResolver;
+import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.common.schema.KeyValue;
 import org.slf4j.Logger;
@@ -46,11 +46,11 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
 
     private final Map<String, Reader<?>> readers = new ConcurrentHashMap<>();
     private final PulsarClient pulsarClient;
-    private final SchemaResolver schemaResolver;
+    private final DefaultSchemaHandler simpleSchemaResolver;
 
-    public PulsarReaderFactory(PulsarClient pulsarClient, SchemaResolver schemaResolver) {
+    public PulsarReaderFactory(PulsarClient pulsarClient, DefaultSchemaHandler simpleSchemaResolver) {
         this.pulsarClient = pulsarClient;
-        this.schemaResolver = schemaResolver;
+        this.simpleSchemaResolver = simpleSchemaResolver;
     }
 
     /**
@@ -71,7 +71,8 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         final Argument<?> messageBodyType;
         final Argument<?> keyClass;
         final Argument<?> readerArgument;
-        String declaredName = null;
+        final String declaredName;
+        final String target;
 
         if (injectionPoint instanceof ArgumentInjectionPoint) {
             @SuppressWarnings({"unchecked"})
@@ -79,14 +80,18 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
             readerArgument = argumentInjection.getArgument().getFirstTypeVariable()
                     .orElse(Argument.of(byte[].class));
             declaredName = argumentInjection.getArgument().getName();
+            target = argumentInjection.getDeclaringBean().getName() + " " + declaredName;
         } else if (injectionPoint instanceof FieldInjectionPoint) {
             @SuppressWarnings({"unchecked"})
             FieldInjectionPoint<?, Reader<?>> fieldInjection = (FieldInjectionPoint<?, Reader<?>>) injectionPoint;
             readerArgument = fieldInjection.asArgument().getFirstTypeVariable()
                     .orElse(Argument.of(byte[].class));
             declaredName = fieldInjection.getName();
+            target = fieldInjection.getDeclaringBean().getName() + " " + declaredName;
         } else {
             readerArgument = Argument.of(byte[].class);
+            declaredName = injectionPoint.getDeclaringBean().getName();
+            target = declaredName;
         }
 
         if (KeyValue.class.isAssignableFrom(readerArgument.getType())) {
@@ -97,7 +102,7 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
             keyClass = null;
         }
 
-        final Schema<?> schema = schemaResolver.decideSchema(messageBodyType, keyClass, annotation);
+        final Schema<?> schema = simpleSchemaResolver.decideSchema(messageBodyType, keyClass, annotation, target);
         final String name = annotation.stringValue("readerName").orElse(declaredName);
         final String topic = annotation.getRequiredValue(String.class);
 
@@ -113,7 +118,7 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     }
 
     @Override
-    public void close() throws Exception {
+    public void close() {
         for (Reader<?> reader : readers.values()) {
             try {
                 reader.close();

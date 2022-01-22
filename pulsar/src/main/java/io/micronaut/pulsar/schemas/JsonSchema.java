@@ -29,6 +29,9 @@ import org.apache.pulsar.client.impl.schema.util.SchemaUtil;
 import org.apache.pulsar.common.schema.SchemaInfo;
 import org.apache.pulsar.common.schema.SchemaType;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 /**
  * JSON Schema to allow using {@link ObjectMapper} from Micronaut instead of shaded one in Pulsar library.
  * @param <T> POJO type to send and receive via Pulsar.
@@ -36,6 +39,8 @@ import org.apache.pulsar.common.schema.SchemaType;
  * @since 1.0
  */
 public class JsonSchema<T> extends AvroBaseStructSchema<T> {
+
+    private static final Map<Integer, JsonSchema<?>> SCHEMAS = new ConcurrentHashMap<>(10);
 
     public JsonSchema(SchemaInfo schemaInfo, SchemaReader<T> reader, SchemaWriter<T> writer) {
         super(schemaInfo);
@@ -62,13 +67,16 @@ public class JsonSchema<T> extends AvroBaseStructSchema<T> {
      * @return The parsed json schema
      * @since 1.1.0
      */
+    @SuppressWarnings("unchecked")
     public static <T> JsonSchema<T> of(Class<T> pojo, JsonMapper jsonMapper) {
-        final SchemaReader<T> reader = new JacksonJsonReader<>(jsonMapper, pojo);
-        final SchemaWriter<T> writer = new JacksonJsonWriter<>(jsonMapper);
-        final SchemaDefinition<T> schemaDefinition = new SchemaDefinitionBuilderImpl<T>().withPojo(pojo)
-                .withSchemaReader(reader)
-                .withSchemaWriter(writer)
-                .build();
-        return new JsonSchema<>(SchemaUtil.parseSchemaInfo(schemaDefinition, SchemaType.JSON), reader, writer);
+        return (JsonSchema<T>) SCHEMAS.computeIfAbsent(pojo.hashCode(), x -> {
+            final SchemaReader<T> reader = new JacksonJsonReader<>(jsonMapper, pojo);
+            final SchemaWriter<T> writer = new JacksonJsonWriter<>(jsonMapper);
+            final SchemaDefinition<T> schemaDefinition = new SchemaDefinitionBuilderImpl<T>().withPojo(pojo)
+                    .withSchemaReader(reader)
+                    .withSchemaWriter(writer)
+                    .build();
+            return new JsonSchema<>(SchemaUtil.parseSchemaInfo(schemaDefinition, SchemaType.JSON), reader, writer);
+        });
     }
 }
