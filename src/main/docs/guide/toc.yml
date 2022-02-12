@@ -13,4 +13,6 @@ authentication:
   title: Authentication
 tls:
   title: Transport encryption
+protobuf:
+  title: Protocol Buffers
 repository: Repository
