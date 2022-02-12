@@ -59,7 +59,9 @@
                                 
                                 <div class="toc-item" style="margin-left:0"><a href="#tls"><strong>8</strong><span>Transport encryption</span></a></div>
                                 
-                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
+                                <div class="toc-item" style="margin-left:0"><a href="#protobuf"><strong>9</strong><span>Protocol Buffers</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>10</strong><span>Repository</span></a></div>
                                 
                             </div>
                         </div>
@@ -106,7 +108,9 @@
         
         <div class="toc-item" style="margin-left:0px" id="toc-item-tls"><a href="#tls"><strong>8</strong><span>Transport encryption</span></a></div>
         
-        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>9</strong><span>Repository</span></a></div>
+        <div class="toc-item" style="margin-left:0px" id="toc-item-protobuf"><a href="#protobuf"><strong>9</strong><span>Protocol Buffers</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>10</strong><span>Repository</span></a></div>
         
         </div>
     </div>
@@ -116,7 +120,7 @@
         <h1>Micronaut Pulsar</h1>
         <p></p>
         <p>Integration between Micronaut and Apache Pulsar</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-pulsar/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0-SNAPSHOT/guide/index.html'>1.0.0-SNAPSHOT</option></select> </p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-pulsar/snapshot/guide/index.html'>SNAPSHOT</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-pulsar/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0-SNAPSHOT/guide/index.html'>1.0.0-SNAPSHOT</option></select> </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
@@ -146,6 +150,31 @@
 </div>
 <div class="paragraph">
 <p><a href="https://github.com/micronaut-projects/micronaut-pulsar/releases">https://github.com/micronaut-projects/micronaut-pulsar/releases</a></p>
+</div>
+<div class="sect3">
+<h4 id="_1_1_0">1.1.0</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Micronaut 3.2.3 minimum version</p>
+</li>
+<li>
+<p>Using new JSON mapper</p>
+</li>
+<li>
+<p>Key-Value messages support</p>
+</li>
+<li>
+<p>Message Headers support</p>
+</li>
+<li>
+<p>Protobuf native messages support using micronaut protobuf dependency</p>
+</li>
+<li>
+<p>Apache Pulsar dependency upgraded to 2.9.1</p>
+</li>
+</ul>
+</div>
 </div>
 <div class="sect3">
 <h4 id="_1_0_0">1.0.0</h4>
@@ -1124,7 +1153,58 @@ hostname is not verified but can be enabled by using <code>tls-verify-hostname: 
 </div>
 </div>
 
-<h1 id="repository"><a class="anchor" href="#repository"></a>9 Repository</h1>
+<h1 id="protobuf"><a class="anchor" href="#protobuf"></a>9 Protocol Buffers</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/protobuf.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_protocol_buffers_support">Protocol buffers support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to allow protocol buffer <strong>native</strong> messaging support you need to include protocol buffers
+google and micronaut dependencies</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut:protobuf-java")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
+    &lt;artifactId&gt;protobuf-java&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+
+        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut:micronaut-protobuff-support")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-protobuff-support&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+</p>
+</div>
+</div>
+</div>
+
+<h1 id="repository"><a class="anchor" href="#repository"></a>10 Repository</h1>
 
 <div class='contribute-btn'>
     <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/repository.adoc"'>
