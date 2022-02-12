@@ -14,6 +14,7 @@ dependencies {
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     compileOnly 'com.google.protobuf:protobuf-java:3.19.4'
     compileOnly 'io.micronaut.reactor:micronaut-reactor'
+    compileOnly 'io.micronaut.grpc:micronaut-protobuff-support:3.1.3'
 
     testImplementation mn.micronaut.inject.groovy
     testImplementation mn.micronaut.inject.java
@@ -26,6 +27,7 @@ dependencies {
     testImplementation libs.testcontainers.spock
     testImplementation libs.testcontainers.pulsar
     testImplementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2'
+    testImplementation 'io.micronaut.grpc:micronaut-protobuff-support:3.1.3'
 }
 
 test {

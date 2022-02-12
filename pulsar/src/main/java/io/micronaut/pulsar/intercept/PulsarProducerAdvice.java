@@ -20,6 +20,7 @@ import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
+import io.micronaut.context.exceptions.BeanInstantiationException;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
@@ -30,25 +31,22 @@ import io.micronaut.core.type.ReturnType;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.MessageBody;
 import io.micronaut.messaging.annotation.MessageHeader;
+import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.pulsar.PulsarProducerRegistry;
 import io.micronaut.pulsar.annotation.MessageKey;
 import io.micronaut.pulsar.annotation.MessageProperties;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.annotation.PulsarProducerClient;
 import io.micronaut.pulsar.events.ProducerSubscriptionFailedEvent;
-import io.micronaut.pulsar.processor.SchemaResolver;
+import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import jakarta.annotation.PreDestroy;
 import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.common.schema.KeyValue;
-import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -69,16 +67,16 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
 
     private final Map<String, Producer<?>> producers = new ConcurrentHashMap<>();
     private final PulsarClient pulsarClient;
-    private final SchemaResolver schemaResolver;
+    private final DefaultSchemaHandler simpleSchemaResolver;
     private final BeanContext beanContext;
     private final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher;
 
     public PulsarProducerAdvice(final PulsarClient pulsarClient,
-                                final SchemaResolver schemaResolver,
+                                final DefaultSchemaHandler simpleSchemaResolver,
                                 final BeanContext beanContext,
                                 final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher) {
         this.pulsarClient = pulsarClient;
-        this.schemaResolver = schemaResolver;
+        this.simpleSchemaResolver = simpleSchemaResolver;
         this.beanContext = beanContext;
         this.applicationEventPublisher = applicationEventPublisher;
     }
@@ -207,7 +205,7 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
             return (Map<String, String>) headers.get(0).getValue();
         }
         return headers.stream().collect(Collectors.toMap(
-                x -> x.getAnnotation(MessageHeader.class).stringValue().orElse(x.getName()),
+                x -> Objects.requireNonNull(x.getAnnotation(MessageHeader.class)).stringValue().orElse(x.getName()),
                 x -> (String) x.getValue()
         ));
     }
@@ -222,12 +220,16 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
                         pulsarClient,
                         annotationValue,
                         method.getArguments(),
-                        schemaResolver,
-                        method.getMethodName()
+                        simpleSchemaResolver,
+                        method.getDescription(true)
                 );
                 producers.put(producerId, producer);
             } catch (Exception ex) {
-                LOG.error("Failed to create producer {}", producerId);
+                if (MessageListenerException.class == ex.getClass() && ex.getMessage().startsWith("Topic")) {
+                    LOG.error("Topic missing for producer {} {}", producerId, method.getDescription(false));
+                } else {
+                    LOG.error("Failed to create producer {} with reason: ", producerId, ex);
+                }
                 applicationEventPublisher.publishEventAsync(new ProducerSubscriptionFailedEvent(producerId, ex));
             }
         }
@@ -236,7 +238,7 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
 
     @Override
     @PreDestroy
-    public void close() throws Exception {
+    public void close() {
         for (Producer<?> producer : producers.values()) {
             if (producer.isConnected()) {
                 try {

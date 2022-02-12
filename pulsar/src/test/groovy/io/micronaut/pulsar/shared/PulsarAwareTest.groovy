@@ -20,6 +20,7 @@ import io.micronaut.context.env.Environment
 import io.micronaut.pulsar.PulsarConsumerSpec
 import io.micronaut.pulsar.PulsarProducersSpec
 import io.micronaut.pulsar.PulsarReaderSpec
+import io.micronaut.pulsar.PulsarSchemaSpec
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -35,6 +36,8 @@ abstract class PulsarAwareTest extends Specification {
         PulsarTls.createTopic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
         PulsarTls.createTopic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
         PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
+        PulsarTls.createTopic(PulsarSchemaSpec.PULSAR_JSON_TOPIC)
+        PulsarTls.createTopic(PulsarSchemaSpec.PULSAR_PROTOBUF_TOPIC)
         context = ApplicationContext.run(
                 ['pulsar.service-url'                 : PulsarTls.pulsarBrokerUrl,
                  'pulsar.shutdown-on-subscriber-error': true,

@@ -15,6 +15,9 @@
  */
 package io.micronaut.pulsar;
 
+import io.micronaut.core.annotation.Nullable;
+import io.micronaut.pulsar.schemas.SchemaResolver;
+
 /**
  * Supported schema types.
  *
@@ -26,80 +29,91 @@ public enum MessageSchema {
     /**
      * A sequence of 8-bit unsigned bytes.
      */
-    BYTES,
+    BYTES(null),
 
     /**
      * Effectively a `BYTES` schema.
      */
-    BYTEBUFFER,
+    BYTEBUFFER(null),
 
     /**
-     * A 8-bit signed integer.
+     * Effectively a `BYTES` schema of a single byte.
      */
-    INT8,
+    INT8(null),
 
     /**
      * A 16-bit signed integer.
      */
-    INT16,
+    INT16(null),
 
     /**
      * A 32-bit signed integer.
      */
-    INT32,
+    INT32(null),
 
     /**
      * A 64-bit signed integer.
      */
-    INT64,
+    INT64(null),
 
     /**
      * A binary value.
      */
-    BOOL,
+    BOOL(null),
 
     /**
      * A single precision (32-bit) IEEE 754 floating-point number.
      */
-    FLOAT,
+    FLOAT(null),
 
     /**
      * A double-precision (64-bit) IEEE 754 floating-point number.
      */
-    DOUBLE,
+    DOUBLE(null),
 
     /**
      * A schema for `java.util.Date` or `java.sql.Date`.
      */
-    DATE,
+    DATE(null),
 
     /**
      * A schema for `java.sql.Time`.
      */
-    TIME,
+    TIME(null),
 
     /**
      * A schema for `java.sql.Timestamp`.
      */
-    TIMESTAMP,
+    TIMESTAMP(null),
 
     /**
      * A Unicode character sequence.
      */
-    STRING,
+    STRING(null),
 
     /**
      * A schema for JSON data.
      */
-    JSON,
+    JSON(SchemaResolver.JSON_SCHEMA_NAME),
 
     /**
      * An Apache Avro schema.
      */
-    AVRO,
+    AVRO(null),
 
     /**
      * A schema for Protocol Buffer generated messages.
      */
-    PROTOBUF
+    PROTOBUF(SchemaResolver.PROTOBUF_SCHEMA_NAME);
+
+    final String schemaResolverName;
+
+    MessageSchema(@Nullable String namedBean) {
+        this.schemaResolverName = namedBean;
+    }
+
+    @Nullable
+    public String getSchemaResolverName() {
+        return schemaResolverName;
+    }
 }

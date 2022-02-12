@@ -61,6 +61,7 @@ public final class JacksonJsonReader<T> implements SchemaReader<T> {
         this.jsonMapper = jsonMapper;
     }
 
+    @Override
     public T read(byte[] bytes, int offset, int length) {
         try {
             return this.jsonMapper.readValue(new ByteArrayInputStream(bytes, offset, length), Argument.of(this.pojo));
@@ -69,6 +70,7 @@ public final class JacksonJsonReader<T> implements SchemaReader<T> {
         }
     }
 
+    @Override
     public T read(InputStream inputStream) {
         final T value;
         try {
