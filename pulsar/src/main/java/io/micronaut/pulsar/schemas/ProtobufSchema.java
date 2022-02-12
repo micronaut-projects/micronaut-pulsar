@@ -46,7 +46,6 @@ public final class ProtobufSchema<T> extends AbstractStructSchema<T> {
         this.setWriter(writer);
     }
 
-    //TODO: needs to be able to handle any class and convert it to GeneratedMessageV3 for codec to be able to work
     @SuppressWarnings("unchecked")
     public static <T> ProtobufSchema<T> of(final Class<T> type, final ProtobufferCodec codec) {
         return (ProtobufSchema<T>) SCHEMAS.computeIfAbsent(type.hashCode(), x -> {

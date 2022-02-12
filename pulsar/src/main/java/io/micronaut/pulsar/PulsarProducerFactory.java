@@ -23,8 +23,8 @@ import io.micronaut.core.type.Argument;
 import io.micronaut.messaging.exceptions.MessagingClientException;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.config.PulsarClientConfiguration;
-import io.micronaut.pulsar.processor.PulsarArgumentHandler;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
+import io.micronaut.pulsar.processor.PulsarArgumentHandler;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.client.impl.ProducerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
@@ -47,12 +47,12 @@ public class PulsarProducerFactory {
     /**
      * Simple factory method for producing Pulsar {@link Producer} beans.
      *
-     * @param pulsarClient        main Pulsar Client bean
-     * @param annotationValue     method annotation to read properties from
-     * @param methodArguments     arguments passed to method annotated with @PulsarProducer
-     * @param simpleSchemaResolver      schema resolver bean
-     * @param <T>                 type of message body for pulsar producer
-     * @param annotatedMethodName method name on which annotation for Pulsar Producer was set
+     * @param pulsarClient         main Pulsar Client bean
+     * @param annotationValue      method annotation to read properties from
+     * @param methodArguments      arguments passed to method annotated with @PulsarProducer
+     * @param simpleSchemaResolver schema resolver bean
+     * @param <T>                  type of message body for pulsar producer
+     * @param annotatedMethodName  method name on which annotation for Pulsar Producer was set
      * @return new Pulsar producer
      * @throws MessagingClientException in case Producer cannot be created
      */
@@ -71,7 +71,7 @@ public class PulsarProducerFactory {
                 annotatedMethodName);
 
         final String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
-        if (!annotationValue.stringValue("topic").isPresent() && !annotationValue.getValue(String.class).isPresent()){
+        if (!annotationValue.stringValue("topic").isPresent() && !annotationValue.getValue(String.class).isPresent()) {
             if (configuration.getShutdownOnSubscriberError()) {
                 throw new Error("Failed to instantiate Pulsar producer " + producerName + " due to missing topic");
             }
