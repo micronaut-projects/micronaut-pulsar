@@ -1,8 +1,8 @@
 [versions]
 kotlin = '1.6.10'
-kotest = '4.6.0'
-testcontainers = '1.16.2'
-junit = '5.7.2'
+kotest = '4.6.4'
+testcontainers = '1.16.3'
+junit = '5.8.2'
 pulsar = '2.9.1'
 micronaut-serde = "1.0.0-M5"
 

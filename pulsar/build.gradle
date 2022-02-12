@@ -12,7 +12,7 @@ dependencies {
 
     compileOnly "jakarta.inject:jakarta.inject-api"
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
-    compileOnly 'com.google.protobuf:protobuf-java:3.19.3'
+    compileOnly 'com.google.protobuf:protobuf-java:3.19.4'
     compileOnly 'io.micronaut.reactor:micronaut-reactor'
     compileOnly 'io.micronaut.grpc:micronaut-protobuff-support:3.1.3'
 
