@@ -23,7 +23,7 @@ import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.Schema;
 
 /**
- * JSON schema resolver
+ * JSON schema resolver.
  *
  * @author Haris Secic
  * @since 1.1.0

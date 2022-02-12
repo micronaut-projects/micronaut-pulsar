@@ -32,8 +32,18 @@ import org.apache.pulsar.client.api.Schema;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/***
+ * SchemaResolver represents basic bean that will handle serde operations for a given type. Beans should be named and
+ * each should represent schema which Apache Pulsar should use as transport type. For example JSON is wrapped in AVRO
+ * and Protobuf is natively support but thus 2 SchemaResolvers should exist. To avoid dependency checking default type
+ * names are listed here.
+ *
+ * Note: Primitive types are passed down to official Pulsar Java library thus no SchemaResolver names are listed here
+ * for them.
+ */
 public interface SchemaResolver {
     String JSON_SCHEMA_NAME = "JSON_SCHEMA_RESOLVER";
     String PROTOBUF_SCHEMA_NAME = "PROTOBUF_SCHEMA_RESOLVER";
-    Schema<?> forArgument(final Class<?> pojo);
+    Schema<?> forArgument(Class<?> pojo);
 }

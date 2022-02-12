@@ -25,7 +25,7 @@ import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.Schema;
 
 /**
- * Protobuf schema resolver
+ * Protobuf schema resolver.
  *
  * @author Haris Secic
  * @since 1.1.0
