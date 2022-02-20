@@ -15,15 +15,20 @@
  */
 package io.micronaut.pulsar;
 
+import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.annotation.Factory;
+import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.type.Argument;
 import io.micronaut.inject.ArgumentInjectionPoint;
+import io.micronaut.inject.ConstructorInjectionPoint;
 import io.micronaut.inject.FieldInjectionPoint;
 import io.micronaut.inject.InjectionPoint;
 import io.micronaut.pulsar.annotation.PulsarReader;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
+import io.micronaut.pulsar.processor.TopicResolver;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.common.schema.KeyValue;
 import org.slf4j.Logger;
@@ -47,53 +52,102 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     private final Map<String, Reader<?>> readers = new ConcurrentHashMap<>();
     private final PulsarClient pulsarClient;
     private final DefaultSchemaHandler simpleSchemaResolver;
+    private final TopicResolver topicResolver;
 
-    public PulsarReaderFactory(PulsarClient pulsarClient, DefaultSchemaHandler simpleSchemaResolver) {
+    public PulsarReaderFactory(PulsarClient pulsarClient,
+                               DefaultSchemaHandler simpleSchemaResolver,
+                               TopicResolver topicResolver) {
         this.pulsarClient = pulsarClient;
         this.simpleSchemaResolver = simpleSchemaResolver;
+        this.topicResolver = topicResolver;
     }
 
     /**
      * Create Pulsar Reader for given injection point if missing.
      *
      * @param injectionPoint field or argument injection point
-     * @return new instance of Pulsar reader for each injection point
+     * @return new instance of Pulsar reader if missing; otherwise return from cache
      * @throws PulsarClientException in case of not being able to create such Reader
      */
     @Prototype
-    public Reader<?> createReader(InjectionPoint<?> injectionPoint) throws PulsarClientException {
+    public Reader<?> createReader(final InjectionPoint<Reader<?>> injectionPoint) throws PulsarClientException {
 
-        AnnotationValue<PulsarReader> annotation = injectionPoint.getAnnotation(PulsarReader.class);
-        if (null == annotation) { //is this state possible?
+        final AnnotationValue<PulsarReader> annotation = injectionPoint.getAnnotation(PulsarReader.class);
+        if (null == annotation) {
             throw new IllegalStateException("Failed to get value for bean annotated with PulsarReader");
         }
 
-        final Argument<?> messageBodyType;
-        final Argument<?> keyClass;
+        final String topicValue = annotation.getRequiredValue(String.class);
         final Argument<?> readerArgument;
         final String declaredName;
         final String target;
 
         if (injectionPoint instanceof ArgumentInjectionPoint) {
-            @SuppressWarnings({"unchecked"})
-            ArgumentInjectionPoint<?, Reader<?>> argumentInjection = (ArgumentInjectionPoint<?, Reader<?>>) injectionPoint;
+            final ArgumentInjectionPoint<?, Reader<?>> argumentInjection = (ArgumentInjectionPoint<?, Reader<?>>) injectionPoint;
             readerArgument = argumentInjection.getArgument().getFirstTypeVariable()
                     .orElse(Argument.of(byte[].class));
             declaredName = argumentInjection.getArgument().getName();
             target = argumentInjection.getDeclaringBean().getName() + " " + declaredName;
+            if (argumentInjection.getOuterInjectionPoint() instanceof ConstructorInjectionPoint
+                    && TopicResolver.isDynamicTenantInTopic(topicValue)) {
+                throw new ConfigurationException(String.format(
+                        "Cannot use dynamic tenant in topics for constructor injected Readers in %s",
+                        target
+                ));
+            }
         } else if (injectionPoint instanceof FieldInjectionPoint) {
-            @SuppressWarnings({"unchecked"})
-            FieldInjectionPoint<?, Reader<?>> fieldInjection = (FieldInjectionPoint<?, Reader<?>>) injectionPoint;
+            final FieldInjectionPoint<?, Reader<?>> fieldInjection = (FieldInjectionPoint<?, Reader<?>>) injectionPoint;
             readerArgument = fieldInjection.asArgument().getFirstTypeVariable()
                     .orElse(Argument.of(byte[].class));
             declaredName = fieldInjection.getName();
-            target = fieldInjection.getDeclaringBean().getName() + " " + declaredName;
+            target = fieldInjection.getDeclaringBean().getName() + "::" + declaredName;
+            if (TopicResolver.isDynamicTenantInTopic(topicValue)) {
+                throw new ConfigurationException(String.format(
+                        "Cannot use dynamic tenant in topics for field injected Readers in %s",
+                        target
+                ));
+            }
         } else {
             readerArgument = Argument.of(byte[].class);
             declaredName = injectionPoint.getDeclaringBean().getName();
             target = declaredName;
+            if (TopicResolver.isDynamicTenantInTopic(topicValue)) {
+                throw new ConfigurationException(String.format(
+                        "Cannot use dynamic tenant in topics for field injected Readers in %s",
+                        target
+                ));
+            }
         }
 
+        return getOrCreateReader(annotation, readerArgument, declaredName, target);
+    }
+
+    /**
+     * Create Pulsar Reader for given injection point if missing.
+     *
+     * @param annotationValue value of {@link @PulsarReader} annotation on specified method
+     * @param returnType annotated method return type
+     * @param methodInvocationContext context in which annotated method was called
+     * @return new instance of Pulsar reader if missing; otherwise return from cache
+     * @throws PulsarClientException
+     */
+    @Prototype
+    public Reader<?> createReader(@Parameter final AnnotationValue<PulsarReader> annotationValue,
+                                  @Parameter final Argument<?> returnType,
+                                  @Parameter final MethodInvocationContext<?, ?> methodInvocationContext)
+            throws PulsarClientException {
+
+        final String target = methodInvocationContext.getExecutableMethod().getDescription(false);
+        final String declaredName = methodInvocationContext.getExecutableMethod().getName();
+        return getOrCreateReader(annotationValue, returnType, declaredName, target);
+    }
+
+    private Reader<?> getOrCreateReader(final AnnotationValue<PulsarReader> annotation,
+                                        final Argument<?> readerArgument,
+                                        final String declaredName,
+                                        final String target) throws PulsarClientException {
+        final Argument<?> keyClass;
+        final Argument<?> messageBodyType;
         if (KeyValue.class.isAssignableFrom(readerArgument.getType())) {
             keyClass = readerArgument.getTypeParameters()[0];
             messageBodyType = readerArgument.getTypeParameters()[1];
@@ -102,24 +156,22 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
             keyClass = null;
         }
 
-        final Schema<?> schema = simpleSchemaResolver.decideSchema(messageBodyType, keyClass, annotation, target);
         final String name = annotation.stringValue("readerName").orElse(declaredName);
-        final String topic = annotation.getRequiredValue(String.class);
+        if (readers.containsKey(name)) {
+            return readers.get(name);
+        }
+        final Schema<?> schema = simpleSchemaResolver.decideSchema(messageBodyType, keyClass, annotation, target);
+        final String topic = topicResolver.resolve(annotation.getRequiredValue(String.class));
 
         boolean startFromLatestMessage = annotation.getRequiredValue("startMessageLatest", boolean.class);
-        MessageId startMessageId = startFromLatestMessage ? MessageId.latest : MessageId.earliest;
+        final MessageId startMessageId = startFromLatestMessage ? MessageId.latest : MessageId.earliest;
 
-        return pulsarClient
-                .newReader(schema)
-                .startMessageId(startMessageId)
-                .readerName(name)
-                .topic(topic)
-                .create();
+        return pulsarClient.newReader(schema).startMessageId(startMessageId).readerName(name).topic(topic).create();
     }
 
     @Override
     public void close() {
-        for (Reader<?> reader : readers.values()) {
+        for (final Reader<?> reader : readers.values()) {
             try {
                 reader.close();
             } catch (Exception e) {

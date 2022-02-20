@@ -91,34 +91,12 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         boolean sendBefore = annotationValue.booleanValue("sendBefore").orElse(false);
         boolean isAbstract = context.isAbstract();
 
-        final Object returnValue; // store value of the call before
+        // store value of the call before
+        final Object returnValue = !isAbstract && !sendBefore ? context.proceed() : null;
 
-        if (!isAbstract && !sendBefore) {
-            returnValue = context.proceed();
-        } else {
-            returnValue = null;
-        }
-
-        final Object value, key;
-        final Map<String, String> headers;
-        if (context.getParameters().size() == 1) {
-            value = context.getParameterValues()[0];
-            key = null;
-            headers = Collections.emptyMap();
-        } else {
-            value = context.getParameters().values().stream()
-                    .filter(mutableArgumentValue -> mutableArgumentValue.isAnnotationPresent(MessageBody.class))
-                    .map(ArgumentValue::getValue)
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Producers with multiple values must have one argument annotated with @MessageBody"));
-            //key can be omitted if headers are used instead of just payload
-            key = context.getParameters().values().stream()
-                    .filter(mutableArgumentValue -> mutableArgumentValue.isAnnotationPresent(MessageKey.class))
-                    .map(ArgumentValue::getValue)
-                    .findFirst()
-                    .orElse(null);
-            headers = collectHeaders(context);
-        }
+        final Object value = getValueFromContext(context);
+        final Object key = getKeyFromContext(context);
+        final Map<String, String> headers = collectHeaders(context);
         final ExecutableMethod<?, ?> method = context.getExecutableMethod();
         final Producer<?> producer = getOrCreateProducer(method, annotationValue);
         final ReturnType<?> returnType = method.getReturnType();
@@ -147,7 +125,36 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         }
     }
 
-    private <T, V> Object sendAsync(V value, Producer<T> producer, ReturnType<?> returnType, @Nullable Object key, Map<String, String> headers) {
+    @NonNull
+    private static Object getValueFromContext(MethodInvocationContext<Object, Object> context) {
+        if (context.getParameters().size() == 1) {
+            return context.getParameterValues()[0];
+        }
+        return context.getParameters().values().stream()
+                .filter(mutableArgumentValue -> mutableArgumentValue.isAnnotationPresent(MessageBody.class))
+                .map(ArgumentValue::getValue)
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Producers with multiple values must have one argument annotated with @MessageBody"));
+    }
+
+    @Nullable
+    private static Object getKeyFromContext(MethodInvocationContext<Object, Object> context) {
+        if (context.getParameters().size() == 1) {
+            return null;
+        }
+        return context.getParameters().values().stream()
+                .filter(mutableArgumentValue -> mutableArgumentValue.isAnnotationPresent(MessageKey.class))
+                .map(ArgumentValue::getValue)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private static <T, V> Object sendAsync(final V value,
+                                           final Producer<T> producer,
+                                           final ReturnType<?> returnType,
+                                           final @Nullable Object key,
+                                           final Map<String, String> headers) {
         final CompletableFuture<?> future = buildMessage(producer, value, key, headers).sendAsync();
         if (CompletableFuture.class == returnType.getType()) {
             return future;
@@ -155,11 +162,11 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         return Publishers.convertPublisher(future, returnType.getType());
     }
 
-    private <T, V> Object sendBlocking(V value,
-                                       Producer<T> producer,
-                                       ReturnType<?> returnType,
-                                       @Nullable Object key,
-                                       Map<String, String> headers) throws PulsarClientException {
+    private static  <T, V> Object sendBlocking(final V value,
+                                       final Producer<T> producer,
+                                       final ReturnType<?> returnType,
+                                       final @Nullable Object key,
+                                       final Map<String, String> headers) throws PulsarClientException {
         final MessageId sent = buildMessage(producer, value, key, headers).send();
         if (returnType.isVoid()) {
             return Void.TYPE;
@@ -177,10 +184,10 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
     }
 
     @SuppressWarnings("unchecked")
-    private static <T, V> TypedMessageBuilder<?> buildMessage(Producer<T> producer,
-                                                              V value,
-                                                              @Nullable Object key,
-                                                              Map<String, String> headers) {
+    private static <T, V> TypedMessageBuilder<?> buildMessage(final Producer<T> producer,
+                                                              final V value,
+                                                              final @Nullable Object key,
+                                                              final Map<String, String> headers) {
         final TypedMessageBuilder<T> message = producer.newMessage();
         if (null == key) {
             message.value((T) value);
@@ -197,6 +204,9 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
 
     @SuppressWarnings("unchecked")
     private static Map<String, String> collectHeaders(final MethodInvocationContext<Object, Object> context) {
+        if (context.getParameters().size() == 1) {
+            return Collections.emptyMap();
+        }
         final List<MutableArgumentValue<?>> headers = context.getParameters().values().stream()
                 .filter(x -> x.isAnnotationPresent(MessageProperties.class) || x.isAnnotationPresent(MessageHeader.class))
                 .collect(Collectors.toList());
@@ -209,9 +219,9 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         ));
     }
 
-    private Producer<?> getOrCreateProducer(ExecutableMethod<?, ?> method,
-                                            AnnotationValue<PulsarProducer> annotationValue) {
-        String producerId = annotationValue.stringValue("producerName").orElse(method.getMethodName());
+    private Producer<?> getOrCreateProducer(final ExecutableMethod<?, ?> method,
+                                            final AnnotationValue<PulsarProducer> annotationValue) {
+        final String producerId = annotationValue.stringValue("producerName").orElse(method.getMethodName());
         Producer<?> producer = producers.get(producerId);
         if (null == producer) {
             try {

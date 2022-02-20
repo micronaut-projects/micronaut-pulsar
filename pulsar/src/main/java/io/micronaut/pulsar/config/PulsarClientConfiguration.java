@@ -62,4 +62,8 @@ public interface PulsarClientConfiguration {
     default boolean getShutdownOnSubscriberError() {
         return false;
     }
+
+    default Optional<String> getDefaultTenant() {
+        return Optional.empty();
+    };
 }

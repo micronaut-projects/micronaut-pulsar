@@ -19,6 +19,7 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.annotation.Internal;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.util.ArgumentUtils;
@@ -44,6 +45,7 @@ import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Collectors;
 
 import static java.util.concurrent.TimeUnit.*;
 
@@ -54,7 +56,8 @@ import static java.util.concurrent.TimeUnit.*;
  * @since 1.0
  */
 @Singleton
-public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<PulsarConsumer>, AutoCloseable,
+@Internal
+public class PulsarConsumerProcessor implements ExecutableMethodProcessor<PulsarConsumer>, AutoCloseable,
         PulsarConsumerRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarConsumerProcessor.class);
@@ -67,47 +70,46 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
     private final Map<String, Consumer<?>> consumers = new ConcurrentHashMap<>();
     private final Map<String, Consumer<?>> paused = new ConcurrentHashMap<>();
     private final AtomicInteger consumerCounter = new AtomicInteger(10);
+    protected final TopicResolver topicResolver;
 
     public PulsarConsumerProcessor(final ApplicationEventPublisher<Object> applicationEventPublisher,
                                    final BeanContext beanContext,
                                    final PulsarClient pulsarClient,
                                    final DefaultSchemaHandler simpleSchemaResolver,
-                                   final DefaultPulsarClientConfiguration pulsarClientConfiguration) {
+                                   final DefaultPulsarClientConfiguration pulsarClientConfiguration,
+                                   final TopicResolver topicResolver) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.beanContext = beanContext;
         this.pulsarClient = pulsarClient;
         this.simpleSchemaResolver = simpleSchemaResolver;
         this.pulsarClientConfiguration = pulsarClientConfiguration;
+        this.topicResolver = topicResolver;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public void process(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
-        AnnotationValue<PulsarConsumer> topic = method.getDeclaredAnnotation(PulsarConsumer.class);
+    public void process(final BeanDefinition<?> beanDefinition, final ExecutableMethod<?, ?> method) {
+        final AnnotationValue<PulsarConsumer> topic = method.getDeclaredAnnotation(PulsarConsumer.class);
         if (null == topic) {
             return;
         }
-        String name = topic.stringValue("consumerName")
-                .orElse("pulsar-consumer-" + consumerCounter.getAndIncrement());
 
+        final String name = getConsumerName(topic);
         if (consumers.containsKey(name)) {
             throw new MessageListenerException(String.format("Consumer %s already exists", name));
         }
 
-        AnnotationValue<PulsarSubscription> subscriptionAnnotation = method.getAnnotation(PulsarSubscription.class);
-
-        Argument<?>[] arguments = method.getArguments();
-
+        final AnnotationValue<PulsarSubscription> subscriptionAnnotation = method.getAnnotation(PulsarSubscription.class);
+        final Argument<?>[] arguments = method.getArguments();
         if (ArrayUtils.isEmpty(arguments)) {
             throw new MessageListenerException("Method annotated with PulsarConsumer must accept at least 1 parameter");
         }
 
-        ExecutableMethod<Object, ?> castMethod = (ExecutableMethod<Object, ?>) method;
+        final ExecutableMethod<Object, ?> castMethod = (ExecutableMethod<Object, ?>) method;
+        final Object bean = beanContext.getBean(beanDefinition.getBeanType());
 
-        Object bean = beanContext.getBean(beanDefinition.getBeanType());
-
-        ConsumerBuilder<?> consumerBuilder = processConsumerAnnotation(topic, subscriptionAnnotation, castMethod, bean);
-        boolean subscribeAsync = topic.getRequiredValue("subscribeAsync", Boolean.class);
+        final ConsumerBuilder<?> consumerBuilder = processConsumerAnnotation(topic, subscriptionAnnotation, castMethod, bean);
+        final boolean subscribeAsync = topic.getRequiredValue("subscribeAsync", Boolean.class);
         consumerBuilder.consumerName(name);
         if (subscribeAsync) {
             consumerBuilder.subscribeAsync().handle((consumer, ex) -> {
@@ -126,20 +128,27 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
             });
         } else {
             try {
-                Consumer<?> consumer = consumerBuilder.subscribe();
+                final Consumer<?> consumer = consumerBuilder.subscribe();
                 consumers.put(name, consumer);
                 applicationEventPublisher.publishEvent(new ConsumerSubscribedEvent(consumer));
             } catch (Exception e) {
                 LOG.error("Failed subscribing Pulsar consumer {} {}", method.getDescription(false), name, e);
                 applicationEventPublisher.publishEvent(new ConsumerSubscriptionFailedEvent(e, name));
                 if (pulsarClientConfiguration.getShutdownOnSubscriberError()) {
-                    String msg = String.format("Failed to subscribe %s %s with cause %s", name, method.getDescription(false), e.getMessage());
+                    final String msg = String.format("Failed to subscribe %s %s with cause %s",
+                            name,
+                            method.getDescription(false),
+                            e.getMessage());
                     throw new Error(msg);
                 }
                 final String message = String.format("Failed to subscribe %s", name);
                 throw new MessageListenerException(message, e);
             }
         }
+    }
+
+    protected String getConsumerName(final AnnotationValue<PulsarConsumer> topic) {
+        return topic.stringValue("consumerName").orElse("pulsar-consumer-" + consumerCounter.getAndIncrement());
     }
 
     @SuppressWarnings({"unchecked"})
@@ -154,7 +163,7 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
                 consumerAnnotation,
                 method.getDescription(false));
 
-        ConsumerBuilder<?> consumer = new ConsumerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema);
+        final ConsumerBuilder<?> consumer = new ConsumerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema);
         consumerAnnotation.stringValue("consumerName").ifPresent(consumer::consumerName);
 
         resolveTopic(consumerAnnotation, consumer);
@@ -192,30 +201,82 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         consumerBuilder.deadLetterPolicy(builder.build());
     }
 
-    private void resolveTopic(AnnotationValue<PulsarConsumer> consumerAnnotation,
-                              ConsumerBuilder<?> consumer) {
-        String topic = consumerAnnotation.stringValue().orElse(null);
-        String[] topics = consumerAnnotation.stringValues("topics");
-        String topicsPattern = consumerAnnotation.stringValue("topicsPattern").orElse(null);
+    private void resolveTopic(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumer) {
+        final TopicResolved topic = extractTopic(consumerAnnotation);
+        if (topic.isPattern()) {
+            resolveTopicsPattern(consumerAnnotation, consumer, topicResolver.resolve(topic.getTopic()));
+        }
+        if (topic.isArray()) {
+            consumer.topic(Arrays.stream(topic.getTopics()).map(topicResolver::resolve).toArray(String[]::new));
+        }
+        consumer.topic(topicResolver.resolve(topic.getTopic()));
+    }
 
+    @NonNull
+    protected TopicResolved extractTopic(final AnnotationValue<PulsarConsumer> consumerAnnotation) {
+        final String topic = consumerAnnotation.stringValue().orElse(null);
         if (StringUtils.isNotEmpty(topic)) {
-            consumer.topic(topic);
-        } else if (ArrayUtils.isNotEmpty(topics)) {
-            consumer.topic(topics);
-        } else if (StringUtils.isNotEmpty(topicsPattern)) {
-            resolveTopicsPattern(consumerAnnotation, consumer, topicsPattern);
-        } else {
-            throw new MessageListenerException("Pulsar consumer requires topics or topicsPattern value");
+            return new TopicResolved(topic, false);
+        }
+        final String[] topics = consumerAnnotation.stringValues("topics");
+        if (ArrayUtils.isNotEmpty(topics)) {
+            return new TopicResolved(topics, false);
+        }
+        final String topicsPattern = consumerAnnotation.stringValue("topicsPattern").orElse(null);
+        if (StringUtils.isNotEmpty(topicsPattern)) {
+            return new TopicResolved(topicsPattern, true);
+        }
+        throw new MessageListenerException("Pulsar consumer requires topics or topicsPattern value");
+    }
+
+    static class TopicResolved {
+        private final Object value;
+        private final boolean isPattern;
+
+        TopicResolved(Object value, boolean isPattern) {
+            this.value = value;
+            this.isPattern = isPattern;
+        }
+
+        public String getTopic() {
+            return (String) value;
+        }
+
+        public String[] getTopics() {
+            return (String[]) value;
+        }
+
+        public boolean isPattern() {
+            return isPattern;
+        }
+
+        public boolean isArray() {
+            return value instanceof String[];
+        }
+
+        public boolean isDynamicTenant() {
+            if (isArray()) {
+                return Arrays.stream(getTopics()).anyMatch(TopicResolver::isDynamicTenantInTopic);
+            }
+            return TopicResolver.isDynamicTenantInTopic(getTopic());
+        }
+
+        public String getId() {
+            if (!isArray()) {
+                return getTopic();
+            }
+            return String.join(";", getTopics());
         }
     }
 
-    private void resolveTopicsPattern(AnnotationValue<PulsarConsumer> consumerAnnotation,
-                                      ConsumerBuilder<?> consumer, String topicsPattern) {
+    private void resolveTopicsPattern(final AnnotationValue<PulsarConsumer> consumerAnnotation,
+                                      final ConsumerBuilder<?> consumer,
+                                      final String topicsPattern) {
         consumer.topicsPattern(topicsPattern);
-        RegexSubscriptionMode mode = consumerAnnotation.getRequiredValue(
+        final RegexSubscriptionMode mode = consumerAnnotation.getRequiredValue(
                 "subscriptionTopicsMode", RegexSubscriptionMode.class);
         consumer.subscriptionTopicsMode(mode);
-        OptionalInt topicsRefresh = consumerAnnotation.intValue("patternAutoDiscoveryPeriod");
+        final OptionalInt topicsRefresh = consumerAnnotation.intValue("patternAutoDiscoveryPeriod");
         if (topicsRefresh.isPresent()) {
             if (topicsRefresh.getAsInt() < 1) {
                 throw new MessageListenerException("Topic " + topicsPattern + " refresh time cannot be below 1 second.");
@@ -224,8 +285,8 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         }
     }
 
-    private void consumerValues(AnnotationValue<PulsarConsumer> consumerAnnotation,
-                                ConsumerBuilder<?> consumer) {
+    private void consumerValues(final AnnotationValue<PulsarConsumer> consumerAnnotation,
+                                final ConsumerBuilder<?> consumer) {
         String subscriptionName = consumerAnnotation.stringValue("subscription")
                 .orElseGet(() -> "pulsar-subscription-" + consumerCounter.incrementAndGet());
         SubscriptionType subscriptionType = consumerAnnotation.getRequiredValue(
@@ -233,18 +294,18 @@ public final class PulsarConsumerProcessor implements ExecutableMethodProcessor<
         consumer.subscriptionName(subscriptionName).subscriptionType(subscriptionType);
     }
 
-    private void subscriptionValues(AnnotationValue<PulsarSubscription> subscription,
-                                    ConsumerBuilder<?> consumer) {
-        String subscriptionName = subscription.stringValue("subscriptionName")
+    private void subscriptionValues(final AnnotationValue<PulsarSubscription> subscription,
+                                    final ConsumerBuilder<?> consumer) {
+        final String subscriptionName = subscription.stringValue("subscriptionName")
                 .orElse("pulsar-subscription-" + consumerCounter.incrementAndGet());
 
         consumer.subscriptionName(subscriptionName);
 
         subscription.enumValue("subscriptionType", SubscriptionType.class).ifPresent(consumer::subscriptionType);
 
-        Optional<String> ackGroupTimeout = subscription.stringValue("ackGroupTimeout");
+        final Optional<String> ackGroupTimeout = subscription.stringValue("ackGroupTimeout");
         if (ackGroupTimeout.isPresent()) {
-            Duration duration = Duration.parse(ackGroupTimeout.get());
+            final Duration duration = Duration.parse(ackGroupTimeout.get());
             consumer.acknowledgmentGroupTime(duration.toNanos(), NANOSECONDS);
         }
     }

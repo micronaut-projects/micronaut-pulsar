@@ -1,0 +1,39 @@
+plugins {
+    id 'io.micronaut.build.internal.pulsar-module'
+}
+dependencies {
+    api mn.micronaut.inject
+    api mn.micronaut.messaging
+    api libs.pulsar
+
+    implementation projects.pulsar
+    implementation mn.micronaut.multitenancy
+    compileOnly "jakarta.inject:jakarta.inject-api"
+    compileOnly 'io.micronaut.reactor:micronaut-reactor'
+
+    testImplementation mn.micronaut.inject.groovy
+    testImplementation mn.micronaut.inject.java
+    testImplementation projects.pulsar.test
+
+    testRuntimeOnly 'io.micronaut:micronaut-http-server-netty'
+    testRuntimeOnly 'io.micronaut:micronaut-runtime'
+    testImplementation 'io.micronaut.reactor:micronaut-reactor'
+    testImplementation mn.micronaut.test.spock
+    testImplementation mn.spock
+    testImplementation libs.testcontainers.spock
+    testImplementation libs.testcontainers.pulsar
+}
+
+test {
+    jvmArgs '-Duser.country=US'
+    jvmArgs '-Duser.language=en'
+    testLogging {
+        showStandardStreams = true
+        exceptionFormat = 'full'
+    }
+    failFast = true
+}
+
+repositories {
+    mavenCentral()
+}
