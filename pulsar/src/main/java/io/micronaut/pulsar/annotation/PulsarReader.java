@@ -15,6 +15,8 @@
  */
 package io.micronaut.pulsar.annotation;
 
+import io.micronaut.aop.Around;
+import io.micronaut.aop.Introduction;
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
@@ -27,8 +29,7 @@ import java.lang.annotation.Target;
 
 import static io.micronaut.pulsar.MessageSchema.BYTES;
 import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR;
-import static java.lang.annotation.ElementType.FIELD;
-import static java.lang.annotation.ElementType.PARAMETER;
+import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
@@ -39,7 +40,9 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
  */
 @Documented
 @Retention(RUNTIME)
-@Target({PARAMETER, FIELD})
+@Target({PARAMETER, FIELD, METHOD})
+@Around
+@Introduction
 public @interface PulsarReader {
 
     /**

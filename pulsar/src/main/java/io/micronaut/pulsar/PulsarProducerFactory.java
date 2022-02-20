@@ -25,6 +25,7 @@ import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import io.micronaut.pulsar.processor.PulsarArgumentHandler;
+import io.micronaut.pulsar.processor.TopicResolver;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.client.impl.ProducerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
@@ -39,9 +40,11 @@ import org.apache.pulsar.client.impl.PulsarClientImpl;
 public class PulsarProducerFactory {
 
     private final PulsarClientConfiguration configuration;
+    private final TopicResolver topicResolver;
 
-    public PulsarProducerFactory(final PulsarClientConfiguration configuration) {
+    public PulsarProducerFactory(final PulsarClientConfiguration configuration, final TopicResolver topicResolver) {
         this.configuration = configuration;
+        this.topicResolver = topicResolver;
     }
 
     /**
@@ -70,19 +73,19 @@ public class PulsarProducerFactory {
                 annotationValue,
                 annotatedMethodName);
 
-        final String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
-        if (!annotationValue.stringValue("topic").isPresent() && !annotationValue.getValue(String.class).isPresent()) {
+        final String producerName = annotationValue.stringValue("producerName", null).orElse(annotatedMethodName);
+        final String topic = annotationValue.stringValue("topic", null)
+                .orElseGet(() -> annotationValue.stringValue("value", null).orElse(null));
+        if (null == topic) {
             if (configuration.getShutdownOnSubscriberError()) {
                 throw new Error("Failed to instantiate Pulsar producer " + producerName + " due to missing topic");
             }
             throw new MessagingClientException("Topic value missing for producer " + producerName);
         }
-        String topic = annotationValue.stringValue("topic")
-                .orElseGet(() -> annotationValue.getRequiredValue(String.class));
 
-        ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
+        final ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
                 .producerName(producerName)
-                .topic(topic);
+                .topic(topicResolver.resolve(topic));
 
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);

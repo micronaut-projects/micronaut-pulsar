@@ -1,0 +1,23 @@
+plugins {
+    id 'io.micronaut.build.internal.pulsar-module'
+    id "java"
+}
+
+dependencies {
+    testCompileOnly mn.micronaut.inject.java
+    testImplementation mn.micronaut.inject.java
+
+    testImplementation mn.micronaut.inject
+    testImplementation mn.spock
+    testImplementation mn.reactor
+    testImplementation mn.micronaut.test.spock
+    testImplementation mn.micronaut.multitenancy
+    testImplementation mn.micronaut.http.client
+    testImplementation project(':pulsar')
+    testImplementation project(':pulsar-multitenant')
+    testImplementation project(':tests:shared')
+}
+
+tasks.withType(GroovyCompile) {
+    groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+}

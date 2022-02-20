@@ -18,6 +18,7 @@ package io.micronaut.pulsar.config;
 import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
+import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.util.StringUtils;
@@ -62,6 +63,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private Set<String> tlsCiphers;
     private Set<String> tlsProtocols;
     private Boolean shutdownOnSubscriberError;
+    private String defaultTenant;
 
     /**
      * Constructs the default Pulsar Client configuration.
@@ -296,5 +298,31 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
             properties.setProperty(key, value.toString());
         });
         return properties;
+    }
+
+    @Override
+    public Optional<String> getDefaultTenant() {
+        return Optional.ofNullable(defaultTenant);
+    }
+
+    /**
+     * Use in combination with ${tenant} placeholder in {@link io.micronaut.pulsar.annotation.PulsarConsumer#topic()},
+     * {@link io.micronaut.pulsar.annotation.PulsarConsumer#topics()},
+     * {@link io.micronaut.pulsar.annotation.PulsarConsumer#topicsPattern()},
+     * {@link io.micronaut.pulsar.annotation.PulsarReader#topic()},
+     * {@link io.micronaut.pulsar.annotation.PulsarProducer#topic()} to avoid hardcoding tenant name into source code
+     * through mentioned annotations.
+     *
+     * This property will be ignored if multi-tenancy module is enabled.
+     *
+     * @param defaultTenant Default Apache Pulsar tenant name to apply on dynamic topic names.
+     */
+    public void setDefaultTenant(final String defaultTenant) {
+        if (null != defaultTenant && !defaultTenant.matches(TENANT_NAME_VALIDATOR)) {
+            throw new ConfigurationException(String.format(
+                    "Default tenant value %s is not a valid tenant name for Apache Pulsar",
+                    defaultTenant));
+        }
+        this.defaultTenant = defaultTenant;
     }
 }
