@@ -32,8 +32,6 @@ import org.apache.pulsar.client.api.PulsarClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,7 +50,8 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor {
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarConsumerProcessor.class);
 
-    private final Map<String, MultiTenantConsumer> multiTenantConsumers;
+    private final ConcurrentHashMap<String, MultiTenantConsumer> multiTenantConsumers;
+    private final boolean recreateConsumersOnNewTenant;
     private final TenantNameResolver tenantNameResolver;
 
     public PulsarMultiTenantConsumerProcessor(final ApplicationEventPublisher<Object> applicationEventPublisher,
@@ -69,11 +68,8 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor {
                 pulsarClientConfiguration,
                 topicResolver);
         this.tenantNameResolver = tenantNameResolver;
-        if (tenantNameResolver.isStaticTenantResolver()) {
-            multiTenantConsumers = new ConcurrentHashMap<>(10);
-        } else {
-            multiTenantConsumers = null;
-        }
+        multiTenantConsumers = new ConcurrentHashMap<>(10);
+        recreateConsumersOnNewTenant = !tenantNameResolver.isStaticTenantResolver();
     }
 
     /**
@@ -82,27 +78,25 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor {
      * Pulsar consumer is created and started.
      *
      * @param beanDefinition definition of a bean that declares method annotated with {@link PulsarConsumer}
-     * @param method         executable method that serves as a message consumer
+     * @param method executable method that serves as a message consumer
      */
     @Override
     public void process(final BeanDefinition<?> beanDefinition, final ExecutableMethod<?, ?> method) {
         try {
             final AnnotationValue<PulsarConsumer> annotation = method.getAnnotation(PulsarConsumer.class);
-            final TopicResolver.TopicResolved topic = TopicResolver.extractTopic(Objects.requireNonNull(annotation));
-            if (!topic.isDynamicTenant() || tenantNameResolver.hasTenantName()) {
+            final TopicResolved topic = extractTopic(Objects.requireNonNull(annotation));
+            if (!topic.isDynamicTenant()) {
                 super.process(beanDefinition, method);
-                return;
             }
-            final String name = getConsumerName(annotation);
-            final String consumerId = topicResolver.generateIdFromMessagingClientName(name, topic);
-            if (!multiTenantConsumers.containsKey(consumerId)) {
-                multiTenantConsumers.put(consumerId, new MultiTenantConsumer(beanDefinition, method));
+            if (!multiTenantConsumers.containsKey(topic.getId())) {
+                multiTenantConsumers.put(topic.getId(), new MultiTenantConsumer(beanDefinition, method));
             }
         } catch (final TenantNotFoundException | NullPointerException ex) {
             if (ex instanceof TenantNotFoundException) {
                 LOG.warn("Failed to instantiate a bean with consumers because topic value was set to dynamic tenant while tenant was missing.", ex);
             }
         }
+        super.process(beanDefinition, method);
     }
 
     @EventListener
@@ -112,9 +106,12 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor {
             super.process(x.getBeanDefinition(), x.getMethod());
         }
         tenantNameResolver.clearTenantName();
+        if (!recreateConsumersOnNewTenant) {
+            multiTenantConsumers.clear();
+        }
     }
 
-    private static final class MultiTenantConsumer {
+    private static class MultiTenantConsumer {
         private final BeanDefinition<?> beanDefinition;
         private final ExecutableMethod<?, ?> method;
 

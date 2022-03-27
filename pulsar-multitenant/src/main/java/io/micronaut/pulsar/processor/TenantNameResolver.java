@@ -33,22 +33,22 @@ import java.io.Serializable;
 public interface TenantNameResolver {
 
     /**
-     * Resolve tenant name as {@link String} from {@link Serializable}.
+     * Resolve tenant name as {@link String} from {@link Serializable}
      *
      * @param tenantId Tenant ID resolved from Micronaut {@link io.micronaut.multitenancy.tenantresolver.TenantResolver}
      * @return String representation of tenant name for Apache Pulsar.
      */
-    String resolveTenantNameFromId(Serializable tenantId);
+    String resolveTenantNameFromId(final Serializable tenantId);
 
     /**
-     * Enforce usage of tenant name.
+     * Enforce usage of tenant name
      *
      * @param tenantName tenant name to enforce on next calls
      */
-    void overrideTenantName(String tenantName);
+    void overrideTenantName(final String tenantName);
 
     /**
-     * Clear out enforced tenant name set through {@link #overrideTenantName(String)}.
+     * Clear out enforced tenant name set through {@link #overrideTenantName(String)}
      */
     void clearTenantName();
 

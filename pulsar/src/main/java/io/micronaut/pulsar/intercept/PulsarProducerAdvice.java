@@ -59,24 +59,17 @@ import java.util.stream.Collectors;
  */
 @Singleton
 @InterceptorBean(PulsarProducerClient.class)
-public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, AutoCloseable, PulsarProducerRegistry {
+public final class PulsarProducerAdvice implements MethodInterceptor<Object, Object>,
+        AutoCloseable, PulsarProducerRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarProducerAdvice.class);
 
-    protected final Map<String, Producer<?>> producers = new ConcurrentHashMap<>();
-    protected final PulsarClient pulsarClient;
-    protected final DefaultSchemaHandler simpleSchemaResolver;
-    protected final BeanContext beanContext;
-    protected final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher;
+    private final Map<String, Producer<?>> producers = new ConcurrentHashMap<>();
+    private final PulsarClient pulsarClient;
+    private final DefaultSchemaHandler simpleSchemaResolver;
+    private final BeanContext beanContext;
+    private final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher;
 
-    /**
-     * Constructor for instantiating Pulsar producer advice for intercepting producer methods.
-     *
-     * @param pulsarClient              Apache Pulsar client bean
-     * @param simpleSchemaResolver      Schema resolver
-     * @param beanContext               Micronaut bean context
-     * @param applicationEventPublisher Event publisher for reporting failed subscriptions
-     */
     public PulsarProducerAdvice(final PulsarClient pulsarClient,
                                 final DefaultSchemaHandler simpleSchemaResolver,
                                 final BeanContext beanContext,
@@ -87,8 +80,7 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    @Override
-    public Object intercept(final MethodInvocationContext<Object, Object> context) {
+    public Object intercept(MethodInvocationContext<Object, Object> context) {
         if (!context.hasAnnotation(PulsarProducer.class)) {
             return context.proceed();
         }
@@ -170,11 +162,11 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
         return Publishers.convertPublisher(future, returnType.getType());
     }
 
-    private static <T, V> Object sendBlocking(final V value,
-                                              final Producer<T> producer,
-                                              final ReturnType<?> returnType,
-                                              final @Nullable Object key,
-                                              final Map<String, String> headers) throws PulsarClientException {
+    private static  <T, V> Object sendBlocking(final V value,
+                                       final Producer<T> producer,
+                                       final ReturnType<?> returnType,
+                                       final @Nullable Object key,
+                                       final Map<String, String> headers) throws PulsarClientException {
         final MessageId sent = buildMessage(producer, value, key, headers).send();
         if (returnType.isVoid()) {
             return Void.TYPE;
@@ -227,14 +219,8 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
         ));
     }
 
-    /**
-     * Fetch existing producer or generate a new one via factory if missing.
-     * @param method method annotated with {@link PulsarProducer}
-     * @param annotationValue {@link PulsarProducer} value
-     * @return existing producer if exists; otherwise create a new one
-     */
-    protected Producer<?> getOrCreateProducer(final ExecutableMethod<?, ?> method,
-                                              final AnnotationValue<PulsarProducer> annotationValue) {
+    private Producer<?> getOrCreateProducer(final ExecutableMethod<?, ?> method,
+                                            final AnnotationValue<PulsarProducer> annotationValue) {
         final String producerId = annotationValue.stringValue("producerName").orElse(method.getMethodName());
         Producer<?> producer = producers.get(producerId);
         if (null == producer) {

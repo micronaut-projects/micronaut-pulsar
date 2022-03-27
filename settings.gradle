@@ -33,7 +33,4 @@ include 'pulsar-multitenant'
 include 'doc-examples:example-java'
 include 'doc-examples:example-kotlin'
 include 'doc-examples:example-groovy'
-include 'tests:shared'
-include 'tests:test-pulsar-module'
-include 'tests:test-pulsar-multitenant-module'
 

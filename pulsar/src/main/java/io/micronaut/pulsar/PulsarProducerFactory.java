@@ -73,19 +73,19 @@ public class PulsarProducerFactory {
                 annotationValue,
                 annotatedMethodName);
 
-        final String producerName = annotationValue.stringValue("producerName", null).orElse(annotatedMethodName);
-        final String topic = annotationValue.stringValue("topic", null)
-                .orElseGet(() -> annotationValue.stringValue("value", null).orElse(null));
-        if (null == topic) {
+        final String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
+        if (!annotationValue.stringValue("topic").isPresent() && !annotationValue.getValue(String.class).isPresent()) {
             if (configuration.getShutdownOnSubscriberError()) {
                 throw new Error("Failed to instantiate Pulsar producer " + producerName + " due to missing topic");
             }
             throw new MessagingClientException("Topic value missing for producer " + producerName);
         }
+        final String topic = topicResolver.resolve(annotationValue.stringValue("topic").orElseGet(() ->
+                annotationValue.getRequiredValue(String.class)));
 
         final ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
                 .producerName(producerName)
-                .topic(topicResolver.resolve(topic));
+                .topic(topic);
 
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);

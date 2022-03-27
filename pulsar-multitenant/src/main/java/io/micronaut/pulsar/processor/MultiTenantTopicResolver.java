@@ -33,7 +33,6 @@ import jakarta.inject.Singleton;
 @Internal
 final class MultiTenantTopicResolver implements TopicResolver {
 
-    private final static String FORMAT_ID = "%s-%s";
     private final TenantNameResolver tenantNameResolver;
 
     public MultiTenantTopicResolver(final TenantNameResolver tenantNameResolver) {
@@ -57,13 +56,5 @@ final class MultiTenantTopicResolver implements TopicResolver {
         }
 
         return TopicResolver.replaceTenantInTopic(topic, tenantName);
-    }
-
-    @Override
-    public String generateIdFromMessagingClientName(final String name, final TopicResolved topicResolved) {
-        if (topicResolved.isDynamicTenant()) {
-            return String.format(FORMAT_ID, tenantNameResolver.getCurrentTenantName(), name);
-        }
-        return name;
     }
 }
