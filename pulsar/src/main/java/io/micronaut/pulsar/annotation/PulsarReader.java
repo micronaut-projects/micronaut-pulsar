@@ -22,10 +22,12 @@ import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
+import java.util.concurrent.TimeUnit;
 
 import static io.micronaut.pulsar.MessageSchema.BYTES;
 import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR;
@@ -106,4 +108,21 @@ public @interface PulsarReader {
      * @return Whether to position reader to the newest available message in queue or not.
      */
     boolean startMessageLatest() default true;
+
+    /**
+     * Ignored on {@link org.apache.pulsar.client.api.Reader#readNextAsync()}.
+     * Use -1 for no timeout (default).
+     *
+     * @return Maximum allowed read time.
+     */
+    @Min(0)
+    int readTimeout() default 0;
+
+    /**
+     * Ignored on {@link org.apache.pulsar.client.api.Reader#readNextAsync()} or if
+     * {@link #readTimeout()} is 0.
+     *
+     * @return Time unit for {@link #readTimeout()}.
+     */
+    TimeUnit timeoutUnit() default TimeUnit.SECONDS;
 }

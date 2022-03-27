@@ -33,6 +33,7 @@ import jakarta.inject.Singleton;
 @Internal
 final class MultiTenantTopicResolver implements TopicResolver {
 
+    private final static String FORMAT_ID = "%s-%s";
     private final TenantNameResolver tenantNameResolver;
 
     public MultiTenantTopicResolver(final TenantNameResolver tenantNameResolver) {
@@ -49,12 +50,20 @@ final class MultiTenantTopicResolver implements TopicResolver {
 
         if (!TenantNameResolver.isValidTenantName(tenantName)) {
             throw new MessageListenerException(String.format(
-                    "Invalid value for topic: %s while resolving tenant: %s. Tenant name does not match pattern: %s",
-                    topic,
-                    tenantName,
-                    AbstractPulsarConfiguration.TENANT_NAME_VALIDATOR));
+                "Invalid value for topic: %s while resolving tenant: %s. Tenant name does not match pattern: %s",
+                topic,
+                tenantName,
+                AbstractPulsarConfiguration.TENANT_NAME_VALIDATOR));
         }
 
         return TopicResolver.replaceTenantInTopic(topic, tenantName);
+    }
+
+    @Override
+    public String generateIdFromMessagingClientName(final String name, final TopicResolved topicResolved) {
+        if (topicResolved.isDynamicTenant()) {
+            return String.format(FORMAT_ID, tenantNameResolver.getCurrentTenantName(), name);
+        }
+        return name;
     }
 }

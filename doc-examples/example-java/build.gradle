@@ -4,6 +4,7 @@ plugins {
 }
 
 dependencies {
+    testImplementation project(':pulsar')
     testCompileOnly mn.micronaut.inject.java
     testImplementation mn.micronaut.inject
 }

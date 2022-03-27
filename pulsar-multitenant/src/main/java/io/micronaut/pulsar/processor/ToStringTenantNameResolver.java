@@ -37,11 +37,11 @@ import java.io.Serializable;
 @Requires(missingBeans = TenantNameResolver.class)
 final class ToStringTenantNameResolver implements TenantNameResolver {
 
-    private static final ThreadLocal<String> currentTenant = new ThreadLocal<>();
+    private static final ThreadLocal<String> CURRENT_TENANT = new ThreadLocal<>();
 
     private final TenantResolver tenantResolver;
 
-    public ToStringTenantNameResolver(TenantResolver tenantResolver) {
+    public ToStringTenantNameResolver(final TenantResolver tenantResolver) {
         this.tenantResolver = tenantResolver;
     }
 
@@ -61,17 +61,17 @@ final class ToStringTenantNameResolver implements TenantNameResolver {
         if (!TenantNameResolver.isValidTenantName(tenantName)) {
             throw new RuntimeException(String.format("Invalid tenant name %s", tenantName));
         }
-        currentTenant.set(tenantName);
+        CURRENT_TENANT.set(tenantName);
     }
 
     @Override
     public void clearTenantName() {
-        currentTenant.remove();
+        CURRENT_TENANT.remove();
     }
 
     @Override
     public String getCurrentTenantName() throws TenantNotFoundException {
-        final String currentTenantName = currentTenant.get();
+        final String currentTenantName = CURRENT_TENANT.get();
         if (null == currentTenantName) {
             return resolveTenantNameFromId(tenantResolver.resolveTenantIdentifier());
         }
@@ -80,7 +80,7 @@ final class ToStringTenantNameResolver implements TenantNameResolver {
 
     @Override
     public boolean hasTenantName() {
-        final String currentTenantName = currentTenant.get();
+        final String currentTenantName = CURRENT_TENANT.get();
         if (null == currentTenantName) {
             try {
                 tenantResolver.resolveTenantIdentifier();

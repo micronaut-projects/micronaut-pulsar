@@ -26,16 +26,17 @@ import static java.lang.annotation.ElementType.TYPE;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
 /**
- * Marks a type as a bean containing producer methods.
- * To avoid mixing up with PulsarClient interface from official library "Producer" part was introduced.
+ * Marks a type as a bean containing reader methods. To avoid problems with the
+ * {@link PulsarProducerClient} due to possible later enhancement of features it was separated from
+ * it.
  *
  * @author Haris Secic
- * @since 1.0
+ * @since 1.2.0
  */
 @Documented
 @Retention(RUNTIME)
 @Introduction
 @Singleton
 @Target({TYPE})
-public @interface PulsarProducerClient {
+public @interface PulsarReaderClient {
 }

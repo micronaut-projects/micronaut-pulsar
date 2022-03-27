@@ -32,7 +32,6 @@ import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import io.micronaut.pulsar.processor.TenantNameResolver;
 import io.micronaut.pulsar.processor.TopicResolver;
 import jakarta.annotation.PreDestroy;
-import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.Producer;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.slf4j.Logger;
@@ -48,7 +47,6 @@ import java.util.Set;
  * @author Haris Secic
  * @since 1.0
  */
-@Singleton
 @InterceptorBean(PulsarProducerClient.class)
 @Replaces(PulsarProducerAdvice.class)
 public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice

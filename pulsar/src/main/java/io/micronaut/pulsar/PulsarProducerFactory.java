@@ -65,7 +65,7 @@ public class PulsarProducerFactory {
                                           @Parameter AnnotationValue<PulsarProducer> annotationValue,
                                           @Parameter Argument<?>[] methodArguments,
                                           @Parameter DefaultSchemaHandler simpleSchemaResolver,
-                                          @Parameter String annotatedMethodName) throws MessagingClientException {
+                                          @Parameter String annotatedMethodName) throws Exception {
 
         final PulsarArgumentHandler argsHandler = new PulsarArgumentHandler(methodArguments, annotatedMethodName);
         final Schema<T> schema = (Schema<T>) simpleSchemaResolver.decideSchema(argsHandler.getBodyArgument(),
@@ -74,18 +74,18 @@ public class PulsarProducerFactory {
                 annotatedMethodName);
 
         final String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
-        if (!annotationValue.stringValue("topic").isPresent() && !annotationValue.getValue(String.class).isPresent()) {
+        final String topic = annotationValue.stringValue("topic", null)
+            .orElseGet(() -> annotationValue.stringValue("value", null).orElse(null));
+        if (null == topic) {
             if (configuration.getShutdownOnSubscriberError()) {
                 throw new Error("Failed to instantiate Pulsar producer " + producerName + " due to missing topic");
             }
             throw new MessagingClientException("Topic value missing for producer " + producerName);
         }
-        final String topic = topicResolver.resolve(annotationValue.stringValue("topic").orElseGet(() ->
-                annotationValue.getRequiredValue(String.class)));
 
         final ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
-                .producerName(producerName)
-                .topic(topic);
+            .producerName(producerName)
+            .topic(topicResolver.resolve(topic));
 
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);
