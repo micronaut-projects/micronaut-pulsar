@@ -1,4 +1,16 @@
 plugins {
     id 'io.micronaut.build.internal.docs'
     id 'io.micronaut.build.internal.dependency-updates'
+    id 'io.micronaut.build.internal.quality-reporting'
+}
+
+def prepareGuideHotfix = tasks.register('prepareGuideHotfix') {
+    doLast {
+        new File(buildDir, 'doc-resources').mkdirs()
+    }
+}
+
+tasks.named('publishGuide') {
+    dependsOn(prepareGuideHotfix)
+    dependsOn(tasks.javadoc)
 }
