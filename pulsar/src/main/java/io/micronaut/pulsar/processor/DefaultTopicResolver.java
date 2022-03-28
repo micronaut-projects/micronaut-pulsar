@@ -15,7 +15,6 @@
  */
 package io.micronaut.pulsar.processor;
 
-import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.pulsar.config.PulsarClientConfiguration;

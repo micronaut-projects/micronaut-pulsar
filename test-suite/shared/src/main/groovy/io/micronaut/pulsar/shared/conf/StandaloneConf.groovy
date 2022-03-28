@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package io.micronaut.pulsar.shared.conf
-
+// CHECKSTYLE:OFF
 /**
  * Due to not being able to use files directly just through HTTPS this is a placeholder for "standalone.conf" text.
  */

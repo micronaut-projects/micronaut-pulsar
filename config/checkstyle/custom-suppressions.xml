@@ -9,4 +9,6 @@
     <!-- files="DefaultBeanContext.java|BeanDefinitionWriter.java|DefaultHttpClient.java"/> -->
 
     <suppress checks="MissingJavadocType" files=".*examples.*" />
+    <!-- doesn't work needs fixing -->
+    <suppress checks="NoHttp" files=".*test-suite.shared.*" />
 </suppressions>

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 package io.micronaut.pulsar.shared.conf
-
+// CHECKSTYLE:OFF
 class ClientConf {
     static final String content = """#
 # Licensed to the Apache Software Foundation (ASF) under one

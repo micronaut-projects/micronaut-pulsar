@@ -65,5 +65,5 @@ public interface PulsarClientConfiguration {
 
     default Optional<String> getDefaultTenant() {
         return Optional.empty();
-    };
+    }
 }

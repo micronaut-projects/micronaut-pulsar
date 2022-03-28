@@ -22,9 +22,6 @@ import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.util.StringUtils;
-import io.micronaut.pulsar.annotation.PulsarConsumer;
-import io.micronaut.pulsar.annotation.PulsarProducer;
-import io.micronaut.pulsar.annotation.PulsarReader;
 import io.micronaut.pulsar.annotation.PulsarServiceUrlProvider;
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.ServiceUrlProvider;
@@ -309,9 +306,12 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     /**
-     * Use in combination with ${tenant} placeholder in {@link PulsarConsumer#topic()}, {@link PulsarConsumer#topics()},
-     * {@link PulsarConsumer#topicsPattern()}, {@link PulsarReader#topic()}, {@link PulsarProducer#topic()} to avoid
-     * hardcoding tenant name into source code through mentioned annotations.
+     * Use in combination with ${tenant} placeholder in {@link io.micronaut.pulsar.annotation.PulsarConsumer#topic()},
+     * {@link io.micronaut.pulsar.annotation.PulsarConsumer#topics()},
+     * {@link io.micronaut.pulsar.annotation.PulsarConsumer#topicsPattern()},
+     * {@link io.micronaut.pulsar.annotation.PulsarReader#topic()},
+     * {@link io.micronaut.pulsar.annotation.PulsarProducer#topic()} to avoid hardcoding tenant name into source code
+     * through mentioned annotations.
      *
      * This property will be ignored if multi-tenancy module is enabled.
      *

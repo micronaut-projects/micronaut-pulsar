@@ -33,7 +33,7 @@ import jakarta.inject.Singleton;
 @Internal
 final class MultiTenantTopicResolver implements TopicResolver {
 
-    private final static String FORMAT_ID = "%s-%s";
+    private static final String FORMAT_ID = "%s-%s";
     private final TenantNameResolver tenantNameResolver;
 
     public MultiTenantTopicResolver(final TenantNameResolver tenantNameResolver) {
