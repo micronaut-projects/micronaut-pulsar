@@ -66,7 +66,7 @@ public abstract class AbstractPulsarConfiguration<K, V> {
      */
     public static final String TOPIC_NAME_PATTERN_VALIDATOR = "((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-?\\w+)?/).+";
 
-    public static final String TENANT_NAME_VALIDATOR = "(\\w+(-|\\w+)*\\w";
+    public static final String TENANT_NAME_VALIDATOR = "\\w+(-|\\w+)*\\w";
 
     private final Properties config;
 
