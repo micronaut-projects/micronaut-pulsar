@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,6 +64,11 @@ public @interface PulsarReader {
     @AliasFor(annotation = MessageMapping.class, member = "value")
     @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     String topic() default "";
+
+    /**
+     * @return Subscription to connect to.
+     */
+    String subscriptionName() default "";
 
     /**
      * Defaults to {@link MessageSchema#BYTES} as default value for Pulsar {@link org.apache.pulsar.client.api.Schema}

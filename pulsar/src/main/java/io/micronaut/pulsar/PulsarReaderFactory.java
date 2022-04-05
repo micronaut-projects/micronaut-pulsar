@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 package io.micronaut.pulsar;
 
 import io.micronaut.aop.MethodInvocationContext;
+import io.micronaut.context.BeanResolutionContext;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
 import io.micronaut.context.annotation.Prototype;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.AnnotationValue;
+import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.inject.ArgumentInjectionPoint;
 import io.micronaut.inject.ConstructorInjectionPoint;
@@ -36,6 +38,8 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -65,13 +69,26 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     /**
      * Create Pulsar Reader for given injection point if missing.
      *
-     * @param injectionPoint field or argument injection point
+     * @param context injection point of {@code Reader<?>}
      * @return new instance of Pulsar reader if missing; otherwise return from cache
      * @throws PulsarClientException in case of not being able to create such Reader
      */
     @Prototype
-    public Reader<?> createReader(final InjectionPoint<Reader<?>> injectionPoint) throws PulsarClientException {
+    @SuppressWarnings("unchecked")
+    public Reader<?> getReaderByInjectionPoint(final BeanResolutionContext context,
+                                               @Nullable @Parameter final AnnotationValue<PulsarReader> annotationValue,
+                                               @Nullable @Parameter final Argument<?> returnType,
+                                               @Nullable @Parameter final MethodInvocationContext<?, ?> methodInvocationContext) throws PulsarClientException {
 
+        if (!context.getPath().currentSegment().isPresent()) {
+            return getReaderForAnnotation(Objects.requireNonNull(annotationValue),
+                Objects.requireNonNull(returnType),
+                Objects.requireNonNull(methodInvocationContext));
+        }
+        final InjectionPoint<?> injectionPoint = context.getPath().currentSegment()
+            .orElseThrow(() ->
+                new IllegalStateException("Could not resolve current injection context while creating a reader"))
+            .getInjectionPoint();
         final AnnotationValue<PulsarReader> annotation = injectionPoint.getAnnotation(PulsarReader.class);
         if (null == annotation) {
             throw new IllegalStateException("Failed to get value for bean annotated with PulsarReader");
@@ -123,17 +140,14 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     }
 
     /**
-     * Create Pulsar Reader for given injection point if missing.
-     *
-     * @param annotationValue         value of {@link @PulsarReader} annotation on specified method
-     * @param returnType              annotated method return type
-     * @param methodInvocationContext context in which annotated method was called
-     * @return new instance of Pulsar reader if missing; otherwise return from cache
+     * Micronaut has issues with having BeanContext injected with @Primary for one method and
+     * second @Prototype for non injection context - for method annotations. Even @Named annotation
+     * won't help since beanContext.creatBean will throw "NoSuchBean". For this reason check in 1
+     * method all parameters and decide to switch to this creator if necessary.
      */
-    @Prototype
-    public Reader<?> createReader(@Parameter final AnnotationValue<PulsarReader> annotationValue,
-                                  @Parameter final Argument<?> returnType,
-                                  @Parameter final MethodInvocationContext<?, ?> methodInvocationContext)
+    private Reader<?> getReaderForAnnotation(@Parameter final AnnotationValue<PulsarReader> annotationValue,
+                                             @Parameter final Argument<?> returnType,
+                                             @Parameter final MethodInvocationContext<?, ?> methodInvocationContext)
         throws PulsarClientException {
 
         final String target = methodInvocationContext.getExecutableMethod().getDescription(false);
@@ -151,7 +165,12 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
             keyClass = readerArgument.getTypeParameters()[0];
             messageBodyType = readerArgument.getTypeParameters()[1];
         } else {
-            messageBodyType = readerArgument;
+            if (Message.class.isAssignableFrom(readerArgument.getType())) {
+                messageBodyType = readerArgument.getFirstTypeVariable().orElseThrow(() ->
+                    new ConfigurationException("Reader methods must return non-raw Message"));
+            } else {
+                messageBodyType = readerArgument;
+            }
             keyClass = null;
         }
 
@@ -162,7 +181,7 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
             return readers.get(readerId);
         }
         final Schema<?> schema = simpleSchemaResolver.decideSchema(messageBodyType, keyClass, annotation, target);
-        final String topic = topicResolver.resolve(annotation.getRequiredValue(String.class));
+        final String topic = topicResolver.resolve(topicResolved.getTopic());
 
         final MessageId startMessageId;
         if (annotation.getRequiredValue("startMessageLatest", boolean.class)) {
@@ -170,11 +189,13 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         } else {
             startMessageId = MessageId.earliest;
         }
-        final Reader<?> reader = pulsarClient.newReader(schema)
+        final Optional<String> subscriptionName = annotation.stringValue("subscriptionName");
+        final ReaderBuilder<?> readerBuilder = pulsarClient.newReader(schema)
             .startMessageId(startMessageId)
             .readerName(readerId)
-            .topic(topic)
-            .create();
+            .topic(topic);
+        subscriptionName.ifPresent(readerBuilder::subscriptionName);
+        final Reader<?> reader = readerBuilder.create();
         readers.put(readerId, reader);
         return reader;
     }

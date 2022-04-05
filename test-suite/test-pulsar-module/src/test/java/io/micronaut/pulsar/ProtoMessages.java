@@ -3,6 +3,9 @@
 
 package io.micronaut.pulsar;
 
+import io.micronaut.context.annotation.Requires;
+
+@Requires(property = "spec.name", value = "PulsarSchemaSpec")
 public final class ProtoMessages {
   private ProtoMessages() {}
   public static void registerAllExtensions(
@@ -127,7 +130,7 @@ public final class ProtoMessages {
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
-        com.google.protobuf.ByteString bs = 
+        com.google.protobuf.ByteString bs =
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
         message_ = s;
@@ -141,7 +144,7 @@ public final class ProtoMessages {
         getMessageBytes() {
       java.lang.Object ref = message_;
       if (ref instanceof java.lang.String) {
-        com.google.protobuf.ByteString b = 
+        com.google.protobuf.ByteString b =
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
         message_ = b;
@@ -503,7 +506,7 @@ public final class ProtoMessages {
           getMessageBytes() {
         java.lang.Object ref = message_;
         if (ref instanceof String) {
-          com.google.protobuf.ByteString b = 
+          com.google.protobuf.ByteString b =
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
           message_ = b;
@@ -520,7 +523,7 @@ public final class ProtoMessages {
         if (value == null) {
     throw new NullPointerException();
   }
-  
+
         message_ = value;
         onChanged();
         return this;
@@ -529,7 +532,7 @@ public final class ProtoMessages {
        * <code>string message = 1;</code>
        */
       public Builder clearMessage() {
-        
+
         message_ = getDefaultInstance().getMessage();
         onChanged();
         return this;
@@ -543,7 +546,7 @@ public final class ProtoMessages {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
-        
+
         message_ = value;
         onChanged();
         return this;
@@ -560,7 +563,7 @@ public final class ProtoMessages {
        * <code>int32 number = 2;</code>
        */
       public Builder setNumber(int value) {
-        
+
         number_ = value;
         onChanged();
         return this;
@@ -569,7 +572,7 @@ public final class ProtoMessages {
        * <code>int32 number = 2;</code>
        */
       public Builder clearNumber() {
-        
+
         number_ = 0;
         onChanged();
         return this;
@@ -629,7 +632,7 @@ public final class ProtoMessages {
 
   private static final com.google.protobuf.Descriptors.Descriptor
     internal_static_ProtoMessage_descriptor;
-  private static final 
+  private static final
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_ProtoMessage_fieldAccessorTable;
 

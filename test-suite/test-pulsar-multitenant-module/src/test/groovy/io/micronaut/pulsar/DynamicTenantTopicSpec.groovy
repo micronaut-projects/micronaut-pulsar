@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
 import io.micronaut.pulsar.dynamic.ConsumerDynamicTenantTopicTester
 import io.micronaut.pulsar.dynamic.FakeClient
+import io.micronaut.pulsar.dynamic.MessageResponse
 import io.micronaut.pulsar.shared.PulsarTls
 import io.micronaut.runtime.server.EmbeddedServer
 import org.apache.pulsar.client.api.Message
@@ -33,6 +34,7 @@ class DynamicTenantTopicSpec extends Specification {
 
     public static final String PULSAR_DYNAMIC_TENANT_TEST_TOPIC = 'persistent://${tenant}/default/other2'
     public static final String TENANT_1 = 't1'
+    public static final String TENANT_2 = 't2'
 
     @Shared
     @AutoCleanup
@@ -44,14 +46,16 @@ class DynamicTenantTopicSpec extends Specification {
 
 
     void setupSpec() {
-        PulsarTls.createTopic(DynamicTenantTopicSpec.PULSAR_DYNAMIC_TENANT_TEST_TOPIC.replace('${tenant}', 'public'))
         PulsarTls.createTenant(DynamicTenantTopicSpec.TENANT_1)
+        PulsarTls.createTenant(DynamicTenantTopicSpec.TENANT_2)
         PulsarTls.createTopic(DynamicTenantTopicSpec.PULSAR_DYNAMIC_TENANT_TEST_TOPIC.replace('${tenant}', DynamicTenantTopicSpec.TENANT_1))
+        PulsarTls.createTopic(DynamicTenantTopicSpec.PULSAR_DYNAMIC_TENANT_TEST_TOPIC.replace('${tenant}', DynamicTenantTopicSpec.TENANT_2))
         server = ApplicationContext.run(EmbeddedServer,
-                ['pulsar.service-url'                                      : PulsarTls.pulsarBrokerUrl,
-                 'pulsar.shutdown-on-subscriber-error'                     : true,
-                 'spec.name'                                               : getClass().simpleName,
-                 'micronaut.multitenancy.tenantresolver.httpheader.enabled': true,
+                ['pulsar.service-url'                                          : PulsarTls.pulsarBrokerUrl,
+                 'pulsar.shutdown-on-subscriber-error'                         : true,
+                 'spec.name'                                                   : getClass().simpleName,
+                 'micronaut.http.client.read-timeout'                          : '5m',
+                 'micronaut.multitenancy.tenantresolver.httpheader.enabled'    : true,
                  // Micronaut ignores @Header.name for some reason and always adds -
                  'micronaut.multitenancy.tenantresolver.httpheader.header-name': 'tenant-id'],
                 Environment.TEST
@@ -68,24 +72,24 @@ class DynamicTenantTopicSpec extends Specification {
         FakeClient fakeClient = context.getBean(FakeClient)
 
         when:
-        String messageId1 = fakeClient.sendMessage('public', message).block()
-        Message<String> readerMessage1 = fakeClient.getNextMessage('public').block()
-        String messageId2 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_1, message).block()
-        Message<String> readerMessage2 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_1).block()
+        String messageId1 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_1, message).block()
+        MessageResponse readerMessage1 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_1).block()
+        String messageId2 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_2, message).block()
+        MessageResponse readerMessage2 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_2).block()
 
         then:
         null != messageId1
         null != vars.getProperty('messages')
         messageId1 == (vars.getProperty('messages') as List[0]['messageId'])
-        messageId1 == readerMessage1.messageId.toString()
+        messageId1 == readerMessage1.messageId
         message == (vars.getProperty('messages') as List[0]['value'])
-        message == readerMessage1.value
-        (vars.getProperty('messages') as List[0]['topic'] as String).contains('public')
+        message == readerMessage1.message
+        (vars.getProperty('messages') as List[0]['topic'] as String).contains(DynamicTenantTopicSpec.TENANT_1)
         messageId2 == (vars.getProperty('messages') as List[1]['messageId'])
-        messageId2 == readerMessage2.messageId.toString()
+        messageId2 == readerMessage2.messageId
         message == (vars.getProperty('messages') as List[1]['value'])
-        (vars.getProperty('messages') as List[1]['topic'] as String).contains(DynamicTenantTopicSpec.TENANT_1)
-        message == readerMessage2.value
+        (vars.getProperty('messages') as List[1]['topic'] as String).contains(DynamicTenantTopicSpec.TENANT_2)
+        message == readerMessage2.message
     }
 
 }

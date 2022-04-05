@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,35 +59,64 @@ public class PulsarReaderAdvice implements MethodInterceptor<Object, Object> {
             ));
         }
         final ReturnType<?> returnType = context.getExecutableMethod().getReturnType();
-        final boolean isAsync = returnType.isAsyncOrReactive();
-        final Reader<?> reader;
         final Argument<?> argumentReturnType;
-        if (isAsync) {
-            argumentReturnType = returnType.getFirstTypeVariable().orElseThrow(() -> new IllegalArgumentException(
-                "Could not extract return type for %s. Async / reactive "));
+        if (returnType.isAsyncOrReactive()) {
+            argumentReturnType = returnType.getFirstTypeVariable()
+                .orElseThrow(() -> new IllegalArgumentException(
+                    "Could not extract return type for %s. Async / reactive "));
         } else {
-            argumentReturnType = Argument.of(returnType);
+            argumentReturnType = returnType.asArgument();
         }
         final AnnotationValue<PulsarReader> annotationValue = context.getAnnotation(PulsarReader.class);
-        reader = beanContext.createBean(Reader.class, annotationValue, argumentReturnType);
-        if (isAsync) {
-            final CompletableFuture<? extends Message<?>> future = reader.readNextAsync();
-            if (CompletableFuture.class == returnType.getType()) {
-                return future;
-            }
-            return Publishers.convertPublisher(future, returnType.getType());
-        }
+        final Reader<?> reader = beanContext.createBean(Reader.class,
+            annotationValue,
+            argumentReturnType,
+            context);
         try {
-            final int timeout = Objects.requireNonNull(annotationValue).intValue("readTimeout")
-                .orElse(0);
-            final TimeUnit timeUnit = annotationValue.get("timeoutUnit", TimeUnit.class)
-                .orElse(TimeUnit.SECONDS);
-            if (timeout != 0) {
-                return reader.readNext(timeout, timeUnit);
-            }
-            return reader.readNext();
+            return read(reader, returnType, annotationValue);
         } catch (PulsarClientException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private Object read(final Reader<?> reader,
+                        final ReturnType<?> returnType,
+                        final AnnotationValue<PulsarReader> annotationValue) throws PulsarClientException {
+        if (returnType.isAsyncOrReactive()) {
+            final Argument<?> wrapped = returnType.getFirstTypeVariable()
+                .orElseThrow(() -> new IllegalStateException("Missing inner type for async reader."));
+            if (Message.class.isAssignableFrom(wrapped.getType())) {
+                return readAsync(returnType, reader.readNextAsync(), wrapped);
+            }
+            return readAsync(returnType, reader.readNextAsync().thenApply(Message::getValue), wrapped);
+        }
+        if (Message.class.isAssignableFrom(returnType.getType())) {
+            return readBlocking(reader, annotationValue);
+        }
+        final Message<?> msg = readBlocking(reader, annotationValue);
+        return msg.getValue();
+    }
+
+    private static Message<?> readBlocking(final Reader<?> reader,
+                                           final AnnotationValue<PulsarReader> annotationValue)
+        throws PulsarClientException {
+        final int timeout = Objects.requireNonNull(annotationValue)
+            .intValue("readTimeout")
+            .orElse(0);
+        final TimeUnit timeUnit = annotationValue.get("timeoutUnit", TimeUnit.class)
+            .orElse(TimeUnit.SECONDS);
+        if (timeout > 0) {
+            return reader.readNext(timeout, timeUnit);
+        }
+        return reader.readNext();
+    }
+
+    private static Object readAsync(final ReturnType<?> returnType,
+                                    final CompletableFuture<?> reading,
+                                    final Argument<?> argumentReturnType) {
+        if (CompletableFuture.class == returnType.getType()) {
+            return reading;
+        }
+        return Publishers.convertPublisher(reading, argumentReturnType.getType());
     }
 }

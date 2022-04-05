@@ -1,6 +1,10 @@
 package io.micronaut.pulsar
+
+import io.micronaut.context.annotation.Requires
+import io.micronaut.messaging.annotation.MessageMapping
+
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,19 +19,10 @@ package io.micronaut.pulsar
  * limitations under the License.
  */
 
-
-import io.micronaut.context.annotation.Requires
-import io.micronaut.inject.qualifiers.Qualifiers
-import io.micronaut.messaging.annotation.MessageMapping
 import io.micronaut.pulsar.annotation.PulsarReader
 import io.micronaut.pulsar.annotation.PulsarReaderClient
-import jakarta.inject.Named
 import jakarta.inject.Singleton
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.MessageId
-import org.apache.pulsar.client.api.Producer
-import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.Reader
+import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import reactor.core.publisher.Mono
 import spock.lang.Stepwise
@@ -37,7 +32,7 @@ import java.time.Duration
 import static java.util.concurrent.TimeUnit.SECONDS
 
 @Stepwise
-abstract class PulsarReaderSpec extends PulsarAwareTest {
+class PulsarReaderSpec extends PulsarAwareTest {
 
     public static final String PULSAR_READER_TEST_TOPIC = "persistent://public/default/simple-reader"
 
@@ -45,7 +40,7 @@ abstract class PulsarReaderSpec extends PulsarAwareTest {
         given:
         Producer producer = context.getBean(PulsarClient)
                 .newProducer(new StringSchema())
-                .topic(PULSAR_READER_TEST_TOPIC)
+                .topic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
                 .producerName("string-producer")
                 .create()
         Reader<String> stringDependencyReader = context.getBean(ReaderRequester).stringReader
@@ -56,6 +51,7 @@ abstract class PulsarReaderSpec extends PulsarAwareTest {
         Message receivedMessage = stringDependencyReader.readNext(60, SECONDS)
 
         then:
+        null != receivedMessage
         messageId == receivedMessage.messageId
         message == receivedMessage.value
 
@@ -68,7 +64,7 @@ abstract class PulsarReaderSpec extends PulsarAwareTest {
         given:
         Producer producer = context.getBean(PulsarClient)
                 .newProducer(new StringSchema())
-                .topic(PULSAR_READER_TEST_TOPIC)
+                .topic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
                 .producerName("string-producer")
                 .create()
         ReaderClientTest readerClientTest = context.getBean(ReaderClientTest)
@@ -89,7 +85,7 @@ abstract class PulsarReaderSpec extends PulsarAwareTest {
         given:
         Producer producer = context.getBean(PulsarClient)
                 .newProducer(new StringSchema())
-                .topic(PULSAR_READER_TEST_TOPIC)
+                .topic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
                 .producerName("string-producer")
                 .create()
         ReaderClientTest readerClientTest = context.getBean(ReaderClientTest)
@@ -111,7 +107,7 @@ abstract class PulsarReaderSpec extends PulsarAwareTest {
         given:
         Producer producer = context.getBean(PulsarClient)
                 .newProducer(new StringSchema())
-                .topic(PULSAR_READER_TEST_TOPIC)
+                .topic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
                 .producerName("string-producer")
                 .create()
         ReaderClientTest readerClientTest = context.getBean(ReaderClientTest)
@@ -132,7 +128,7 @@ abstract class PulsarReaderSpec extends PulsarAwareTest {
         given:
         Producer producer = context.getBean(PulsarClient)
                 .newProducer(new StringSchema())
-                .topic(PULSAR_READER_TEST_TOPIC)
+                .topic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
                 .producerName("string-producer")
                 .create()
         ReaderClientTest readerClientTest = context.getBean(ReaderClientTest)
@@ -177,19 +173,19 @@ abstract class PulsarReaderSpec extends PulsarAwareTest {
     @PulsarReaderClient
     static interface ReaderClientTest {
         @Requires(property = 'spec.name', value = 'PulsarReaderSpec')
-        @PulsarReader(topic = PulsarReaderSpec.PULSAR_READER_TEST_TOPIC, readTimeout = 60)
-        abstract String read();
+        @PulsarReader(topic = PulsarReaderSpec.PULSAR_READER_TEST_TOPIC, readTimeout = 60, startMessageLatest = false)
+        String read();
 
         @Requires(property = 'spec.name', value = 'PulsarReaderSpec')
-        @PulsarReader(topic = PulsarReaderSpec.PULSAR_READER_TEST_TOPIC, readTimeout = 60)
-        abstract Message<String> readMsg();
+        @PulsarReader(topic = PulsarReaderSpec.PULSAR_READER_TEST_TOPIC, readTimeout = 60, startMessageLatest = false)
+        Message<String> readMsg();
 
         @Requires(property = 'spec.name', value = 'PulsarReaderSpec')
-        @PulsarReader(topic = PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
-        abstract Mono<String> readAsync();
+        @PulsarReader(topic = PulsarReaderSpec.PULSAR_READER_TEST_TOPIC, startMessageLatest = false)
+        Mono<String> readAsync();
 
         @Requires(property = 'spec.name', value = 'PulsarReaderSpec')
-        @PulsarReader(topic = PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
-        abstract Mono<Message<String>> readAsyncMsg();
+        @PulsarReader(topic = PulsarReaderSpec.PULSAR_READER_TEST_TOPIC, startMessageLatest = false)
+        Mono<Message<String>> readAsyncMsg();
     }
 }

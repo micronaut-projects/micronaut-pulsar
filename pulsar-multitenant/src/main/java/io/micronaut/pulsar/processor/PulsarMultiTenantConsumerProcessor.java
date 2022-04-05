@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,7 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor {
             pulsarClientConfiguration,
             topicResolver);
         this.tenantNameResolver = tenantNameResolver;
-        if (tenantNameResolver.isStaticTenantResolver()) {
+        if (!tenantNameResolver.isStaticTenantResolver()) {
             multiTenantConsumers = new ConcurrentHashMap<>(10);
         } else {
             multiTenantConsumers = null;
@@ -92,8 +92,7 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor {
                 super.process(beanDefinition, method);
                 return;
             }
-            final String name = getConsumerName(annotation);
-            final String consumerId = topicResolver.generateIdFromMessagingClientName(name, topic);
+            final String consumerId = getConsumerName(annotation);
             if (!multiTenantConsumers.containsKey(consumerId)) {
                 multiTenantConsumers.put(consumerId, new MultiTenantConsumer(beanDefinition, method));
             }

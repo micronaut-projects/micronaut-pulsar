@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -80,7 +80,7 @@ public class DefaultListener implements MessageListenerResolver {
     //so in case of Kotlin we need to create those and do a blocking call within this CompletableFuture
 
     @Override
-    public void received(Consumer consumer, Message msg) {
+    public void received(final Consumer consumer, final Message msg) {
         try {
             receive.accept(consumer, msg);
             consumer.acknowledgeAsync(msg);

@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,17 +18,17 @@ package io.micronaut.pulsar.dynamic
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.ApplicationEventPublisher
 import io.micronaut.http.HttpRequest
-import io.micronaut.http.HttpResponse
+import io.micronaut.http.MutableHttpResponse
 import io.micronaut.http.annotation.Filter
-import io.micronaut.http.filter.FilterChain
-import io.micronaut.http.filter.HttpFilter
+import io.micronaut.http.filter.HttpServerFilter
+import io.micronaut.http.filter.ServerFilterChain
 import io.micronaut.multitenancy.tenantresolver.TenantResolver
 import io.micronaut.pulsar.events.PulsarTenantDiscoveredEvent
 import org.reactivestreams.Publisher
 
 @Requires(property = 'spec.name', value = 'DynamicTenantTopicSpec')
-@Filter("/**")
-class ResolveTenantsFilter implements HttpFilter {
+@Filter(Filter.MATCH_ALL_PATTERN)
+class ResolveTenantsFilter implements HttpServerFilter {
 
     final TenantResolver tenantResolver
     final ApplicationEventPublisher<PulsarTenantDiscoveredEvent> tenantPublisher
@@ -40,9 +40,11 @@ class ResolveTenantsFilter implements HttpFilter {
     }
 
     @Override
-    Publisher<? extends HttpResponse<?>> doFilter(HttpRequest<?> request, FilterChain chain) {
+    Publisher<MutableHttpResponse<?>> doFilter(HttpRequest<?> request, ServerFilterChain chain) {
         final Serializable tenant = tenantResolver.resolveTenantIdentifier()
-        tenantPublisher.publishEvent(new PulsarTenantDiscoveredEvent(tenant))
+        //block and await instantiation of the consumers since it will pass out on first (and only in this case)
+        //message from the producer
+        tenantPublisher.publishEvent(new PulsarTenantDiscoveredEvent(tenant));
         return chain.proceed(request)
     }
 }

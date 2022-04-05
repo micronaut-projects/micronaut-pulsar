@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,6 +23,10 @@ import org.apache.pulsar.client.api.Message
 @PulsarReaderClient
 interface DynamicReader {
 
-    @PulsarReader(topic = DynamicTenantTopicSpec.PULSAR_DYNAMIC_TENANT_TEST_TOPIC, readTimeout = 60)
+    @PulsarReader(topic = DynamicTenantTopicSpec.PULSAR_DYNAMIC_TENANT_TEST_TOPIC,
+            readTimeout = 60,
+            readerName = "fake-reader",
+            startMessageLatest = false)
+    /* in order to read message with a reader instantiated after producer has sent a message, reader needs to read */
     Message<String> read();
 }
