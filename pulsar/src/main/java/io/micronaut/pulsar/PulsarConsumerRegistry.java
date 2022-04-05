@@ -33,6 +33,8 @@ public interface PulsarConsumerRegistry {
 
     <T> Consumer<T> getConsumer(@NonNull String id);
 
+    boolean consumerExists(@NonNull String id);
+
     Set<String> getConsumerIds();
 
     boolean isPaused(@NonNull String id);

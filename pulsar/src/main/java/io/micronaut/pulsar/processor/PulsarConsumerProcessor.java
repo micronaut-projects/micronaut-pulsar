@@ -303,6 +303,11 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
         return consumer;
     }
 
+    @Override
+    public boolean consumerExists(@NonNull String id) {
+        return consumers.containsKey(id);
+    }
+
     @NonNull
     @Override
     public Set<String> getConsumerIds() {

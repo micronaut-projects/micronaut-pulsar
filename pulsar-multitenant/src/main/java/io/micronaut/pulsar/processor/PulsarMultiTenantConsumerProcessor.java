@@ -17,6 +17,7 @@ package io.micronaut.pulsar.processor;
 
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Replaces;
+import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
@@ -47,7 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Internal
 @Replaces(bean = PulsarConsumerProcessor.class)
 @Singleton
-final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor {
+final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor implements ApplicationEventListener<PulsarTenantDiscoveredEvent> {
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarConsumerProcessor.class);
 
@@ -88,11 +89,19 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor {
         try {
             final AnnotationValue<PulsarConsumer> annotation = method.getAnnotation(PulsarConsumer.class);
             final TopicResolver.TopicResolved topic = TopicResolver.extractTopic(Objects.requireNonNull(annotation));
-            if (!topic.isDynamicTenant() || tenantNameResolver.hasTenantName()) {
+            if (!topic.isDynamicTenant()) {
                 super.process(beanDefinition, method);
                 return;
             }
             final String consumerId = getConsumerName(annotation);
+            if (tenantNameResolver.hasTenantName()){
+                final String resolvedConsumerId = topicResolver.generateIdFromMessagingClientName(consumerId, topic);
+                if (consumerExists(resolvedConsumerId)) {
+                    return;
+                }
+                super.process(beanDefinition, method);
+                return;
+            }
             if (!multiTenantConsumers.containsKey(consumerId)) {
                 multiTenantConsumers.put(consumerId, new MultiTenantConsumer(beanDefinition, method));
             }
@@ -103,8 +112,8 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor {
         }
     }
 
-    @EventListener
-    public void resolveNewTenant(final PulsarTenantDiscoveredEvent event) {
+    @Override
+    public void onApplicationEvent(final PulsarTenantDiscoveredEvent event) {
         tenantNameResolver.overrideTenantName(tenantNameResolver.resolveTenantNameFromId(event.getTenant()));
         for (final MultiTenantConsumer x : multiTenantConsumers.values()) {
             super.process(x.getBeanDefinition(), x.getMethod());
