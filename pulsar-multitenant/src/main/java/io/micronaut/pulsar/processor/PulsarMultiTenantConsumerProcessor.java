@@ -114,9 +114,10 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
 
     @Override
     public void onApplicationEvent(final PulsarTenantDiscoveredEvent event) {
-        tenantNameResolver.overrideTenantName(tenantNameResolver.resolveTenantNameFromId(event.getTenant()));
+        final String tenantName = tenantNameResolver.resolveTenantNameFromId(event.getTenant());
+        tenantNameResolver.overrideTenantName(tenantName);
         for (final MultiTenantConsumer x : multiTenantConsumers.values()) {
-            super.process(x.getBeanDefinition(), x.getMethod());
+            this.process(x.getBeanDefinition(), x.getMethod());
         }
         tenantNameResolver.clearTenantName();
     }
