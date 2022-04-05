@@ -79,7 +79,7 @@ class DynamicTenantTopicSpec extends Specification {
 
         then:
         null != messageId1
-        null != vars.getProperty('messages')
+        null != vars.getProperty('isSet')
         messageId1 == (vars.getProperty('messages') as List[0]['messageId'])
         messageId1 == readerMessage1.messageId
         message == (vars.getProperty('messages') as List[0]['value'])
