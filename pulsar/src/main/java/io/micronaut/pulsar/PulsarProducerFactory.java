@@ -57,7 +57,6 @@ public class PulsarProducerFactory {
      * @param <T>                  type of message body for pulsar producer
      * @param annotatedMethodName  method name on which annotation for Pulsar Producer was set
      * @return new Pulsar producer
-     * @throws MessagingClientException in case Producer cannot be created
      */
     @SuppressWarnings("unchecked")
     @Prototype
@@ -65,13 +64,13 @@ public class PulsarProducerFactory {
                                           @Parameter AnnotationValue<PulsarProducer> annotationValue,
                                           @Parameter Argument<?>[] methodArguments,
                                           @Parameter DefaultSchemaHandler simpleSchemaResolver,
-                                          @Parameter String annotatedMethodName) throws Exception {
+                                          @Parameter String annotatedMethodName) throws MessagingClientException {
 
         final PulsarArgumentHandler argsHandler = new PulsarArgumentHandler(methodArguments, annotatedMethodName);
         final Schema<T> schema = (Schema<T>) simpleSchemaResolver.decideSchema(argsHandler.getBodyArgument(),
-                argsHandler.getKeyArgument(),
-                annotationValue,
-                annotatedMethodName);
+            argsHandler.getKeyArgument(),
+            annotationValue,
+            annotatedMethodName);
 
         final String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
         final String topic = annotationValue.stringValue("topic", null)
@@ -96,9 +95,9 @@ public class PulsarProducerFactory {
         annotationValue.longValue("initialSequenceId").ifPresent(producerBuilder::initialSequenceId);
         annotationValue.enumValue("hashingScheme", HashingScheme.class).ifPresent(producerBuilder::hashingScheme);
         annotationValue.enumValue("compressionType", CompressionType.class)
-                .ifPresent(producerBuilder::compressionType);
+            .ifPresent(producerBuilder::compressionType);
         annotationValue.enumValue("messageRoutingMode", MessageRoutingMode.class)
-                .ifPresent(producerBuilder::messageRoutingMode);
+            .ifPresent(producerBuilder::messageRoutingMode);
 
         try {
             return producerBuilder.create();

@@ -49,7 +49,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @Singleton
 final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor implements ApplicationEventListener<PulsarTenantDiscoveredEvent> {
 
-    private static final Logger LOG = LoggerFactory.getLogger(PulsarConsumerProcessor.class);
+    private static final Logger LOG = LoggerFactory.getLogger(PulsarMultiTenantConsumerProcessor.class);
 
     private final Map<String, MultiTenantConsumer> multiTenantConsumers;
     private final TenantNameResolver tenantNameResolver;
@@ -104,11 +104,11 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
             if (!multiTenantConsumers.containsKey(consumerId)) {
                 multiTenantConsumers.put(consumerId, new MultiTenantConsumer(beanDefinition, method));
             }
-        } catch (final TenantNotFoundException | NullPointerException ex) {
+        } catch (final TenantNotFoundException ex) {
             if (ex instanceof TenantNotFoundException) {
                 LOG.warn("Failed to instantiate a bean with consumers because topic value was set to dynamic tenant while tenant was missing.", ex);
             }
-        }
+        } catch (final NullPointerException ignore) {}
     }
 
     @Override

@@ -50,7 +50,7 @@ import java.util.Set;
 @InterceptorBean(PulsarProducerClient.class)
 @Replaces(PulsarProducerAdvice.class)
 public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
-        implements MethodInterceptor<Object, Object>, AutoCloseable {
+    implements MethodInterceptor<Object, Object>, AutoCloseable {
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarMultitenantProducerAdvice.class);
 
@@ -73,34 +73,37 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
                                               final AnnotationValue<PulsarProducer> annotationValue) {
         final TopicResolver.TopicResolved topicResolved = TopicResolver.extractTopic(annotationValue);
         final String producerName = annotationValue.stringValue("producerName", null)
-                .orElse(method.getDescription(true));
+            .orElse(method.getDescription(true));
         final String producerId = topicResolver.generateIdFromMessagingClientName(producerName, topicResolved);
         if (!tenantNameResolver.hasTenantName()) {
             final String description = method.getDescription(false);
             LOG.error("Failed to resolve tenant while sending messages using {}", description);
             throw new ConfigurationException("Tenant not available during message sending");
         }
-        Producer<?> producer = producers.get(producerId);
-        if (null == producer) {
-            try {
-                producer = beanContext.createBean(Producer.class,
-                        pulsarClient,
-                        annotationValue,
-                        method.getArguments(),
-                        simpleSchemaResolver,
-                        method.getDescription(true)
-                );
-                producers.put(producerId, producer);
-            } catch (Exception ex) {
-                if (MessageListenerException.class == ex.getClass() && ex.getMessage().startsWith("Topic")) {
-                    LOG.error("Topic missing for producer {} {}", producerId, method.getDescription(false));
-                } else {
-                    LOG.error("Failed to create producer {} with reason: ", producerId, ex);
-                }
-                applicationEventPublisher.publishEventAsync(new ProducerSubscriptionFailedEvent(producerId, ex));
+        return producers.computeIfAbsent(producerId,
+            id -> tryCreate(beanContext, annotationValue, method, id));
+    }
+
+    private Producer<?> tryCreate(final BeanContext beanContext,
+                                  final AnnotationValue<PulsarProducer> annotationValue,
+                                  final ExecutableMethod<?, ?> method,
+                                  final String producerId) {
+        try {
+            return beanContext.createBean(Producer.class,
+                pulsarClient,
+                annotationValue,
+                method.getArguments(),
+                simpleSchemaResolver,
+                method.getDescription(true));
+        } catch (Exception ex) {
+            if (MessageListenerException.class == ex.getClass() && ex.getMessage().startsWith("Topic")) {
+                LOG.error("Topic missing for producer {} {}", producerId, method.getDescription(false));
+            } else {
+                LOG.error("Failed to create producer {} with reason: ", producerId, ex);
             }
+            applicationEventPublisher.publishEventAsync(new ProducerSubscriptionFailedEvent(producerId, ex));
+            return null;
         }
-        return producer;
     }
 
     @Override

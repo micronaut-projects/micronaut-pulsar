@@ -13,8 +13,6 @@ dependencies {
     testImplementation mn.micronaut.test.spock
     testImplementation mn.micronaut.multitenancy
     testImplementation mn.micronaut.http.client
-    testImplementation project(':pulsar-multitenant')
-    testImplementation project(':test-suite:shared')
 }
 
 tasks.withType(GroovyCompile) {

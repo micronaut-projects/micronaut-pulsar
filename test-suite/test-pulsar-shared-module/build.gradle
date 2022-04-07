@@ -1,6 +1,5 @@
 plugins {
-    id 'io.micronaut.build.internal.pulsar-module'
-    id "java"
+    id 'io.micronaut.build.internal.test-pulsar-shared-module'
 }
 
 dependencies {

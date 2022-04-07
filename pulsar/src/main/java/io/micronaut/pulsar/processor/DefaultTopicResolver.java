@@ -34,11 +34,7 @@ final class DefaultTopicResolver implements TopicResolver {
     private final String defaultTenant;
 
     DefaultTopicResolver(final PulsarClientConfiguration pulsarClientConfiguration) {
-        if (pulsarClientConfiguration.getDefaultTenant().isPresent()) {
-            defaultTenant = pulsarClientConfiguration.getDefaultTenant().get();
-        } else {
-            defaultTenant = null;
-        }
+        defaultTenant = pulsarClientConfiguration.getDefaultTenant().orElse(null);
     }
 
     @Override

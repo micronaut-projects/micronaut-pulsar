@@ -23,6 +23,7 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.async.publisher.Publishers;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.type.ReturnType;
+import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.pulsar.annotation.PulsarReader;
 import io.micronaut.pulsar.annotation.PulsarReaderClient;
 import org.apache.pulsar.client.api.Message;
@@ -75,7 +76,9 @@ public class PulsarReaderAdvice implements MethodInterceptor<Object, Object> {
         try {
             return read(reader, returnType, annotationValue);
         } catch (PulsarClientException e) {
-            throw new RuntimeException(e);
+            throw new MessageListenerException(
+                String.format("Failed to read message on topic %s", reader.getTopic()),
+                e);
         }
     }
 

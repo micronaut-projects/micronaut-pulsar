@@ -9,7 +9,5 @@ dependencies {
     annotationProcessor mn.micronaut.inject.groovy
     testImplementation mn.micronaut.inject
     testImplementation 'io.micronaut.reactor:micronaut-reactor'
-    testImplementation project(':test-suite:shared')
-    testImplementation project(':test-suite:shared')
     testImplementation 'io.micronaut.grpc:micronaut-protobuff-support:3.1.3'
 }

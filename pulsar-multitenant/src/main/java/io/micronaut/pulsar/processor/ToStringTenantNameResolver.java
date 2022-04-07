@@ -17,6 +17,7 @@ package io.micronaut.pulsar.processor;
 
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.core.annotation.Internal;
+import io.micronaut.messaging.exceptions.MessagingException;
 import io.micronaut.multitenancy.exceptions.TenantNotFoundException;
 import io.micronaut.multitenancy.tenantresolver.FixedTenantResolver;
 import io.micronaut.multitenancy.tenantresolver.SystemPropertyTenantResolver;
@@ -59,7 +60,7 @@ final class ToStringTenantNameResolver implements TenantNameResolver {
     @Override
     public void overrideTenantName(final String tenantName) {
         if (!TenantNameResolver.isValidTenantName(tenantName)) {
-            throw new RuntimeException(String.format("Invalid tenant name %s", tenantName));
+            throw new MessagingException(String.format("Invalid tenant name %s", tenantName));
         }
         CURRENT_TENANT.set(tenantName);
     }
