@@ -1,5 +1,5 @@
 plugins {
-    id 'io.micronaut.build.internal.pulsar-multitenant'
+    id 'io.micronaut.build.internal.pulsar-multitenant-module'
     id "java"
 }
 
