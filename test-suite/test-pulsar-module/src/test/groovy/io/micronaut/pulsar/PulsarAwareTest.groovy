@@ -32,7 +32,11 @@ abstract class PulsarAwareTest extends Specification {
         PulsarTls.createTopic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
         PulsarTls.createTopic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
         PulsarTls.createTopic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
-        PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC)
+        PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC_INJECTABLE)
+        PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC_METHOD)
+        PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC_METHOD_WRAPPED)
+        PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC_METHOD_ASYNC)
+        PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC_METHOD_ASYNC_WRAPPED)
         PulsarTls.createTopic(PulsarSchemaSpec.PULSAR_JSON_TOPIC)
         PulsarTls.createTopic(PulsarSchemaSpec.PULSAR_PROTOBUF_TOPIC)
         context = ApplicationContext.run(

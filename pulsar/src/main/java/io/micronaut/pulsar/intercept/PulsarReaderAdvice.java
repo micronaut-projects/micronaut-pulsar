@@ -86,9 +86,9 @@ public class PulsarReaderAdvice implements MethodInterceptor<Object, Object> {
             final Argument<?> wrapped = returnType.getFirstTypeVariable()
                 .orElseThrow(() -> new IllegalStateException("Missing inner type for async reader."));
             if (Message.class.isAssignableFrom(wrapped.getType())) {
-                return readAsync(returnType, reader.readNextAsync(), wrapped);
+                return readAsync(returnType, reader.readNextAsync());
             }
-            return readAsync(returnType, reader.readNextAsync().thenApply(Message::getValue), wrapped);
+            return readAsync(returnType, reader.readNextAsync().thenApply(Message::getValue));
         }
         if (Message.class.isAssignableFrom(returnType.getType())) {
             return readBlocking(reader, annotationValue);
@@ -112,11 +112,10 @@ public class PulsarReaderAdvice implements MethodInterceptor<Object, Object> {
     }
 
     private static Object readAsync(final ReturnType<?> returnType,
-                                    final CompletableFuture<?> reading,
-                                    final Argument<?> argumentReturnType) {
+                                    final CompletableFuture<?> reading) {
         if (CompletableFuture.class == returnType.getType()) {
             return reading;
         }
-        return Publishers.convertPublisher(reading, argumentReturnType.getType());
+        return Publishers.convertPublisher(reading, returnType.getType());
     }
 }

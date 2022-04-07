@@ -69,7 +69,10 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     /**
      * Create Pulsar Reader for given injection point if missing.
      *
-     * @param context injection point of {@code Reader<?>}
+     * @param context                 injection point of {@code Reader<?>} if used as injection argument.
+     * @param annotationValue         method annotation value if used by annotating method
+     * @param methodInvocationContext method invocation context if used by annotating method
+     * @param returnType              method return type if used by annotating method
      * @return new instance of Pulsar reader if missing; otherwise return from cache
      * @throws PulsarClientException in case of not being able to create such Reader
      */
@@ -85,6 +88,10 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
                 Objects.requireNonNull(returnType),
                 Objects.requireNonNull(methodInvocationContext));
         }
+        return getReaderByInjectionPoint(context);
+    }
+
+    private Reader<?> getReaderByInjectionPoint(final BeanResolutionContext context) throws PulsarClientException {
         final InjectionPoint<?> injectionPoint = context.getPath().currentSegment()
             .orElseThrow(() ->
                 new IllegalStateException("Could not resolve current injection context while creating a reader"))

@@ -22,7 +22,6 @@ import io.micronaut.pulsar.dynamic.FakeClient
 import io.micronaut.pulsar.dynamic.MessageResponse
 import io.micronaut.pulsar.shared.PulsarTls
 import io.micronaut.runtime.server.EmbeddedServer
-import org.apache.pulsar.client.api.Message
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
@@ -79,17 +78,14 @@ class DynamicTenantTopicSpec extends Specification {
 
         then:
         null != messageId1
-        null != vars.getProperty('isSet')
-        messageId1 == (vars.getProperty('messages') as List[0]['messageId'])
         messageId1 == readerMessage1.messageId
-        message == (vars.getProperty('messages') as List[0]['value'])
         message == readerMessage1.message
-        (vars.getProperty('messages') as List[0]['topic'] as String).contains(DynamicTenantTopicSpec.TENANT_1)
-        messageId2 == (vars.getProperty('messages') as List[1]['messageId'])
+        (vars.getProperty(messageId1.toString()) as String).contains(message)
+        (vars.getProperty(messageId1.toString()) as String).contains(DynamicTenantTopicSpec.TENANT_1)
         messageId2 == readerMessage2.messageId
-        message == (vars.getProperty('messages') as List[1]['value'])
-        (vars.getProperty('messages') as List[1]['topic'] as String).contains(DynamicTenantTopicSpec.TENANT_2)
         message == readerMessage2.message
+        (vars.getProperty(messageId2) as String).contains(message)
+        (vars.getProperty(messageId2) as String).contains(DynamicTenantTopicSpec.TENANT_2)
     }
 
 }

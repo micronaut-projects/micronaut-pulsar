@@ -28,7 +28,6 @@ import spock.util.concurrent.BlockingVariables
 @PulsarSubscription(subscriptionName = "subscriber-dynamic")
 class ConsumerDynamicTenantTopicTester {
     BlockingVariables blockers
-    def messages = [[:]];
 
     @PulsarConsumer(
             topic = DynamicTenantTopicSpec.PULSAR_DYNAMIC_TENANT_TEST_TOPIC,
@@ -38,12 +37,6 @@ class ConsumerDynamicTenantTopicTester {
         if (null == blockers) {
             return
         }
-        this.blockers.setProperty("isSet", true)
-        messages.add(["topic": consumer.topic, "messageId": message.messageId.toString(), "value": message.value])
-    }
-
-    void setBlockers(BlockingVariables blockers) {
-        this.blockers = blockers;
-        this.blockers.setProperty("messages", [[:]])
+        blockers.setProperty(message.getMessageId().toString(), message.getValue() + " " + consumer.topic)
     }
 }

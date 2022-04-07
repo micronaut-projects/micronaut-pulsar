@@ -27,7 +27,6 @@ import io.micronaut.multitenancy.exceptions.TenantNotFoundException;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.PulsarTenantDiscoveredEvent;
-import io.micronaut.runtime.event.annotation.EventListener;
 import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.slf4j.Logger;
@@ -94,7 +93,7 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
                 return;
             }
             final String consumerId = getConsumerName(annotation);
-            if (tenantNameResolver.hasTenantName()){
+            if (tenantNameResolver.hasTenantName()) {
                 final String resolvedConsumerId = topicResolver.generateIdFromMessagingClientName(consumerId, topic);
                 if (consumerExists(resolvedConsumerId)) {
                     return;
