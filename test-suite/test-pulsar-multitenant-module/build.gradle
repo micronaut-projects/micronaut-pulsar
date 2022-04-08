@@ -3,6 +3,12 @@ plugins {
     id "java"
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
 dependencies {
     testCompileOnly mn.micronaut.inject.java
     testImplementation mn.micronaut.inject.java

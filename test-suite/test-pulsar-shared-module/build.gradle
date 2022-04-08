@@ -2,6 +2,12 @@ plugins {
     id 'io.micronaut.build.internal.test-pulsar-shared-module'
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
 dependencies {
     implementation mn.micronaut.inject
     implementation mn.micronaut.inject.groovy

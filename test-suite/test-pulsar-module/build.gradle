@@ -3,6 +3,12 @@ plugins {
     id "java"
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
 dependencies {
     implementation project(':pulsar')
     annotationProcessor mn.micronaut.inject.java
