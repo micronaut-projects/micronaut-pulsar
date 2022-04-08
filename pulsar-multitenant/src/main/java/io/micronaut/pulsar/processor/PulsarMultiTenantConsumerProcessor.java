@@ -105,10 +105,9 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
                 multiTenantConsumers.put(consumerId, new MultiTenantConsumer(beanDefinition, method));
             }
         } catch (final TenantNotFoundException ex) {
-            if (ex instanceof TenantNotFoundException) {
-                LOG.warn("Failed to instantiate a bean with consumers because topic value was set to dynamic tenant while tenant was missing.", ex);
-            }
-        } catch (final NullPointerException ignore) {}
+            LOG.warn("Failed to instantiate a bean with consumers because topic value was set to dynamic tenant while tenant was missing.", ex);
+        } catch (final NullPointerException ignore) {
+        }
     }
 
     @Override

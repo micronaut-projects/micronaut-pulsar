@@ -3,6 +3,12 @@ plugins {
     id "java"
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
 dependencies {
     testImplementation project(':pulsar')
     testCompileOnly mn.micronaut.inject.java

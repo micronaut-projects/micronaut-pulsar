@@ -4,6 +4,12 @@ plugins {
     alias libs.plugins.kotlin.kapt
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
 dependencies {
     kaptTest enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion")
     kaptTest mn.micronaut.inject.java

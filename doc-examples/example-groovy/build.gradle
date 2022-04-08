@@ -3,6 +3,12 @@ plugins {
     id "groovy"
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
 dependencies {
     testImplementation projects.pulsar
 
