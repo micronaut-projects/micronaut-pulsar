@@ -10,9 +10,11 @@ micronautBuild {
 }
 
 dependencies {
+    implementation project(':pulsar-multitenant')
     testCompileOnly mn.micronaut.inject.java
     testImplementation mn.micronaut.inject.java
 
+    testImplementation project(':test-suite:test-pulsar-shared-module')
     testImplementation mn.micronaut.inject
     testImplementation mn.spock
     testImplementation mn.reactor
