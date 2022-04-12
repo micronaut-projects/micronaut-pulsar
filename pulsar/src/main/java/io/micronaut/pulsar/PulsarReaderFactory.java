@@ -77,11 +77,11 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
      * @throws PulsarClientException in case of not being able to create such Reader
      */
     @Prototype
-    @SuppressWarnings("unchecked")
     public Reader<?> getReaderByInjectionPoint(final BeanResolutionContext context,
                                                @Nullable @Parameter final AnnotationValue<PulsarReader> annotationValue,
                                                @Nullable @Parameter final Argument<?> returnType,
-                                               @Nullable @Parameter final MethodInvocationContext<?, ?> methodInvocationContext) throws PulsarClientException {
+                                               @Nullable @Parameter final MethodInvocationContext<?, ?> methodInvocationContext)
+        throws PulsarClientException {
 
         if (!context.getPath().currentSegment().isPresent()) {
             return getReaderForAnnotation(Objects.requireNonNull(annotationValue),
@@ -91,6 +91,7 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         return getReaderByInjectionPoint(context);
     }
 
+    @SuppressWarnings("unchecked")
     private Reader<?> getReaderByInjectionPoint(final BeanResolutionContext context) throws PulsarClientException {
         final InjectionPoint<?> injectionPoint = context.getPath().currentSegment()
             .orElseThrow(() ->
