@@ -1,7 +1,4 @@
 pluginManagement {
-    plugins {
-        id 'io.micronaut.build.shared.settings' version getProperty("micronautSharedSettingVersion")
-    }
     repositories {
         gradlePluginPortal()
         mavenCentral()
@@ -9,11 +6,10 @@ pluginManagement {
 }
 
 plugins {
-    id 'io.micronaut.build.shared.settings'
+    id 'io.micronaut.build.shared.settings' version '5.3.0'
 }
 
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
-enableFeaturePreview 'VERSION_CATALOGS'
 
 dependencyResolutionManagement {
     repositories {
@@ -29,6 +25,11 @@ dependencyResolutionManagement {
 rootProject.name = 'pulsar-root'
 
 include 'pulsar'
+include 'pulsar-multitenant'
+include 'test-suite:test-pulsar-shared-module'
+include 'test-suite:test-pulsar-module'
+include 'test-suite:test-pulsar-multitenant-module'
 include 'doc-examples:example-java'
 include 'doc-examples:example-kotlin'
 include 'doc-examples:example-groovy'
+

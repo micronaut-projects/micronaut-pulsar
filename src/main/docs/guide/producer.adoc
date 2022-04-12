@@ -1,9 +1,6 @@
 == Creating producers
 
 To initialize a producer it's sufficient to annotate an interface with `@PulsarProducerClient` and annotate methods with `@PulsarProducer`.
-First method parameter will be taken as a message body. Others are ignored. It's possible to annotate non-abstract methods
-in which case it's important to ensure that the first method parameter is what should be sent to Pulsar as rest will be
-ignored.
 
 snippet::example.Producer[project-base="doc-examples/example", indent="0"]
 <1> Annotate interface with @PulsarProducerClient to notify Micronaut for processing it without implementation
@@ -11,7 +8,7 @@ snippet::example.Producer[project-base="doc-examples/example", indent="0"]
 <3> Return decides whether to send message in a blocking or non-blocking manner.
 <4> A blocking send that waits until message is successfully sent or throws an exception on failure.
 
-Producers can be used in other beans as well.
+Producers can be used in other types of beans as well (Singleton or such).
 
 === Producer method
 

@@ -1,0 +1,41 @@
+== Multitenancy
+Micronaut has a support for multitenancy and so does Apache Pulsar. There is a bridge now between these two which
+allows you to switch pulsar tenant based upon micronaut tenant in given context. This will utilize micronaut tenant resolver
+to instantiate new consumers, producer, or readers for multi tenant approach.
+
+In order to use it both dependencies must be added:
+Micronaut Multitenancy
+dependency::micronaut-multitenancy[groupId="io.micronaut.multitenancy"]
+And Micronaut Pulsar Multitenant module
+dependency::pulsar-multitenant[groupId="io.micronaut.pulsar"]
+
+To make a reader, consumer, or a producer multitenant simply use `${tenant}` in topic value.
+For example: `"persistent://${tenant}/public/default"`. This will indicate to Pulsar module that the client needs to
+resolve tenant name prior to instantiation.
+
+A good use case for this is orchestration of messaging clients that use same workflow thus same namespaces and topics but
+different tenants. In such case it's good to have `SystemPropertyTenantResolver` or `FixedTenantResolver` setup in
+Micronaut application which will always use one single tenant per application instance. This will make it possible to use
+same code for different tenants by simply specifying tenant-id before deploying the application, and it also makes it
+possible to individually scale messaging clients based upon tenant or simply automating deployment of messaging clients
+with the creation of tenants in the system.
+
+
+
+
+1. For fixed and system resolved tenants it will happen once during server (application) startup and thus consumers and producers
+will be instantiated during server startup.
+2. Dynamically discovered tenants like Cookie-based or from HTTP headers will be resolved during each client request.
+Micronaut Pulsar multi tenancy module will detect usage of these types for tenant resolution (by default) and will store
+each consumer and producer definition with dynamic tenant in the background. This will serve as a cache which will for each
+new detected tenant create a new consumer or a producer from definition cache.
+Ex. let's say a consumer is defined with `"persistent://${tenant}/public/default"`. This will store configuration for such
+consumer throughout the whole application lifecycle. After the first request, cache is checked and a new consumer is created
+for a tenant defined in the HTTP header (or cookie or such). For each request it will check the tenant again. If there
+is a new request with a different tenant, creation of a consumer is repeated and now application has 2 consumers running
+for each tenant.
+
+=== Multitenant readers
+
+Readers are special. They do not need dynamic or fixed discovery of tenants. Only important thing is that some tenant is
+available during

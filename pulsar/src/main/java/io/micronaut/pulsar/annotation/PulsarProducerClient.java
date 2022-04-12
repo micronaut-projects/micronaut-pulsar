@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,7 +16,7 @@
 package io.micronaut.pulsar.annotation;
 
 import io.micronaut.aop.Introduction;
-import io.micronaut.context.annotation.Bean;
+import jakarta.inject.Singleton;
 
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
@@ -35,7 +35,7 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 @Retention(RUNTIME)
 @Introduction
-@Bean
+@Singleton
 @Target({TYPE})
 public @interface PulsarProducerClient {
 }

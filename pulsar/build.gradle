@@ -2,6 +2,12 @@ plugins {
     id 'io.micronaut.build.internal.pulsar-module'
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
 dependencies {
     annotationProcessor mn.micronaut.inject.java
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
@@ -12,22 +18,9 @@ dependencies {
 
     compileOnly "jakarta.inject:jakarta.inject-api"
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
-    compileOnly 'com.google.protobuf:protobuf-java:3.19.4'
+    compileOnly 'com.google.protobuf:protobuf-java:3.20.0'
     compileOnly 'io.micronaut.reactor:micronaut-reactor'
     compileOnly 'io.micronaut.grpc:micronaut-protobuff-support:3.1.3'
-
-    testImplementation mn.micronaut.inject.groovy
-    testImplementation mn.micronaut.inject.java
-
-    testRuntimeOnly 'io.micronaut:micronaut-http-server-netty'
-    testRuntimeOnly 'io.micronaut:micronaut-runtime'
-    testImplementation 'io.micronaut.reactor:micronaut-reactor'
-    testImplementation mn.micronaut.test.spock
-    testImplementation mn.spock
-    testImplementation libs.testcontainers.spock
-    testImplementation libs.testcontainers.pulsar
-    testImplementation 'org.conscrypt:conscrypt-openjdk-uber:2.5.2'
-    testImplementation 'io.micronaut.grpc:micronaut-protobuff-support:3.1.3'
 }
 
 test {

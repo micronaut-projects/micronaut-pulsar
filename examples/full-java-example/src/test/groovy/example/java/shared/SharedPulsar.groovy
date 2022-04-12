@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -55,7 +55,7 @@ final class SharedPulsar implements AutoCloseable {
 
     SharedPulsar(SharedKeycloak keycloak) {
         this.keycloak = keycloak
-        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.9.1"))
+        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.9.2"))
                 .dependsOn(keycloak) // leave non-ssl ports for metrics test and such
         pulsarContainer.addExposedPorts(SSL_PORT, HTTPS_PORT)
     }

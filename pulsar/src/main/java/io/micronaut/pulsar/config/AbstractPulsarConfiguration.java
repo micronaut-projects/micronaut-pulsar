@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -59,12 +59,14 @@ public abstract class AbstractPulsarConfiguration<K, V> {
     /**
      * Regex for validating topic name.
      */
-    public static final String TOPIC_NAME_VALIDATOR = "((non-)?persistent://)?(\\w+(-|\\w+)*\\w/){2}\\w+(-|\\w+)*\\w";
+    public static final String TOPIC_NAME_VALIDATOR = "((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-|\\w+)*\\w/)\\w+(-|\\w+)*\\w";
 
     /**
      * Regex for validating topic pattern.
      */
-    public static final String TOPIC_NAME_PATTERN_VALIDATOR = "((non-)?persistent://)?(\\w+(-?\\w+)?/){2}.+";
+    public static final String TOPIC_NAME_PATTERN_VALIDATOR = "((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-?\\w+)?/).+";
+
+    public static final String TENANT_NAME_VALIDATOR = "\\w+(-|\\w+)*\\w";
 
     private final Properties config;
 

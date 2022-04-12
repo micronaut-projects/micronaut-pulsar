@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -25,6 +25,7 @@ import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import io.micronaut.pulsar.processor.PulsarArgumentHandler;
+import io.micronaut.pulsar.processor.TopicResolver;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.client.impl.ProducerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
@@ -39,9 +40,11 @@ import org.apache.pulsar.client.impl.PulsarClientImpl;
 public class PulsarProducerFactory {
 
     private final PulsarClientConfiguration configuration;
+    private final TopicResolver topicResolver;
 
-    public PulsarProducerFactory(final PulsarClientConfiguration configuration) {
+    public PulsarProducerFactory(final PulsarClientConfiguration configuration, final TopicResolver topicResolver) {
         this.configuration = configuration;
+        this.topicResolver = topicResolver;
     }
 
     /**
@@ -54,7 +57,6 @@ public class PulsarProducerFactory {
      * @param <T>                  type of message body for pulsar producer
      * @param annotatedMethodName  method name on which annotation for Pulsar Producer was set
      * @return new Pulsar producer
-     * @throws MessagingClientException in case Producer cannot be created
      */
     @SuppressWarnings("unchecked")
     @Prototype
@@ -66,23 +68,23 @@ public class PulsarProducerFactory {
 
         final PulsarArgumentHandler argsHandler = new PulsarArgumentHandler(methodArguments, annotatedMethodName);
         final Schema<T> schema = (Schema<T>) simpleSchemaResolver.decideSchema(argsHandler.getBodyArgument(),
-                argsHandler.getKeyArgument(),
-                annotationValue,
-                annotatedMethodName);
+            argsHandler.getKeyArgument(),
+            annotationValue,
+            annotatedMethodName);
 
         final String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
-        if (!annotationValue.stringValue("topic").isPresent() && !annotationValue.getValue(String.class).isPresent()) {
+        final String topic = annotationValue.stringValue("topic", null)
+            .orElseGet(() -> annotationValue.stringValue("value", null).orElse(null));
+        if (null == topic) {
             if (configuration.getShutdownOnSubscriberError()) {
                 throw new Error("Failed to instantiate Pulsar producer " + producerName + " due to missing topic");
             }
             throw new MessagingClientException("Topic value missing for producer " + producerName);
         }
-        String topic = annotationValue.stringValue("topic")
-                .orElseGet(() -> annotationValue.getRequiredValue(String.class));
 
-        ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
-                .producerName(producerName)
-                .topic(topic);
+        final ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
+            .producerName(producerName)
+            .topic(topicResolver.resolve(topic));
 
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);
@@ -93,9 +95,9 @@ public class PulsarProducerFactory {
         annotationValue.longValue("initialSequenceId").ifPresent(producerBuilder::initialSequenceId);
         annotationValue.enumValue("hashingScheme", HashingScheme.class).ifPresent(producerBuilder::hashingScheme);
         annotationValue.enumValue("compressionType", CompressionType.class)
-                .ifPresent(producerBuilder::compressionType);
+            .ifPresent(producerBuilder::compressionType);
         annotationValue.enumValue("messageRoutingMode", MessageRoutingMode.class)
-                .ifPresent(producerBuilder::messageRoutingMode);
+            .ifPresent(producerBuilder::messageRoutingMode);
 
         try {
             return producerBuilder.create();

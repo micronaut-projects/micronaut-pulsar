@@ -1,5 +1,5 @@
 /*
- * Copyright 2017-2021 original authors
+ * Copyright 2017-2022 original authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,10 @@ import io.micronaut.messaging.annotation.MessageBody;
 import io.micronaut.messaging.annotation.MessageHeader;
 import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.pulsar.PulsarProducerRegistry;
-import io.micronaut.pulsar.annotation.MessageKey;
-import io.micronaut.pulsar.annotation.MessageProperties;
-import io.micronaut.pulsar.annotation.PulsarProducer;
-import io.micronaut.pulsar.annotation.PulsarProducerClient;
+import io.micronaut.pulsar.annotation.*;
 import io.micronaut.pulsar.events.ProducerSubscriptionFailedEvent;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import jakarta.annotation.PreDestroy;
-import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.*;
 import org.apache.pulsar.common.schema.KeyValue;
 import org.slf4j.Logger;
@@ -57,19 +53,25 @@ import java.util.stream.Collectors;
  * @author Haris Secic
  * @since 1.0
  */
-@Singleton
 @InterceptorBean(PulsarProducerClient.class)
-public final class PulsarProducerAdvice implements MethodInterceptor<Object, Object>,
-        AutoCloseable, PulsarProducerRegistry {
+public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, AutoCloseable, PulsarProducerRegistry {
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarProducerAdvice.class);
 
-    private final Map<String, Producer<?>> producers = new ConcurrentHashMap<>();
-    private final PulsarClient pulsarClient;
-    private final DefaultSchemaHandler simpleSchemaResolver;
-    private final BeanContext beanContext;
-    private final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher;
+    protected final Map<String, Producer<?>> producers = new ConcurrentHashMap<>();
+    protected final PulsarClient pulsarClient;
+    protected final DefaultSchemaHandler simpleSchemaResolver;
+    protected final BeanContext beanContext;
+    protected final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher;
 
+    /**
+     * Constructor for instantiating Pulsar producer advice for intercepting producer methods.
+     *
+     * @param pulsarClient              Apache Pulsar client bean
+     * @param simpleSchemaResolver      Schema resolver
+     * @param beanContext               Micronaut bean context
+     * @param applicationEventPublisher Event publisher for reporting failed subscriptions
+     */
     public PulsarProducerAdvice(final PulsarClient pulsarClient,
                                 final DefaultSchemaHandler simpleSchemaResolver,
                                 final BeanContext beanContext,
@@ -80,45 +82,24 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         this.applicationEventPublisher = applicationEventPublisher;
     }
 
-    public Object intercept(MethodInvocationContext<Object, Object> context) {
+    @Override
+    public Object intercept(final MethodInvocationContext<Object, Object> context) {
         if (!context.hasAnnotation(PulsarProducer.class)) {
             return context.proceed();
         }
 
         AnnotationValue<PulsarProducer> annotationValue = context.findAnnotation(PulsarProducer.class)
-                .orElseThrow(() -> new IllegalStateException("No @PulsarProducer on method: " + context));
+            .orElseThrow(() -> new IllegalStateException("No @PulsarProducer on method: " + context));
 
         boolean sendBefore = annotationValue.booleanValue("sendBefore").orElse(false);
         boolean isAbstract = context.isAbstract();
 
-        final Object returnValue; // store value of the call before
+        // store value of the call before
+        final Object returnValue = !isAbstract && !sendBefore ? context.proceed() : null;
 
-        if (!isAbstract && !sendBefore) {
-            returnValue = context.proceed();
-        } else {
-            returnValue = null;
-        }
-
-        final Object value, key;
-        final Map<String, String> headers;
-        if (context.getParameters().size() == 1) {
-            value = context.getParameterValues()[0];
-            key = null;
-            headers = Collections.emptyMap();
-        } else {
-            value = context.getParameters().values().stream()
-                    .filter(mutableArgumentValue -> mutableArgumentValue.isAnnotationPresent(MessageBody.class))
-                    .map(ArgumentValue::getValue)
-                    .findFirst()
-                    .orElseThrow(() -> new IllegalArgumentException("Producers with multiple values must have one argument annotated with @MessageBody"));
-            //key can be omitted if headers are used instead of just payload
-            key = context.getParameters().values().stream()
-                    .filter(mutableArgumentValue -> mutableArgumentValue.isAnnotationPresent(MessageKey.class))
-                    .map(ArgumentValue::getValue)
-                    .findFirst()
-                    .orElse(null);
-            headers = collectHeaders(context);
-        }
+        final Object value = getValueFromContext(context);
+        final Object key = getKeyFromContext(context);
+        final Map<String, String> headers = collectHeaders(context);
         final ExecutableMethod<?, ?> method = context.getExecutableMethod();
         final Producer<?> producer = getOrCreateProducer(method, annotationValue);
         final ReturnType<?> returnType = method.getReturnType();
@@ -147,7 +128,36 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         }
     }
 
-    private <T, V> Object sendAsync(V value, Producer<T> producer, ReturnType<?> returnType, @Nullable Object key, Map<String, String> headers) {
+    @NonNull
+    private static Object getValueFromContext(MethodInvocationContext<Object, Object> context) {
+        if (context.getParameters().size() == 1) {
+            return context.getParameterValues()[0];
+        }
+        return context.getParameters().values().stream()
+            .filter(mutableArgumentValue -> mutableArgumentValue.isAnnotationPresent(MessageBody.class))
+            .map(ArgumentValue::getValue)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException(
+                "Producers with multiple values must have one argument annotated with @MessageBody"));
+    }
+
+    @Nullable
+    private static Object getKeyFromContext(MethodInvocationContext<Object, Object> context) {
+        if (context.getParameters().size() == 1) {
+            return null;
+        }
+        return context.getParameters().values().stream()
+            .filter(mutableArgumentValue -> mutableArgumentValue.isAnnotationPresent(MessageKey.class))
+            .map(ArgumentValue::getValue)
+            .findFirst()
+            .orElse(null);
+    }
+
+    private static <T, V> Object sendAsync(final V value,
+                                           final Producer<T> producer,
+                                           final ReturnType<?> returnType,
+                                           final @Nullable Object key,
+                                           final Map<String, String> headers) {
         final CompletableFuture<?> future = buildMessage(producer, value, key, headers).sendAsync();
         if (CompletableFuture.class == returnType.getType()) {
             return future;
@@ -155,11 +165,11 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
         return Publishers.convertPublisher(future, returnType.getType());
     }
 
-    private <T, V> Object sendBlocking(V value,
-                                       Producer<T> producer,
-                                       ReturnType<?> returnType,
-                                       @Nullable Object key,
-                                       Map<String, String> headers) throws PulsarClientException {
+    private static <T, V> Object sendBlocking(final V value,
+                                              final Producer<T> producer,
+                                              final ReturnType<?> returnType,
+                                              final @Nullable Object key,
+                                              final Map<String, String> headers) throws PulsarClientException {
         final MessageId sent = buildMessage(producer, value, key, headers).send();
         if (returnType.isVoid()) {
             return Void.TYPE;
@@ -177,10 +187,10 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
     }
 
     @SuppressWarnings("unchecked")
-    private static <T, V> TypedMessageBuilder<?> buildMessage(Producer<T> producer,
-                                                              V value,
-                                                              @Nullable Object key,
-                                                              Map<String, String> headers) {
+    private static <T, V> TypedMessageBuilder<?> buildMessage(final Producer<T> producer,
+                                                              final V value,
+                                                              final @Nullable Object key,
+                                                              final Map<String, String> headers) {
         final TypedMessageBuilder<T> message = producer.newMessage();
         if (null == key) {
             message.value((T) value);
@@ -197,30 +207,39 @@ public final class PulsarProducerAdvice implements MethodInterceptor<Object, Obj
 
     @SuppressWarnings("unchecked")
     private static Map<String, String> collectHeaders(final MethodInvocationContext<Object, Object> context) {
+        if (context.getParameters().size() == 1) {
+            return Collections.emptyMap();
+        }
         final List<MutableArgumentValue<?>> headers = context.getParameters().values().stream()
-                .filter(x -> x.isAnnotationPresent(MessageProperties.class) || x.isAnnotationPresent(MessageHeader.class))
-                .collect(Collectors.toList());
+            .filter(x -> x.isAnnotationPresent(MessageProperties.class) || x.isAnnotationPresent(MessageHeader.class))
+            .collect(Collectors.toList());
         if (headers.size() == 1 && headers.get(0).isAnnotationPresent(MessageProperties.class)) {
             return (Map<String, String>) headers.get(0).getValue();
         }
         return headers.stream().collect(Collectors.toMap(
-                x -> Objects.requireNonNull(x.getAnnotation(MessageHeader.class)).stringValue().orElse(x.getName()),
-                x -> (String) x.getValue()
+            x -> Objects.requireNonNull(x.getAnnotation(MessageHeader.class)).stringValue().orElse(x.getName()),
+            x -> (String) x.getValue()
         ));
     }
 
-    private Producer<?> getOrCreateProducer(ExecutableMethod<?, ?> method,
-                                            AnnotationValue<PulsarProducer> annotationValue) {
-        String producerId = annotationValue.stringValue("producerName").orElse(method.getMethodName());
+    /**
+     * Fetch existing producer or generate a new one via factory if missing.
+     * @param method method annotated with {@link PulsarProducer}
+     * @param annotationValue {@link PulsarProducer} value
+     * @return existing producer if exists; otherwise create a new one
+     */
+    protected Producer<?> getOrCreateProducer(final ExecutableMethod<?, ?> method,
+                                              final AnnotationValue<PulsarProducer> annotationValue) {
+        final String producerId = annotationValue.stringValue("producerName").orElse(method.getMethodName());
         Producer<?> producer = producers.get(producerId);
         if (null == producer) {
             try {
                 producer = beanContext.createBean(Producer.class,
-                        pulsarClient,
-                        annotationValue,
-                        method.getArguments(),
-                        simpleSchemaResolver,
-                        method.getDescription(true)
+                    pulsarClient,
+                    annotationValue,
+                    method.getArguments(),
+                    simpleSchemaResolver,
+                    method.getDescription(true)
                 );
                 producers.put(producerId, producer);
             } catch (Exception ex) {

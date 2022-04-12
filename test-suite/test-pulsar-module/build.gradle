@@ -1,0 +1,20 @@
+plugins {
+    id 'io.micronaut.build.internal.pulsar-module'
+    id "java"
+}
+
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
+dependencies {
+    implementation project(':pulsar')
+    annotationProcessor mn.micronaut.inject.java
+    annotationProcessor mn.micronaut.inject.groovy
+    testImplementation mn.micronaut.inject
+    testImplementation project(':test-suite:test-pulsar-shared-module')
+    testImplementation 'io.micronaut.reactor:micronaut-reactor'
+    testImplementation 'io.micronaut.grpc:micronaut-protobuff-support:3.1.3'
+}
