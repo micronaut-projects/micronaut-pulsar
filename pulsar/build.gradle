@@ -2,6 +2,12 @@ plugins {
     id 'io.micronaut.build.internal.pulsar-module'
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
 dependencies {
     annotationProcessor mn.micronaut.inject.java
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"
@@ -12,7 +18,7 @@ dependencies {
 
     compileOnly "jakarta.inject:jakarta.inject-api"
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
-    compileOnly 'com.google.protobuf:protobuf-java:3.19.4'
+    compileOnly 'com.google.protobuf:protobuf-java:3.20.0'
     compileOnly 'io.micronaut.reactor:micronaut-reactor'
     compileOnly 'io.micronaut.grpc:micronaut-protobuff-support:3.1.3'
 }
