@@ -78,6 +78,8 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     void "test defined schema consumer read async with regex"() {
         given:
         BlockingVariables variables = new BlockingVariables(65)
+
+        when:
         Producer<String> producer = context.getBean(PulsarClient)
                 .newProducer(new StringSchema())
                 .producerName("simple-producer-regex")
@@ -92,8 +94,6 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         def consumerPatternTester = context.getBean(PulsarConsumerTopicPatternTester)
         consumerPatternTester.blockers = variables
         String message = "This should be received"
-
-        when:
         MessageId messageId = producer.send(message)
 
         then:
