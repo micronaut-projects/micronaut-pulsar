@@ -61,7 +61,7 @@ final class SharedPulsar implements AutoCloseable {
     }
 
     String getUrl() {
-        String brokerUrl = String.format("pulsar+ssl://%s:%s", pulsarContainer.getContainerIpAddress(),
+        String brokerUrl = String.format("pulsar+ssl://%s:%s", pulsarContainer.getHost(),
                 pulsarContainer.getMappedPort(SSL_PORT))
         return brokerUrl
     }
