@@ -25,6 +25,7 @@ import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
+import reactor.core.publisher.Mono
 import spock.lang.Stepwise
 import spock.util.concurrent.BlockingVariables
 
@@ -137,7 +138,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "subscriber-simple")
+    @PulsarSubscription(subscriptionName = "subscriber-simple-exclusive")
     static class PulsarConsumerTopicTester {
         BlockingVariables blockers
 
@@ -214,15 +215,15 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     }
 
     @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
-    @PulsarSubscription(subscriptionName = "example-java-listeners", subscriptionType = SubscriptionType.Shared)
+    @PulsarSubscription(subscriptionName = "subscribe-regex-async", subscriptionType = SubscriptionType.Shared)
     static class PulsarConsumerTopicPatternTester {
 
         BlockingVariables blockers
 
         //testing default order
         //fails to subscribe to test topic because exclusive consumer is connected already so subscribe only to other
-        @PulsarConsumer(topicsPattern = 'persistent://public/default/other.*', consumerName = "consumer-async")
-        void asyncTopicListener(Consumer<String> consumer, @MessageBody Message<String> message) {
+        @PulsarConsumer(topicsPattern = 'persistent://public/default/other.*', consumerName = "consumer-async", patternAutoDiscoveryPeriod = 10)
+        Mono<Void> asyncTopicListener(Consumer<String> consumer, @MessageBody Message<String> message) {
             if (null == blockers) {
                 return
             }

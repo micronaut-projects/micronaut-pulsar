@@ -102,7 +102,7 @@ backlogQuotaDefaultLimitGB=10
 ttlDurationDefaultInSeconds=0
 
 # Enable the deletion of inactive topics
-brokerDeleteInactiveTopicsEnabled=true
+brokerDeleteInactiveTopicsEnabled=false
 
 # How often to check for inactive topics
 brokerDeleteInactiveTopicsFrequencySeconds=60
