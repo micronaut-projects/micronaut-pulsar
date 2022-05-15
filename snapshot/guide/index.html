@@ -469,6 +469,36 @@ same subscription.</p>
 </li>
 </ul>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Consumer names are generated non-randomly so names will contain sequence numbers which might be OK in a single
+instance deployment but can cause errors with replicas given that names will use same generating method and start again
+from 1 for each deployment (instance of the app). Pulsar expects unique names for each consumer within the subscription.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Given that subscriptions in multi-deployment environment (example same micronaut app replicated couple of times) will
+use fixed subscription name and consumer name this will problems because consumers should be unique within the subscription.
+To avoid this utilize Micronauts annotation parsing by providing expression inside of the <code>consumerName</code> property. Read
+more about it in official docs. In short, you can add expression as a name in the <code>consumerName</code> and it will be parsed so
+you can have something like a system property #{pulsar.subscriptionX.consumerYname} and set property for each deployment.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Type and acknowledgment group timeout default to Pulsar Java client library values if not set. Name will be generated
 by this module in a "counter manner" (pulsar-subscription-1,2,3,4&#8230;&#8203;).</p>
