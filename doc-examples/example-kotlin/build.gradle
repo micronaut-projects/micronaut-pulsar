@@ -1,20 +1,13 @@
 plugins {
-    id 'io.micronaut.build.internal.pulsar-module'
+    id 'io.micronaut.build.internal.pulsar-example'
     alias libs.plugins.kotlin.jvm
     alias libs.plugins.kotlin.kapt
-}
-
-micronautBuild {
-    binaryCompatibility {
-        enabled = false
-    }
 }
 
 dependencies {
     kaptTest enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion")
     kaptTest mn.micronaut.inject.java
 
-    testImplementation projects.pulsar
     testImplementation libs.kotest
     testImplementation libs.kotlin.reflect
     testImplementation libs.kotlin.stdlib
