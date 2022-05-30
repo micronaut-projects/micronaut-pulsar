@@ -20,7 +20,7 @@ dependencies {
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     compileOnly 'com.google.protobuf:protobuf-java:3.20.1'
     compileOnly 'io.micronaut.reactor:micronaut-reactor'
-    compileOnly 'io.micronaut.grpc:micronaut-protobuff-support:3.1.3'
+    compileOnly 'io.micronaut.grpc:micronaut-protobuff-support:3.3.1'
 }
 
 test {
