@@ -15,8 +15,6 @@
  */
 package io.micronaut.pulsar.schemas.json;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
 import org.apache.pulsar.client.api.SchemaSerializationException;
 import org.apache.pulsar.client.api.schema.SchemaWriter;
@@ -24,27 +22,21 @@ import org.apache.pulsar.client.api.schema.SchemaWriter;
 import java.io.IOException;
 
 /**
- * JSON Schema Writer to allow using {@link ObjectMapper} from Micronaut instead of shaded one in Pulsar library.
+ * JSON Schema Writer to allow using {@link JsonMapper} from Micronaut instead of shaded one in Pulsar library.
  *
  * @param <T> POJO type to process.
  * @author Haris Secic
  * @since 1.0
  */
-public final class JacksonJsonWriter<T> implements SchemaWriter<T> {
+public final class JsonWriter<T> implements SchemaWriter<T> {
 
     private final JsonMapper mapper;
 
-    @Deprecated
-    public JacksonJsonWriter(ObjectMapper mapper) {
-        this(new JacksonDatabindMapper(mapper));
-    }
-
     /**
-     *
      * @param mapper new json mapper
      * @since 1.1.0
      */
-    public JacksonJsonWriter(JsonMapper mapper) {
+    public JsonWriter(JsonMapper mapper) {
         this.mapper = mapper;
     }
 

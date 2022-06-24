@@ -15,9 +15,7 @@
  */
 package io.micronaut.pulsar.schemas.json;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import io.micronaut.core.type.Argument;
-import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
 import org.apache.pulsar.client.api.SchemaSerializationException;
 import org.apache.pulsar.client.api.schema.SchemaReader;
@@ -29,34 +27,24 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- * JSON Schema Reader to allow using {@link ObjectMapper} from Micronaut instead of shaded one in Pulsar library.
+ * JSON Schema Reader to allow using {@link JsonMapper} from Micronaut instead of shaded one in Pulsar library.
  *
  * @param <T> POJO type to process.
  * @author Haris Secic
  * @since 1.0
  */
-public final class JacksonJsonReader<T> implements SchemaReader<T> {
-    private static final Logger LOG = LoggerFactory.getLogger(JacksonJsonReader.class);
+public final class JsonReader<T> implements SchemaReader<T> {
+    private static final Logger LOG = LoggerFactory.getLogger(JsonReader.class);
 
     private final Class<T> pojo;
     private final JsonMapper jsonMapper;
-
-    /**
-     * @param objectMapper The jackson object mapper to use for reading
-     * @param pojo         The pojo type to read
-     * @deprecated Use {@link #JacksonJsonReader(JsonMapper, Class)} instead
-     */
-    @Deprecated
-    public JacksonJsonReader(ObjectMapper objectMapper, Class<T> pojo) {
-        this(new JacksonDatabindMapper(objectMapper), pojo);
-    }
 
     /**
      * @param jsonMapper The json mapper to use for reading
      * @param pojo       The pojo type to read
      * @since 1.1.0
      */
-    public JacksonJsonReader(JsonMapper jsonMapper, Class<T> pojo) {
+    public JsonReader(JsonMapper jsonMapper, Class<T> pojo) {
         this.pojo = pojo;
         this.jsonMapper = jsonMapper;
     }

@@ -3,6 +3,8 @@ micronaut:
     name: java
   server:
     port: 8081
+    netty:
+      use-native-transport: true
 pulsar:
   enabled: true
   service-url: pulsar+ssl://localhost:6651

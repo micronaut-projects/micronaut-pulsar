@@ -15,11 +15,9 @@
  */
 package io.micronaut.pulsar.schemas;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import io.micronaut.jackson.databind.JacksonDatabindMapper;
 import io.micronaut.json.JsonMapper;
-import io.micronaut.pulsar.schemas.json.JacksonJsonReader;
-import io.micronaut.pulsar.schemas.json.JacksonJsonWriter;
+import io.micronaut.pulsar.schemas.json.JsonReader;
+import io.micronaut.pulsar.schemas.json.JsonWriter;
 import org.apache.pulsar.client.api.schema.SchemaDefinition;
 import org.apache.pulsar.client.api.schema.SchemaReader;
 import org.apache.pulsar.client.api.schema.SchemaWriter;
@@ -33,7 +31,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * JSON Schema to allow using {@link ObjectMapper} from Micronaut instead of shaded one in Pulsar library.
+ * JSON Schema to allow using {@link JsonMapper} from Micronaut instead of shaded one in Pulsar library.
+ *
  * @param <T> POJO type to send and receive via Pulsar.
  * @author Haris Secic
  * @since 1.0
@@ -49,18 +48,6 @@ public class JsonSchema<T> extends AvroBaseStructSchema<T> {
     }
 
     /**
-     * @param pojo         The pojo class to map
-     * @param objectMapper The jackson object mapper to use for mapping
-     * @param <T>          The pojo class to map
-     * @return The parsed json schema
-     * @deprecated Use {@link #of(Class, JsonMapper)} instead
-     */
-    @Deprecated
-    public static <T> JsonSchema<T> of(Class<T> pojo, ObjectMapper objectMapper) {
-        return of(pojo, new JacksonDatabindMapper(objectMapper));
-    }
-
-    /**
      * @param pojo       The pojo class to map
      * @param jsonMapper The json mapper to use for mapping
      * @param <T>        The pojo class to map
@@ -70,12 +57,12 @@ public class JsonSchema<T> extends AvroBaseStructSchema<T> {
     @SuppressWarnings("unchecked")
     public static <T> JsonSchema<T> of(Class<T> pojo, JsonMapper jsonMapper) {
         return (JsonSchema<T>) SCHEMAS.computeIfAbsent(pojo.hashCode(), x -> {
-            final SchemaReader<T> reader = new JacksonJsonReader<>(jsonMapper, pojo);
-            final SchemaWriter<T> writer = new JacksonJsonWriter<>(jsonMapper);
+            final SchemaReader<T> reader = new JsonReader<>(jsonMapper, pojo);
+            final SchemaWriter<T> writer = new JsonWriter<>(jsonMapper);
             final SchemaDefinition<T> schemaDefinition = new SchemaDefinitionBuilderImpl<T>().withPojo(pojo)
-                    .withSchemaReader(reader)
-                    .withSchemaWriter(writer)
-                    .build();
+                .withSchemaReader(reader)
+                .withSchemaWriter(writer)
+                .build();
             return new JsonSchema<>(SchemaUtil.parseSchemaInfo(schemaDefinition, SchemaType.JSON), reader, writer);
         });
     }

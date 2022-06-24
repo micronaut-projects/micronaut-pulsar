@@ -2,6 +2,12 @@ plugins {
     id 'io.micronaut.build.internal.pulsar-multitenant-module'
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
+
 dependencies {
     api mn.micronaut.inject
     api mn.micronaut.messaging

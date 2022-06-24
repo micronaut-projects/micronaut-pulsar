@@ -41,7 +41,7 @@ public class ProtobufSchemaResolver implements SchemaResolver {
     }
 
     @Override
-    public Schema<?> forArgument(Class<?> pojo) {
+    public <T> Schema<T> forArgument(final Class<T> pojo) {
         if (!Message.class.isAssignableFrom(pojo)) {
             throw new MessageListenerException("Protocol buffers (native) are only supported for types that implement com.google.protobuf.Message");
         }

@@ -39,7 +39,7 @@ public class JsonSchemaResolver implements SchemaResolver {
     }
 
     @Override
-    public Schema<?> forArgument(Class<?> pojo) {
+    public <T> Schema<T> forArgument(Class<T> pojo) {
         return JsonSchema.of(pojo, mapper);
     }
 }
