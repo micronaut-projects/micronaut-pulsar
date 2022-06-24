@@ -1,8 +1,0 @@
-plugins {
-    id 'io.micronaut.build.internal.pulsar-module'
-}
-
-dependencies {
-    implementation projects.pulsar
-    implementation mn.reactor
-}

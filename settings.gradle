@@ -22,9 +22,10 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = 'pulsar-root'
+rootProject.name = 'pulsar-parent'
 
 include 'pulsar'
+include 'pulsar-bom'
 include 'pulsar-multitenant'
 include 'test-suite:test-pulsar-shared-module'
 include 'test-suite:test-pulsar-module'
@@ -32,4 +33,3 @@ include 'test-suite:test-pulsar-multitenant-module'
 include 'doc-examples:example-java'
 include 'doc-examples:example-kotlin'
 include 'doc-examples:example-groovy'
-

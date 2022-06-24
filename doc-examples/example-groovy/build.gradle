@@ -1,12 +1,6 @@
 plugins {
-    id 'io.micronaut.build.internal.pulsar-module'
+    alias libs.plugins.micronaut.minimal.app
     id "groovy"
-}
-
-micronautBuild {
-    binaryCompatibility {
-        enabled = false
-    }
 }
 
 dependencies {
@@ -17,6 +11,6 @@ dependencies {
     testImplementation mn.spock
 }
 
-tasks.withType(GroovyCompile) {
+tasks.withType(GroovyCompile).configureEach {
     groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
 }

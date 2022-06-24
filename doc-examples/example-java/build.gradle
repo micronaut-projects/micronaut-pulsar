@@ -1,12 +1,6 @@
 plugins {
-    id 'io.micronaut.build.internal.pulsar-module'
+    alias libs.plugins.micronaut.minimal.app
     id "java"
-}
-
-micronautBuild {
-    binaryCompatibility {
-        enabled = false
-    }
 }
 
 dependencies {

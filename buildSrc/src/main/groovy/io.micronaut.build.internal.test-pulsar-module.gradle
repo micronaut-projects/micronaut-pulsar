@@ -1,8 +1,23 @@
 plugins {
-    id 'io.micronaut.build.internal.test-pulsar-shared-module'
+    id 'groovy'
 }
 
 dependencies {
-    implementation projects.pulsar
-    implementation mn.reactor
+    annotationProcessor mn.micronaut.inject.java
+    testImplementation mn.micronaut.inject.java
+    testImplementation mn.micronaut.inject.groovy
+    testImplementation projects.pulsar
+    testImplementation projects.testSuite.testPulsarSharedModule
+    testImplementation mn.micronaut.inject
+    testImplementation mn.micronaut.reactor
+    testImplementation libs.micronaut.grpc.protobuf.support
+}
+
+tasks.named('test') {
+    // Use JUnit Platform for unit tests.
+    useJUnitPlatform()
+}
+
+tasks.withType(GroovyCompile).configureEach {
+    groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
 }
