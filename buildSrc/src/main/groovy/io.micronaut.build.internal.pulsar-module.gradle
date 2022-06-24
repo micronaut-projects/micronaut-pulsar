@@ -9,13 +9,13 @@ repositories {
 dependencies {
     api mn.micronaut.messaging
     api libs.micronaut.serde.support
-    api(libs.pulsar) {
+    api(libs.managed.pulsar) {
         exclude group: 'io.netty'
         exclude group: 'com.fasterxml.jackson.module'
         exclude group: 'com.google.code.gson'
     }
 
-    implementation(libs.pulsar) {
+    implementation(libs.managed.pulsar) {
         exclude group: 'io.netty'
         exclude group: 'com.fasterxml.jackson.module'
         exclude group: 'com.google.code.gson'

@@ -1,4 +1,0 @@
-plugins {
-    id 'io.micronaut.build.internal.pulsar-module'
-    id 'io.micronaut.build.internal.module'
-}

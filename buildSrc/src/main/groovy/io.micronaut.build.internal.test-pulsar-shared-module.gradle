@@ -1,7 +1,0 @@
-plugins {
-    id 'io.micronaut.build.internal.pulsar-module'
-}
-
-dependencies {
-    testImplementation mn.micronaut.http.server.netty
-}
