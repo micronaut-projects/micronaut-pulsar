@@ -23,16 +23,6 @@ dependencies {
     compileOnly libs.micronaut.grpc.protobuf.support
 }
 
-test {
-    jvmArgs '-Duser.country=US'
-    jvmArgs '-Duser.language=en'
-    testLogging {
-        showStandardStreams = true
-        exceptionFormat = 'full'
-    }
-    failFast = true
-}
-
 repositories {
     mavenCentral()
 }

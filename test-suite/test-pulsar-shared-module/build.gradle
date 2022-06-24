@@ -3,12 +3,6 @@ plugins {
     id 'groovy'
 }
 
-micronautBuild {
-    binaryCompatibility {
-        enabled = false
-    }
-}
-
 dependencies {
     api platform(mn.micronaut.bom)
     api project(':pulsar')

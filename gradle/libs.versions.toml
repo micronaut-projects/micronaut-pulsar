@@ -11,7 +11,7 @@ managed-pulsar = '2.10.0'
 
 [libraries]
 # Managed libraries
-managed-pulsar = { module = 'org.apache.pulsar:pulsar-client', version.ref= 'managed-pulsar' }
+managed-pulsar = { module = 'org.apache.pulsar:pulsar-client-original', version.ref= 'managed-pulsar' }
 
 # Other libraries
 conscrypt-openjdk = { module = "org.conscrypt:conscrypt-openjdk-uber", version.ref="conscrypt-openjdk" }

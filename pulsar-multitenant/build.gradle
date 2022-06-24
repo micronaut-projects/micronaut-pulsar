@@ -13,6 +13,7 @@ dependencies {
     api mn.micronaut.messaging
     api libs.managed.pulsar
 
+    implementation projects.pulsar
     implementation mn.micronaut.multitenancy
     compileOnly "jakarta.inject:jakarta.inject-api"
     compileOnly mn.micronaut.reactor

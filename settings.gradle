@@ -13,7 +13,7 @@ micronautBuild {
     importMicronautCatalog()
 }
 
-rootProject.name = 'pulsar-parent'
+rootProject.name = 'pulsar-root'
 
 include 'pulsar'
 include 'pulsar-bom'
