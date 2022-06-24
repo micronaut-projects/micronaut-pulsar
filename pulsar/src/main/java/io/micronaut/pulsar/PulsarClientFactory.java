@@ -15,14 +15,12 @@
  */
 package io.micronaut.pulsar;
 
-import io.micronaut.context.ApplicationContext;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.messaging.exceptions.MessagingClientException;
 import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.netty.channel.EventLoopGroup;
 import jakarta.inject.Singleton;
-import jdk.jshell.EvalException;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.impl.ClientBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
