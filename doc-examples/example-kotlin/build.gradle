@@ -1,13 +1,7 @@
 plugins {
-    id 'io.micronaut.build.internal.pulsar-module'
     alias libs.plugins.kotlin.jvm
     alias libs.plugins.kotlin.kapt
-}
-
-micronautBuild {
-    binaryCompatibility {
-        enabled = false
-    }
+    alias libs.plugins.micronaut.minimal.app
 }
 
 dependencies {
@@ -24,13 +18,13 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0'
 }
 
-test {
+tasks.named('test') {
     systemProperties['junit.jupiter.execution.parallel.enabled'] = true
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     forkEvery = 1
 }
 
-compileTestKotlin {
+tasks.named('compileTestKotlin') {
     kotlinOptions {
         jvmTarget = '1.8'
         javaParameters = true

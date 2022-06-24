@@ -11,12 +11,12 @@ micronautBuild {
 dependencies {
     api mn.micronaut.inject
     api mn.micronaut.messaging
-    api libs.pulsar
+    api libs.managed.pulsar
 
     implementation projects.pulsar
     implementation mn.micronaut.multitenancy
     compileOnly "jakarta.inject:jakarta.inject-api"
-    compileOnly 'io.micronaut.reactor:micronaut-reactor'
+    compileOnly mn.micronaut.reactor
 }
 
 repositories {
