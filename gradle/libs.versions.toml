@@ -7,11 +7,11 @@ junit = '5.8.2'
 micronaut-serde = '1.0.1'
 micronaut-docs = '2.0.0'
 micronaut-gradle = '3.4.1'
-managed-pulsar = '2.10.0'
+managed-pulsar-client = '2.10.0'
 
 [libraries]
 # Managed libraries
-managed-pulsar = { module = 'org.apache.pulsar:pulsar-client-original', version.ref= 'managed-pulsar' }
+managed-pulsar-client = { module = 'org.apache.pulsar:pulsar-client-original', version.ref= 'managed-pulsar-client' }
 
 # Other libraries
 conscrypt-openjdk = { module = "org.conscrypt:conscrypt-openjdk-uber", version.ref="conscrypt-openjdk" }
