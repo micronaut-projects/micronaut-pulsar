@@ -28,6 +28,8 @@ import spock.lang.Specification
 import spock.lang.Stepwise
 import spock.util.concurrent.BlockingVariables
 
+import java.time.Duration
+
 @Stepwise
 class DynamicTenantTopicSpec extends Specification {
 
@@ -71,10 +73,14 @@ class DynamicTenantTopicSpec extends Specification {
         FakeClient fakeClient = context.getBean(FakeClient)
 
         when:
-        String messageId1 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_1, message).block()
-        MessageResponse readerMessage1 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_1).block()
-        String messageId2 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_2, message).block()
-        MessageResponse readerMessage2 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_2).block()
+        String messageId1 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_1, message)
+                .block(Duration.ofMinutes(2))
+        MessageResponse readerMessage1 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_1)
+                .block(Duration.ofMinutes(2))
+        String messageId2 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_2, message)
+                .block(Duration.ofMinutes(2))
+        MessageResponse readerMessage2 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_2)
+                .block(Duration.ofMinutes(2))
 
         then:
         null != messageId1
