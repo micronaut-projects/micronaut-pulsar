@@ -108,7 +108,7 @@ abstract class PulsarTls {
             if (!reason.startsWith("This topic already exists"))
                 throw new RuntimeException("Unable to create test topic for TLS: $reason")
         }
-        result = PULSAR_CONTAINER.execInContainer('/bin/bash', '-c', PULSAR_CLI_ADMIN + " namespaces create $tenant/default")
+        result = PULSAR_CONTAINER.execInContainer('/bin/bash', '-c', PULSAR_CLI_ADMIN + " namespaces create $tenant/default --size 1T --time -1 ")
         if (0 != result.exitCode) {
             String reason = result.stderr ?: result.stdout
             if (!reason.startsWith("This topic already exists"))
