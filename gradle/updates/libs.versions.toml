@@ -15,7 +15,7 @@ kotlin-stdlib = { module = 'org.jetbrains.kotlin:kotlin-stdlib-jdk8', version.re
 testcontainers = { module = 'org.testcontainers:testcontainers', version.ref = 'testcontainers' }
 testcontainers-spock = { module = 'org.testcontainers:spock', version.ref = 'testcontainers' }
 testcontainers-pulsar = { module = 'org.testcontainers:pulsar', version.ref = 'testcontainers' }
-managed-pulsar-client = { module = 'org.apache.pulsar:pulsar-client-original', version.ref= 'pulsar' }
+managed-pulsar-client = { module = 'org.apache.pulsar:pulsar-client-original', version.ref= 'managed-pulsar-client' }
 micronaut-docs = { module = "io.micronaut.docs:micronaut-docs-asciidoc-config-props", version.ref = "micronaut-docs" }
 micronaut-serde-processor = { module = "io.micronaut.serde:micronaut-serde-processor", version.ref = "micronaut-serde" }
 micronaut-serde-api = { module = "io.micronaut.serde:micronaut-serde-api", version.ref = "micronaut-serde" }
