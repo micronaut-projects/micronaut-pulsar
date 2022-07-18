@@ -15,7 +15,7 @@ dependencies {
     testImplementation libs.testcontainers
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$kotlinCoroutinesVersion"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.4'
 }
 
 tasks.named('test') {
