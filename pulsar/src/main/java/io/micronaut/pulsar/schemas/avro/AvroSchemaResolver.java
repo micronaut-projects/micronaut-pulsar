@@ -13,38 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.pulsar.schemas.protobuf;
+package io.micronaut.pulsar.schemas.avro;
 
-import com.google.protobuf.Message;
-import io.micronaut.messaging.exceptions.MessageListenerException;
-import io.micronaut.protobuf.codec.ProtobufferCodec;
-import io.micronaut.pulsar.schemas.ProtobufSchema;
 import io.micronaut.pulsar.schemas.SchemaResolver;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.Schema;
+import org.apache.pulsar.client.impl.schema.AvroSchema;
+import org.apache.pulsar.client.impl.schema.SchemaDefinitionBuilderImpl;
 
 /**
- * Protobuf schema resolver.
+ * AVRO schema resolver.
  *
  * @author Haris Secic
- * @since 1.1.0
+ * @since 1.2.1
  */
 @Singleton
-@Named(SchemaResolver.PROTOBUF_SCHEMA_NAME)
-public class ProtobufSchemaResolver implements SchemaResolver {
-
-    private final ProtobufferCodec codec;
-
-    public ProtobufSchemaResolver(final ProtobufferCodec codec) {
-        this.codec = codec;
-    }
-
+@Named(SchemaResolver.AVRO_SCHEMA_NAME)
+public final class AvroSchemaResolver implements SchemaResolver {
     @Override
     public <T> Schema<T> forArgument(final Class<T> pojo) {
-        if (!Message.class.isAssignableFrom(pojo)) {
-            throw new MessageListenerException("Protocol buffers (native) are only supported for types that implement com.google.protobuf.Message");
-        }
-        return ProtobufSchema.of(pojo, codec);
+        return AvroSchema.of(new SchemaDefinitionBuilderImpl<T>()
+            .withPojo(pojo)
+            .build());
     }
 }

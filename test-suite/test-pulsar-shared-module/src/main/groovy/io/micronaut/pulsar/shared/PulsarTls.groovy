@@ -29,7 +29,7 @@ abstract class PulsarTls {
     public static final int BROKER_SSL = 6651
     private static final String caConfPath = "/my-ca"
     private static final PulsarContainer PULSAR_CONTAINER =
-            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.10.0"))
+            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.10.1"))
     private static ClassLoader resourceLoader
     private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
@@ -112,7 +112,13 @@ abstract class PulsarTls {
         if (0 != result.exitCode) {
             String reason = result.stderr ?: result.stdout
             if (!reason.startsWith("This topic already exists"))
-                throw new RuntimeException("Unable to create test topic for TLS: $reason")
+                throw new RuntimeException("Unable to create test tenant for TLS: $reason")
+        }
+        result = PULSAR_CONTAINER.execInContainer('/bin/bash', '-c', PULSAR_CLI_ADMIN + " namespaces set-retention -s 1T -t -1 $tenant/default")
+        if (0 != result.exitCode) {
+            String reason = result.stderr ?: result.stdout
+            if (!reason.startsWith("Unable to set namespace retention"))
+                throw new RuntimeException("Unable to create test tenant for TLS: $reason")
         }
     }
 }

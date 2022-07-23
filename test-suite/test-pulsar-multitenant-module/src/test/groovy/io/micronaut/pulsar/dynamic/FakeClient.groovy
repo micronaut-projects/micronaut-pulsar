@@ -30,8 +30,11 @@ import reactor.core.publisher.Mono
 @Header(name = HttpHeaders.USER_AGENT, value = "Micronaut HTTP Client")
 interface FakeClient {
     @Post('/messages')
-    Mono<String> sendMessage(@Header String tenantId, @Body String message);
+    String sendMessage(@Header String tenantId, @Body String message);
 
     @Get('/messages')
-    Mono<MessageResponse> getNextMessage(@Header String tenantId);
+    MessageResponse getNextMessage(@Header String tenantId);
+
+    @Post("/tenant")
+    String addTenantConsumer(@Body String tenant);
 }

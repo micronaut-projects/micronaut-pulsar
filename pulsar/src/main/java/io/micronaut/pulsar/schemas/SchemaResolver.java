@@ -45,5 +45,7 @@ import org.apache.pulsar.client.api.Schema;
 public interface SchemaResolver {
     String JSON_SCHEMA_NAME = "JSON_SCHEMA_RESOLVER";
     String PROTOBUF_SCHEMA_NAME = "PROTOBUF_SCHEMA_RESOLVER";
-    Schema<?> forArgument(Class<?> pojo);
+    String AVRO_SCHEMA_NAME = "AVRO_SCHEMA_RESOLVER";
+
+    <T> Schema<T> forArgument(Class<T> pojo);
 }

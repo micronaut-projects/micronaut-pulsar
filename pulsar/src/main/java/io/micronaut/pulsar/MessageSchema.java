@@ -99,7 +99,7 @@ public enum MessageSchema {
     /**
      * An Apache Avro schema.
      */
-    AVRO(null),
+    AVRO(SchemaResolver.AVRO_SCHEMA_NAME),
 
     /**
      * A schema for Protocol Buffer generated messages.

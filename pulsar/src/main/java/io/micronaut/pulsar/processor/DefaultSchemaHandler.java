@@ -116,8 +116,6 @@ public class DefaultSchemaHandler {
                 return TimestampSchema.of();
             case STRING:
                 return StringSchema.utf8();
-            case AVRO:
-                return AvroSchema.of(new SchemaDefinitionBuilderImpl<>().withPojo(type).build());
             default:
                 try {
                     return context.getBean(SchemaResolver.class, Qualifiers.byName(schema.getSchemaResolverName()))

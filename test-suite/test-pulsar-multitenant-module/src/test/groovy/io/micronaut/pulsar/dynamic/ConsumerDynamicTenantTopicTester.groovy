@@ -37,6 +37,6 @@ class ConsumerDynamicTenantTopicTester {
         if (null == blockers) {
             return
         }
-        blockers.setProperty(message.getMessageId().toString(), message.getValue() + " " + consumer.topic)
+        blockers.setProperty(message.getMessageId().toString(), message.getValue() + " " + consumer.topic.split("/")[2])
     }
 }

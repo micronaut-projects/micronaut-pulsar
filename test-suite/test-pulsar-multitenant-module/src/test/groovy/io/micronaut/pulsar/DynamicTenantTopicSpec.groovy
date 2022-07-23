@@ -28,6 +28,8 @@ import spock.lang.Specification
 import spock.lang.Stepwise
 import spock.util.concurrent.BlockingVariables
 
+import java.time.Duration
+
 @Stepwise
 class DynamicTenantTopicSpec extends Specification {
 
@@ -71,21 +73,23 @@ class DynamicTenantTopicSpec extends Specification {
         FakeClient fakeClient = context.getBean(FakeClient)
 
         when:
-        String messageId1 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_1, message).block()
-        MessageResponse readerMessage1 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_1).block()
-        String messageId2 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_2, message).block()
-        MessageResponse readerMessage2 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_2).block()
+        fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_1)
+        fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_2)
+        String messageId1 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_1, message)
+        MessageResponse readerMessage1 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_1)
+        String messageId2 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_2, message)
+        MessageResponse readerMessage2 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_2)
 
         then:
         null != messageId1
         messageId1 == readerMessage1.messageId
         message == readerMessage1.message
         (vars.getProperty(messageId1.toString()) as String).contains(message)
-        (vars.getProperty(messageId1.toString()) as String).contains(DynamicTenantTopicSpec.TENANT_1)
+        (vars.getProperty(messageId1.toString()) as String).endsWith(DynamicTenantTopicSpec.TENANT_1)
         messageId2 == readerMessage2.messageId
         message == readerMessage2.message
         (vars.getProperty(messageId2) as String).contains(message)
-        (vars.getProperty(messageId2) as String).contains(DynamicTenantTopicSpec.TENANT_2)
+        (vars.getProperty(messageId2) as String).endsWith(DynamicTenantTopicSpec.TENANT_2)
     }
 
 }

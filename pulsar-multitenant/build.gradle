@@ -11,7 +11,7 @@ micronautBuild {
 dependencies {
     api mn.micronaut.inject
     api mn.micronaut.messaging
-    api libs.managed.pulsar
+    api libs.managed.pulsar.client
 
     implementation projects.pulsar
     implementation mn.micronaut.multitenancy

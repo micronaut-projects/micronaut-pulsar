@@ -14,7 +14,7 @@ dependencies {
 
     api mn.micronaut.inject
     api mn.micronaut.messaging
-    api libs.managed.pulsar
+    api libs.managed.pulsar.client
 
     compileOnly "jakarta.inject:jakarta.inject-api"
     compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"

@@ -7,6 +7,13 @@ repositories {
 }
 
 dependencies {
+    api mn.micronaut.messaging
+    api libs.micronaut.serde.support
+    api(libs.managed.pulsar.client) {
+        exclude group: 'io.netty'
+        exclude group: 'com.fasterxml.jackson.module'
+        exclude group: 'com.google.code.gson'
+    }
     compileOnly 'com.google.code.findbugs:jsr305'
     testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.7'
 }
