@@ -7,7 +7,7 @@ junit = '5.8.2'
 micronaut-serde = '1.0.1'
 micronaut-docs = '2.0.0'
 micronaut-gradle = '3.4.1'
-managed-pulsar-client = '2.10.0'
+managed-pulsar-client = '2.10.1'
 
 [libraries]
 # Managed libraries

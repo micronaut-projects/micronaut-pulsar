@@ -27,6 +27,5 @@ interface DynamicReader {
             readTimeout = 60,
             readerName = "fake-reader",
             startMessageLatest = false)
-    /* in order to read message with a reader instantiated after producer has sent a message, reader needs to read */
     Message<String> read();
 }

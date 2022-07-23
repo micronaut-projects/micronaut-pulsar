@@ -3,7 +3,7 @@ kotlin = '1.6.20'
 kotest = '4.6.4'
 testcontainers = '1.16.3'
 junit = '5.8.2'
-managed-pulsar-client = '2.10.0'
+managed-pulsar-client = '2.10.1'
 micronaut-serde = '1.0.1'
 micronaut-docs = '2.0.0'
 

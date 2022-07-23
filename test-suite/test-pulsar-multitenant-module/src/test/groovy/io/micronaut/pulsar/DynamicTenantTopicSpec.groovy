@@ -73,25 +73,27 @@ class DynamicTenantTopicSpec extends Specification {
         FakeClient fakeClient = context.getBean(FakeClient)
 
         when:
+        fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_1).block(Duration.ofMinutes(1))
+        fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_2).block(Duration.ofMinutes(1))
         String messageId1 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_1, message)
-                .block(Duration.ofMinutes(2))
+                .block(Duration.ofMinutes(1))
         MessageResponse readerMessage1 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_1)
-                .block(Duration.ofMinutes(2))
+                .block(Duration.ofMinutes(1))
         String messageId2 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_2, message)
-                .block(Duration.ofMinutes(2))
+                .block(Duration.ofMinutes(1))
         MessageResponse readerMessage2 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_2)
-                .block(Duration.ofMinutes(2))
+                .block(Duration.ofMinutes(1))
 
         then:
         null != messageId1
         messageId1 == readerMessage1.messageId
         message == readerMessage1.message
         (vars.getProperty(messageId1.toString()) as String).contains(message)
-        (vars.getProperty(messageId1.toString()) as String).contains(DynamicTenantTopicSpec.TENANT_1)
+        (vars.getProperty(messageId1.toString()) as String).endsWith(DynamicTenantTopicSpec.TENANT_1)
         messageId2 == readerMessage2.messageId
         message == readerMessage2.message
         (vars.getProperty(messageId2) as String).contains(message)
-        (vars.getProperty(messageId2) as String).contains(DynamicTenantTopicSpec.TENANT_2)
+        (vars.getProperty(messageId2) as String).endsWith(DynamicTenantTopicSpec.TENANT_2)
     }
 
 }

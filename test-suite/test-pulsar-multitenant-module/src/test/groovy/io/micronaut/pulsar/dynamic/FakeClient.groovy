@@ -34,4 +34,7 @@ interface FakeClient {
 
     @Get('/messages')
     Mono<MessageResponse> getNextMessage(@Header String tenantId);
+
+    @Post("/tenant")
+    Mono<String> addTenantConsumer(@Body String tenant);
 }
