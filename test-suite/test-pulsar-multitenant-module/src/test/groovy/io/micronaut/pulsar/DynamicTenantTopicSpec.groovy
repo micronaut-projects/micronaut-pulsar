@@ -73,16 +73,12 @@ class DynamicTenantTopicSpec extends Specification {
         FakeClient fakeClient = context.getBean(FakeClient)
 
         when:
-        fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_1).block(Duration.ofMinutes(1))
-        fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_2).block(Duration.ofMinutes(1))
+        fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_1)
+        fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_2)
         String messageId1 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_1, message)
-                .block(Duration.ofMinutes(1))
         MessageResponse readerMessage1 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_1)
-                .block(Duration.ofMinutes(1))
         String messageId2 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_2, message)
-                .block(Duration.ofMinutes(1))
         MessageResponse readerMessage2 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_2)
-                .block(Duration.ofMinutes(1))
 
         then:
         null != messageId1
