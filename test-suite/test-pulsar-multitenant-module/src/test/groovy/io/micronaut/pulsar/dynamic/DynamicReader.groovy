@@ -15,11 +15,13 @@
  */
 package io.micronaut.pulsar.dynamic
 
+import io.micronaut.context.annotation.Requires
 import io.micronaut.pulsar.DynamicTenantTopicSpec
 import io.micronaut.pulsar.annotation.PulsarReader
 import io.micronaut.pulsar.annotation.PulsarReaderClient
 import org.apache.pulsar.client.api.Message
 
+@Requires(property = 'spec.name', value = 'DynamicTenantTopicSpec')
 @PulsarReaderClient
 interface DynamicReader {
 
