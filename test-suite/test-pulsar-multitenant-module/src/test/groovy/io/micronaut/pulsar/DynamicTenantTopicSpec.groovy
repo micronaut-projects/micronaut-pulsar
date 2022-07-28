@@ -17,18 +17,19 @@ package io.micronaut.pulsar
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
+import io.micronaut.multitenancy.tenantresolver.TenantResolver
 import io.micronaut.pulsar.dynamic.ConsumerDynamicTenantTopicTester
+import io.micronaut.pulsar.dynamic.DynamicReader
 import io.micronaut.pulsar.dynamic.FakeClient
-import io.micronaut.pulsar.dynamic.MessageResponse
+import io.micronaut.pulsar.processor.TenantNameResolver
 import io.micronaut.pulsar.shared.PulsarTls
 import io.micronaut.runtime.server.EmbeddedServer
+import org.apache.pulsar.client.api.Message
 import spock.lang.AutoCleanup
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
 import spock.util.concurrent.BlockingVariables
-
-import java.time.Duration
 
 @Stepwise
 class DynamicTenantTopicSpec extends Specification {
@@ -68,26 +69,32 @@ class DynamicTenantTopicSpec extends Specification {
         given:
         BlockingVariables vars = new BlockingVariables(65)
         ConsumerDynamicTenantTopicTester dynamicConsumerTester = context.getBean(ConsumerDynamicTenantTopicTester.class)
+        DynamicReader dynamicReaderTester = context.getBean(DynamicReader.class)
         dynamicConsumerTester.blockers = vars
         String message = 'This should be received'
         FakeClient fakeClient = context.getBean(FakeClient)
+        TenantNameResolver tenantNameResolver = context.getBean(TenantNameResolver.class)
 
         when:
         fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_1)
         fakeClient.addTenantConsumer(DynamicTenantTopicSpec.TENANT_2)
         String messageId1 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_1, message)
-        MessageResponse readerMessage1 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_1)
+        tenantNameResolver.overrideTenantName(DynamicTenantTopicSpec.TENANT_1)
+        Message<String> readerMessage1 = dynamicReaderTester.read()
+        tenantNameResolver.clearTenantName()
         String messageId2 = fakeClient.sendMessage(DynamicTenantTopicSpec.TENANT_2, message)
-        MessageResponse readerMessage2 = fakeClient.getNextMessage(DynamicTenantTopicSpec.TENANT_2)
+        tenantNameResolver.overrideTenantName(DynamicTenantTopicSpec.TENANT_2)
+        Message<String> readerMessage2 = dynamicReaderTester.read()
+        tenantNameResolver.clearTenantName()
 
         then:
         null != messageId1
-        messageId1 == readerMessage1.messageId
-        message == readerMessage1.message
+        messageId1 == readerMessage1.messageId.toString()
+        message == readerMessage1.value
         (vars.getProperty(messageId1.toString()) as String).contains(message)
         (vars.getProperty(messageId1.toString()) as String).endsWith(DynamicTenantTopicSpec.TENANT_1)
-        messageId2 == readerMessage2.messageId
-        message == readerMessage2.message
+        messageId2 == readerMessage2.messageId.toString()
+        message == readerMessage2.value
         (vars.getProperty(messageId2) as String).contains(message)
         (vars.getProperty(messageId2) as String).endsWith(DynamicTenantTopicSpec.TENANT_2)
     }
