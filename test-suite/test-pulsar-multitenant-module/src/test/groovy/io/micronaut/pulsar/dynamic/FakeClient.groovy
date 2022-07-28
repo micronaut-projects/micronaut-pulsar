@@ -32,9 +32,6 @@ interface FakeClient {
     @Post('/messages')
     String sendMessage(@Header String tenantId, @Body String message);
 
-    @Get('/messages')
-    MessageResponse getNextMessage(@Header String tenantId);
-
     @Post("/tenant")
     String addTenantConsumer(@Body String tenant);
 }
