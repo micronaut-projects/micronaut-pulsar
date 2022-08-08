@@ -34,7 +34,7 @@ import spock.util.concurrent.BlockingVariables
 @Stepwise
 class DynamicTenantTopicSpec extends Specification {
 
-    public static final String PULSAR_DYNAMIC_TENANT_TEST_TOPIC = 'persistent://${tenant}/default/other2'
+    public static final String PULSAR_DYNAMIC_TENANT_TEST_TOPIC = 'persistent://${tenant}/default/dynamicTenantTest'
     public static final String TENANT_1 = 't1'
     public static final String TENANT_2 = 't2'
 
