@@ -17,13 +17,13 @@ package io.micronaut.pulsar
 
 import io.micronaut.context.ApplicationContext
 import io.micronaut.context.env.Environment
-import io.micronaut.multitenancy.tenantresolver.TenantResolver
 import io.micronaut.pulsar.dynamic.ConsumerDynamicTenantTopicTester
 import io.micronaut.pulsar.dynamic.DynamicReader
 import io.micronaut.pulsar.dynamic.FakeClient
 import io.micronaut.pulsar.processor.TenantNameResolver
 import io.micronaut.pulsar.shared.PulsarTls
 import io.micronaut.runtime.server.EmbeddedServer
+import io.micronaut.scheduling.executor.ThreadSelection
 import org.apache.pulsar.client.api.Message
 import spock.lang.AutoCleanup
 import spock.lang.Shared
@@ -57,6 +57,7 @@ class DynamicTenantTopicSpec extends Specification {
                  'pulsar.shutdown-on-subscriber-error'                         : true,
                  'spec.name'                                                   : getClass().simpleName,
                  'micronaut.http.client.read-timeout'                          : '5m',
+                 'micronaut.server.thread-selection'                           : ThreadSelection.AUTO,
                  'micronaut.multitenancy.tenantresolver.httpheader.enabled'    : true,
                  // Micronaut ignores @Header.name for some reason and always adds -
                  'micronaut.multitenancy.tenantresolver.httpheader.header-name': 'tenant-id'],
