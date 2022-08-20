@@ -19,25 +19,20 @@ import io.micronaut.context.annotation.Requires
 import io.micronaut.context.event.ApplicationEventPublisher
 import io.micronaut.http.annotation.Body
 import io.micronaut.http.annotation.Controller
-import io.micronaut.http.annotation.Get
 import io.micronaut.http.annotation.Post
 import io.micronaut.multitenancy.tenantresolver.TenantResolver
 import io.micronaut.pulsar.events.PulsarTenantDiscoveredEvent
-import org.apache.pulsar.client.api.Message
 
 @Requires(property = 'spec.name', value = 'DynamicTenantTopicSpec')
 @Controller("/")
 class FakeController {
     private final ProducerDynamicTenantTopicTester producer
-    private final DynamicReader dynamicReader
     final TenantResolver tenantResolver
     final ApplicationEventPublisher<PulsarTenantDiscoveredEvent> tenantPublisher
 
     FakeController(ProducerDynamicTenantTopicTester producer,
-                   DynamicReader dynamicReader,
                    TenantResolver tenantResolver,
                    ApplicationEventPublisher<PulsarTenantDiscoveredEvent> tenantPublisher) {
-        this.dynamicReader = dynamicReader
         this.producer = producer
         this.tenantResolver = tenantResolver
         this.tenantPublisher = tenantPublisher
@@ -46,12 +41,6 @@ class FakeController {
     @Post("/messages")
     String send(@Body String message) {
         return producer.send(message).toString()
-    }
-
-    @Get("/messages")
-    MessageResponse next() {
-        Message<String> msg = dynamicReader.read();
-        return new MessageResponse(messageId: msg.messageId.toString(), message: msg.value)
     }
 
     @Post("/tenant")
