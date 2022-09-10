@@ -2,12 +2,6 @@ plugins {
     id 'io.micronaut.build.internal.pulsar-module'
 }
 
-micronautBuild {
-    binaryCompatibility {
-        enabled = false
-    }
-}
-
 dependencies {
     annotationProcessor mn.micronaut.inject.java
     annotationProcessor "io.micronaut.docs:micronaut-docs-asciidoc-config-props:$micronautDocsVersion"

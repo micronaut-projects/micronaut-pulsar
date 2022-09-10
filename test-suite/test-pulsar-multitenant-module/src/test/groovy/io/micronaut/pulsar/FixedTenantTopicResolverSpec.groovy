@@ -37,7 +37,7 @@ import spock.util.concurrent.BlockingVariables
 @Stepwise
 class FixedTenantTopicResolverSpec extends Specification {
 
-    public static final String PULSAR_FIXED_TENANT_TEST_TOPIC = 'persistent://${tenant}/default/other2'
+    public static final String PULSAR_FIXED_TENANT_TEST_TOPIC = 'persistent://${tenant}/default/fixedTenantTest'
 
     @Shared
     @AutoCleanup
