@@ -17,11 +17,13 @@ package io.micronaut.pulsar.shared
 
 import io.micronaut.pulsar.shared.conf.ClientConf
 import io.micronaut.pulsar.shared.conf.StandaloneConf
-import org.assertj.core.util.Files
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
+import org.testcontainers.containers.output.OutputFrame
 import org.testcontainers.utility.DockerImageName
+
+import java.nio.file.Files
 
 abstract class PulsarTls {
 
@@ -29,7 +31,7 @@ abstract class PulsarTls {
     public static final int BROKER_SSL = 6651
     private static final String caConfPath = "/my-ca"
     private static final PulsarContainer PULSAR_CONTAINER =
-            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.10.1"))
+            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.10.2"))
     private static ClassLoader resourceLoader
     private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
@@ -46,8 +48,8 @@ abstract class PulsarTls {
         String caCert = resourceLoader.getResource("ca.cert.pem").path
         PULSAR_CONTAINER.addFileSystemBind(new File(caCert).path, "$caConfPath/ca.cert.pem", BindMode.READ_ONLY)
 
-        PULSAR_CONTAINER.addFileSystemBind(standalone, "/pulsar/conf/standalone.conf", BindMode.READ_ONLY)
-        PULSAR_CONTAINER.addFileSystemBind(client, "/pulsar/conf/client.conf", BindMode.READ_ONLY)
+        PULSAR_CONTAINER.addFileSystemBind(standalone, "/pulsar/conf/standalone.conf", BindMode.READ_WRITE)
+        PULSAR_CONTAINER.addFileSystemBind(client, "/pulsar/conf/client.conf", BindMode.READ_WRITE)
 
         PULSAR_CONTAINER.addExposedPorts(HTTPS, BROKER_SSL)
         PULSAR_CONTAINER.start()
@@ -67,7 +69,7 @@ abstract class PulsarTls {
         text = text.replace("tlsCertificateFilePath=", "tlsCertificateFilePath=$caConfPath/broker.cert.pem")
         text = text.replace("tlsKeyFilePath=", "tlsKeyFilePath=$caConfPath/broker.key-pk8.pem")
         text = text.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
-        File tmp = Files.newTemporaryFile()
+        File tmp = Files.createTempFile(null,null).toFile()
         tmp.write(text)
         return tmp
     }
@@ -75,7 +77,7 @@ abstract class PulsarTls {
     private static File createClientConf() {
         String text = ClientConf.getContent()
         text = text.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
-        File tmp = Files.newTemporaryFile()
+        File tmp = Files.createTempFile(null,null).toFile()
         tmp.write(text)
         return tmp
     }
