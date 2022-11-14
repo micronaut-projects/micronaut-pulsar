@@ -15,7 +15,6 @@
  */
 package example.java.shared
 
-import org.assertj.core.util.Files
 import org.keycloak.admin.client.resource.RealmResource
 import org.keycloak.crypto.Algorithm
 import org.keycloak.representations.idm.ClientRepresentation
@@ -25,6 +24,8 @@ import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
 import org.testcontainers.images.builder.Transferable
 import org.testcontainers.utility.DockerImageName
+
+import java.nio.file.Files
 
 
 /**
@@ -55,7 +56,7 @@ final class SharedPulsar implements AutoCloseable {
 
     SharedPulsar(SharedKeycloak keycloak) {
         this.keycloak = keycloak
-        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.10.1"))
+        pulsarContainer = new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.10.2"))
                 .dependsOn(keycloak) // leave non-ssl ports for metrics test and such
         pulsarContainer.addExposedPorts(SSL_PORT, HTTPS_PORT)
     }
@@ -124,14 +125,14 @@ final class SharedPulsar implements AutoCloseable {
             it.algorithm == Algorithm.RS256
         }.publicKey
         byte[] key = publicKey.decodeBase64()
-        File f = Files.newTemporaryFile()
+        File f = Files.createTempFile(null,null).toFile()
         f.bytes = key
         return f
     }
 
     private File createCredentialsFile(String secret) {
         String fileContents = String.format(CLIENT_CREDENTIALS, secret, keycloak.crossContainerAuthUrl + "/realms/master")
-        File credentials = Files.newTemporaryFile()
+        File credentials = Files.createTempFile(null,null).toFile()
         credentials.write(fileContents)
         return credentials
     }
@@ -142,13 +143,13 @@ final class SharedPulsar implements AutoCloseable {
         standaloneContent = standaloneContent.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
         standaloneContent = standaloneContent.replace('brokerClientAuthenticationParameters=',
                 "brokerClientAuthenticationParameters={\"issuerUrl\": \"$url\",\"privateKey\": \"/pulsar/credentials.json\",\"audience\": \"pulsar\"}")
-        File standalone = Files.newTemporaryFile()
+        File standalone = Files.createTempFile(null,null).toFile()
         standalone.write(standaloneContent)
 
         String clientContent = ClientConf.content.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
         clientContent = clientContent.replace('authParams=',
                 "authParams={\"issuerUrl\": \"$url\",\"privateKey\": \"file:///pulsar/credentials.json\",\"audience\": \"pulsar\"}")
-        File client = Files.newTemporaryFile()
+        File client = Files.createTempFile(null,null).toFile()
         client.write(clientContent)
 
         return ["client": client, "standalone": standalone]
