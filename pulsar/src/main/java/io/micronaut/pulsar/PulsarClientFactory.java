@@ -40,6 +40,7 @@ public final class PulsarClientFactory {
      * Simple factory method for building main PulsarClient that serves as a connection to Pulsar cluster.
      *
      * @param pulsarClientConfiguration Main configuration for building PulsarClient
+     * @param eventLoopGroup netty's event loop group from Micronaut to pass to pulsar
      * @return Instance of {@link PulsarClient}
      * @throws MessagingClientException in case any of the required options are missing or malformed
      */

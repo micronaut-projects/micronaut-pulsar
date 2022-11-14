@@ -1,10 +1,3 @@
-package io.micronaut.pulsar
-
-import io.micronaut.context.ApplicationContext
-import io.micronaut.context.annotation.Requires
-import io.micronaut.context.env.Environment
-import io.micronaut.pulsar.annotation.PulsarConsumer
-
 /*
  * Copyright 2017-2022 original authors
  *
@@ -20,12 +13,16 @@ import io.micronaut.pulsar.annotation.PulsarConsumer
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package io.micronaut.pulsar
 
+import io.micronaut.context.ApplicationContext
+import io.micronaut.context.annotation.Requires
+import io.micronaut.context.env.Environment
+import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarTls
-import jakarta.inject.Singleton
 import org.apache.pulsar.client.api.Message
 import org.apache.pulsar.client.api.MessageId
 import spock.lang.AutoCleanup
