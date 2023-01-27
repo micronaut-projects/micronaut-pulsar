@@ -2,20 +2,19 @@ To configure the Apache Pulsar client, first add the `micronaut-pulsar` module d
 
 dependency::micronaut-pulsar[groupId="io.micronaut.pulsar"]
 
-Then configure the URI of the Pulsar cluster or standalone server to communicate with in `application.yml`:
+Then configure the URI of the Pulsar cluster or standalone server to communicate with:
 
+[configuration]
 .Configuring `pulsar.service-url`
-[source,yaml]
 ----
 pulsar:
   service-url: pulsar://localhost:6650
 ----
 NOTE: As this module is based on the official Java client from Apache Pulsar, see the link:https://pulsar.apache.org/docs/en/client-libraries-java/#connection-urls[official documentation] for detailed information on service URL format.
 
-Alternatively, `pulsar.service-url-provider` can be set using either `@kotlinexample.PulsarServiceUrlProvider` or by setting the provider name
-in `application.yml` as such:
+Alternatively, `pulsar.service-url-provider` can be set using either `@kotlinexample.PulsarServiceUrlProvider` or by setting the provider name:
 
-[source,yaml]
+[configuration]
 ----
 pulsar:
   service-url-provider: BeanName
