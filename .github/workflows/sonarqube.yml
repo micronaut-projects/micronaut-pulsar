@@ -18,17 +18,17 @@ jobs:
     if: github.repository != 'micronaut-projects/micronaut-project-template'
     runs-on: ubuntu-latest
     steps:
-       # https://github.com/actions/virtual-environments/issues/709
+      # https://github.com/actions/virtual-environments/issues/709
       - name: Free disk space
         run: |
-         sudo rm -rf "/usr/local/share/boost"
-         sudo rm -rf "$AGENT_TOOLSDIRECTORY"
-         sudo apt-get clean
-         df -h
+          sudo rm -rf "/usr/local/share/boost"
+          sudo rm -rf "$AGENT_TOOLSDIRECTORY"
+          sudo apt-get clean
+          df -h
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
-      - uses: actions/cache@v3.2.2
+      - uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
@@ -37,7 +37,7 @@ jobs:
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: 11
       - name: Optional setup step
         env:
