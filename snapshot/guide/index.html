@@ -120,13 +120,13 @@
         <h1>Micronaut Pulsar</h1>
         <p></p>
         <p>Integration between Micronaut and Apache Pulsar</p>
-        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-pulsar/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.1.1/guide/index.html'>1.1.1</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0-SNAPSHOT/guide/index.html'>1.0.0-SNAPSHOT</option></select> </p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option selected='selected' value='https://micronaut-projects.github.io/micronaut-pulsar/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/latest/guide/index.html'>LATEST</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.1.1/guide/index.html'>1.1.1</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0-SNAPSHOT/guide/index.html'>1.0.0-SNAPSHOT</option></select> </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/introduction.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/introduction.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -139,7 +139,7 @@
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/releaseHistory.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/releaseHistory.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -215,7 +215,7 @@
 <h1 id="quickStart"><a class="anchor" href="#quickStart"></a>3 Quick Start</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/quickStart.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/quickStart.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -241,13 +241,44 @@
 </div></p>
 </div>
 <div class="paragraph">
-<p>Then configure the URI of the Pulsar cluster or standalone server to communicate with in <code>application.yml</code>:</p>
+<p>Then configure the URI of the Pulsar cluster or standalone server to communicate with:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
 <div class="title">Configuring <code>pulsar.service-url</code></div>
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.service-url=pulsar://localhost:6650</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
   service-url: pulsar://localhost:6650</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  service-url="pulsar://localhost:6650"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  serviceUrl = "pulsar://localhost:6650"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    service-url = "pulsar://localhost:6650"
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -263,13 +294,43 @@ As this module is based on the official Java client from Apache Pulsar, see the 
 </table>
 </div>
 <div class="paragraph">
-<p>Alternatively, <code>pulsar.service-url-provider</code> can be set using either <code>@kotlinexample.PulsarServiceUrlProvider</code> or by setting the provider name
-in <code>application.yml</code> as such:</p>
+<p>Alternatively, <code>pulsar.service-url-provider</code> can be set using either <code>@kotlinexample.PulsarServiceUrlProvider</code> or by setting the provider name:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.service-url-provider=BeanName</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
   service-url-provider: BeanName</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  service-url-provider="BeanName"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  serviceUrlProvider = "BeanName"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    service-url-provider = "BeanName"
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -282,7 +343,7 @@ in <code>application.yml</code> as such:</p>
 <h1 id="consumer"><a class="anchor" href="#consumer"></a>4 Pulsar consumers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/consumer.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/consumer.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -694,7 +755,7 @@ properties indicate that the DLQ will be used by default on all Pulsar consumers
 <h1 id="reader"><a class="anchor" href="#reader"></a>5 Pulsar readers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/reader.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/reader.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -824,7 +885,7 @@ is part of the message payload or <code>SEPARATED</code> - key is stored as a me
 <h1 id="producer"><a class="anchor" href="#producer"></a>6 Pulsar producers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/producer.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/producer.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1087,7 +1148,7 @@ on caller or upper layers to provide it.</td>
 <h1 id="authentication"><a class="anchor" href="#authentication"></a>7 Authentication</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/authentication.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/authentication.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1098,11 +1159,47 @@ on caller or upper layers to provide it.</td>
 <div class="paragraph">
 <p>To configure JWT authentication it&#8217;s sufficient to specify a JWT in <code>application.yml</code> under <code>pulsar.authentication-jwt</code>, e.g.:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.authentication.jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
   authentication:
     jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  [pulsar.authentication]
+    jwt="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  authentication {
+    jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    authentication {
+      jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
+    }
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -1117,12 +1214,51 @@ on caller or upper layers to provide it.</td>
 <div class="paragraph">
 <p>To use OAuth2 authentication, configure three parameters like in the example below to connect to a Pulsar service that uses OAuth2:</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.oauth-issuer-url=https://some-sso.io/...
+pulsar.oauth-credentials-url=file:///path/to/file.json
+pulsar.audience=localhost:6650</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
     oauth-issuer-url: https://some-sso.io/...
     oauth-credentials-url: file:///path/to/file.json
     audience: localhost:6650</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  oauth-issuer-url="https://some-sso.io/..."
+  oauth-credentials-url="file:///path/to/file.json"
+  audience="localhost:6650"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  oauthIssuerUrl = "https://some-sso.io/..."
+  oauthCredentialsUrl = "file:///path/to/file.json"
+  audience = "localhost:6650"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    oauth-issuer-url = "https://some-sso.io/..."
+    oauth-credentials-url = "file:///path/to/file.json"
+    audience = "localhost:6650"
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -1153,7 +1289,7 @@ and <em>role</em> attribute in its configuration files must be specified for Pul
 <h1 id="tls"><a class="anchor" href="#tls"></a>8 Transport encryption</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/tls.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/tls.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1166,18 +1302,68 @@ and <em>role</em> attribute in its configuration files must be specified for Pul
 <p>To use transport encryption you must configure proper connection string as well as provide necessary information about
 certificate path, ciphers, and protocols as shown in example below.</p>
 </div>
-<div class="listingblock">
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.service-url=pulsar+ssl://localhost:6651
+pulsar.tls-cert-file-path=path/to/cert.pem
+pulsar.tls-ciphers[0]=TLS_RSA_WITH_AES_256_GCM_SHA384
+pulsar.tls-ciphers[1]=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+pulsar.tls-protocols[0]=TLSv1.3
+pulsar.tls-protocols[1]=TLSv1.2</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
-    ...
-    service-url: pulsar+ssl://localhost:6651
-    tls-cert-file-path: path/to/cert.pem
+    service-url: 'pulsar+ssl://localhost:6651'
+    tls-cert-file-path: 'path/to/cert.pem'
     tls-ciphers:
         - TLS_RSA_WITH_AES_256_GCM_SHA384
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
     tls-protocols:
         - TLSv1.3
         - TLSv1.2</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  service-url="pulsar+ssl://localhost:6651"
+  tls-cert-file-path="path/to/cert.pem"
+  tls-ciphers=[
+    "TLS_RSA_WITH_AES_256_GCM_SHA384",
+    "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+  ]
+  tls-protocols=[
+    "TLSv1.3",
+    "TLSv1.2"
+  ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  serviceUrl = "pulsar+ssl://localhost:6651"
+  tlsCertFilePath = "path/to/cert.pem"
+  tlsCiphers = ["TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"]
+  tlsProtocols = ["TLSv1.3", "TLSv1.2"]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    service-url = "pulsar+ssl://localhost:6651"
+    tls-cert-file-path = "path/to/cert.pem"
+    tls-ciphers = ["TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"]
+    tls-protocols = ["TLSv1.3", "TLSv1.2"]
+  }
+}</code></pre>
+</div>
+</div>
 </div>
 </div>
 <div class="paragraph">
@@ -1193,7 +1379,7 @@ hostname is not verified but can be enabled by using <code>tls-verify-hostname: 
 <h1 id="protobuf"><a class="anchor" href="#protobuf"></a>9 Protocol Buffers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/protobuf.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/protobuf.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1242,7 +1428,7 @@ google and micronaut dependencies</p>
 <h1 id="repository"><a class="anchor" href="#repository"></a>10 Repository</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.2.x/src/main/docs/guide/repository.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/repository.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
