@@ -2,7 +2,7 @@
 
 To configure JWT authentication it's sufficient to specify a JWT in `application.yml` under `pulsar.authentication-jwt`, e.g.:
 
-[source,yaml]
+[configuration]
 ----
 pulsar:
   authentication:
@@ -17,7 +17,7 @@ It's planned to support specifying a JWT path, either an HTTP endpoint or URL to
 
 To use OAuth2 authentication, configure three parameters like in the example below to connect to a Pulsar service that uses OAuth2:
 
-[source,yaml]
+[configuration]
 ----
 pulsar:
     oauth-issuer-url: https://some-sso.io/...

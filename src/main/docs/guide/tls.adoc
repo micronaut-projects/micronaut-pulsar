@@ -1,12 +1,12 @@
 == Transport encryption
 To use transport encryption you must configure proper connection string as well as provide necessary information about
 certificate path, ciphers, and protocols as shown in example below.
-[source,yaml]
+
+[configuration]
 ----
 pulsar:
-    ...
-    service-url: pulsar+ssl://localhost:6651
-    tls-cert-file-path: path/to/cert.pem
+    service-url: 'pulsar+ssl://localhost:6651'
+    tls-cert-file-path: 'path/to/cert.pem'
     tls-ciphers:
         - TLS_RSA_WITH_AES_256_GCM_SHA384
         - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
