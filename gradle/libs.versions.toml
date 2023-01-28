@@ -3,7 +3,7 @@
 conscrypt-openjdk = "2.5.2"
 kotlin = '1.7.20'
 kotest = '4.6.4'
-testcontainers = '1.17.5'
+testcontainers = '1.17.6'
 junit = '5.9.1'
 
 micronaut = '3.8.2'
