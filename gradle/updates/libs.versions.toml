@@ -1,5 +1,5 @@
 [versions]
-kotlin = '1.6.20'
+kotlin = '1.8.0'
 kotest = '4.6.4'
 testcontainers = '1.16.3'
 junit = '5.8.2'
