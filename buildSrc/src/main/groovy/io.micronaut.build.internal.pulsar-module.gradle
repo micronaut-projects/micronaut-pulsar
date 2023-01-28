@@ -15,7 +15,7 @@ dependencies {
         exclude group: 'com.google.code.gson'
     }
     compileOnly 'com.google.code.findbugs:jsr305'
-    testRuntimeOnly 'ch.qos.logback:logback-classic:1.2.7'
+    testRuntimeOnly 'ch.qos.logback:logback-classic:1.4.5'
 }
 
 test {
