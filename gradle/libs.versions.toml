@@ -2,7 +2,7 @@
 
 conscrypt-openjdk = "2.5.2"
 kotlin = '1.7.20'
-kotest = '4.6.4'
+kotest = '5.5.4'
 testcontainers = '1.17.5'
 junit = '5.9.1'
 

@@ -1,6 +1,6 @@
 [versions]
 kotlin = '1.6.20'
-kotest = '4.6.4'
+kotest = '5.5.4'
 testcontainers = '1.16.3'
 junit = '5.8.2'
 managed-pulsar-client = '2.10.1'
