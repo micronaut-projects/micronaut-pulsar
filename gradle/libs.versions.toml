@@ -37,7 +37,7 @@ micronaut-serde-support = { module = "io.micronaut.serde:micronaut-serde-support
 micronaut-docs = { module = "io.micronaut.docs:micronaut-docs-asciidoc-config-props", version.ref = "micronaut-docs" }
 
 # This can be replaced with the Micronaut BOM version once the base Micronaut version is bumped to 3.5
-micronaut-grpc-protobuf-support = "io.micronaut.grpc:micronaut-protobuff-support:3.3.1"
+micronaut-grpc-protobuf-support = "io.micronaut.grpc:micronaut-protobuff-support:3.5.0"
 
 [plugins]
 kotlin-jvm = { id = 'org.jetbrains.kotlin.jvm', version.ref = 'kotlin' }
