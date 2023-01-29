@@ -15,7 +15,7 @@ micronaut-test = '3.0.5'
 spock = '2.0-groovy-3.0'
 groovy = '3.0.9'
 
-managed-pulsar-client = '2.10.2'
+managed-pulsar-client = '2.11.0'
 
 [libraries]
 # Managed libraries
