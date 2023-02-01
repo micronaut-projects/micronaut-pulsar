@@ -4,6 +4,6 @@ plugins {
 
 dependencies {
     testImplementation projects.pulsarMultitenant
-    testImplementation mn.micronaut.multitenancy
+    testImplementation mnMultitenancy.micronaut.multitenancy
     testImplementation mn.micronaut.http.client
 }

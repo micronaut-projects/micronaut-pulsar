@@ -1,5 +1,5 @@
 plugins {
-    alias libs.plugins.micronaut.minimal.app
+    id("io.micronaut.minimal.application")
     id "groovy"
 }
 
@@ -8,7 +8,7 @@ dependencies {
 
     testCompileOnly mn.micronaut.inject.groovy
     testImplementation mn.micronaut.inject
-    testImplementation mn.spock
+    testImplementation mnTest.micronaut.test.spock
 }
 
 tasks.withType(GroovyCompile).configureEach {
