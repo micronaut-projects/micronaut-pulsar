@@ -20,7 +20,7 @@ micronaut-reactor = "3.0.0-SNAPSHOT"
 micronaut-serde = "2.0.0-SNAPSHOT"
 micronaut-test = '4.0.0-SNAPSHOT'
 
-managed-pulsar-client = '2.10.2'
+managed-pulsar-client = '2.11.0'
 
 [libraries]
 # Micronaut BOMS

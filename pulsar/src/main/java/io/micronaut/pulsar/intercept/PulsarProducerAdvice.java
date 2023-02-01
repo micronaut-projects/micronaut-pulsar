@@ -24,6 +24,7 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.type.ArgumentValue;
 import io.micronaut.core.type.MutableArgumentValue;
 import io.micronaut.core.type.ReturnType;
@@ -63,6 +64,7 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
     protected final DefaultSchemaHandler simpleSchemaResolver;
     protected final BeanContext beanContext;
     protected final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher;
+    protected final ConversionService conversionService;
 
     /**
      * Constructor for instantiating Pulsar producer advice for intercepting producer methods.
@@ -75,11 +77,13 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
     public PulsarProducerAdvice(final PulsarClient pulsarClient,
                                 final DefaultSchemaHandler simpleSchemaResolver,
                                 final BeanContext beanContext,
-                                final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher) {
+                                final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher,
+                                final ConversionService conversionService) {
         this.pulsarClient = pulsarClient;
         this.simpleSchemaResolver = simpleSchemaResolver;
         this.beanContext = beanContext;
         this.applicationEventPublisher = applicationEventPublisher;
+        this.conversionService = conversionService;
     }
 
     @Override
@@ -153,7 +157,7 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
             .orElse(null);
     }
 
-    private static <T, V> Object sendAsync(final V value,
+    private <T, V> Object sendAsync(final V value,
                                            final Producer<T> producer,
                                            final ReturnType<?> returnType,
                                            final @Nullable Object key,
@@ -162,7 +166,7 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
         if (CompletableFuture.class == returnType.getType()) {
             return future;
         }
-        return Publishers.convertPublisher(future, returnType.getType());
+        return Publishers.convertPublisher(conversionService, future, returnType.getType());
     }
 
     private static <T, V> Object sendBlocking(final V value,
