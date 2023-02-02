@@ -62,9 +62,9 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
                                            final DefaultSchemaHandler simpleSchemaResolver,
                                            final BeanContext beanContext,
                                            final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher,
-                                           final ConversionService conversionService,
                                            final TenantNameResolver tenantNameResolver,
-                                           final TopicResolver topicResolver) {
+                                           final TopicResolver topicResolver,
+                                           final ConversionService conversionService) {
         super(pulsarClient, simpleSchemaResolver, beanContext, applicationEventPublisher, conversionService);
         this.tenantNameResolver = tenantNameResolver;
         this.topicResolver = topicResolver;
