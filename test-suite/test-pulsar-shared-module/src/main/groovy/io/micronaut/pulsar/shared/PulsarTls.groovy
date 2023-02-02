@@ -15,40 +15,42 @@
  */
 package io.micronaut.pulsar.shared
 
-import io.micronaut.pulsar.shared.conf.ClientConf
-import io.micronaut.pulsar.shared.conf.StandaloneConf
+
 import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
 import org.testcontainers.containers.output.OutputFrame
 import org.testcontainers.utility.DockerImageName
 
-import java.nio.file.Files
-import java.nio.file.attribute.PosixFileAttributes
-import java.nio.file.attribute.PosixFilePermissions
-
 abstract class PulsarTls {
 
     public static final int HTTPS = 8443
     public static final int BROKER_SSL = 6651
-    private static final String caConfPath = "/my-ca"
     private static final PulsarContainer PULSAR_CONTAINER =
-            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.10.2"))
+            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.11.0"))
     private static ClassLoader resourceLoader
     private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
     static {
         resourceLoader = ClassLoader.getSystemClassLoader()
 
-        String standalone = createStandaloneConfFile().path
-        String client = createClientConf().path
+        final var brokerCert = resourceLoader.getResource("broker.cert.pem").path
+        PULSAR_CONTAINER.addFileSystemBind(new File(brokerCert).path, "/my-ca/broker.cert.pem", BindMode.READ_ONLY)
+        final var brokerKey = resourceLoader.getResource("broker.key-pk8.pem").path
+        PULSAR_CONTAINER.addFileSystemBind(new File(brokerKey).path, "/my-ca/broker.key-pk8.pem", BindMode.READ_ONLY)
+        final var caCert = resourceLoader.getResource("ca.cert.pem").path
+        PULSAR_CONTAINER.addFileSystemBind(new File(caCert).path, "/my-ca/ca.cert.pem", BindMode.READ_ONLY)
 
-        String brokerCert = resourceLoader.getResource("broker.cert.pem").path
-        PULSAR_CONTAINER.addFileSystemBind(new File(brokerCert).path, "$caConfPath/broker.cert.pem", BindMode.READ_ONLY)
-        String brokerKey = resourceLoader.getResource("broker.key-pk8.pem").path
-        PULSAR_CONTAINER.addFileSystemBind(new File(brokerKey).path, "$caConfPath/broker.key-pk8.pem", BindMode.READ_ONLY)
-        String caCert = resourceLoader.getResource("ca.cert.pem").path
-        PULSAR_CONTAINER.addFileSystemBind(new File(caCert).path, "$caConfPath/ca.cert.pem", BindMode.READ_ONLY)
+        final var standaloneConfFile = new File(resourceLoader.getResource("standalone.conf").path)
+        standaloneConfFile.setWritable(true,false)
+        standaloneConfFile.setReadable(true,false)
+        standaloneConfFile.setExecutable(true,false)
+        final var standalone = standaloneConfFile.path
+        final var clientConfFile = new File(resourceLoader.getResource("client.conf").path)
+        clientConfFile.setWritable(true, false)
+        clientConfFile.setReadable(true, false)
+        clientConfFile.setExecutable(true, false)
+        final var client = clientConfFile.path
 
         PULSAR_CONTAINER.addFileSystemBind(standalone, "/pulsar/conf/standalone.conf", BindMode.READ_WRITE)
         PULSAR_CONTAINER.addFileSystemBind(client, "/pulsar/conf/client.conf", BindMode.READ_WRITE)
@@ -68,30 +70,6 @@ abstract class PulsarTls {
 
     static String getPulsarBrokerUrl() {
         return PULSAR_CONTAINER.pulsarBrokerUrl
-    }
-
-    private static File createStandaloneConfFile() {
-        String text = StandaloneConf.getContent()
-        text = text.replace("tlsCertificateFilePath=", "tlsCertificateFilePath=$caConfPath/broker.cert.pem")
-        text = text.replace("tlsKeyFilePath=", "tlsKeyFilePath=$caConfPath/broker.key-pk8.pem")
-        text = text.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
-        File tmp = Files.createTempFile(null,null).toFile()
-        tmp.setExecutable(true, false)
-        tmp.setReadable(true, false)
-        tmp.setWritable(true, false)
-        tmp.write(text)
-        return tmp
-    }
-
-    private static File createClientConf() {
-        String text = ClientConf.getContent()
-        text = text.replace("tlsTrustCertsFilePath=", "tlsTrustCertsFilePath=$caConfPath/ca.cert.pem")
-        File tmp = Files.createTempFile(null,null).toFile()
-        tmp.setExecutable(true, false)
-        tmp.setReadable(true, false)
-        tmp.setWritable(true, false)
-        tmp.write(text)
-        return tmp
     }
 
     private static void createTlsTopic() {

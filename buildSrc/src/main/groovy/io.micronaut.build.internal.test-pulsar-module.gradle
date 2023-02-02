@@ -3,6 +3,11 @@ plugins {
 }
 
 dependencies {
+    // annotation processors (.inject) must be present for Micronaut context to detect inner static classes
+    annotationProcessor mn.micronaut.inject.java
+    testImplementation mn.micronaut.inject.java
+    testImplementation mn.micronaut.inject.groovy
+
     testImplementation projects.pulsar
     testImplementation projects.testSuite.testPulsarSharedModule
     testImplementation mnReactor.micronaut.reactor

@@ -7,3 +7,12 @@ dependencies {
     testImplementation mnMultitenancy.micronaut.multitenancy
     testImplementation mn.micronaut.http.client
 }
+
+sourceSets {
+    test {
+        resources {
+            srcDir '../test-pulsar-shared-module/src/test/resources'
+            include 'broker.cert.pem', 'broker.key-pk8.pem', 'ca.cert.pem', 'standalone.conf', 'client.conf'
+        }
+    }
+}

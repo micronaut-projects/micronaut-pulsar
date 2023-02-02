@@ -28,7 +28,7 @@ abstract class PulsarAwareTest extends Specification {
     @AutoCleanup
     ApplicationContext context
 
-    void setupSpec() {
+    static {
         PulsarTls.createTopic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
         PulsarTls.createTopic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
         PulsarTls.createTopic(PulsarProducersSpec.PULSAR_PRODUCER_TEST_TOPIC)
@@ -39,6 +39,9 @@ abstract class PulsarAwareTest extends Specification {
         PulsarTls.createTopic(PulsarReaderSpec.PULSAR_READER_TEST_TOPIC_METHOD_ASYNC_WRAPPED)
         PulsarTls.createTopic(PulsarSchemaSpec.PULSAR_JSON_TOPIC)
         PulsarTls.createTopic(PulsarSchemaSpec.PULSAR_PROTOBUF_TOPIC)
+    }
+
+    void setupSpec() {
         context = ApplicationContext.run(
                 ['pulsar.service-url'                 : PulsarTls.pulsarBrokerUrl,
                  'pulsar.shutdown-on-subscriber-error': true,

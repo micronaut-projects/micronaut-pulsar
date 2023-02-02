@@ -216,7 +216,7 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
         }
         final List<MutableArgumentValue<?>> headers = context.getParameters().values().stream()
             .filter(x -> x.isAnnotationPresent(MessageProperties.class) || x.isAnnotationPresent(MessageHeader.class))
-            .collect(Collectors.toList());
+            .toList();
         if (headers.size() == 1 && headers.get(0).isAnnotationPresent(MessageProperties.class)) {
             return (Map<String, String>) headers.get(0).getValue();
         }

@@ -23,6 +23,8 @@ import io.micronaut.pulsar.PulsarAwareTest
 import io.micronaut.pulsar.annotation.MessageProperties
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
+import io.micronaut.test.extensions.spock.annotation.MicronautTest
+import jakarta.inject.Singleton
 import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import reactor.core.publisher.Mono
