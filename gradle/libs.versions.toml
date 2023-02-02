@@ -1,7 +1,7 @@
 [versions]
 
 conscrypt-openjdk = "2.5.2"
-groovy = "4.0.7"
+groovy = "4.0.8"
 junit = '5.9.2'
 kotlin = "1.8.0"
 kotlin-coroutines = "1.6.4"
@@ -52,10 +52,4 @@ micronaut-docs = { module = "io.micronaut.docs:micronaut-docs-asciidoc-config-pr
 
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
 gradle-kotlin = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
-
-#[plugins]
-#kotlin-jvm = { id = 'org.jetbrains.kotlin.jvm', version.ref = 'kotlin' }
-#kotlin-kapt = { id = 'org.jetbrains.kotlin.kapt', version.ref = 'kotlin' }
-#micronaut-minimal-app = { id = 'io.micronaut.minimal.application', version.ref = 'micronaut-gradle-plugin' }
-#micronaut-minimal-library = { id = 'io.micronaut.minimal.library', version.ref = 'micronaut-gradle-plugin' }
 
