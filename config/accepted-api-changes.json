@@ -183,5 +183,9 @@
     "type": "io.micronaut.pulsar.intercept.PulsarReaderAdvice",
     "member": "Constructor io.micronaut.pulsar.intercept.PulsarReaderAdvice(io.micronaut.context.BeanContext)",
     "reason": "Fixes for deprecations introduced by Micronaut 4"
-  }
-]
+  },
+  {
+    "type": "io.micronaut.pulsar.intercept.PulsarMultitenantProducerAdvice",
+    "member": "Constructor io.micronaut.pulsar.intercept.PulsarMultitenantProducerAdvice(org.apache.pulsar.client.api.PulsarClient,io.micronaut.pulsar.processor.DefaultSchemaHandler,io.micronaut.context.BeanContext,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.pulsar.processor.TenantNameResolver,io.micronaut.pulsar.processor.TopicResolver)",
+    "reason": "Fixes for deprecations introduced by Micronaut 4"
+  }]
