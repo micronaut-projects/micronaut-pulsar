@@ -3,19 +3,11 @@ plugins {
 }
 
 dependencies {
-    annotationProcessor mn.micronaut.inject.java
-
-    api mn.micronaut.inject
     api mn.micronaut.messaging
     api libs.managed.pulsar.client
 
-    compileOnly "jakarta.inject:jakarta.inject-api"
-    compileOnly "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
-    compileOnly 'com.google.protobuf:protobuf-java:3.21.12'
-    compileOnly mn.micronaut.reactor
-    compileOnly libs.micronaut.grpc.protobuf.support
-}
-
-repositories {
-    mavenCentral()
+    compileOnly mnReactor.micronaut.reactor
+    compileOnly libs.kotlin.coroutines
+    compileOnly libs.protobuf.java
+    compileOnly mnGrpc.micronaut.protobuff.support
 }

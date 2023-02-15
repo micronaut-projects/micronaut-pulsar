@@ -1,10 +1,10 @@
 plugins {
-    alias libs.plugins.micronaut.minimal.app
+    id("io.micronaut.minimal.application")
     id "java"
 }
 
 dependencies {
-    testImplementation project(':pulsar')
+    testImplementation projects.pulsar
     testCompileOnly mn.micronaut.inject.java
     testImplementation mn.micronaut.inject
 }

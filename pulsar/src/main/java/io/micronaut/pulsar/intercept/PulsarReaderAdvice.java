@@ -21,6 +21,7 @@ import io.micronaut.aop.MethodInvocationContext;
 import io.micronaut.context.BeanContext;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.async.publisher.Publishers;
+import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.type.Argument;
 import io.micronaut.core.type.ReturnType;
 import io.micronaut.messaging.exceptions.MessageListenerException;
@@ -44,9 +45,11 @@ import java.util.concurrent.TimeUnit;
 public class PulsarReaderAdvice implements MethodInterceptor<Object, Object> {
 
     protected final BeanContext beanContext;
+    protected final ConversionService conversionService;
 
-    public PulsarReaderAdvice(final BeanContext beanContext) {
+    public PulsarReaderAdvice(final BeanContext beanContext, ConversionService conversionService) {
         this.beanContext = beanContext;
+        this.conversionService = conversionService;
     }
 
     @Override
@@ -114,11 +117,11 @@ public class PulsarReaderAdvice implements MethodInterceptor<Object, Object> {
         return reader.readNext();
     }
 
-    private static Object readAsync(final ReturnType<?> returnType,
+    private Object readAsync(final ReturnType<?> returnType,
                                     final CompletableFuture<?> reading) {
         if (CompletableFuture.class == returnType.getType()) {
             return reading;
         }
-        return Publishers.convertPublisher(reading, returnType.getType());
+        return Publishers.convertPublisher(conversionService, reading, returnType.getType());
     }
 }

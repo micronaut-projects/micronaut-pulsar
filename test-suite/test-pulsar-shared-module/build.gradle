@@ -4,22 +4,18 @@ plugins {
 }
 
 dependencies {
-    api platform(mn.micronaut.bom)
-    api project(':pulsar')
-    api mn.spock
+    api projects.pulsar
+    api mnTest.micronaut.test.spock
     api mn.groovy
-
-    implementation mn.micronaut.inject
-    implementation mn.micronaut.inject.groovy
-    implementation mn.micronaut.inject.java
 
     runtimeOnly mn.micronaut.http.server.netty
     runtimeOnly mn.micronaut.runtime
-    implementation mn.micronaut.reactor
-    implementation mn.micronaut.test.spock
+
+    implementation mnGrpc.micronaut.protobuff.support
+    implementation mnReactor.micronaut.reactor
+    implementation mnTest.micronaut.test.spock
     implementation libs.testcontainers.spock
     implementation libs.testcontainers.pulsar
     implementation libs.conscrypt.openjdk
-    implementation libs.micronaut.grpc.protobuf.support
 
 }
