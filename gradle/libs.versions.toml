@@ -12,7 +12,7 @@ testcontainers = '1.17.6'
 
 micronaut = '4.0.0-SNAPSHOT'
 micronaut-docs = '2.0.0'
-micronaut-gradle-plugin = '3.7.2'
+micronaut-gradle-plugin = '3.7.3'
 
 micronaut-grpc = "4.0.0-SNAPSHOT"
 micronaut-multitenancy = "5.0.0-SNAPSHOT"
