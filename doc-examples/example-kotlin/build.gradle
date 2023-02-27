@@ -1,21 +1,21 @@
 plugins {
-    alias libs.plugins.kotlin.jvm
-    alias libs.plugins.kotlin.kapt
-    alias libs.plugins.micronaut.minimal.app
+    id "org.jetbrains.kotlin.jvm"
+    id("org.jetbrains.kotlin.kapt")
+    id("io.micronaut.minimal.application")
 }
 
 dependencies {
-    kaptTest enforcedPlatform("io.micronaut:micronaut-bom:$micronautVersion")
+    kaptTest enforcedPlatform(mn.micronaut.core.bom)
     kaptTest mn.micronaut.inject.java
 
     testImplementation projects.pulsar
-    testImplementation libs.kotest
+    testImplementation libs.kotest.runner
     testImplementation libs.kotlin.reflect
-    testImplementation libs.kotlin.stdlib
+    testImplementation libs.kotlin.stdlib.jdk8
     testImplementation libs.testcontainers
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinCoroutinesVersion"
-    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:$kotlinCoroutinesVersion"
-    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.6.0'
+    implementation libs.kotlinx.coroutines.core
+    implementation libs.kotlinx.coroutines.jvm
+    implementation libs.kotlinx.coroutines.jdk8
 }
 
 tasks.named('test') {
@@ -26,7 +26,7 @@ tasks.named('test') {
 
 tasks.named('compileTestKotlin') {
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = '17'
         javaParameters = true
     }
 }

@@ -1,3 +1,12 @@
 plugins {
     id 'io.micronaut.build.internal.test-pulsar-module'
 }
+
+sourceSets {
+    test {
+        resources {
+            srcDir '../test-pulsar-shared-module/src/test/resources'
+            include 'broker.cert.pem', 'broker.key-pk8.pem', 'ca.cert.pem', 'standalone.conf', 'client.conf'
+        }
+    }
+}

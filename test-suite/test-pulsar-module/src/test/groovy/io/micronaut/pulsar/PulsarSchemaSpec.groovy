@@ -6,6 +6,7 @@ import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
 import io.micronaut.pulsar.annotation.PulsarSubscription
+import io.micronaut.serde.annotation.Serdeable
 import org.apache.pulsar.client.api.Message
 import org.apache.pulsar.client.api.MessageId
 import spock.lang.Stepwise
@@ -97,6 +98,7 @@ class PulsarSchemaSpec extends PulsarAwareTest {
         }
     }
 
+    @Serdeable
     static class JsonMessage {
         String text
         Integer number

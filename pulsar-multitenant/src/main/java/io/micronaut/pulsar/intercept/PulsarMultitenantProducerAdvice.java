@@ -23,6 +23,7 @@ import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.NonNull;
+import io.micronaut.core.convert.ConversionService;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.pulsar.annotation.PulsarProducer;
@@ -62,8 +63,9 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
                                            final BeanContext beanContext,
                                            final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher,
                                            final TenantNameResolver tenantNameResolver,
-                                           final TopicResolver topicResolver) {
-        super(pulsarClient, simpleSchemaResolver, beanContext, applicationEventPublisher);
+                                           final TopicResolver topicResolver,
+                                           final ConversionService conversionService) {
+        super(pulsarClient, simpleSchemaResolver, beanContext, applicationEventPublisher, conversionService);
         this.tenantNameResolver = tenantNameResolver;
         this.topicResolver = topicResolver;
     }
