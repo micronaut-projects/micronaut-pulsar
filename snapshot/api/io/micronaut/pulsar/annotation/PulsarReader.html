@@ -106,7 +106,7 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="#readerName()" class="member-name-link">readerName</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>@javax.validation.constraints.Min(0L) int</code></div>
+<div class="col-first odd-row-color"><code>int</code></div>
 <div class="col-second odd-row-color"><code><a href="#readTimeout()" class="member-name-link">readTimeout</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Ignored on <code>Reader.readNextAsync()</code>.</div>
@@ -135,7 +135,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Ignored on <code>Reader.readNextAsync()</code> or if
  <a href="#readTimeout()"><code>readTimeout()</code></a> is 0.</div>
 </div>
-<div class="col-first odd-row-color"><code>@Pattern(regexp="((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-|\\w+)*\\w/)\\w+(-|\\w+)*\\w") <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#topic()" class="member-name-link">topic</a></code></div>
 <div class="col-last odd-row-color">
 <div class="block">Only single topic subscription possible for readers.</div>
@@ -181,7 +181,7 @@ loadScripts(document, 'script');</script>
 <h3>topic</h3>
 <div class="member-signature"><span class="annotations">@AliasFor(member="value") @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,member="value")
 @Pattern(regexp="((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-|\\w+)*\\w/)\\w+(-|\\w+)*\\w")
-</span><span class="return-type">@Pattern(regexp="((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-|\\w+)*\\w/)\\w+(-|\\w+)*\\w") <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">topic</span></div>
+</span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">topic</span></div>
 <div class="block">Only single topic subscription possible for readers.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -305,7 +305,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="readTimeout()">
 <h3>readTimeout</h3>
 <div class="member-signature"><span class="annotations">@Min(0L)
-</span><span class="return-type">@javax.validation.constraints.Min(0L) int</span>&nbsp;<span class="element-name">readTimeout</span></div>
+</span><span class="return-type">int</span>&nbsp;<span class="element-name">readTimeout</span></div>
 <div class="block">Ignored on <code>Reader.readNextAsync()</code>.
  Use -1 for no timeout (default).</div>
 <dl class="notes">
