@@ -6,18 +6,20 @@ pluginManagement {
 }
 
 plugins {
-    id 'io.micronaut.build.shared.settings' version '6.3.3'
+    id 'io.micronaut.build.shared.settings' version '6.3.5'
 }
 
 enableFeaturePreview 'TYPESAFE_PROJECT_ACCESSORS'
 
 micronautBuild {
     addSnapshotRepository()
+    useStandardizedProjectNames = true
     importMicronautCatalog()
     importMicronautCatalog("micronaut-grpc")
     importMicronautCatalog("micronaut-multitenancy")
     importMicronautCatalog("micronaut-reactor")
     importMicronautCatalog("micronaut-serde")
+    importMicronautCatalog("micronaut-validation")
 }
 
 rootProject.name = 'pulsar-parent'

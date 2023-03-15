@@ -21,12 +21,12 @@ import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.context.annotation.Type;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.intercept.PulsarProducerAdvice;
+import jakarta.validation.constraints.Pattern;
 import org.apache.pulsar.client.api.CompressionType;
 import org.apache.pulsar.client.api.HashingScheme;
 import org.apache.pulsar.client.api.MessageRoutingMode;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
-import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

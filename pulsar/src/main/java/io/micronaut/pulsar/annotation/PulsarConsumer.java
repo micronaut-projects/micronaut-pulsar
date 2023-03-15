@@ -20,11 +20,11 @@ import io.micronaut.context.annotation.Executable;
 import io.micronaut.messaging.annotation.MessageListener;
 import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
+import jakarta.validation.constraints.Pattern;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
-import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
