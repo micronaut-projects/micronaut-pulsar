@@ -20,7 +20,6 @@ import io.micronaut.context.annotation.Executable;
 import io.micronaut.messaging.annotation.MessageListener;
 import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
-import jakarta.validation.constraints.Pattern;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
@@ -30,8 +29,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static io.micronaut.pulsar.MessageSchema.BYTES;
-import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_PATTERN_VALIDATOR;
-import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.apache.pulsar.client.api.RegexSubscriptionMode.AllTopics;
@@ -54,7 +51,6 @@ public @interface PulsarConsumer {
      * @return Same as {@link #topic()}
      */
     @AliasFor(member = "topic")
-    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     @AliasFor(annotation = MessageMapping.class, member = "value")
     String value() default "";
 
@@ -64,7 +60,6 @@ public @interface PulsarConsumer {
      *
      * @return Topic name to listen to
      */
-    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     @AliasFor(member = "value")
     @AliasFor(annotation = MessageMapping.class, member = "value")
     String topic() default "";
@@ -72,9 +67,8 @@ public @interface PulsarConsumer {
     /**
      * Has precedence over {@code topicPattern}.
      *
-     * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.
+     * @return String[] of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.
      */
-    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     @AliasFor(annotation = MessageMapping.class, member = "value")
     String[] topics() default {};
 
@@ -83,7 +77,6 @@ public @interface PulsarConsumer {
      *
      * @return Topics name in form of tenantName/namespace/topic-name-pattern.
      */
-    @Pattern(regexp = TOPIC_NAME_PATTERN_VALIDATOR)
     @AliasFor(annotation = MessageMapping.class, member = "value")
     String topicsPattern() default "";
 
@@ -115,7 +108,7 @@ public @interface PulsarConsumer {
     /**
      * @return Consumer name for more descriptive monitoring
      */
-    String consumerName();
+    String consumerName() default "";
 
     /**
      * @return Subscription name in case consumer was defined outside the {@link PulsarSubscription} annotated class

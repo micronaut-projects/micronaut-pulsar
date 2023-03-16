@@ -72,19 +72,15 @@ public class PulsarProducerFactory {
             annotationValue,
             annotatedMethodName);
 
-        final String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
-        final String topic = annotationValue.stringValue("topic", null)
-            .orElseGet(() -> annotationValue.stringValue("value", null).orElse(null));
-        if (null == topic) {
-            if (configuration.getShutdownOnSubscriberError()) {
-                throw new Error("Failed to instantiate Pulsar producer " + producerName + " due to missing topic");
-            }
-            throw new MessagingClientException("Topic value missing for producer " + producerName);
-        }
+        final var producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
+        final var topicResolved = TopicResolver.extractTopic(annotationValue,
+            producerName,
+            configuration.getShutdownOnSubscriberError());
 
-        final ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
+        final var producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
             .producerName(producerName)
-            .topic(topicResolver.resolve(topic));
+            // producers can't have list of topics or patterns just a single topic
+            .topic(topicResolver.resolve(topicResolved.getTopic()));
 
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);
@@ -102,7 +98,8 @@ public class PulsarProducerFactory {
         try {
             return producerBuilder.create();
         } catch (Exception ex) {
-            final String message = String.format("Failed to initialize Pulsar producer %s on topic %s", producerName, topic);
+            final var message = "Failed to initialize Pulsar producer %s on topic %s"
+                .formatted(producerName, topicResolved.getTopic());
             throw new MessagingClientException(message, ex);
         }
     }

@@ -15,16 +15,15 @@
  */
 package io.micronaut.pulsar
 
+
 import io.micronaut.context.annotation.Requires
 import io.micronaut.messaging.annotation.MessageBody
 import io.micronaut.messaging.annotation.MessageHeader
 import io.micronaut.messaging.annotation.MessageMapping
-import io.micronaut.pulsar.PulsarAwareTest
 import io.micronaut.pulsar.annotation.MessageProperties
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarSubscription
-import io.micronaut.test.extensions.spock.annotation.MicronautTest
-import jakarta.inject.Singleton
+import io.micronaut.pulsar.processor.PulsarConsumerProcessor
 import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import reactor.core.publisher.Mono
@@ -39,6 +38,18 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
     public static final String PULSAR_REGEX_TEST_TOPIC = "persistent://public/default/other2"
     public static final String PULSAR_STATIC_TOPIC_TEST = "persistent://public/default/test"
+    public static final String PULSAR_CONSUMER_NAME_PROPERTY_VALUE = "myConsumer"
+
+    void "test consumer names setup"() {
+        given:
+        PulsarConsumerProcessor consumerProcessor = context.getBean(PulsarConsumerProcessor)
+
+        expect:
+        consumerProcessor.consumers
+                .findAll { it.value.consumerName.matches('pulsar-consumer-\\d\\d') }
+                .size() == 2
+        consumerProcessor.consumers.any { it.value.consumerName == PULSAR_CONSUMER_NAME_PROPERTY_VALUE }
+    }
 
     void "test consumer read default topic and array"() {
         given:
@@ -57,7 +68,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         headersTester.blockers = varsHeader
         Producer producer = context.getBean(PulsarClient)
                 .newProducer()
-                .topic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
+                .topic(PULSAR_STATIC_TOPIC_TEST)
                 .producerName("test-producer-simple")
                 .create()
         //simple consumer with topic list and blocking
@@ -72,7 +83,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         message == varsSingle.getProperty("value")
         null != varsSingle.getProperty("consumer")
         varsHeader.getProperty("property") == "test"
-        varsHeader.getProperty("properties") ?["header"] == "test"
+        varsHeader.getProperty("properties")?["header"] == "test"
 
         cleanup:
         producer.close()
@@ -86,13 +97,13 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         Producer<String> producer = context.getBean(PulsarClient)
                 .newProducer(new StringSchema())
                 .producerName("simple-producer-regex")
-                .topic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
+                .topic(PULSAR_REGEX_TEST_TOPIC)
                 .create()
         Reader blockingReader = context.getBean(PulsarClient)
                 .newReader(new StringSchema())
                 .readerName("simple-reader-blocker")
                 .startMessageId(latest)
-                .topic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
+                .topic(PULSAR_REGEX_TEST_TOPIC)
                 .create()
         def consumerPatternTester = context.getBean(PulsarConsumerTopicPatternTester)
         consumerPatternTester.blockers = variables
@@ -145,7 +156,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         BlockingVariables blockers
 
         @PulsarConsumer(
-                topic = PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST,
+                topic = PULSAR_STATIC_TOPIC_TEST,
                 consumerName = 'simple-topic-consumer',
                 subscribeAsync = false)
         void topicListener(@MessageBody Message<byte[]> message, Consumer<byte[]> consumer) {
@@ -165,7 +176,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         BlockingVariables blockers
 
         @PulsarConsumer(
-                topic = PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST,
+                topic = PULSAR_STATIC_TOPIC_TEST,
                 consumerName = 'simple-header-consumer2',
                 subscribeAsync = false)
         void propertyListener(@MessageBody byte[] message, @MessageHeader("header") String header) {
@@ -183,7 +194,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         BlockingVariables blockers
 
         @PulsarConsumer(
-                topic = PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST,
+                topic = PULSAR_STATIC_TOPIC_TEST,
                 consumerName = 'simple-headers-consumer',
                 subscribeAsync = false)
         void propertiesListener(@MessageBody byte[] message, @MessageProperties Map<String, String> headers) {
@@ -202,7 +213,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         //testing reverse order to ensure processor will do correct call
         @PulsarConsumer(
-                topics = [PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST],
+                topics = [PULSAR_STATIC_TOPIC_TEST],
                 consumerName = 'single-topic-consumer',
                 subscribeAsync = false)
         void topicListener(@MessageBody Message<byte[]> message, Consumer<byte[]> consumer) {
@@ -231,6 +242,37 @@ class PulsarConsumerSpec extends PulsarAwareTest {
             }
             blockers.setProperty('latestMessage', message.value)
             blockers.setProperty('latestMessageId', message.messageId)
+        }
+    }
+
+    @Requires(property = 'spec.name', value = 'PulsarConsumerSpec')
+    @PulsarSubscription(subscriptionName = "auto-assigned-consumer-name-subscription", subscriptionType = SubscriptionType.Shared)
+    static class ConsumerNameConfigTester {
+        BlockingVariables blockers
+
+        @PulsarConsumer(topic = "persistent://public/default/name-tester")
+        void readTest1(String message) {
+            if (null == blockers) {
+                return
+            }
+            blockers.setProperty("message1", message)
+        }
+
+        @PulsarConsumer(topic = "persistent://public/default/name-tester")
+        void readTest2(String message) {
+            if (null == blockers) {
+                return
+            }
+            blockers.setProperty("message2", message)
+        }
+
+        @PulsarConsumer(topic = "persistent://public/default/name-tester",
+                consumerName = '${pulsar.testSub.testConsumerName}')
+        void readTestPropertyConfig(String message) {
+            if (null == blockers) {
+                return
+            }
+            blockers.setProperty("propertyNamer", message)
         }
     }
 }

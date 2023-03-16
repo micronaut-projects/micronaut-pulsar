@@ -45,6 +45,7 @@ abstract class PulsarAwareTest extends Specification {
         context = ApplicationContext.run(
                 ['pulsar.service-url'                 : PulsarTls.pulsarBrokerUrl,
                  'pulsar.shutdown-on-subscriber-error': true,
+                 'pulsar.testSub.testConsumerName'    : PulsarConsumerSpec.PULSAR_CONSUMER_NAME_PROPERTY_VALUE,
                  'spec.name'                          : getClass().simpleName],
                 Environment.TEST
         )

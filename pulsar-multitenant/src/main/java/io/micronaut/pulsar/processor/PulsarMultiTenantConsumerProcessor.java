@@ -87,12 +87,15 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
     public void process(final BeanDefinition<?> beanDefinition, final ExecutableMethod<?, ?> method) {
         try {
             final AnnotationValue<PulsarConsumer> annotation = method.getAnnotation(PulsarConsumer.class);
-            final TopicResolver.TopicResolved topic = TopicResolver.extractTopic(Objects.requireNonNull(annotation));
+            final String consumerId = getConsumerName(annotation);
+            final var topic = TopicResolver.extractTopic(Objects.requireNonNull(annotation),
+                consumerId,
+                pulsarClientConfiguration.getShutdownOnSubscriberError()
+            );
             if (!topic.isDynamicTenant()) {
                 super.process(beanDefinition, method);
                 return;
             }
-            final String consumerId = getConsumerName(annotation);
             if (tenantNameResolver.hasTenantName()) {
                 final String resolvedConsumerId = topicResolver.generateIdFromMessagingClientName(consumerId, topic);
                 if (consumerExists(resolvedConsumerId)) {
