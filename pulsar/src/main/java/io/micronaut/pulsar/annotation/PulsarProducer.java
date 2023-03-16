@@ -21,7 +21,6 @@ import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.context.annotation.Type;
 import io.micronaut.pulsar.MessageSchema;
 import io.micronaut.pulsar.intercept.PulsarProducerAdvice;
-import jakarta.validation.constraints.Pattern;
 import org.apache.pulsar.client.api.CompressionType;
 import org.apache.pulsar.client.api.HashingScheme;
 import org.apache.pulsar.client.api.MessageRoutingMode;
@@ -32,7 +31,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static io.micronaut.pulsar.MessageSchema.BYTES;
-import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.apache.pulsar.client.api.CompressionType.NONE;
@@ -68,7 +66,6 @@ public @interface PulsarProducer {
      * @return Topic to produce messages to
      */
     @AliasFor(member = "value")
-    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     String topic() default "";
 
     /**

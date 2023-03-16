@@ -16,6 +16,15 @@ Async return type is mostly for developers control over execution flow from the 
 <6> -
 <7> -
 
+Consumer names are important but can be left. This will trigger sequential assignment of names in pattern of
+`pulsar-cosumer-###`. Default name assignment will start from 10 and increase with consumer number.
+
+WARNING: Pulsar expects unique names for each consumer within the subscription. To avoid issues in shared subscription
+model where multiple instances of same micronaut messaging application is deployed use expressions in consumer
+annotation. Example: `${pulsarapp.myTestSubscription.consumerXyz.name}` then have such property in you application.yml
+(or other registered property setters). This means auto-naming for consumers will break at some point as well as hardcoded
+names in annotations, so please switch to expressions and assign names via properties dynamically.
+
 === Consumer method
 
 Simple approach is to provide just 1 parameter in the method arguments list which will default to it being detected as a
@@ -36,6 +45,7 @@ default from underlying Pulsar library. If not present on the method annotated w
 
 This is especially important for messages that should be of KeyValue type.
 
+
 === Using @PulsarSubscription annotation
 
 This annotation marks a class as a singleton bean that contains one or more methods serving as Pulsar consumers under
@@ -47,17 +57,6 @@ Non-required properties:
 - `type`, one of Pulsar's subscription types. Subscription types can be read in Apache Pulsar
 http://pulsar.apache.org/docs/en/concepts-messaging/#subscriptions[official documentation].
 - `ackGroupTimeout`, the acknowledgment group timeout for shared subscriptions
-
-WARNING: Consumer names are generated non-randomly so names will contain sequence numbers which might be OK in a single
-instance deployment but can cause errors with replicas given that names will use same generating method and start again
-from 1 for each deployment (instance of the app). Pulsar expects unique names for each consumer within the subscription.
-
-TIP: Given that subscriptions in multi-deployment environment (example same micronaut app replicated couple of times) will
-use fixed subscription name and consumer name this will problems because consumers should be unique within the subscription.
-To avoid this utilize Micronauts annotation parsing by providing expression inside of the `consumerName` property. Read
-more about it in official docs. In short, you can add expression as a name in the `consumerName` and it will be parsed so
-you can have something like a system property #{pulsar.subscriptionX.consumerYname} and set property for each deployment.
-
 
 Type and acknowledgment group timeout default to Pulsar Java client library values if not set. Name will be generated
 by this module in a "counter manner" (pulsar-subscription-1,2,3,4...).

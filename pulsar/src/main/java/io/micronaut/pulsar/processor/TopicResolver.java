@@ -20,6 +20,8 @@ import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.core.util.StringUtils;
 import io.micronaut.messaging.exceptions.MessageListenerException;
+import io.micronaut.messaging.exceptions.MessagingException;
+import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
 
 import java.util.Arrays;
 
@@ -47,21 +49,55 @@ public interface TopicResolver {
     }
 
     @NonNull
-    static TopicResolved extractTopic(final AnnotationValue<?> pulsarAnnotation) {
+    static TopicResolved extractTopic(final AnnotationValue<?> pulsarAnnotation,
+                                      final String forName,
+                                      final boolean shutdownOnSubscribeError) {
         //don't remap tenantId value placeholder since it can be empty during initial run
-        final String topic = pulsarAnnotation.stringValue("topic", null).orElse(null);
+        //verify topic values here since regexp in Pattern annotation causes problems in some scenarios
+        final var topic = pulsarAnnotation.stringValue("topic", null)
+            .orElse(null);
         if (StringUtils.isNotEmpty(topic)) {
+            verifyTopicValue(topic, forName, shutdownOnSubscribeError);
             return new TopicResolved(topic, false);
         }
-        final String[] topics = pulsarAnnotation.stringValues("topics", null);
+        final var topics = pulsarAnnotation.stringValues("topics", null);
         if (ArrayUtils.isNotEmpty(topics)) {
+            Arrays.stream(topics).forEach(x -> verifyTopicValue(x, forName, shutdownOnSubscribeError));
             return new TopicResolved(topics, false);
         }
-        final String topicsPattern = pulsarAnnotation.stringValue("topicsPattern", null).orElse(null);
+        final var topicsPattern = pulsarAnnotation.stringValue("topicsPattern", null)
+            .orElse(null);
         if (StringUtils.isNotEmpty(topicsPattern)) {
-            return new TopicResolved(topicsPattern, true);
+            if (topicsPattern.matches(AbstractPulsarConfiguration.TOPIC_NAME_PATTERN_VALIDATOR)) {
+                return new TopicResolved(topicsPattern, true);
+            }
+            throw new MessageListenerException(
+                "Consumer failed. Invalid topic pattern value %s. Must match %s".formatted(
+                    topicsPattern, AbstractPulsarConfiguration.TOPIC_NAME_PATTERN_VALIDATOR
+                )
+            );
         }
-        throw new MessageListenerException("Pulsar consumer requires topics or topicsPattern value");
+        final var message = "Missing topic value for %s".formatted(forName);
+        if (shutdownOnSubscribeError) {
+            throw new Error(message);
+        }
+        throw new MessagingException(message);
+    }
+
+    private static void verifyTopicValue(final String topic,
+                                         final String forName,
+                                         final boolean shutdownOnSubscribe) {
+        if (topic.matches(AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)) {
+            return;
+        }
+        final var message = "Invalid topic value %s for %s. Must match %s".formatted(
+            topic, forName, AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR
+        );
+        if (shutdownOnSubscribe) {
+            throw new Error(message);
+        } else {
+            throw new MessageListenerException(message);
+        }
     }
 
     /**

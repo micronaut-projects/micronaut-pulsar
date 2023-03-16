@@ -28,6 +28,7 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.annotation.PulsarProducerClient;
+import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.pulsar.events.ProducerSubscriptionFailedEvent;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import io.micronaut.pulsar.processor.TenantNameResolver;
@@ -57,6 +58,7 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
 
     private final TenantNameResolver tenantNameResolver;
     private final TopicResolver topicResolver;
+    private final boolean shutdownOnSubscribeError;
 
     public PulsarMultitenantProducerAdvice(final PulsarClient pulsarClient,
                                            final DefaultSchemaHandler simpleSchemaResolver,
@@ -64,18 +66,22 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
                                            final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher,
                                            final TenantNameResolver tenantNameResolver,
                                            final TopicResolver topicResolver,
-                                           final ConversionService conversionService) {
+                                           final ConversionService conversionService,
+                                           final PulsarClientConfiguration configuration) {
         super(pulsarClient, simpleSchemaResolver, beanContext, applicationEventPublisher, conversionService);
         this.tenantNameResolver = tenantNameResolver;
         this.topicResolver = topicResolver;
+        this.shutdownOnSubscribeError = configuration.getShutdownOnSubscriberError();
     }
 
     @Override
     protected Producer<?> getOrCreateProducer(final ExecutableMethod<?, ?> method,
                                               final AnnotationValue<PulsarProducer> annotationValue) {
-        final TopicResolver.TopicResolved topicResolved = TopicResolver.extractTopic(annotationValue);
         final String producerName = annotationValue.stringValue("producerName", null)
             .orElse(method.getDescription(true));
+        final var topicResolved = TopicResolver.extractTopic(annotationValue,
+            producerName,
+            shutdownOnSubscribeError);
         final String producerId = topicResolver.generateIdFromMessagingClientName(producerName, topicResolved);
         if (!tenantNameResolver.hasTenantName()) {
             final String description = method.getDescription(false);

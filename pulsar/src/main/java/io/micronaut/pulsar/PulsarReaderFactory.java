@@ -29,6 +29,7 @@ import io.micronaut.inject.ConstructorInjectionPoint;
 import io.micronaut.inject.FieldInjectionPoint;
 import io.micronaut.inject.InjectionPoint;
 import io.micronaut.pulsar.annotation.PulsarReader;
+import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import io.micronaut.pulsar.processor.TopicResolver;
 import org.apache.pulsar.client.api.*;
@@ -39,7 +40,6 @@ import org.slf4j.LoggerFactory;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -57,13 +57,16 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     private final PulsarClient pulsarClient;
     private final DefaultSchemaHandler simpleSchemaResolver;
     private final TopicResolver topicResolver;
+    private final boolean shutdownOnSubscribeError;
 
     public PulsarReaderFactory(final PulsarClient pulsarClient,
                                final DefaultSchemaHandler simpleSchemaResolver,
-                               final TopicResolver topicResolver) {
+                               final TopicResolver topicResolver,
+                               final PulsarClientConfiguration configuration) {
         this.pulsarClient = pulsarClient;
         this.simpleSchemaResolver = simpleSchemaResolver;
         this.topicResolver = topicResolver;
+        this.shutdownOnSubscribeError = configuration.getShutdownOnSubscriberError();
     }
 
     /**
@@ -83,7 +86,7 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
                                                @Nullable @Parameter final MethodInvocationContext<?, ?> methodInvocationContext)
         throws PulsarClientException {
 
-        if (!context.getPath().currentSegment().isPresent()) {
+        if (context.getPath().currentSegment().isEmpty()) {
             return getReaderForAnnotation(Objects.requireNonNull(annotationValue),
                 Objects.requireNonNull(returnType),
                 Objects.requireNonNull(methodInvocationContext));
@@ -182,14 +185,14 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
             keyClass = null;
         }
 
-        final TopicResolver.TopicResolved topicResolved = TopicResolver.extractTopic(annotation);
-        final String name = annotation.stringValue("readerName").orElse(declaredName);
-        final String readerId = topicResolver.generateIdFromMessagingClientName(name, topicResolved);
+        final var name = annotation.stringValue("readerName").orElse(declaredName);
+        final var topicResolved = TopicResolver.extractTopic(annotation, name, shutdownOnSubscribeError);
+        final var readerId = topicResolver.generateIdFromMessagingClientName(name, topicResolved);
         if (readers.containsKey(readerId)) {
             return readers.get(readerId);
         }
-        final Schema<?> schema = simpleSchemaResolver.decideSchema(messageBodyType, keyClass, annotation, target);
-        final String topic = topicResolver.resolve(topicResolved.getTopic());
+        final var schema = simpleSchemaResolver.decideSchema(messageBodyType, keyClass, annotation, target);
+        final var topic = topicResolver.resolve(topicResolved.getTopic());
 
         final MessageId startMessageId;
         if (annotation.getRequiredValue("startMessageLatest", boolean.class)) {
@@ -197,13 +200,13 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         } else {
             startMessageId = MessageId.earliest;
         }
-        final Optional<String> subscriptionName = annotation.stringValue("subscriptionName");
-        final ReaderBuilder<?> readerBuilder = pulsarClient.newReader(schema)
+        final var subscriptionName = annotation.stringValue("subscriptionName");
+        final var readerBuilder = pulsarClient.newReader(schema)
             .startMessageId(startMessageId)
             .readerName(readerId)
             .topic(topic);
         subscriptionName.ifPresent(readerBuilder::subscriptionName);
-        final Reader<?> reader = readerBuilder.create();
+        final var reader = readerBuilder.create();
         readers.put(readerId, reader);
         return reader;
     }
