@@ -1,6 +1,6 @@
 To configure the Apache Pulsar client, first add the `micronaut-pulsar` module dependency:
 
-dependency::micronaut-pulsar[groupId="io.micronaut.pulsar"]
+dependency:micronaut-pulsar[groupId="io.micronaut.pulsar"]
 
 Then configure the URI of the Pulsar cluster or standalone server to communicate with:
 
