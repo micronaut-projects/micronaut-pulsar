@@ -56,7 +56,8 @@ public interface TopicResolver {
         //verify topic values here since regexp in Pattern annotation causes problems in some scenarios
         final var topic = pulsarAnnotation.stringValue("topic", null)
             .orElse(null);
-        if (StringUtils.isNotEmpty(topic)) {
+        // replace util string check with null && isBlank because of SonarCloud
+        if (null != topic && !topic.isBlank()) {
             verifyTopicValue(topic, forName, shutdownOnSubscribeError);
             return new TopicResolved(topic, false);
         }
@@ -67,7 +68,8 @@ public interface TopicResolver {
         }
         final var topicsPattern = pulsarAnnotation.stringValue("topicsPattern", null)
             .orElse(null);
-        if (StringUtils.isNotEmpty(topicsPattern)) {
+        // again for SonarCloud
+        if (null != topicsPattern && !topicsPattern.isBlank()) {
             if (topicsPattern.matches(AbstractPulsarConfiguration.TOPIC_NAME_PATTERN_VALIDATOR)) {
                 return new TopicResolved(topicsPattern, true);
             }

@@ -68,7 +68,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         headersTester.blockers = varsHeader
         Producer producer = context.getBean(PulsarClient)
                 .newProducer()
-                .topic(PULSAR_STATIC_TOPIC_TEST)
+                .topic(PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST)
                 .producerName("test-producer-simple")
                 .create()
         //simple consumer with topic list and blocking
@@ -97,13 +97,13 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         Producer<String> producer = context.getBean(PulsarClient)
                 .newProducer(new StringSchema())
                 .producerName("simple-producer-regex")
-                .topic(PULSAR_REGEX_TEST_TOPIC)
+                .topic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
                 .create()
         Reader blockingReader = context.getBean(PulsarClient)
                 .newReader(new StringSchema())
                 .readerName("simple-reader-blocker")
                 .startMessageId(latest)
-                .topic(PULSAR_REGEX_TEST_TOPIC)
+                .topic(PulsarConsumerSpec.PULSAR_REGEX_TEST_TOPIC)
                 .create()
         def consumerPatternTester = context.getBean(PulsarConsumerTopicPatternTester)
         consumerPatternTester.blockers = variables
@@ -156,7 +156,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         BlockingVariables blockers
 
         @PulsarConsumer(
-                topic = PULSAR_STATIC_TOPIC_TEST,
+                topic = PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST,
                 consumerName = 'simple-topic-consumer',
                 subscribeAsync = false)
         void topicListener(@MessageBody Message<byte[]> message, Consumer<byte[]> consumer) {
@@ -176,7 +176,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         BlockingVariables blockers
 
         @PulsarConsumer(
-                topic = PULSAR_STATIC_TOPIC_TEST,
+                topic = PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST,
                 consumerName = 'simple-header-consumer2',
                 subscribeAsync = false)
         void propertyListener(@MessageBody byte[] message, @MessageHeader("header") String header) {
@@ -194,7 +194,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         BlockingVariables blockers
 
         @PulsarConsumer(
-                topic = PULSAR_STATIC_TOPIC_TEST,
+                topic = PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST,
                 consumerName = 'simple-headers-consumer',
                 subscribeAsync = false)
         void propertiesListener(@MessageBody byte[] message, @MessageProperties Map<String, String> headers) {
@@ -213,7 +213,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         //testing reverse order to ensure processor will do correct call
         @PulsarConsumer(
-                topics = [PULSAR_STATIC_TOPIC_TEST],
+                topics = [PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST],
                 consumerName = 'single-topic-consumer',
                 subscribeAsync = false)
         void topicListener(@MessageBody Message<byte[]> message, Consumer<byte[]> consumer) {
@@ -235,7 +235,9 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         //testing default order
         //fails to subscribe to test topic because exclusive consumer is connected already so subscribe only to other
-        @PulsarConsumer(topicsPattern = 'persistent://public/default/other.*', consumerName = "consumer-async", patternAutoDiscoveryPeriod = 10)
+        @PulsarConsumer(topicsPattern = 'persistent://public/default/other.*',
+                consumerName = "consumer-async",
+                patternAutoDiscoveryPeriod = 10)
         Mono<Void> asyncTopicListener(Consumer<String> consumer, @MessageBody Message<String> message) {
             if (null == blockers) {
                 return
