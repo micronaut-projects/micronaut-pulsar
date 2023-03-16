@@ -20,7 +20,6 @@ import io.micronaut.aop.MethodInterceptor;
 import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.event.ApplicationEventPublisher;
-import io.micronaut.context.exceptions.ConfigurationException;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.convert.ConversionService;
@@ -31,7 +30,6 @@ import io.micronaut.pulsar.annotation.PulsarProducerClient;
 import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.pulsar.events.ProducerSubscriptionFailedEvent;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
-import io.micronaut.pulsar.processor.TenantNameResolver;
 import io.micronaut.pulsar.processor.TopicResolver;
 import jakarta.annotation.PreDestroy;
 import org.apache.pulsar.client.api.Producer;
@@ -56,7 +54,6 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarMultitenantProducerAdvice.class);
 
-    private final TenantNameResolver tenantNameResolver;
     private final TopicResolver topicResolver;
     private final boolean shutdownOnSubscribeError;
 
@@ -64,12 +61,10 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
                                            final DefaultSchemaHandler simpleSchemaResolver,
                                            final BeanContext beanContext,
                                            final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher,
-                                           final TenantNameResolver tenantNameResolver,
                                            final TopicResolver topicResolver,
                                            final ConversionService conversionService,
                                            final PulsarClientConfiguration configuration) {
         super(pulsarClient, simpleSchemaResolver, beanContext, applicationEventPublisher, conversionService);
-        this.tenantNameResolver = tenantNameResolver;
         this.topicResolver = topicResolver;
         this.shutdownOnSubscribeError = configuration.getShutdownOnSubscriberError();
     }
@@ -77,17 +72,12 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
     @Override
     protected Producer<?> getOrCreateProducer(final ExecutableMethod<?, ?> method,
                                               final AnnotationValue<PulsarProducer> annotationValue) {
-        final String producerName = annotationValue.stringValue("producerName", null)
+        final var producerName = annotationValue.stringValue("producerName", null)
             .orElse(method.getDescription(true));
         final var topicResolved = TopicResolver.extractTopic(annotationValue,
             producerName,
             shutdownOnSubscribeError);
-        final String producerId = topicResolver.generateIdFromMessagingClientName(producerName, topicResolved);
-        if (!tenantNameResolver.hasTenantName()) {
-            final String description = method.getDescription(false);
-            LOG.error("Failed to resolve tenant while sending messages using {}", description);
-            throw new ConfigurationException("Tenant not available during message sending");
-        }
+        final var producerId = topicResolver.generateIdFromMessagingClientName(producerName, topicResolved);
         return producers.computeIfAbsent(producerId,
             id -> tryCreate(beanContext, annotationValue, method, id));
     }

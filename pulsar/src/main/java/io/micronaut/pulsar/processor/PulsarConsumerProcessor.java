@@ -61,12 +61,12 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
 
     private static final Logger LOG = LoggerFactory.getLogger(PulsarConsumerProcessor.class);
     protected final TopicResolver topicResolver;
+    protected final DefaultPulsarClientConfiguration pulsarClientConfiguration;
 
     private final ApplicationEventPublisher<Object> applicationEventPublisher;
     private final BeanContext beanContext;
     private final PulsarClient pulsarClient;
     private final DefaultSchemaHandler simpleSchemaResolver;
-    protected final DefaultPulsarClientConfiguration pulsarClientConfiguration;
     private final Map<String, Consumer<?>> consumers = new ConcurrentHashMap<>();
     private final Map<String, Consumer<?>> paused = new ConcurrentHashMap<>();
     private final AtomicInteger consumerCounter = new AtomicInteger(10);
@@ -112,7 +112,7 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
         final var castMethod = (ExecutableMethod<Object, ?>) method;
         final var bean = beanContext.getBean(beanDefinition.getBeanType());
 
-        final ConsumerBuilder<?> consumerBuilder = processConsumerAnnotation(consumerAnnotation,
+        final var consumerBuilder = processConsumerAnnotation(consumerAnnotation,
             subscriptionAnnotation,
             castMethod,
             bean,

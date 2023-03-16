@@ -89,7 +89,8 @@ public interface TopicResolver {
     private static void verifyTopicValue(final String topic,
                                          final String forName,
                                          final boolean shutdownOnSubscribe) {
-        if (topic.matches(AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)) {
+        // null check because of SonarCloud
+        if (null != topic && topic.matches(AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)) {
             return;
         }
         final var message = "Invalid topic value %s for %s. Must match %s".formatted(
