@@ -18,7 +18,6 @@ package io.micronaut.pulsar.processor;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.NonNull;
 import io.micronaut.core.util.ArrayUtils;
-import io.micronaut.core.util.StringUtils;
 import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.messaging.exceptions.MessagingException;
 import io.micronaut.pulsar.config.AbstractPulsarConfiguration;
