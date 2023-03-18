@@ -22,6 +22,7 @@ import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
 import org.apache.pulsar.client.api.SubscriptionType;
+import org.apache.pulsar.client.util.RetryMessageUtil;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
 import java.lang.annotation.Documented;
@@ -168,7 +169,7 @@ public @interface PulsarConsumer {
     int receiverQueueSize() default 1000;
 
     /**
-     * By default no priority is set.
+     * By default, no priority is set.
      * Use any value less than 0 to disable. Use anything above 0 to set lower priority level.
      *
      * @return priority level for a consumer
@@ -186,5 +187,5 @@ public @interface PulsarConsumer {
     /**
      * @return Maximum numbers of retires before sending message to dead letter queue topic.
      */
-    int maxRetriesBeforeDlq() default 3;
+    int maxRetriesBeforeDlq() default RetryMessageUtil.MAX_RECONSUMETIMES;
 }

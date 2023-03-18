@@ -49,20 +49,19 @@ public interface TopicResolver {
 
     @NonNull
     static TopicResolved extractTopic(final AnnotationValue<?> pulsarAnnotation,
-                                      final String forName,
-                                      final boolean shutdownOnSubscribeError) {
+                                      final String forName) {
         //don't remap tenantId value placeholder since it can be empty during initial run
         //verify topic values here since regexp in Pattern annotation causes problems in some scenarios
         final var topic = pulsarAnnotation.stringValue("topic", null)
             .orElse(null);
         // replace util string check with null && isBlank because of SonarCloud
         if (null != topic && !topic.isBlank()) {
-            verifyTopicValue(topic, forName, shutdownOnSubscribeError);
+            verifyTopicValue(topic, forName);
             return new TopicResolved(topic, false);
         }
         final var topics = pulsarAnnotation.stringValues("topics", null);
         if (ArrayUtils.isNotEmpty(topics)) {
-            Arrays.stream(topics).forEach(x -> verifyTopicValue(x, forName, shutdownOnSubscribeError));
+            Arrays.stream(topics).forEach(x -> verifyTopicValue(x, forName));
             return new TopicResolved(topics, false);
         }
         final var topicsPattern = pulsarAnnotation.stringValue("topicsPattern", null)
@@ -78,16 +77,11 @@ public interface TopicResolver {
                 )
             );
         }
-        final var message = "Missing topic value for %s".formatted(forName);
-        if (shutdownOnSubscribeError) {
-            throw new Error(message);
-        }
-        throw new MessagingException(message);
+        throw new MessagingException("Missing topic value for %s".formatted(forName));
     }
 
     private static void verifyTopicValue(final String topic,
-                                         final String forName,
-                                         final boolean shutdownOnSubscribe) {
+                                         final String forName) {
         // null check because of SonarCloud
         if (null != topic && topic.matches(AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR)) {
             return;
@@ -95,11 +89,7 @@ public interface TopicResolver {
         final var message = "Invalid topic value %s for %s. Must match %s".formatted(
             topic, forName, AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR
         );
-        if (shutdownOnSubscribe) {
-            throw new Error(message);
-        } else {
-            throw new MessageListenerException(message);
-        }
+        throw new MessageListenerException(message);
     }
 
     /**

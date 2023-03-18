@@ -31,38 +31,73 @@ public interface PulsarClientConfiguration {
 
     String getServiceUrl();
 
+    /**
+     * Optional provider for Pulsar services URL.
+     * @return Optional bean for fetching Pulsar services URLs
+     */
     default Optional<ServiceUrlProvider> getServiceUrlProvider() {
         return Optional.empty();
     }
 
+    /**
+     * @return Authentication method for pulsar clients
+     */
     Authentication getAuthentication();
 
+    /**
+     * @return Number of threads to allow for Pulsar library.
+     */
     default Optional<Integer> getIoThreads() {
         return Optional.empty();
     }
 
+    /**
+     * @return Number of threads to allow for listeners from IO threads defined for Pulsar library
+     */
     default Optional<Integer> getListenerThreads() {
         return Optional.empty();
     }
 
+    /**
+     * @return SSL provider if any for Pulsar to client communication encryption
+     */
     Optional<String> getSslProvider();
 
     Optional<String> getTlsTrustStorePath();
 
+    /**
+     * @return TLS certificate file path if any for TLS communication between Pulsar & clients.
+     */
     Optional<String> getTlsCertFilePath();
 
+    /**
+     * Useful in development environment for using with local host or such.
+     * @return Whether to verify TLS certificate host or not.
+     */
     Optional<Boolean> getTlsVerifyHostname();
 
+    /**
+     * @return Allow insecure connection when TLS certificate is set or not.
+     */
     Optional<Boolean> getTlsAllowInsecureConnection();
 
+    /**
+     * Ciphers like TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256.
+     * @return Permitted ciphers for TLS.
+     */
     Optional<Set<String>> getTlsCiphers();
 
+    /**
+     * Protocols like TLSv1.3, TLSv1.2.
+     * @return Permitted protocols for TLS.
+     */
     Optional<Set<String>> getTlsProtocols();
 
-    default boolean getShutdownOnSubscriberError() {
-        return false;
-    }
-
+    /**
+     * Useful for avoiding hard coding tenant name into every annotation value for producers,
+     * consumers, or readers.
+     * @return Default tenant name if any.
+     */
     default Optional<String> getDefaultTenant() {
         return Optional.empty();
     }

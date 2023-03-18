@@ -94,9 +94,7 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
         }
 
         final var name = getConsumerName(consumerAnnotation);
-        final var topicResolved = TopicResolver.extractTopic(consumerAnnotation,
-            name,
-            pulsarClientConfiguration.getShutdownOnSubscriberError());
+        final var topicResolved = TopicResolver.extractTopic(consumerAnnotation, name);
         final var consumerId = topicResolver.generateIdFromMessagingClientName(name, topicResolved);
 
         if (consumers.containsKey(consumerId)) {
@@ -128,10 +126,6 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
                 }
                 consumers.put(consumerId, consumer);
                 applicationEventPublisher.publishEventAsync(new ConsumerSubscribedEvent(consumer));
-                if (pulsarClientConfiguration.getShutdownOnSubscriberError()) {
-                    String msg = String.format("Failed to subscribe %s %s", consumerId, method.getDescription(false));
-                    throw new Error(msg);
-                }
                 return consumer;
             });
         } else {
@@ -142,12 +136,6 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
             } catch (Exception e) {
                 LOG.error("Failed subscribing Pulsar consumer {} {}", method.getDescription(false), consumerId, e);
                 applicationEventPublisher.publishEvent(new ConsumerSubscriptionFailedEvent(e, consumerId));
-                if (pulsarClientConfiguration.getShutdownOnSubscriberError()) {
-                    final var msg = "Failed to subscribe %s %s with cause %s".formatted(name,
-                        method.getDescription(false),
-                        e.getMessage());
-                    throw new Error(msg);
-                }
                 throw new MessageListenerException("Failed to subscribe %s".formatted(consumerId), e);
             }
         }
@@ -216,8 +204,10 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
         }
         final int maxRedeliverCount = consumerAnnotation.intValue("maxRetriesBeforeDlq")
             .orElse(pulsarClientConfiguration.getDefaultMaxRetryDlq());
-        builder.maxRedeliverCount(maxRedeliverCount);
-        consumerBuilder.deadLetterPolicy(builder.build());
+        if (0 < maxRedeliverCount) {
+            builder.maxRedeliverCount(maxRedeliverCount);
+            consumerBuilder.deadLetterPolicy(builder.build());
+        }
     }
 
     private void resolveTopic(final AnnotationValue<PulsarConsumer> consumerAnnotation,

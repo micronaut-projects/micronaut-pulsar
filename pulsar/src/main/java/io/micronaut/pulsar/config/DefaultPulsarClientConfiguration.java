@@ -27,6 +27,7 @@ import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.ServiceUrlProvider;
 import org.apache.pulsar.client.impl.auth.AuthenticationToken;
 import org.apache.pulsar.client.impl.auth.oauth2.AuthenticationFactoryOAuth2;
+import org.apache.pulsar.client.util.RetryMessageUtil;
 
 import java.net.URL;
 import java.util.*;
@@ -49,20 +50,19 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private Integer listenerThreads;
     private String sslProvider;
     private String serviceUrl;
-    private final Optional<ServiceUrlProvider> serviceUrlProvider;
+    private final ServiceUrlProvider serviceUrlProvider;
     private Authentication pulsarAuthentication;
     private URL oauthIssuerUrl;
     private URL oauthCredentialsUrl;
     private String oauthAudience;
     private Boolean useDeadLetterQueue;
-    private int defaultMaxRetryDlq = 3;
+    private int defaultMaxRetryDlq = RetryMessageUtil.MAX_RECONSUMETIMES;
     private String tlsTrustStorePath;
     private String tlsCertFilePath;
     private Boolean tlsVerifyHostname;
     private Boolean tlsAllowInsecureConnection;
     private Set<String> tlsCiphers;
     private Set<String> tlsProtocols;
-    private Boolean shutdownOnSubscriberError;
     private String defaultTenant;
 
     /**
@@ -72,7 +72,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
      * @param serviceUrlProvider Pulsars service URL provider
      */
     protected DefaultPulsarClientConfiguration(final Environment environment,
-                                               @PulsarServiceUrlProvider final Optional<ServiceUrlProvider> serviceUrlProvider) {
+                                               @Nullable @PulsarServiceUrlProvider final ServiceUrlProvider serviceUrlProvider) {
         super(resolveDefaultConfiguration(environment));
         this.serviceUrlProvider = serviceUrlProvider;
     }
@@ -185,24 +185,12 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     public Optional<ServiceUrlProvider> getServiceUrlProvider() {
-        return serviceUrlProvider;
+        return Optional.ofNullable(serviceUrlProvider);
     }
 
     @Override
     public Authentication getAuthentication() {
         return Optional.ofNullable(pulsarAuthentication).orElse(DEFAULT_PULSAR_AUTHENTICATION);
-    }
-
-    @Override
-    public boolean getShutdownOnSubscriberError() {
-        return Optional.ofNullable(shutdownOnSubscriberError).orElse(false);
-    }
-
-    /**
-     * @param shutdownOnSubscriberError should application shutdown if any of subscriptions fail
-     */
-    public void setShutdownOnSubscriberError(Boolean shutdownOnSubscriberError) {
-        this.shutdownOnSubscriberError = shutdownOnSubscriberError;
     }
 
     /**
@@ -251,8 +239,8 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     /**
-     * If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
-     * be resent again.
+     * If not set defaults to true which means that after max number of retries failed message is
+     * sent to DLQ and won't be resent again.
      *
      * @param useDeadLetterQueue Use DLQ for Pulsar Consumers by default or not.
      */
@@ -265,9 +253,11 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     }
 
     /**
-     * If not set defaults to 3. {@code #useDeadLetterQueue} must be enabled or else this value is ignored.
+     * If not set defaults to 16 (Pulsar library default).
+     * {@code #useDeadLetterQueue} must be enabled or else this value is ignored.
      *
-     * @param defaultMaxRetryDlq Deafult max number of retries before sending message to DLQ for all consumers.
+     * @param defaultMaxRetryDlq Default max number of retries before sending message to DLQ
+     *                           for all consumers.
      */
     public void setDefaultMaxRetryDlq(int defaultMaxRetryDlq) {
         if (defaultMaxRetryDlq < 1) {
@@ -285,8 +275,8 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
 
     private static Properties resolveDefaultConfiguration(Environment environment) {
         Map<String, Object> values = environment.containsProperties(PREFIX)
-                ? environment.getProperties(PREFIX, RAW)
-                : Collections.emptyMap();
+            ? environment.getProperties(PREFIX, RAW)
+            : Collections.emptyMap();
         Properties properties = new Properties();
         values.forEach((key, value) -> {
             if (ConversionService.SHARED.canConvert(value.getClass(), String.class)) {
@@ -312,7 +302,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
      * {@link io.micronaut.pulsar.annotation.PulsarReader#topic()},
      * {@link io.micronaut.pulsar.annotation.PulsarProducer#topic()} to avoid hardcoding tenant name into source code
      * through mentioned annotations.
-     *
+     * <p>
      * This property will be ignored if multi-tenancy module is enabled.
      *
      * @param defaultTenant Default Apache Pulsar tenant name to apply on dynamic topic names.
@@ -320,8 +310,8 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     public void setDefaultTenant(final String defaultTenant) {
         if (null != defaultTenant && !defaultTenant.matches(TENANT_NAME_VALIDATOR)) {
             throw new ConfigurationException(String.format(
-                    "Default tenant value %s is not a valid tenant name for Apache Pulsar",
-                    defaultTenant));
+                "Default tenant value %s is not a valid tenant name for Apache Pulsar",
+                defaultTenant));
         }
         this.defaultTenant = defaultTenant;
     }

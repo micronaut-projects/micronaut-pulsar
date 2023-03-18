@@ -19,7 +19,6 @@ import io.micronaut.context.BeanContext;
 import io.micronaut.context.annotation.Replaces;
 import io.micronaut.context.event.ApplicationEventListener;
 import io.micronaut.context.event.ApplicationEventPublisher;
-import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
@@ -86,18 +85,20 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
     @Override
     public void process(final BeanDefinition<?> beanDefinition, final ExecutableMethod<?, ?> method) {
         try {
-            final AnnotationValue<PulsarConsumer> annotation = method.getAnnotation(PulsarConsumer.class);
-            final String consumerId = getConsumerName(annotation);
-            final var topic = TopicResolver.extractTopic(Objects.requireNonNull(annotation),
-                consumerId,
-                pulsarClientConfiguration.getShutdownOnSubscriberError()
+            final var annotation = method.getAnnotation(PulsarConsumer.class);
+            final var consumerId = getConsumerName(annotation);
+            final var topic = TopicResolver.extractTopic(
+                Objects.requireNonNull(annotation),
+                consumerId
             );
             if (!topic.isDynamicTenant()) {
                 super.process(beanDefinition, method);
                 return;
             }
             if (tenantNameResolver.hasTenantName()) {
-                final String resolvedConsumerId = topicResolver.generateIdFromMessagingClientName(consumerId, topic);
+                final var resolvedConsumerId = topicResolver.generateIdFromMessagingClientName(
+                    consumerId, topic
+                );
                 if (consumerExists(resolvedConsumerId)) {
                     return;
                 }
@@ -108,7 +109,10 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
                 multiTenantConsumers.put(consumerId, new MultiTenantConsumer(beanDefinition, method));
             }
         } catch (final TenantNotFoundException ex) {
-            LOG.warn("Failed to instantiate a bean with consumers because topic value was set to dynamic tenant while tenant was missing.", ex);
+            LOG.warn(
+                "Failed to instantiate a bean with consumers because topic value was set to " +
+                    "dynamic tenant while tenant was missing.",
+                ex);
         } catch (final NullPointerException ignore) {
         }
     }
@@ -127,7 +131,8 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
         private final BeanDefinition<?> beanDefinition;
         private final ExecutableMethod<?, ?> method;
 
-        public MultiTenantConsumer(BeanDefinition<?> beanDefinition, ExecutableMethod<?, ?> method) {
+        public MultiTenantConsumer(final BeanDefinition<?> beanDefinition,
+                                   final ExecutableMethod<?, ?> method) {
             this.beanDefinition = beanDefinition;
             this.method = method;
         }

@@ -29,7 +29,6 @@ import io.micronaut.inject.ConstructorInjectionPoint;
 import io.micronaut.inject.FieldInjectionPoint;
 import io.micronaut.inject.InjectionPoint;
 import io.micronaut.pulsar.annotation.PulsarReader;
-import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import io.micronaut.pulsar.processor.TopicResolver;
 import org.apache.pulsar.client.api.*;
@@ -57,16 +56,13 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     private final PulsarClient pulsarClient;
     private final DefaultSchemaHandler simpleSchemaResolver;
     private final TopicResolver topicResolver;
-    private final boolean shutdownOnSubscribeError;
 
     public PulsarReaderFactory(final PulsarClient pulsarClient,
                                final DefaultSchemaHandler simpleSchemaResolver,
-                               final TopicResolver topicResolver,
-                               final PulsarClientConfiguration configuration) {
+                               final TopicResolver topicResolver) {
         this.pulsarClient = pulsarClient;
         this.simpleSchemaResolver = simpleSchemaResolver;
         this.topicResolver = topicResolver;
-        this.shutdownOnSubscribeError = configuration.getShutdownOnSubscriberError();
     }
 
     /**
@@ -98,9 +94,10 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     private Reader<?> getReaderByInjectionPoint(final BeanResolutionContext context) throws PulsarClientException {
         final InjectionPoint<?> injectionPoint = context.getPath().currentSegment()
             .orElseThrow(() ->
-                new IllegalStateException("Could not resolve current injection context while creating a reader"))
+                new IllegalStateException(
+                    "Could not resolve current injection context while creating a reader"))
             .getInjectionPoint();
-        final AnnotationValue<PulsarReader> annotation = injectionPoint.getAnnotation(PulsarReader.class);
+        final var annotation = injectionPoint.getAnnotation(PulsarReader.class);
         if (null == annotation) {
             throw new IllegalStateException("Failed to get value for bean annotated with PulsarReader");
         }
@@ -110,8 +107,7 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         final String declaredName;
         final String target;
 
-        if (injectionPoint instanceof ArgumentInjectionPoint) {
-            final ArgumentInjectionPoint<?, Reader<?>> argumentInjection = (ArgumentInjectionPoint<?, Reader<?>>) injectionPoint;
+        if (injectionPoint instanceof ArgumentInjectionPoint<?, ?> argumentInjection) {
             readerArgument = argumentInjection.getArgument().getFirstTypeVariable()
                 .orElse(Argument.of(byte[].class));
             declaredName = argumentInjection.getArgument().getName();
@@ -123,9 +119,9 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
                     target
                 ));
             }
-        } else if (injectionPoint instanceof FieldInjectionPoint) {
-            final FieldInjectionPoint<?, Reader<?>> fieldInjection = (FieldInjectionPoint<?, Reader<?>>) injectionPoint;
-            readerArgument = fieldInjection.asArgument().getFirstTypeVariable()
+        } else if (injectionPoint instanceof FieldInjectionPoint<?, ?> fieldInjection) {
+            readerArgument = fieldInjection.asArgument()
+                .getFirstTypeVariable()
                 .orElse(Argument.of(byte[].class));
             declaredName = fieldInjection.getName();
             target = fieldInjection.getDeclaringBean().getName() + "::" + declaredName;
@@ -153,15 +149,17 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
     /**
      * Micronaut has issues with having BeanContext injected with @Primary for one method and
      * second @Prototype for non injection context - for method annotations. Even @Named annotation
-     * won't help since beanContext.creatBean will throw "NoSuchBean". For this reason check in 1
+     * won't help since beanContext.createBean will throw "NoSuchBean". For this reason check in 1
      * method all parameters and decide to switch to this creator if necessary.
      */
-    private Reader<?> getReaderForAnnotation(@Parameter final AnnotationValue<PulsarReader> annotationValue,
-                                             @Parameter final Argument<?> returnType,
-                                             @Parameter final MethodInvocationContext<?, ?> methodInvocationContext)
+    private Reader<?> getReaderForAnnotation(final AnnotationValue<PulsarReader> annotationValue,
+                                             final Argument<?> returnType,
+                                             final MethodInvocationContext<?, ?> methodInvocationContext)
         throws PulsarClientException {
 
-        final String target = methodInvocationContext.getExecutableMethod().getDescription(false);
+        final String target = methodInvocationContext
+            .getExecutableMethod()
+            .getDescription(false);
         final String declaredName = methodInvocationContext.getExecutableMethod().getName();
         return getOrCreateReader(annotationValue, returnType, declaredName, target);
     }
@@ -186,12 +184,15 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         }
 
         final var name = annotation.stringValue("readerName").orElse(declaredName);
-        final var topicResolved = TopicResolver.extractTopic(annotation, name, shutdownOnSubscribeError);
+        final var topicResolved = TopicResolver.extractTopic(annotation, name);
         final var readerId = topicResolver.generateIdFromMessagingClientName(name, topicResolved);
         if (readers.containsKey(readerId)) {
             return readers.get(readerId);
         }
-        final var schema = simpleSchemaResolver.decideSchema(messageBodyType, keyClass, annotation, target);
+        final var schema = simpleSchemaResolver.decideSchema(messageBodyType,
+            keyClass,
+            annotation,
+            target);
         final var topic = topicResolver.resolve(topicResolved.getTopic());
 
         final MessageId startMessageId;

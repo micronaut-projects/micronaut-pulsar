@@ -43,8 +43,10 @@ class PulsarConsumerSpec extends PulsarAwareTest {
     void "test consumer names setup"() {
         given:
         PulsarConsumerProcessor consumerProcessor = context.getBean(PulsarConsumerProcessor)
+        ConsumerNameConfigTester tester = context.getBean(ConsumerNameConfigTester)
 
         expect:
+        null != tester
         consumerProcessor.consumers
                 .findAll { it.value.consumerName.matches('pulsar-consumer-\\d\\d') }
                 .size() == 2

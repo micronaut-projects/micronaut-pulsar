@@ -16,15 +16,6 @@ Async return type is mostly for developers control over execution flow from the 
 <6> -
 <7> -
 
-Consumer names are important but can be left. This will trigger sequential assignment of names in pattern of
-`pulsar-cosumer-###`. Default name assignment will start from 10 and increase with consumer number.
-
-WARNING: Pulsar expects unique names for each consumer within the subscription. To avoid issues in shared subscription
-model where multiple instances of same micronaut messaging application is deployed use expressions in consumer
-annotation. Example: `${pulsarapp.myTestSubscription.consumerXyz.name}` then have such property in you application.yml
-(or other registered property setters). This means auto-naming for consumers will break at some point as well as hardcoded
-names in annotations, so please switch to expressions and assign names via properties dynamically.
-
 === Consumer method
 
 Simple approach is to provide just 1 parameter in the method arguments list which will default to it being detected as a
@@ -128,7 +119,7 @@ should be set to `KeyValueEncodingType.SEPARATED`; otherwise Pulsar will try to 
 |`java.lang.String`
 |
 |No
-|Consumer name, not required
+|Consumer name, not required; will be generated automatically if missing
 
 |subscriptionTopicsMode
 |`org.apache.pulsar.client.api.RegexSubscriptionMode`
@@ -148,6 +139,18 @@ should be set to `KeyValueEncodingType.SEPARATED`; otherwise Pulsar will try to 
 |No
 |Time delay in seconds after which regex subscriptions should seek new topics.
 
+|maxRetriesBeforeDlq
+|`int`
+|16 - Pulsar library default
+|No
+|Maximum attempts before sending failed message to DLQ
+
+|deadLetterTopic
+|`String`
+|topic name + '-DLQ' Pulsar library default
+|No
+|DLQ topic name, if not set will let pulsar decide
+
 |===
 
 TIP: When using `topicsPattern`, be sure to create topics before the consumer is started, since Pulsar refresh on new
@@ -157,14 +160,20 @@ WARNING: When using PulsarConsumer with specific schema other than `byte[]`, mak
 schema the consumer is expecting, especially when using pattern consumer which listens to multiple topics. Otherwise, the consumer
 might not connect and could throw `org.apache.pulsar.client.api.PulsarClientException$IncompatibleSchemaException`.
 
+==== Consumer names
+
+Consumer names are important but can be left. This will trigger sequential assignment of names in pattern of
+`pulsar-cosumer-###`. Default name assignment will start from 10 and increase with consumer number.
+
+WARNING: Pulsar expects unique names for each consumer within the subscription. To avoid issues in shared subscription
+model where multiple instances of same micronaut messaging application is deployed use expressions in consumer
+annotation. Example: `${pulsarapp.myTestSubscription.consumerXyz.name}` then have such property in you application.yml
+(or other registered property setters). This means auto-naming for consumers will break at some point as well as hardcoded
+names in annotations, so please switch to expressions and assign names via properties dynamically.
+
 
 === Dead Letter Queue
 
-By default, Pulsar Java library does not configure DLQ to be used. Instead it will re-deliver failed messages as long as
-possible which floods the consumer(s) until message if finally received. Failed means that message was received but consumer
-did negative acknowledgement thus received means delivered and acknowledged by the consumer. However, reason for failure might be
-bad JSON formatting (in the case where JSON is being used) or such which will create unnecessary traffic to consumer(s) and message
-will never be delivered resulting in either consumers slowing down due to high redelivery count or at the end dropping
-due to high load. For this purpose Micronaut Pulsar is using DLQ by default and it will retry __only__ 3 times. If you wish
-to configure these options please use configuration properties `use-dead-letter-queue` and `default-max-retry-dlq`. These
-properties indicate that the DLQ will be used by default on all Pulsar consumers if not explicitly set otherwise.
+Pulsar library uses DLQ for Shared and Key_Shared subscriptions. It also configures DLQ topic name as well as maximum amount of times for redelivery before putting message for DLQ.
+To override default behavior please use configuration properties `use-dead-letter-queue` and `default-max-retry-dlq`. These
+properties indicate that the DLQ settings will be used by default on all Pulsar consumers during their creation if not explicitly set through annotation.
