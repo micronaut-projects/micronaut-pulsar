@@ -15,3 +15,8 @@ dependencies {
     testRuntimeOnly mn.logback.classic
 }
 
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
+}
