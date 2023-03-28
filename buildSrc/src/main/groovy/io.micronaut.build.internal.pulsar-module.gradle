@@ -12,7 +12,7 @@ dependencies {
         exclude group: 'com.google.code.gson'
     }
     compileOnly 'com.google.code.findbugs:jsr305'
-    testRuntimeOnly mn.logback.classic
+    testRuntimeOnly mnLogging.logback.classic
 }
 
 micronautBuild {
