@@ -14,12 +14,12 @@ micronaut = '4.0.0-SNAPSHOT'
 micronaut-docs = '2.0.0'
 micronaut-gradle-plugin = '4.0.0-SNAPSHOT'
 
-micronaut-multitenancy = "5.0.0-SNAPSHOT"
 micronaut-validation = "4.0.0-SNAPSHOT"
 micronaut-reactor = "3.0.0-SNAPSHOT"
 micronaut-serde = "2.0.0-SNAPSHOT"
 micronaut-test = '4.0.0-SNAPSHOT'
 micronaut-grpc = "4.0.0-M1"
+micronaut-multitenancy = "5.0.0-M1"
 
 managed-pulsar-client = '2.11.0'
 
