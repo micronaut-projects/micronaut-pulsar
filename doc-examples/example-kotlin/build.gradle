@@ -3,7 +3,9 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("io.micronaut.minimal.application")
 }
-
+micronaut {
+    version '4.0.0-SNAPSHOT'
+}
 dependencies {
     kaptTest enforcedPlatform(mn.micronaut.core.bom)
     kaptTest mn.micronaut.inject.java
