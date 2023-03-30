@@ -1,0 +1,1538 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+    <title>Micronaut Pulsar</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
+    <link rel="stylesheet" href="../css/custom.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
+    <link rel="stylesheet" href="../css/pdf.css" type="text/css" media="print" title="PDF" charset="utf-8" />
+    <link rel="stylesheet" href="../css/highlight/agate.css">
+    <script src="../js/highlight.pack.js"></script>
+    <script src="../js/guide.js"></script>
+    <script src="../js/multi-language-sample.js"></script>
+    <script>hljs.initHighlightingOnLoad();</script>
+    <link rel="stylesheet" href="../css/multi-language-sample.css"/>
+    <script src="../js/docs.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.13/clipboard.min.js"></script>
+    <script type="text/javascript">
+        function addJsClass(el) {
+            var classes = document.body.className.split(" ");
+            classes.push("js");
+            document.body.className = classes.join(" ");
+        }
+    </script>
+
+</head>
+
+<body class="body" id="docs" onload="addJsClass();" onhashchange="highlightMenu()">
+
+<div id="table-of-content-nav-link" class="desktop">
+    <a id="theme-switcher" title="Switch to dark theme" href="javascript:switchTheme(true)"><i class="fa fa-moon-o"></i></a>
+    <a title="Collapse/Open Table of contents" title="Hide Table of Contents" href="javascript:hideTableOfContents();" class="button">[ + ]</a>
+</div>
+
+<div id="main">
+    <div id="navigation" class="no-print">
+        <div class="navTitle">
+            <span id="logo"><a href="http://micronaut.io" title="Go to Micronaut Website"><img src="../img/micronaut-logo-white.svg" alt="Micronaut"/></a></span>
+        </div>
+        <div class="navLinks">
+            <ul>
+                    <li><div id="nav-summary" onmouseover="toggleNavSummary(false)" onmouseout="toggleNavSummary(true)" class="desktop">
+                            <a href="../guide/index.html" class="button">Table of contents</a>
+                            <div id="nav-summary-childs" style="display:none;">
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#consumer"><strong>4</strong><span>Pulsar consumers</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#reader"><strong>5</strong><span>Pulsar readers</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#producer"><strong>6</strong><span>Pulsar producers</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#authentication"><strong>7</strong><span>Authentication</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#tls"><strong>8</strong><span>Transport encryption</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#protobuf"><strong>9</strong><span>Protocol Buffers</span></a></div>
+                                
+                                <div class="toc-item" style="margin-left:0"><a href="#repository"><strong>10</strong><span>Repository</span></a></div>
+                                
+                            </div>
+                        </div>
+                    </li>
+
+                <li id="table-of-content-nav-link-mobile" class="mobile">
+                    <a title="Scroll to Table of contents" href="javascript:scrollToTop();" class="button">Toc</a>
+                </li>
+                <li class="desktop">
+                    <a title="Go to API documentation" href="../api/index.html" class="button">API Reference</a>
+                </li>
+                <li class="mobile">
+                    <a title="Go to API documentation" href="../api/index.html" class="button">API</a>
+                </li>
+                <li class="desktop">
+                    <a title="Go to Configuration Reference documentation" href="../guide/configurationreference.html" class="button">Configuration Reference</a>
+                </li>
+                <li class="mobile">
+                    <a title="Go to Configuration Reference documentation" href="../guide/configurationreference.html" class="button">Conf</a>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+    
+    <div id="table-of-content">
+        <div class="toc-content">
+
+        <h2>Table of Contents</h2>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-introduction"><a href="#introduction"><strong>1</strong><span>Introduction</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-releaseHistory"><a href="#releaseHistory"><strong>2</strong><span>Release History</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-quickStart"><a href="#quickStart"><strong>3</strong><span>Quick Start</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-consumer"><a href="#consumer"><strong>4</strong><span>Pulsar consumers</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-reader"><a href="#reader"><strong>5</strong><span>Pulsar readers</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-producer"><a href="#producer"><strong>6</strong><span>Pulsar producers</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-authentication"><a href="#authentication"><strong>7</strong><span>Authentication</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-tls"><a href="#tls"><strong>8</strong><span>Transport encryption</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-protobuf"><a href="#protobuf"><strong>9</strong><span>Protocol Buffers</span></a></div>
+        
+        <div class="toc-item" style="margin-left:0px" id="toc-item-repository"><a href="#repository"><strong>10</strong><span>Repository</span></a></div>
+        
+        </div>
+    </div>
+    
+    <div class="docs-content">
+    <div class="project">
+        <h1>Micronaut Pulsar</h1>
+        <p></p>
+        <p>Integration between Micronaut and Apache Pulsar</p>
+        <p><strong>Version:</strong> <select style='max-width: 200px' onChange='window.document.location.href=this.options[this.selectedIndex].value;'><option value='https://micronaut-projects.github.io/micronaut-pulsar/snapshot/guide/index.html'>SNAPSHOT</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/latest/guide/index.html'>LATEST</option><option selected='selected' value='https://micronaut-projects.github.io/micronaut-pulsar/2.0.0-M1/guide/index.html'>2.0.0-M1</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.3.0/guide/index.html'>1.3.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.2.1/guide/index.html'>1.2.1</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.2.0/guide/index.html'>1.2.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.1.1/guide/index.html'>1.1.1</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.1.0/guide/index.html'>1.1.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0/guide/index.html'>1.0.0</option><option value='https://micronaut-projects.github.io/micronaut-pulsar/1.0.0-SNAPSHOT/guide/index.html'>1.0.0-SNAPSHOT</option></select> </p>
+    </div>
+    
+<h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/introduction.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>This project includes integration between Micronaut and Apache Pulsar.</p>
+</div>
+
+<h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/releaseHistory.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>For this project, you can find a list of releases (with release notes) here:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/micronaut-projects/micronaut-pulsar/releases">https://github.com/micronaut-projects/micronaut-pulsar/releases</a></p>
+</div>
+<div class="sect3">
+<h4 id="_2_0_0">2.0.0</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Java 17 minimum</p>
+</li>
+<li>
+<p>Micronaut 4.0.0 minimum version</p>
+</li>
+<li>
+<p>Remove shutdown on subscribe error</p>
+</li>
+<li>
+<p>Bug fixes</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1_3_0">1.3.0</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Dependency updates</p>
+</li>
+<li>
+<p>Micronaut 3.8.0</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1_2_0">1.2.0</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Added multitenancy support module</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1_1_0">1.1.0</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Micronaut 3.2.3 minimum version</p>
+</li>
+<li>
+<p>Using new JSON mapper</p>
+</li>
+<li>
+<p>Key-Value messages support</p>
+</li>
+<li>
+<p>Message Headers support</p>
+</li>
+<li>
+<p>Protobuf native messages support using micronaut protobuf dependency</p>
+</li>
+<li>
+<p>Apache Pulsar dependency upgraded to 2.9.1</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_1_0_0">1.0.0</h4>
+<div class="ulist">
+<ul>
+<li>
+<p>Micronaut 2.1.3 minimum version</p>
+</li>
+<li>
+<p>Authorization via JWT</p>
+</li>
+<li>
+<p>Service URL Provider resolver</p>
+</li>
+<li>
+<p>Basic support for consumers</p>
+</li>
+<li>
+<p>Basic support for producers</p>
+</li>
+<li>
+<p>Basic support for reader</p>
+</li>
+</ul>
+</div>
+</div>
+
+<h1 id="quickStart"><a class="anchor" href="#quickStart"></a>3 Quick Start</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/quickStart.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>To configure the Apache Pulsar client, first add the <code>micronaut-pulsar</code> module dependency:</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.pulsar:micronaut-pulsar")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.pulsar&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-pulsar&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div></p>
+</div>
+<div class="paragraph">
+<p>Then configure the URI of the Pulsar cluster or standalone server to communicate with:</p>
+</div>
+<div class="openblock">
+<div class="title">Configuring <code>pulsar.service-url</code></div>
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.service-url=pulsar://localhost:6650</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
+  service-url: pulsar://localhost:6650</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  service-url="pulsar://localhost:6650"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  serviceUrl = "pulsar://localhost:6650"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    service-url = "pulsar://localhost:6650"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "pulsar": {
+    "service-url": "pulsar://localhost:6650"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+As this module is based on the official Java client from Apache Pulsar, see the <a href="https://pulsar.apache.org/docs/en/client-libraries-java/#connection-urls">official documentation</a> for detailed information on service URL format.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Alternatively, <code>pulsar.service-url-provider</code> can be set using either <code>@kotlinexample.PulsarServiceUrlProvider</code> or by setting the provider name:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.service-url-provider=BeanName</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
+  service-url-provider: BeanName</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  service-url-provider="BeanName"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  serviceUrlProvider = "BeanName"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    service-url-provider = "BeanName"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "pulsar": {
+    "service-url-provider": "BeanName"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>in which case the implementing class must be annotated with <code>@Named</code> with value equal to the one in YAML. In both cases, the bean must implement the <code>org.apache.pulsar.client.api.ServiceUrlProvider</code> interface.</p>
+</div>
+<div class="paragraph">
+<p>After configuring the Pulsar cluster URL, the Micronaut Pulsar module will be able to produce a bean of type <code>org.apache.pulsar.client.api.PulsarClient</code>. This bean will be a <code>Singleton</code> from which all producers and consumers can be created. Since <code>PulsarClient</code> supports an URL provider which can switch URLs to clusters on demand, there&#8217;s no need to have multiple clients.</p>
+</div>
+
+<h1 id="consumer"><a class="anchor" href="#consumer"></a>4 Pulsar consumers</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/consumer.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_creating_consumers">Creating consumers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To create a consumer annotate any bean method with a <code>@PulsarConsumer</code> and define a topic. Methods that are part of
+beans annotated with a <code>@PulsarSubscription</code> will try to fetch subscription name from it. Otherwise, make sure to put
+<code>subscriptionName</code> property value in the <code>@PulsarConsumer</code> annotation. Subscription beans are singletons.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package example;
+
+import io.micronaut.pulsar.annotation.PulsarConsumer;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarSubscription;
+import org.apache.pulsar.client.api.SubscriptionType;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+@PulsarSubscription(subscriptionName = "pulsar-jtest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+public class ConsumerProducer { // <b class="conum">(2)</b>
+    @PulsarConsumer(topic = "persistent://public/default/messages-java-docs", consumerName = "shared-consumer-jtester") // <b class="conum">(3)</b>
+    public void messagePrinter(String message) { // <b class="conum">(4)</b>
+        try {
+            String changed = report(message).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-java-docs", producerName = "report-producer-java") // <b class="conum">(5)</b>
+    public CompletableFuture&lt;String&gt; report(String message) { // <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
+
+import io.micronaut.pulsar.annotation.PulsarConsumer;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarSubscription;
+import org.apache.pulsar.client.api.SubscriptionType;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+@PulsarSubscription(subscriptionName = "pulsar-jtest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+class ConsumerProducer { // <b class="conum">(2)</b>
+    @PulsarConsumer(topic = "persistent://public/default/messages-groovy-docs", consumerName = "shared-consumer-gtester") // <b class="conum">(3)</b>
+    void messagePrinter(String message) { // <b class="conum">(4)</b>
+        try {
+            String changed = report(message).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-groovy-docs", producerName = "report-producer-groovy") // <b class="conum">(5)</b>
+    CompletableFuture&lt;String&gt; report(String message) { // <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarConsumer
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarSubscription
+import org.apache.pulsar.client.api.SubscriptionType
+
+@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+open class ConsumerProducer { // <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
+    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
+        val changed = report(message)
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
+    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
+        return "Reporting message '$message'" // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>The class holding consumers can be annotated with api:pulsar.annotation.PulsarSubscription. It&#8217;s also allowed to set
+subscription from the <code>@PulsarConsumer</code>. By that, consumer can be located in other beans like <code>@Singleton</code>.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>-</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Methods that will process the message, in other words consumers, must be annotated with <code>@PulsarConsumer</code> and one
+of the <em>topic</em> options must be specified.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Using CompletableFeature, reactor-core, RxJava return types, or Kotlin suspend, allows the body of the method to be
+executed in an async manner. Method invocations will be async always as underlying Pulsar library uses CompletableFuture.
+Async return type is mostly for developers control over execution flow from the method body or external callers</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>-</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>-</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>-</td>
+</tr>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_consumer_method">Consumer method</h3>
+<div class="paragraph">
+<p>Simple approach is to provide just 1 parameter in the method arguments list which will default to it being detected as a
+message body (payload). This can also resolve <code>Message&lt;&gt;</code> type from Pulsar and thus detect whether to inject parsed body
+or to inject the whole Pulsar message. In case of multiple argument it&#8217;s important to annotate argument which will be used
+for passing message payload with <code>@MessageBody</code> as well as other parameters with one of the <code>MessageKey</code> (message key) or
+<code>@MessageProperties</code> of type <code>Map&lt;String,String&gt;</code> which represents all message properties/headers to be injected. For headers listed
+as method arguments use <code>@MessageHeader(*headerName)</code> on each argument representing message header. Due to Pulsar underlying
+library headers must be strings (and their corresponding keys).</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Don&#8217;t confuse <code>@MessageHeader*s*</code> with <code>@MessageProperties</code>. Former is used by Micronaut messaging and not applicable
+to method argument thus latter was created to support mapping all headers/properties on a single method argument. Still,
+<code>@MessageHeader()</code> from the same package (messaging) was used for method argument, which maps single header value, to
+utilize as much existing annotations.
+</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Extra parameter of <code>org.apache.pulsar.client.api.Consumer</code> type does not need any annotation. It is a consumer passed by
+default from underlying Pulsar library. If not present on the method annotated with <code>@PulsarConsumer</code> it will be omitted.</p>
+</div>
+<div class="paragraph">
+<p>This is especially important for messages that should be of KeyValue type.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_using_pulsarsubscription_annotation">Using @PulsarSubscription annotation</h3>
+<div class="paragraph">
+<p>This annotation marks a class as a singleton bean that contains one or more methods serving as Pulsar consumers under
+same subscription.</p>
+</div>
+<div class="paragraph">
+<p>Non-required properties:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p><code>name</code>, which sets the Pulsar subscription name to a custom string; recommended to always set manually</p>
+</li>
+<li>
+<p><code>type</code>, one of Pulsar&#8217;s subscription types. Subscription types can be read in Apache Pulsar
+<a href="http://pulsar.apache.org/docs/en/concepts-messaging/#subscriptions">official documentation</a>.</p>
+</li>
+<li>
+<p><code>ackGroupTimeout</code>, the acknowledgment group timeout for shared subscriptions</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>Type and acknowledgment group timeout default to Pulsar Java client library values if not set. Name will be generated
+by this module in a "counter manner" (pulsar-subscription-1,2,3,4&#8230;&#8203;).</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">name</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User-specified name, or leave blank to let the Pulsar module generate the name</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">type</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.apache.pulsar.client.api.SubscriptionType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Exclusive</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Default as in Pulsar official Java library</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ackGroupTimeout</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Must be a <code>Duration</code>-parsable string.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_using_pulsarconsumer_annotation">Using @PulsarConsumer annotation</h3>
+<div class="paragraph">
+<p>This is a method annotation. To use it you must specify one of the <code>value</code>, <code>topic</code>, <code>topics</code>, <code>topicsPattern</code>.
+Properties are processed in order <code>topic</code> (alias <code>value</code>), <code>topics</code>, <code>topicsPattern</code> so setting more than one will ignore
+rest depending on the order. Other properties might be omitted, however it&#8217;s good to always specify consumer name manually
+as it can be used later for debugging or injection points for Pulsar <code>Consumer&lt;T&gt;</code> which are generated for each method.</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Property</th>
+<th class="tableblock halign-left valign-top">Type</th>
+<th class="tableblock halign-left valign-top">Default</th>
+<th class="tableblock halign-left valign-top">Required</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">topics</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String[]</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required unless <code>topicsPattern</code> is specified. Has priority over <code>topicsPattern</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">topicsPattern</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Yes*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Required unless <code>topics</code> is specified. Regex for listening to multiple topics.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">schema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSchema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSchema.BYTES</code> or <code>MessageSchema.JSON</code>*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If body is different from <code>byte[]</code> but <code>MessageSchema</code> is <code>Byte</code>, will default to JSON.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keySchema</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSchema</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>MessageSchema.BYTES</code> or <code>MessageSchema.JSON</code>*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If message is of key-value type this must be set or default will be used with same resolution style as the schema</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">keyEncoding</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyValueEncodingType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>KeyValueEncodingType.INLINE</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If message is of key-value type it is frequent that the key is sent separately from the payload in which case this value
+should be set to <code>KeyValueEncodingType.SEPARATED</code>; otherwise Pulsar will try to extract key from the message payload (body)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">consumerName</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumer name, not required; will be generated automatically if missing</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subscriptionTopicsMode</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>org.apache.pulsar.client.api.RegexSubscriptionMode</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If <code>topicsPattern</code> is set, this can be one of <code>PersistentOnly</code>, <code>NonPersistentOnly</code>, or <code>AllTopics</code>. Not required, set by Pulsar library if not defined.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">subscribeAsync</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>boolean</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">true</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Whether to use async when reading Pulsar messages.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">patternAutoDiscoveryPeriod</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Time delay in seconds after which regex subscriptions should seek new topics.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">maxRetriesBeforeDlq</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">16 - Pulsar library default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum attempts before sending failed message to DLQ</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">deadLetterTopic</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">topic name + '-DLQ' Pulsar library default</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DLQ topic name, if not set will let pulsar decide</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+When using <code>topicsPattern</code>, be sure to create topics before the consumer is started, since Pulsar refresh on new
+topics tends to take a long time by default.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+When using PulsarConsumer with specific schema other than <code>byte[]</code>, make sure topics are created and have the same
+schema the consumer is expecting, especially when using pattern consumer which listens to multiple topics. Otherwise, the consumer
+might not connect and could throw <code>org.apache.pulsar.client.api.PulsarClientException$IncompatibleSchemaException</code>.
+</td>
+</tr>
+</table>
+</div>
+<div class="sect3">
+<h4 id="_consumer_names">Consumer names</h4>
+<div class="paragraph">
+<p>Consumer names are important but can be left. This will trigger sequential assignment of names in pattern of
+<code>pulsar-cosumer-<mark>#</mark></code>. Default name assignment will start from 10 and increase with consumer number.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Pulsar expects unique names for each consumer within the subscription. To avoid issues in shared subscription
+model where multiple instances of same micronaut messaging application is deployed use expressions in consumer
+annotation. Example: <code>${pulsarapp.myTestSubscription.consumerXyz.name}</code> then have such property in you application.yml
+(or other registered property setters). This means auto-naming for consumers will break at some point as well as hardcoded
+names in annotations, so please switch to expressions and assign names via properties dynamically.
+</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_dead_letter_queue">Dead Letter Queue</h3>
+<div class="paragraph">
+<p>Pulsar library uses DLQ for Shared and Key_Shared subscriptions. It also configures DLQ topic name as well as maximum amount of times for redelivery before putting message for DLQ.
+To override default behavior please use configuration properties <code>use-dead-letter-queue</code> and <code>default-max-retry-dlq</code>. These
+properties indicate that the DLQ settings will be used by default on all Pulsar consumers during their creation if not explicitly set through annotation.</p>
+</div>
+</div>
+</div>
+</div>
+
+<h1 id="reader"><a class="anchor" href="#reader"></a>5 Pulsar readers</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/reader.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_readers">Readers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>Pulsar supports both "Consumers" and "Readers". More can be read in their
+<a href="https://pulsar.apache.org/docs/en/concepts-clients/#reader-interface">documentation</a></p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_creating_readers">Creating readers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To initialize a reader, declare a field annotated with <code>@PulsarReader</code> inside any bean or as a constructor argument.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package example;
+
+import io.micronaut.pulsar.annotation.PulsarReader;
+import jakarta.inject.Singleton;
+import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.Reader;
+
+import java.util.concurrent.CompletableFuture;
+
+
+@Singleton
+public class ReaderExample {
+
+    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-j-reader") // <b class="conum">(1)</b>
+    private Reader&lt;String&gt; reader; // <b class="conum">(2)</b>
+
+    public CompletableFuture&lt;Message&lt;String&gt;&gt; readNext() { // <b class="conum">(3)</b>
+        return reader.readNextAsync(); // <b class="conum">(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
+
+import io.micronaut.pulsar.annotation.PulsarReader;
+import jakarta.inject.Singleton;
+import org.apache.pulsar.client.api.Message;
+import org.apache.pulsar.client.api.Reader;
+
+import java.util.concurrent.CompletableFuture;
+
+
+@Singleton
+class ReaderExample {
+
+    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-g-reader") // <b class="conum">(1)</b>
+    private Reader&lt;String&gt; reader // <b class="conum">(2)</b>
+
+    CompletableFuture&lt;Message&lt;String&gt;&gt; readNext() { // <b class="conum">(3)</b>
+        return reader.readNextAsync() // <b class="conum">(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarReader
+import jakarta.inject.Singleton
+import kotlinx.coroutines.future.await
+import org.apache.pulsar.client.api.Message
+import org.apache.pulsar.client.api.Reader
+
+@Singleton
+class ReaderExample {
+    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-k-reader") // <b class="conum">(1)</b>
+    private lateinit var reader: Reader&lt;String&gt; // <b class="conum">(2)</b>
+
+    suspend fun readNext(): Message&lt;String&gt; { // <b class="conum">(3)</b>
+        return reader.readNextAsync().await() // <b class="conum">(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Reader annotation with the topic and the reader name</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Reader must be of type api:org.apache.pulsar.client.api.Reader</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Using readAsync requires <code>CompletableFeature</code> or in Kotlin awaiting is possible</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Calling the read will move the cursor to the next message or give null in case there are no more messages</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Reader <code>name</code> can be autogenerated but <code>topic</code> argument must be set. Reader injections cause blocking behaviour as
+Reader instances will start creation and wait until Pulsar replies with a successful status. Reader <code>name</code> defaults
+to field or argument name for injection points or method name for method annotated reader.</p>
+</div>
+<div class="sect2">
+<h3 id="_keyvalue_readers">KeyValue readers</h3>
+<div class="paragraph">
+<p>In order to use KeyValue with a reader, reader argument type must be of <code>org.apache.pulsar.common.schema.KeyValue</code>.
+It is possible then to set attributes in <code>@PulsarReader</code> like <code>keyType</code> which defines what type of data
+serializer will be used to extract key, and <code>keyEncoding</code> which defines how will the key be extracted: <code>INLINE</code> - key
+is part of the message payload or <code>SEPARATED</code> - key is stored as a message key.</p>
+</div>
+</div>
+</div>
+</div>
+
+<h1 id="producer"><a class="anchor" href="#producer"></a>6 Pulsar producers</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/producer.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_creating_producers">Creating producers</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To initialize a producer it&#8217;s sufficient to annotate an interface with <code>@PulsarProducerClient</code> and annotate methods with <code>@PulsarProducer</code>.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package example;
+
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarProducerClient;
+import org.apache.pulsar.client.api.MessageId;
+
+import java.util.concurrent.CompletableFuture;
+
+@PulsarProducerClient // <b class="conum">(1)</b>
+public interface Producer {
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
+    CompletableFuture&lt;MessageId&gt; send(String message); // <b class="conum">(3)</b>
+
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    void sendBlocking(String message); // <b class="conum">(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
+
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarProducerClient;
+import org.apache.pulsar.client.api.MessageId;
+
+import java.util.concurrent.CompletableFuture;
+
+@PulsarProducerClient // <b class="conum">(1)</b>
+interface Producer {
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
+    CompletableFuture&lt;MessageId&gt; send(String message); // <b class="conum">(3)</b>
+
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    void sendBlocking(String message); // <b class="conum">(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarProducerClient
+import org.apache.pulsar.client.api.MessageId
+
+@PulsarProducerClient // <b class="conum">(1)</b>
+interface Producer {
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
+    suspend fun send(message: String): MessageId // <b class="conum">(3)</b>
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    fun sendBlocking(message: String) // <b class="conum">(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Annotate interface with @PulsarProducerClient to notify Micronaut for processing it without implementation</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>Methods are the actual producers so annotate them with @PulsarProducer</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Return decides whether to send message in a blocking or non-blocking manner.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>A blocking send that waits until message is successfully sent or throws an exception on failure.</td>
+</tr>
+</table>
+</div>
+<div class="paragraph">
+<p>Producers can be used in other types of beans as well (Singleton or such).</p>
+</div>
+<div class="sect2">
+<h3 id="_producer_method">Producer method</h3>
+<div class="paragraph">
+<p>It&#8217;s important to note that if the method contains more than 1 argument, <code>@MessageBody</code> must be specified on argument
+intended for message body as well as <code>@MessageKey</code>, <code>@MessageProperties</code>, <code>@MessageHeader</code> depending on desired mapping.</p>
+</div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+As with Consumers it&#8217;s important to spot <code>@MessageProperties</code> for collection of headers value but <code>@MessageHeader</code>
+for single header mapping on method argument. More details in consumer warning.
+</td>
+</tr>
+</table>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_producer_return_values">Producer return values</h3>
+<div class="paragraph">
+<p>Not counting wrappers for async behaviour (CompletableFuture, RxJava, reactor cor), abstract methods can only have 2 return
+types: void or MessageId since nothing more than sending will be done.</p>
+</div>
+<div class="paragraph">
+<p>Non-abstract methods can have any return type except for <code>MessageId</code> in the sense that it will not be filled by Pulsars
+resulting value. This is because return value must be defined within the method body so there is no reliable way to know
+what was the intended return value - was it MessageID from the Pulsar or was it some other MessageID value generated
+within the body.</p>
+</div>
+<div class="paragraph">
+<p>Methods can be invoked before or after sending the message by setting the property <code>sendBefore</code> to <code>true</code> or <code>false</code> respectively.
+Default is false which will execute method invoke message body before calling send message part.
+In async approach behaviour is unpredicted as calling the method and sending the message has no blocking
+thus message may still be sent before the execution of the method finishes or even starts properly because those can run
+on separate threads. This is mainly useful for blocking approach where it&#8217;s possible to execute the method body
+before sending the message an if execution throws exception, sending will be skipped. <strong>First parameter of the method is
+still used as a message body</strong>.</p>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package example;
+
+import io.micronaut.pulsar.annotation.PulsarConsumer;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarSubscription;
+import org.apache.pulsar.client.api.SubscriptionType;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+@PulsarSubscription(subscriptionName = "pulsar-jtest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+public class ConsumerProducer { // <b class="conum">(2)</b>
+    @PulsarConsumer(topic = "persistent://public/default/messages-java-docs", consumerName = "shared-consumer-jtester") // <b class="conum">(3)</b>
+    public void messagePrinter(String message) { // <b class="conum">(4)</b>
+        try {
+            String changed = report(message).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-java-docs", producerName = "report-producer-java") // <b class="conum">(5)</b>
+    public CompletableFuture&lt;String&gt; report(String message) { // <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
+
+import io.micronaut.pulsar.annotation.PulsarConsumer;
+import io.micronaut.pulsar.annotation.PulsarProducer;
+import io.micronaut.pulsar.annotation.PulsarSubscription;
+import org.apache.pulsar.client.api.SubscriptionType;
+
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+
+@PulsarSubscription(subscriptionName = "pulsar-jtest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+class ConsumerProducer { // <b class="conum">(2)</b>
+    @PulsarConsumer(topic = "persistent://public/default/messages-groovy-docs", consumerName = "shared-consumer-gtester") // <b class="conum">(3)</b>
+    void messagePrinter(String message) { // <b class="conum">(4)</b>
+        try {
+            String changed = report(message).get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-groovy-docs", producerName = "report-producer-groovy") // <b class="conum">(5)</b>
+    CompletableFuture&lt;String&gt; report(String message) { // <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarConsumer
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarSubscription
+import org.apache.pulsar.client.api.SubscriptionType
+
+@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+open class ConsumerProducer { // <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
+    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
+        val changed = report(message)
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
+    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
+        return "Reporting message '$message'" // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>For Kotlin, open is required in non-interface (abstract) classes because of AOT</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td>-</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>-</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>-</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Annotating method as a producer</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>A non-abstract async method. In Kotlin case we need open to allow Micronaut AOT interception.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>CompletableFuture or suspend will trigger immediate execution but reactor or RxJava need subscription and will rely
+on caller or upper layers to provide it.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+</div>
+
+<h1 id="authentication"><a class="anchor" href="#authentication"></a>7 Authentication</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/authentication.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect2">
+<h3 id="_jwt">JWT</h3>
+<div class="paragraph">
+<p>To configure JWT authentication it&#8217;s sufficient to specify a JWT in <code>application.yml</code> under <code>pulsar.authentication-jwt</code>, e.g.:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.authentication.jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
+  authentication:
+    jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  [pulsar.authentication]
+    jwt="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  authentication {
+    jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    authentication {
+      jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
+    }
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "pulsar": {
+    "authentication": {
+      "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
+    }
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p><code>io.micronaut.configuration.pulsar.config.AbstractPulsarConfiguration</code> is left public in case you want to implement more options yourself.</p>
+</div>
+<div class="paragraph">
+<p>It&#8217;s planned to support specifying a JWT path, either an HTTP endpoint or URL to retrieve a fresh JWT.</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_oauth2">OAuth2</h3>
+<div class="paragraph">
+<p>To use OAuth2 authentication, configure three parameters like in the example below to connect to a Pulsar service that uses OAuth2:</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.oauth-issuer-url=https://some-sso.io/...
+pulsar.oauth-credentials-url=file:///path/to/file.json
+pulsar.audience=localhost:6650</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
+    oauth-issuer-url: https://some-sso.io/...
+    oauth-credentials-url: file:///path/to/file.json
+    audience: localhost:6650</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  oauth-issuer-url="https://some-sso.io/..."
+  oauth-credentials-url="file:///path/to/file.json"
+  audience="localhost:6650"</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  oauthIssuerUrl = "https://some-sso.io/..."
+  oauthCredentialsUrl = "file:///path/to/file.json"
+  audience = "localhost:6650"
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    oauth-issuer-url = "https://some-sso.io/..."
+    oauth-credentials-url = "file:///path/to/file.json"
+    audience = "localhost:6650"
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "pulsar": {
+    "oauth-issuer-url": "https://some-sso.io/...",
+    "oauth-credentials-url": "file:///path/to/file.json",
+    "audience": "localhost:6650"
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>The issuer URL is the URL to the OAuth2 server generating tokens and such.</p>
+</div>
+<div class="paragraph">
+<p>Parameter <code>oauth-credentials-url</code> is used for reading a file containing necessary configuration for authenticating to the OAuth2 provider as a client app. The file should contain everything defined in Pulsar documentation, and type is limited to <code>client_credentials</code>. Below is an example of what the file should look like.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json hljs" data-lang="json">{
+    "type": "client_credentials",
+    "client_id": "pulsar",
+    "client_secret": "1234-abcd-5678-9011-ab56ac4564sa56",
+    "issuer_url": "https://my-oauth2-server.com/auth/realms/pulsar-realm"
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The example shows something similar that could be set when using KeyCloak or a similar SSO. Audience must be set, but Pulsar service can be configured to ignore this value, and in such case you might put any text with one or more characters. For more details, see the <a href="https://pulsar.apache.org/docs/en/security-oauth2/">Apache Pulsar documentation</a>. Consult Java client to understand more about limitations for <code>client_credentials</code>.</p>
+</div>
+<div class="paragraph">
+<p>The Pulsar library takes care of the OAuth2 JWT refreshing and such. The Pulsar server must be configured to use OAuth2
+and <em>role</em> attribute in its configuration files must be specified for Pulsar to be able to detect which kind of <em>"user"</em> is requesting data.</p>
+</div>
+</div>
+
+<h1 id="tls"><a class="anchor" href="#tls"></a>8 Transport encryption</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/tls.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_transport_encryption">Transport encryption</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>To use transport encryption you must configure proper connection string as well as provide necessary information about
+certificate path, ciphers, and protocols as shown in example below.</p>
+</div>
+<div class="openblock">
+<div class="content">
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.service-url=pulsar+ssl://localhost:6651
+pulsar.tls-cert-file-path=path/to/cert.pem
+pulsar.tls-ciphers[0]=TLS_RSA_WITH_AES_256_GCM_SHA384
+pulsar.tls-ciphers[1]=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+pulsar.tls-protocols[0]=TLSv1.3
+pulsar.tls-protocols[1]=TLSv1.2</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
+    service-url: 'pulsar+ssl://localhost:6651'
+    tls-cert-file-path: 'path/to/cert.pem'
+    tls-ciphers:
+        - TLS_RSA_WITH_AES_256_GCM_SHA384
+        - TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256
+    tls-protocols:
+        - TLSv1.3
+        - TLSv1.2</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
+  service-url="pulsar+ssl://localhost:6651"
+  tls-cert-file-path="path/to/cert.pem"
+  tls-ciphers=[
+    "TLS_RSA_WITH_AES_256_GCM_SHA384",
+    "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
+  ]
+  tls-protocols=[
+    "TLSv1.3",
+    "TLSv1.2"
+  ]</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
+  serviceUrl = "pulsar+ssl://localhost:6651"
+  tlsCertFilePath = "path/to/cert.pem"
+  tlsCiphers = ["TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"]
+  tlsProtocols = ["TLSv1.3", "TLSv1.2"]
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
+  pulsar {
+    service-url = "pulsar+ssl://localhost:6651"
+    tls-cert-file-path = "path/to/cert.pem"
+    tls-ciphers = ["TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"]
+    tls-protocols = ["TLSv1.3", "TLSv1.2"]
+  }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
+  "pulsar": {
+    "service-url": "pulsar+ssl://localhost:6651",
+    "tls-cert-file-path": "path/to/cert.pem",
+    "tls-ciphers": ["TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"],
+    "tls-protocols": ["TLSv1.3", "TLSv1.2"]
+  }
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div class="paragraph">
+<p>It&#8217;s necessary to ensure that both server and client certificates match with supported ciphers and protocols. By default
+hostname is not verified but can be enabled by using <code>tls-verify-hostname: true</code></p>
+</div>
+<div class="paragraph">
+<p>TLS as authentication method is not yet supported.</p>
+</div>
+</div>
+</div>
+
+<h1 id="protobuf"><a class="anchor" href="#protobuf"></a>9 Protocol Buffers</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/protobuf.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="sect1">
+<h2 id="_protocol_buffers_support">Protocol buffers support</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>In order to allow protocol buffer <strong>native</strong> messaging support you need to include protocol buffers
+google and micronaut dependencies</p>
+</div>
+<div class="paragraph">
+<p>        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut:protobuf-java")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
+    &lt;artifactId&gt;protobuf-java&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut:micronaut-protobuff-support")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-protobuff-support&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div></p>
+</div>
+</div>
+</div>
+
+<h1 id="repository"><a class="anchor" href="#repository"></a>10 Repository</h1>
+
+<div class='contribute-btn'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/repository.adoc"'>
+        <i class='fa fa-pencil-square-o'></i> Improve this doc
+    </button>
+</div>
+
+
+<div class="paragraph">
+<p>You can find the source code of this project in this repository:</p>
+</div>
+<div class="paragraph">
+<p><a href="https://github.com/micronaut-projects/micronaut-pulsar">https://github.com/micronaut-projects/micronaut-pulsar</a></p>
+</div>
+
+    </div>
+</div>
+
+<script type="text/javascript">
+
+</script>
+</body>
+</html>
