@@ -50,7 +50,7 @@
                 <p></p>
             </div>
 <div class="sect2">
-<h3 id="_pulsar_config_properties">Pulsar Config Properties</h3>
+<h3 id="_micronaut_pulsar_config_properties">Micronaut Pulsar Config Properties</h3>
 <a id="io.micronaut.pulsar.config.DefaultPulsarClientConfiguration" href="#io.micronaut.pulsar.config.DefaultPulsarClientConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html">DefaultPulsarClientConfiguration</a></caption>
@@ -123,11 +123,6 @@
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.shutdown-on-subscriber-error</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">should application shutdown if any of subscriptions fail</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.oauth-audience</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Must be set for usage with the OAuth2 authentication.</p></td>
@@ -145,13 +140,14 @@
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.use-dead-letter-queue</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won&#8217;t
- be resent again.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to true which means that after max number of retries failed message is
+ sent to DLQ and won&#8217;t be resent again.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.default-max-retry-dlq</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to 3.  must be enabled or else this value is ignored.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to 16 (Pulsar library default).
+  must be enabled or else this value is ignored.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.default-tenant</code></p></td>
@@ -161,8 +157,9 @@
  ,
  ,
   to avoid hardcoding tenant name into source code
- through mentioned annotations.</p>
-<p class="tableblock"> This property will be ignored if multi-tenancy module is enabled.</p></td>
+ through mentioned annotations.
+ &lt;p&gt;
+ This property will be ignored if multi-tenancy module is enabled.</p></td>
 </tr>
 </tbody>
 </table>

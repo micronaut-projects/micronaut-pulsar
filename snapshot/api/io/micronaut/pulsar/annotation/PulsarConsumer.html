@@ -41,7 +41,7 @@ loadScripts(document, 'script');</script>
 <li>Summary:&nbsp;</li>
 <li>Field&nbsp;|&nbsp;</li>
 <li><a href="#annotation-interface-optional-element-summary">Optional</a>&nbsp;|&nbsp;</li>
-<li><a href="#annotation-interface-required-element-summary">Required</a></li>
+<li>Required</li>
 </ul>
 <ul class="sub-nav-list">
 <li>Detail:&nbsp;</li>
@@ -82,21 +82,6 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
-<!-- =========== ANNOTATION INTERFACE REQUIRED MEMBER SUMMARY =========== -->
-<li>
-<section class="member-summary" id="annotation-interface-required-element-summary">
-<h2>Required Element Summary</h2>
-<div class="caption"><span>Required Elements</span></div>
-<div class="summary-table three-column-summary">
-<div class="table-header col-first">Modifier and Type</div>
-<div class="table-header col-second">Required Element</div>
-<div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#consumerName()" class="member-name-link">consumerName</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-</div>
-</section>
-</li>
 <!-- =========== ANNOTATION INTERFACE OPTIONAL MEMBER SUMMARY =========== -->
 <li>
 <section class="member-summary" id="annotation-interface-optional-element-summary">
@@ -113,77 +98,80 @@ loadScripts(document, 'script');</script>
  and no redelivery happens unless consumer crashed.</div>
 </div>
 <div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#deadLetterTopic()" class="member-name-link">deadLetterTopic</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-second odd-row-color"><code><a href="#consumerName()" class="member-name-link">consumerName</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#deadLetterTopic()" class="member-name-link">deadLetterTopic</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Default is fallback to Pulsar Client Java library.</div>
 </div>
-<div class="col-first even-row-color"><code>org.apache.pulsar.common.schema.KeyValueEncodingType</code></div>
-<div class="col-second even-row-color"><code><a href="#keyEncoding()" class="member-name-link">keyEncoding</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code>org.apache.pulsar.common.schema.KeyValueEncodingType</code></div>
+<div class="col-second odd-row-color"><code><a href="#keyEncoding()" class="member-name-link">keyEncoding</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Ignored if annotated method does not contain parameter annotated with <a href="MessageKey.html" title="annotation interface in io.micronaut.pulsar.annotation"><code>MessageKey</code></a>.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="../MessageSchema.html" title="enum class in io.micronaut.pulsar">MessageSchema</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#keySchema()" class="member-name-link">keySchema</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code><a href="../MessageSchema.html" title="enum class in io.micronaut.pulsar">MessageSchema</a></code></div>
+<div class="col-second even-row-color"><code><a href="#keySchema()" class="member-name-link">keySchema</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Ignored if <a href="#keyEncoding()"><code>keyEncoding()</code></a> is <code>KeyValueEncodingType.INLINE</code> or if <a href="MessageKey.html" title="annotation interface in io.micronaut.pulsar.annotation"><code>MessageKey</code></a> is missing
  on one of the attributes of the annotated method.</div>
 </div>
-<div class="col-first even-row-color"><code>int</code></div>
-<div class="col-second even-row-color"><code><a href="#maxRetriesBeforeDlq()" class="member-name-link">maxRetriesBeforeDlq</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>int</code></div>
-<div class="col-second odd-row-color"><code><a href="#patternAutoDiscoveryPeriod()" class="member-name-link">patternAutoDiscoveryPeriod</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-second odd-row-color"><code><a href="#maxRetriesBeforeDlq()" class="member-name-link">maxRetriesBeforeDlq</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>int</code></div>
+<div class="col-second even-row-color"><code><a href="#patternAutoDiscoveryPeriod()" class="member-name-link">patternAutoDiscoveryPeriod</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Used in combination with <a href="#topicsPattern()"><code>topicsPattern()</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><code>int</code></div>
-<div class="col-second even-row-color"><code><a href="#priorityLevel()" class="member-name-link">priorityLevel</a></code></div>
-<div class="col-last even-row-color">
-<div class="block">By default no priority is set.</div>
-</div>
 <div class="col-first odd-row-color"><code>int</code></div>
-<div class="col-second odd-row-color"><code><a href="#receiverQueueSize()" class="member-name-link">receiverQueueSize</a></code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="../MessageSchema.html" title="enum class in io.micronaut.pulsar">MessageSchema</a></code></div>
-<div class="col-second even-row-color"><code><a href="#schema()" class="member-name-link">schema</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-second odd-row-color"><code><a href="#priorityLevel()" class="member-name-link">priorityLevel</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">By default, no priority is set.</div>
+</div>
+<div class="col-first even-row-color"><code>int</code></div>
+<div class="col-second even-row-color"><code><a href="#receiverQueueSize()" class="member-name-link">receiverQueueSize</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="../MessageSchema.html" title="enum class in io.micronaut.pulsar">MessageSchema</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#schema()" class="member-name-link">schema</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Defaults to <a href="../MessageSchema.html#BYTES"><code>MessageSchema.BYTES</code></a> as default value for Pulsar <code>Schema</code> is <code>byte[]</code>.</div>
 </div>
-<div class="col-first odd-row-color"><code>boolean</code></div>
-<div class="col-second odd-row-color"><code><a href="#subscribeAsync()" class="member-name-link">subscribeAsync</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code>boolean</code></div>
+<div class="col-second even-row-color"><code><a href="#subscribeAsync()" class="member-name-link">subscribeAsync</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">By default, consumer should subscribe in non-blocking manner using default <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link"><code>CompletableFuture</code></a>
  of <code>ConsumerBuilder.subscribeAsync()</code>.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#subscription()" class="member-name-link">subscription</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code>org.apache.pulsar.client.api.RegexSubscriptionMode</code></div>
-<div class="col-second odd-row-color"><code><a href="#subscriptionTopicsMode()" class="member-name-link">subscriptionTopicsMode</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#subscription()" class="member-name-link">subscription</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>org.apache.pulsar.client.api.RegexSubscriptionMode</code></div>
+<div class="col-second even-row-color"><code><a href="#subscriptionTopicsMode()" class="member-name-link">subscriptionTopicsMode</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Ignored if <code>topics()</code> attribute is set.</div>
 </div>
-<div class="col-first even-row-color"><code>org.apache.pulsar.client.api.SubscriptionType</code></div>
-<div class="col-second even-row-color"><code><a href="#subscriptionType()" class="member-name-link">subscriptionType</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#topic()" class="member-name-link">topic</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><code>org.apache.pulsar.client.api.SubscriptionType</code></div>
+<div class="col-second odd-row-color"><code><a href="#subscriptionType()" class="member-name-link">subscriptionType</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#topic()" class="member-name-link">topic</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Has precedence over <a href="#topics()"><code>topics()</code></a> and <a href="#topicsPattern()"><code>topicsPattern()</code></a>.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second even-row-color"><code><a href="#topics()" class="member-name-link">topics</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#topics()" class="member-name-link">topics</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Has precedence over <code>topicPattern</code>.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#topicsPattern()" class="member-name-link">topicsPattern</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#topicsPattern()" class="member-name-link">topicsPattern</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Ignored if <code>topics</code> attribute is set.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#value()" class="member-name-link">value</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -197,27 +185,9 @@ loadScripts(document, 'script');</script>
 <h2>Element Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="consumerName()">
-<h3>consumerName</h3>
-<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">consumerName</span></div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>Consumer name for more descriptive monitoring</dd>
-</dl>
-</section>
-</li>
-</ul>
-</section>
-</li>
-<!-- ============ ANNOTATION INTERFACE MEMBER DETAIL =========== -->
-<li>
-<section class="member-details">
-<ul class="member-list">
-<li>
 <section class="detail" id="value()">
 <h3>value</h3>
 <div class="member-signature"><span class="annotations">@AliasFor(member="topic") @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,member="value")
-@Pattern(regexp="((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-|\\w+)*\\w/)\\w+(-|\\w+)*\\w")
 </span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">value</span></div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -232,8 +202,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="topic()">
 <h3>topic</h3>
-<div class="member-signature"><span class="annotations">@Pattern(regexp="((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-|\\w+)*\\w/)\\w+(-|\\w+)*\\w")
-@AliasFor(member="value") @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,member="value")
+<div class="member-signature"><span class="annotations">@AliasFor(member="value") @AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,member="value")
 </span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">topic</span></div>
 <div class="block">Has precedence over <a href="#topics()"><code>topics()</code></a> and <a href="#topicsPattern()"><code>topicsPattern()</code></a>.
  Single topic to consume messages from.</div>
@@ -250,14 +219,13 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="topics()">
 <h3>topics</h3>
-<div class="member-signature"><span class="annotations">@Pattern(regexp="((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-|\\w+)*\\w/)\\w+(-|\\w+)*\\w")
-@AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,
+<div class="member-signature"><span class="annotations">@AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,
           member="value")
 </span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">topics</span></div>
 <div class="block">Has precedence over <code>topicPattern</code>.</div>
 <dl class="notes">
 <dt>Returns:</dt>
-<dd>List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.</dd>
+<dd>String[] of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.</dd>
 </dl>
 <dl class="notes">
 <dt>Default:</dt>
@@ -268,8 +236,7 @@ loadScripts(document, 'script');</script>
 <li>
 <section class="detail" id="topicsPattern()">
 <h3>topicsPattern</h3>
-<div class="member-signature"><span class="annotations">@Pattern(regexp="((non-)?persistent://)?((\\w+(-|\\w+)*\\w/)|(\\$\\{tenant\\}))(\\w+(-?\\w+)?/).+")
-@AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,
+<div class="member-signature"><span class="annotations">@AliasFor(annotation=io.micronaut.messaging.annotation.MessageMapping.class,
           member="value")
 </span><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">topicsPattern</span></div>
 <div class="block">Ignored if <code>topics</code> attribute is set.</div>
@@ -329,6 +296,20 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Default:</dt>
 <dd>INLINE</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="consumerName()">
+<h3>consumerName</h3>
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">consumerName</span></div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Consumer name for more descriptive monitoring</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd>""</dd>
 </dl>
 </section>
 </li>
@@ -457,7 +438,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="priorityLevel()">
 <h3>priorityLevel</h3>
 <div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">priorityLevel</span></div>
-<div class="block">By default no priority is set.
+<div class="block">By default, no priority is set.
  Use any value less than 0 to disable. Use anything above 0 to set lower priority level.</div>
 <dl class="notes">
 <dt>Returns:</dt>
@@ -500,7 +481,7 @@ loadScripts(document, 'script');</script>
 </dl>
 <dl class="notes">
 <dt>Default:</dt>
-<dd>3</dd>
+<dd>16</dd>
 </dl>
 </section>
 </li>

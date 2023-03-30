@@ -204,7 +204,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Default properties holder for Pulsar client configuration.</div>
 </dd>
-<dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#%3Cinit%3E(io.micronaut.context.env.Environment,java.util.Optional)" class="member-name-link">DefaultPulsarClientConfiguration(Environment, Optional&lt;ServiceUrlProvider&gt;)</a> - Constructor for class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
+<dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#%3Cinit%3E(io.micronaut.context.env.Environment,org.apache.pulsar.client.api.ServiceUrlProvider)" class="member-name-link">DefaultPulsarClientConfiguration(Environment, ServiceUrlProvider)</a> - Constructor for class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>
 <div class="block">Constructs the default Pulsar Client configuration.</div>
 </dd>
@@ -223,7 +223,7 @@ loadScripts(document, 'script');</script>
 <dl class="index">
 <dt><a href="io/micronaut/pulsar/annotation/PulsarProducer.html#encryptionKey()" class="member-name-link">encryptionKey()</a> - Element in annotation interface io.micronaut.pulsar.annotation.<a href="io/micronaut/pulsar/annotation/PulsarProducer.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarProducer</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/pulsar/processor/TopicResolver.html#extractTopic(io.micronaut.core.annotation.AnnotationValue)" class="member-name-link">extractTopic(AnnotationValue&lt;?&gt;)</a> - Static method in interface io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/TopicResolver.html" title="interface in io.micronaut.pulsar.processor">TopicResolver</a></dt>
+<dt><a href="io/micronaut/pulsar/processor/TopicResolver.html#extractTopic(io.micronaut.core.annotation.AnnotationValue,java.lang.String)" class="member-name-link">extractTopic(AnnotationValue&lt;?&gt;, String)</a> - Static method in interface io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/TopicResolver.html" title="interface in io.micronaut.pulsar.processor">TopicResolver</a></dt>
 <dd>&nbsp;</dd>
 </dl>
 <h2 class="title" id="I:F">F</h2>
@@ -282,7 +282,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getDefaultTenant()" class="member-name-link">getDefaultTenant()</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getDefaultTenant()" class="member-name-link">getDefaultTenant()</a> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Useful for avoiding hard coding tenant name into every annotation value for producers,
+ consumers, or readers.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getIoThreads()" class="member-name-link">getIoThreads()</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getIoThreads()" class="member-name-link">getIoThreads()</a> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
@@ -362,11 +365,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getServiceUrlProvider()" class="member-name-link">getServiceUrlProvider()</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getServiceUrlProvider()" class="member-name-link">getServiceUrlProvider()</a> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getShutdownOnSubscriberError()" class="member-name-link">getShutdownOnSubscriberError()</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getShutdownOnSubscriberError()" class="member-name-link">getShutdownOnSubscriberError()</a> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Optional provider for Pulsar services URL.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html#getSourceError()" class="member-name-link">getSourceError()</a> - Method in class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ConsumerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ConsumerSubscriptionFailedEvent</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html#getSourceError()" class="member-name-link">getSourceError()</a> - Method in class io.micronaut.pulsar.events.<a href="io/micronaut/pulsar/events/ProducerSubscriptionFailedEvent.html" title="class in io.micronaut.pulsar.events">ProducerSubscriptionFailedEvent</a></dt>
@@ -388,11 +389,15 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsCiphers()" class="member-name-link">getTlsCiphers()</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsCiphers()" class="member-name-link">getTlsCiphers()</a> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Ciphers like TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsProtocols()" class="member-name-link">getTlsProtocols()</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsProtocols()" class="member-name-link">getTlsProtocols()</a> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Protocols like TLSv1.3, TLSv1.2.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsTrustStorePath()" class="member-name-link">getTlsTrustStorePath()</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsTrustStorePath()" class="member-name-link">getTlsTrustStorePath()</a> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
@@ -400,7 +405,9 @@ loadScripts(document, 'script');</script>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#getTlsVerifyHostname()" class="member-name-link">getTlsVerifyHostname()</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html#getTlsVerifyHostname()" class="member-name-link">getTlsVerifyHostname()</a> - Method in interface io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></dt>
-<dd>&nbsp;</dd>
+<dd>
+<div class="block">Useful in development environment for using with local host or such.</div>
+</dd>
 <dt><a href="io/micronaut/pulsar/processor/TopicResolver.TopicResolved.html#getTopic()" class="member-name-link">getTopic()</a> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/TopicResolver.TopicResolved.html" title="class in io.micronaut.pulsar.processor">TopicResolver.TopicResolved</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/processor/TopicResolver.TopicResolved.html#getTopics()" class="member-name-link">getTopics()</a> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/TopicResolver.TopicResolved.html" title="class in io.micronaut.pulsar.processor">TopicResolver.TopicResolved</a></dt>
@@ -626,7 +633,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="io/micronaut/pulsar/annotation/PulsarConsumer.html#priorityLevel()" class="member-name-link">priorityLevel()</a> - Element in annotation interface io.micronaut.pulsar.annotation.<a href="io/micronaut/pulsar/annotation/PulsarConsumer.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarConsumer</a></dt>
 <dd>
-<div class="block">By default no priority is set.</div>
+<div class="block">By default, no priority is set.</div>
 </dd>
 <dt><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#process(io.micronaut.inject.BeanDefinition,io.micronaut.inject.ExecutableMethod)" class="member-name-link">process(BeanDefinition&lt;?&gt;, ExecutableMethod&lt;?, ?&gt;)</a> - Method in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
 <dd>&nbsp;</dd>
@@ -682,6 +689,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Simple factory method for building main PulsarClient that serves as a connection to Pulsar cluster.</div>
 </dd>
+<dt><a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html#pulsarClientConfiguration" class="member-name-link">pulsarClientConfiguration</a> - Variable in class io.micronaut.pulsar.processor.<a href="io/micronaut/pulsar/processor/PulsarConsumerProcessor.html" title="class in io.micronaut.pulsar.processor">PulsarConsumerProcessor</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/PulsarClientConfiguration.html" class="type-name-link" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a> - Interface in <a href="io/micronaut/pulsar/config/package-summary.html">io.micronaut.pulsar.config</a></dt>
 <dd>
 <div class="block">Basic requirements for custom and default configuration to create Pulsar client.</div>
@@ -714,7 +723,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Intercepting pulsar <code>Producer</code> methods.</div>
 </dd>
-<dt><a href="io/micronaut/pulsar/intercept/PulsarMultitenantProducerAdvice.html#%3Cinit%3E(org.apache.pulsar.client.api.PulsarClient,io.micronaut.pulsar.processor.DefaultSchemaHandler,io.micronaut.context.BeanContext,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.pulsar.processor.TenantNameResolver,io.micronaut.pulsar.processor.TopicResolver,io.micronaut.core.convert.ConversionService)" class="member-name-link">PulsarMultitenantProducerAdvice(PulsarClient, DefaultSchemaHandler, BeanContext, ApplicationEventPublisher&lt;ProducerSubscriptionFailedEvent&gt;, TenantNameResolver, TopicResolver, ConversionService)</a> - Constructor for class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarMultitenantProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarMultitenantProducerAdvice</a></dt>
+<dt><a href="io/micronaut/pulsar/intercept/PulsarMultitenantProducerAdvice.html#%3Cinit%3E(org.apache.pulsar.client.api.PulsarClient,io.micronaut.pulsar.processor.DefaultSchemaHandler,io.micronaut.context.BeanContext,io.micronaut.context.event.ApplicationEventPublisher,io.micronaut.pulsar.processor.TopicResolver,io.micronaut.core.convert.ConversionService)" class="member-name-link">PulsarMultitenantProducerAdvice(PulsarClient, DefaultSchemaHandler, BeanContext, ApplicationEventPublisher&lt;ProducerSubscriptionFailedEvent&gt;, TopicResolver, ConversionService)</a> - Constructor for class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarMultitenantProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarMultitenantProducerAdvice</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/annotation/PulsarProducer.html" class="type-name-link" title="annotation interface in io.micronaut.pulsar.annotation">PulsarProducer</a> - Annotation Interface in <a href="io/micronaut/pulsar/annotation/package-summary.html">io.micronaut.pulsar.annotation</a></dt>
 <dd>
@@ -736,7 +745,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Pulsar <code>Producer</code> factory.</div>
 </dd>
-<dt><a href="io/micronaut/pulsar/PulsarProducerFactory.html#%3Cinit%3E(io.micronaut.pulsar.config.PulsarClientConfiguration,io.micronaut.pulsar.processor.TopicResolver)" class="member-name-link">PulsarProducerFactory(PulsarClientConfiguration, TopicResolver)</a> - Constructor for class io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarProducerFactory.html" title="class in io.micronaut.pulsar">PulsarProducerFactory</a></dt>
+<dt><a href="io/micronaut/pulsar/PulsarProducerFactory.html#%3Cinit%3E(io.micronaut.pulsar.processor.TopicResolver)" class="member-name-link">PulsarProducerFactory(TopicResolver)</a> - Constructor for class io.micronaut.pulsar.<a href="io/micronaut/pulsar/PulsarProducerFactory.html" title="class in io.micronaut.pulsar">PulsarProducerFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/PulsarProducerRegistry.html" class="type-name-link" title="interface in io.micronaut.pulsar">PulsarProducerRegistry</a> - Interface in <a href="io/micronaut/pulsar/package-summary.html">io.micronaut.pulsar</a></dt>
 <dd>
@@ -841,7 +850,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setDefaultMaxRetryDlq(int)" class="member-name-link">setDefaultMaxRetryDlq(int)</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>
-<div class="block">If not set defaults to 3.</div>
+<div class="block">If not set defaults to 16 (Pulsar library default).</div>
 </dd>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setDefaultTenant(java.lang.String)" class="member-name-link">setDefaultTenant(String)</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>
@@ -864,8 +873,6 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setServiceUrl(java.lang.String)" class="member-name-link">setServiceUrl(String)</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setShutdownOnSubscriberError(java.lang.Boolean)" class="member-name-link">setShutdownOnSubscriberError(Boolean)</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setSslProvider(java.lang.String)" class="member-name-link">setSslProvider(String)</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>
 <div class="block">Defaults to default JVM provider.</div>
@@ -884,8 +891,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html#setUseDeadLetterQueue(java.lang.Boolean)" class="member-name-link">setUseDeadLetterQueue(Boolean)</a> - Method in class io.micronaut.pulsar.config.<a href="io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html" title="class in io.micronaut.pulsar.config">DefaultPulsarClientConfiguration</a></dt>
 <dd>
-<div class="block">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
- be resent again.</div>
+<div class="block">If not set defaults to true which means that after max number of retries failed message is
+ sent to DLQ and won't be resent again.</div>
 </dd>
 <dt><a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html#simpleSchemaResolver" class="member-name-link">simpleSchemaResolver</a> - Variable in class io.micronaut.pulsar.intercept.<a href="io/micronaut/pulsar/intercept/PulsarProducerAdvice.html" title="class in io.micronaut.pulsar.intercept">PulsarProducerAdvice</a></dt>
 <dd>&nbsp;</dd>

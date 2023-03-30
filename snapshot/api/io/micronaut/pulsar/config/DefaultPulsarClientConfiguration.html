@@ -115,8 +115,8 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.context.env.Environment,java.util.Optional)" class="member-name-link">DefaultPulsarClientConfiguration</a><wbr>(io.micronaut.context.env.Environment&nbsp;environment,
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;org.apache.pulsar.client.api.ServiceUrlProvider&gt;&nbsp;serviceUrlProvider)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.context.env.Environment,org.apache.pulsar.client.api.ServiceUrlProvider)" class="member-name-link">DefaultPulsarClientConfiguration</a><wbr>(io.micronaut.context.env.Environment&nbsp;environment,
+ org.apache.pulsar.client.api.ServiceUrlProvider&nbsp;serviceUrlProvider)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs the default Pulsar Client configuration.</div>
 </div>
@@ -142,7 +142,10 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDefaultTenant()" class="member-name-link">getDefaultTenant</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Useful for avoiding hard coding tenant name into every annotation value for producers,
+ consumers, or readers.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getIoThreads()" class="member-name-link">getIoThreads</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -165,45 +168,50 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;org.apache.pulsar.client.api.ServiceUrlProvider&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getServiceUrlProvider()" class="member-name-link">getServiceUrlProvider</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getShutdownOnSubscriberError()" class="member-name-link">getShutdownOnSubscriberError</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSslProvider()" class="member-name-link">getSslProvider</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsAllowInsecureConnection()" class="member-name-link">getTlsAllowInsecureConnection</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsCertFilePath()" class="member-name-link">getTlsCertFilePath</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsCiphers()" class="member-name-link">getTlsCiphers</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsProtocols()" class="member-name-link">getTlsProtocols</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Optional provider for Pulsar services URL.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsTrustStorePath()" class="member-name-link">getTlsTrustStorePath</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSslProvider()" class="member-name-link">getSslProvider</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsVerifyHostname()" class="member-name-link">getTlsVerifyHostname</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsAllowInsecureConnection()" class="member-name-link">getTlsAllowInsecureConnection</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUseDeadLetterQueue()" class="member-name-link">getUseDeadLetterQueue</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsCertFilePath()" class="member-name-link">getTlsCertFilePath</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAuthenticationJwt(java.lang.String)" class="member-name-link">setAuthenticationJwt</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;authenticationJwt)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsCiphers()" class="member-name-link">getTlsCiphers</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Ciphers like TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsProtocols()" class="member-name-link">getTlsProtocols</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Protocols like TLSv1.3, TLSv1.2.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsTrustStorePath()" class="member-name-link">getTlsTrustStorePath</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTlsVerifyHostname()" class="member-name-link">getTlsVerifyHostname</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Useful in development environment for using with local host or such.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUseDeadLetterQueue()" class="member-name-link">getUseDeadLetterQueue</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDefaultMaxRetryDlq(int)" class="member-name-link">setDefaultMaxRetryDlq</a><wbr>(int&nbsp;defaultMaxRetryDlq)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">If not set defaults to 3.</div>
-</div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAuthenticationJwt(java.lang.String)" class="member-name-link">setAuthenticationJwt</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;authenticationJwt)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDefaultTenant(java.lang.String)" class="member-name-link">setDefaultTenant</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;defaultTenant)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDefaultMaxRetryDlq(int)" class="member-name-link">setDefaultMaxRetryDlq</a><wbr>(int&nbsp;defaultMaxRetryDlq)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">If not set defaults to 16 (Pulsar library default).</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDefaultTenant(java.lang.String)" class="member-name-link">setDefaultTenant</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;defaultTenant)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Use in combination with ${tenant} placeholder in <a href="../annotation/PulsarConsumer.html#topic()"><code>PulsarConsumer.topic()</code></a>,
  <a href="../annotation/PulsarConsumer.html#topics()"><code>PulsarConsumer.topics()</code></a>,
  <a href="../annotation/PulsarConsumer.html#topicsPattern()"><code>PulsarConsumer.topicsPattern()</code></a>,
@@ -211,26 +219,23 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
  <a href="../annotation/PulsarProducer.html#topic()"><code>PulsarProducer.topic()</code></a> to avoid hardcoding tenant name into source code
  through mentioned annotations.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIoThreads(java.lang.Integer)" class="member-name-link">setIoThreads</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;ioThreads)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setListenerThreads(java.lang.Integer)" class="member-name-link">setListenerThreads</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;listenerThreads)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIoThreads(java.lang.Integer)" class="member-name-link">setIoThreads</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;ioThreads)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOauthAudience(java.lang.String)" class="member-name-link">setOauthAudience</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;oauthAudience)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setListenerThreads(java.lang.Integer)" class="member-name-link">setListenerThreads</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;listenerThreads)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOauthCredentialsUrl(java.net.URL)" class="member-name-link">setOauthCredentialsUrl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;oauthCredentialsUrl)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOauthAudience(java.lang.String)" class="member-name-link">setOauthAudience</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;oauthAudience)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOauthIssuerUrl(java.net.URL)" class="member-name-link">setOauthIssuerUrl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;oauthIssuerUrl)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOauthCredentialsUrl(java.net.URL)" class="member-name-link">setOauthCredentialsUrl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;oauthCredentialsUrl)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setServiceUrl(java.lang.String)" class="member-name-link">setServiceUrl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serviceUrl)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOauthIssuerUrl(java.net.URL)" class="member-name-link">setOauthIssuerUrl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;oauthIssuerUrl)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setShutdownOnSubscriberError(java.lang.Boolean)" class="member-name-link">setShutdownOnSubscriberError</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;shutdownOnSubscriberError)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setServiceUrl(java.lang.String)" class="member-name-link">setServiceUrl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serviceUrl)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSslProvider(java.lang.String)" class="member-name-link">setSslProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sslProvider)</code></div>
@@ -258,8 +263,8 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setUseDeadLetterQueue(java.lang.Boolean)" class="member-name-link">setUseDeadLetterQueue</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;useDeadLetterQueue)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
- be resent again.</div>
+<div class="block">If not set defaults to true which means that after max number of retries failed message is
+ sent to DLQ and won't be resent again.</div>
 </div>
 </div>
 </div>
@@ -282,11 +287,11 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(io.micronaut.context.env.Environment,java.util.Optional)">
+<section class="detail" id="&lt;init&gt;(io.micronaut.context.env.Environment,org.apache.pulsar.client.api.ServiceUrlProvider)">
 <h3>DefaultPulsarClientConfiguration</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">DefaultPulsarClientConfiguration</span><wbr><span class="parameters">(io.micronaut.context.env.Environment&nbsp;environment,
- <a href="../annotation/PulsarServiceUrlProvider.html" title="annotation interface in io.micronaut.pulsar.annotation">@PulsarServiceUrlProvider</a>
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;org.apache.pulsar.client.api.ServiceUrlProvider&gt;&nbsp;serviceUrlProvider)</span></div>
+ @Nullable <a href="../annotation/PulsarServiceUrlProvider.html" title="annotation interface in io.micronaut.pulsar.annotation">@PulsarServiceUrlProvider</a>
+ org.apache.pulsar.client.api.ServiceUrlProvider&nbsp;serviceUrlProvider)</span></div>
 <div class="block">Constructs the default Pulsar Client configuration.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -310,6 +315,8 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getIoThreads()">getIoThreads</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Number of threads to allow for Pulsar library.</dd>
 </dl>
 </section>
 </li>
@@ -330,6 +337,8 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getListenerThreads()">getListenerThreads</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Number of threads to allow for listeners from IO threads defined for Pulsar library</dd>
 </dl>
 </section>
 </li>
@@ -357,6 +366,8 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getSslProvider()">getSslProvider</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>SSL provider if any for Pulsar to client communication encryption</dd>
 </dl>
 </section>
 </li>
@@ -389,6 +400,8 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getTlsCertFilePath()">getTlsCertFilePath</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>TLS certificate file path if any for TLS communication between Pulsar &amp; clients.</dd>
 </dl>
 </section>
 </li>
@@ -402,9 +415,13 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <section class="detail" id="getTlsVerifyHostname()">
 <h3>getTlsVerifyHostname</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</span>&nbsp;<span class="element-name">getTlsVerifyHostname</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="PulsarClientConfiguration.html#getTlsVerifyHostname()">PulsarClientConfiguration</a></code></span></div>
+<div class="block">Useful in development environment for using with local host or such.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getTlsVerifyHostname()">getTlsVerifyHostname</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Whether to verify TLS certificate host or not.</dd>
 </dl>
 </section>
 </li>
@@ -421,6 +438,8 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getTlsAllowInsecureConnection()">getTlsAllowInsecureConnection</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Allow insecure connection when TLS certificate is set or not.</dd>
 </dl>
 </section>
 </li>
@@ -434,9 +453,13 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <section class="detail" id="getTlsCiphers()">
 <h3>getTlsCiphers</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">getTlsCiphers</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="PulsarClientConfiguration.html#getTlsCiphers()">PulsarClientConfiguration</a></code></span></div>
+<div class="block">Ciphers like TLS_RSA_WITH_AES_256_GCM_SHA384, TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getTlsCiphers()">getTlsCiphers</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Permitted ciphers for TLS.</dd>
 </dl>
 </section>
 </li>
@@ -450,9 +473,13 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <section class="detail" id="getTlsProtocols()">
 <h3>getTlsProtocols</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</span>&nbsp;<span class="element-name">getTlsProtocols</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="PulsarClientConfiguration.html#getTlsProtocols()">PulsarClientConfiguration</a></code></span></div>
+<div class="block">Protocols like TLSv1.3, TLSv1.2.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getTlsProtocols()">getTlsProtocols</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Permitted protocols for TLS.</dd>
 </dl>
 </section>
 </li>
@@ -494,9 +521,13 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <section class="detail" id="getServiceUrlProvider()">
 <h3>getServiceUrlProvider</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;org.apache.pulsar.client.api.ServiceUrlProvider&gt;</span>&nbsp;<span class="element-name">getServiceUrlProvider</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="PulsarClientConfiguration.html#getServiceUrlProvider()">PulsarClientConfiguration</a></code></span></div>
+<div class="block">Optional provider for Pulsar services URL.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getServiceUrlProvider()">getServiceUrlProvider</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Optional bean for fetching Pulsar services URLs</dd>
 </dl>
 </section>
 </li>
@@ -507,26 +538,8 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getAuthentication()">getAuthentication</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="getShutdownOnSubscriberError()">
-<h3>getShutdownOnSubscriberError</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">getShutdownOnSubscriberError</span>()</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="PulsarClientConfiguration.html#getShutdownOnSubscriberError()">getShutdownOnSubscriberError</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
-</dl>
-</section>
-</li>
-<li>
-<section class="detail" id="setShutdownOnSubscriberError(java.lang.Boolean)">
-<h3>setShutdownOnSubscriberError</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setShutdownOnSubscriberError</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;shutdownOnSubscriberError)</span></div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>shutdownOnSubscriberError</code> - should application shutdown if any of subscriptions fail</dd>
+<dt>Returns:</dt>
+<dd>Authentication method for pulsar clients</dd>
 </dl>
 </section>
 </li>
@@ -593,8 +606,8 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <section class="detail" id="setUseDeadLetterQueue(java.lang.Boolean)">
 <h3>setUseDeadLetterQueue</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setUseDeadLetterQueue</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&nbsp;useDeadLetterQueue)</span></div>
-<div class="block">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won't
- be resent again.</div>
+<div class="block">If not set defaults to true which means that after max number of retries failed message is
+ sent to DLQ and won't be resent again.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>useDeadLetterQueue</code> - Use DLQ for Pulsar Consumers by default or not.</dd>
@@ -611,10 +624,12 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <section class="detail" id="setDefaultMaxRetryDlq(int)">
 <h3>setDefaultMaxRetryDlq</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setDefaultMaxRetryDlq</span><wbr><span class="parameters">(int&nbsp;defaultMaxRetryDlq)</span></div>
-<div class="block">If not set defaults to 3. <code>#useDeadLetterQueue</code> must be enabled or else this value is ignored.</div>
+<div class="block">If not set defaults to 16 (Pulsar library default).
+ <code>#useDeadLetterQueue</code> must be enabled or else this value is ignored.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>defaultMaxRetryDlq</code> - Deafult max number of retries before sending message to DLQ for all consumers.</dd>
+<dd><code>defaultMaxRetryDlq</code> - Default max number of retries before sending message to DLQ
+                           for all consumers.</dd>
 </dl>
 </section>
 </li>
@@ -622,9 +637,14 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <section class="detail" id="getDefaultTenant()">
 <h3>getDefaultTenant</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getDefaultTenant</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="PulsarClientConfiguration.html#getDefaultTenant()">PulsarClientConfiguration</a></code></span></div>
+<div class="block">Useful for avoiding hard coding tenant name into every annotation value for producers,
+ consumers, or readers.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="PulsarClientConfiguration.html#getDefaultTenant()">getDefaultTenant</a></code>&nbsp;in interface&nbsp;<code><a href="PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a></code></dd>
+<dt>Returns:</dt>
+<dd>Default tenant name if any.</dd>
 </dl>
 </section>
 </li>
@@ -638,7 +658,7 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
  <a href="../annotation/PulsarReader.html#topic()"><code>PulsarReader.topic()</code></a>,
  <a href="../annotation/PulsarProducer.html#topic()"><code>PulsarProducer.topic()</code></a> to avoid hardcoding tenant name into source code
  through mentioned annotations.
-
+ <p>
  This property will be ignored if multi-tenancy module is enabled.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
