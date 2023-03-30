@@ -46,11 +46,11 @@
         <div class="docs-content">
             <div class="project">
                 <h1>Configuration Reference</h1>
-                <p><strong>Version:</strong>1.3.1-SNAPSHOT</p>
+                <p><strong>Version:</strong>2.0.0-SNAPSHOT</p>
                 <p></p>
             </div>
 <div class="sect2">
-<h3 id="_pulsar_config_properties">Pulsar Config Properties</h3>
+<h3 id="_micronaut_pulsar_config_properties">Micronaut Pulsar Config Properties</h3>
 <a id="io.micronaut.pulsar.config.DefaultPulsarClientConfiguration" href="#io.micronaut.pulsar.config.DefaultPulsarClientConfiguration">&#128279;</a>
 <table class="tableblock frame-all grid-all stretch">
 <caption class="title">Table 1. Configuration Properties for <a href="../api/io/micronaut/pulsar/config/DefaultPulsarClientConfiguration.html">DefaultPulsarClientConfiguration</a></caption>
@@ -78,40 +78,14 @@
 <td class="tableblock halign-left valign-top"><p class="tableblock">Number of threads to use with message example.java.listeners.</p></td>
 </tr>
 <tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.authentication-jwt</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.ssl-provider</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Defaults to default JVM provider.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.service-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL to Pulsar cluster</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.oauth-issuer-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the OAuth2 Token issuer</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.oauth-credentials-url</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">URL or a path to a file containing client id, client secret, and such for OAuth2 client application.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.oauth-audience</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">OAuth2 audience</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.use-dead-letter-queue</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to true which means that after max number of retries failed message is sent to DLQ and won&#8217;t
- be resent again.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.default-max-retry-dlq</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to 3. {@code #useDeadLetterQueue} must be enabled or else this value is ignored.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.tls-trust-store-path</code></p></td>
@@ -144,25 +118,48 @@
 <td class="tableblock halign-left valign-top"></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.shutdown-on-subscriber-error</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.service-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.oauth-audience</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Must be set for usage with the OAuth2 authentication.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.oauth-credentials-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL or a path to a file containing client id, client secret, and such for OAuth2 client application.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.oauth-issuer-url</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">java.net.URL</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">URL of the OAuth2 Token issuer</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.use-dead-letter-queue</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.Boolean</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">should application shutdown if any of subscriptions fail</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to true which means that after max number of retries failed message is
+ sent to DLQ and won&#8217;t be resent again.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.default-max-retry-dlq</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">int</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">If not set defaults to 16 (Pulsar library default).
+  must be enabled or else this value is ignored.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.default-tenant</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Use in combination with ${tenant} placeholder in <a href="../api/io/micronaut/pulsar/annotation/.html#PulsarConsumer#topic--">annotation.PulsarConsumer#topic()</a>,
- <a href="../api/io/micronaut/pulsar/annotation/.html#PulsarConsumer#topics--">annotation.PulsarConsumer#topics()</a>,
- <a href="../api/io/micronaut/pulsar/annotation/.html#PulsarConsumer#topicsPattern--">annotation.PulsarConsumer#topicsPattern()</a>,
- <a href="../api/io/micronaut/pulsar/annotation/.html#PulsarReader#topic--">annotation.PulsarReader#topic()</a>,
- <a href="../api/io/micronaut/pulsar/annotation/.html#PulsarProducer#topic--">annotation.PulsarProducer#topic()</a> to avoid hardcoding tenant name into source code
- through mentioned annotations.</p>
-<p class="tableblock"> This property will be ignored if multi-tenancy module is enabled.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>pulsar.authentication-jwt</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">java.lang.String</p></td>
-<td class="tableblock halign-left valign-top"></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Use in combination with ${tenant} placeholder in ,
+ ,
+ ,
+ ,
+  to avoid hardcoding tenant name into source code
+ through mentioned annotations.
+ &lt;p&gt;
+ This property will be ignored if multi-tenancy module is enabled.</p></td>
 </tr>
 </tbody>
 </table>
