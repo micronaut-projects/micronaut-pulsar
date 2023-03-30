@@ -22,7 +22,6 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.type.Argument;
 import io.micronaut.messaging.exceptions.MessagingClientException;
 import io.micronaut.pulsar.annotation.PulsarProducer;
-import io.micronaut.pulsar.config.PulsarClientConfiguration;
 import io.micronaut.pulsar.processor.DefaultSchemaHandler;
 import io.micronaut.pulsar.processor.PulsarArgumentHandler;
 import io.micronaut.pulsar.processor.TopicResolver;
@@ -38,12 +37,9 @@ import org.apache.pulsar.client.impl.PulsarClientImpl;
  */
 @Factory
 public class PulsarProducerFactory {
-
-    private final PulsarClientConfiguration configuration;
     private final TopicResolver topicResolver;
 
-    public PulsarProducerFactory(final PulsarClientConfiguration configuration, final TopicResolver topicResolver) {
-        this.configuration = configuration;
+    public PulsarProducerFactory(final TopicResolver topicResolver) {
         this.topicResolver = topicResolver;
     }
 
@@ -66,25 +62,19 @@ public class PulsarProducerFactory {
                                           @Parameter DefaultSchemaHandler simpleSchemaResolver,
                                           @Parameter String annotatedMethodName) throws MessagingClientException {
 
-        final PulsarArgumentHandler argsHandler = new PulsarArgumentHandler(methodArguments, annotatedMethodName);
-        final Schema<T> schema = (Schema<T>) simpleSchemaResolver.decideSchema(argsHandler.getBodyArgument(),
+        final var argsHandler = new PulsarArgumentHandler(methodArguments, annotatedMethodName);
+        final var schema = (Schema<T>) simpleSchemaResolver.decideSchema(argsHandler.getBodyArgument(),
             argsHandler.getKeyArgument(),
             annotationValue,
             annotatedMethodName);
 
-        final String producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
-        final String topic = annotationValue.stringValue("topic", null)
-            .orElseGet(() -> annotationValue.stringValue("value", null).orElse(null));
-        if (null == topic) {
-            if (configuration.getShutdownOnSubscriberError()) {
-                throw new Error("Failed to instantiate Pulsar producer " + producerName + " due to missing topic");
-            }
-            throw new MessagingClientException("Topic value missing for producer " + producerName);
-        }
+        final var producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
+        final var topicResolved = TopicResolver.extractTopic(annotationValue, producerName);
 
-        final ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
+        final var producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
             .producerName(producerName)
-            .topic(topicResolver.resolve(topic));
+            // producers can't have list of topics or patterns just a single topic
+            .topic(topicResolver.resolve(topicResolved.getTopic()));
 
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);
@@ -102,7 +92,8 @@ public class PulsarProducerFactory {
         try {
             return producerBuilder.create();
         } catch (Exception ex) {
-            final String message = String.format("Failed to initialize Pulsar producer %s on topic %s", producerName, topic);
+            final var message = "Failed to initialize Pulsar producer %s on topic %s"
+                .formatted(producerName, topicResolved.getTopic());
             throw new MessagingClientException(message, ex);
         }
     }

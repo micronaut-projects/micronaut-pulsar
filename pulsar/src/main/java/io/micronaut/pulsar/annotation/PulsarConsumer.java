@@ -22,16 +22,14 @@ import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
 import org.apache.pulsar.client.api.SubscriptionType;
+import org.apache.pulsar.client.util.RetryMessageUtil;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
-import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 import static io.micronaut.pulsar.MessageSchema.BYTES;
-import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_PATTERN_VALIDATOR;
-import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import static org.apache.pulsar.client.api.RegexSubscriptionMode.AllTopics;
@@ -54,7 +52,6 @@ public @interface PulsarConsumer {
      * @return Same as {@link #topic()}
      */
     @AliasFor(member = "topic")
-    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     @AliasFor(annotation = MessageMapping.class, member = "value")
     String value() default "";
 
@@ -64,7 +61,6 @@ public @interface PulsarConsumer {
      *
      * @return Topic name to listen to
      */
-    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     @AliasFor(member = "value")
     @AliasFor(annotation = MessageMapping.class, member = "value")
     String topic() default "";
@@ -72,9 +68,8 @@ public @interface PulsarConsumer {
     /**
      * Has precedence over {@code topicPattern}.
      *
-     * @return List of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.
+     * @return String[] of topic names in form of (persistent|non-persistent)://tenant-name/namespace/topic.
      */
-    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     @AliasFor(annotation = MessageMapping.class, member = "value")
     String[] topics() default {};
 
@@ -83,7 +78,6 @@ public @interface PulsarConsumer {
      *
      * @return Topics name in form of tenantName/namespace/topic-name-pattern.
      */
-    @Pattern(regexp = TOPIC_NAME_PATTERN_VALIDATOR)
     @AliasFor(annotation = MessageMapping.class, member = "value")
     String topicsPattern() default "";
 
@@ -115,7 +109,7 @@ public @interface PulsarConsumer {
     /**
      * @return Consumer name for more descriptive monitoring
      */
-    String consumerName();
+    String consumerName() default "";
 
     /**
      * @return Subscription name in case consumer was defined outside the {@link PulsarSubscription} annotated class
@@ -175,7 +169,7 @@ public @interface PulsarConsumer {
     int receiverQueueSize() default 1000;
 
     /**
-     * By default no priority is set.
+     * By default, no priority is set.
      * Use any value less than 0 to disable. Use anything above 0 to set lower priority level.
      *
      * @return priority level for a consumer
@@ -193,5 +187,5 @@ public @interface PulsarConsumer {
     /**
      * @return Maximum numbers of retires before sending message to dead letter queue topic.
      */
-    int maxRetriesBeforeDlq() default 3;
+    int maxRetriesBeforeDlq() default RetryMessageUtil.MAX_RECONSUMETIMES;
 }

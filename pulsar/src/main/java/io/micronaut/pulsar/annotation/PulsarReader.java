@@ -20,17 +20,15 @@ import io.micronaut.aop.Introduction;
 import io.micronaut.context.annotation.AliasFor;
 import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
+import jakarta.validation.constraints.Min;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Pattern;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import java.util.concurrent.TimeUnit;
 
 import static io.micronaut.pulsar.MessageSchema.BYTES;
-import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.TOPIC_NAME_VALIDATOR;
 import static java.lang.annotation.ElementType.*;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
@@ -62,7 +60,6 @@ public @interface PulsarReader {
      */
     @AliasFor(member = "value")
     @AliasFor(annotation = MessageMapping.class, member = "value")
-    @Pattern(regexp = TOPIC_NAME_VALIDATOR)
     String topic() default "";
 
     /**

@@ -25,7 +25,7 @@ jobs:
           java-version: '17'
       - name: Set the current release version
         id: release_version
-        run: echo "release_version::${GITHUB_REF:11}" >> $GITHUB_OUTPUT
+        run: echo "release_version=${GITHUB_REF:11}" >> $GITHUB_OUTPUT
       - name: Run pre-release
         uses: micronaut-projects/github-actions/pre-release@master
         env:
@@ -66,13 +66,13 @@ jobs:
           # Store the hash in a file, which is uploaded as a workflow artifact.
           echo $(sha256sum $ARTIFACTS | base64 -w0) > artifacts-sha256
       - name: Upload build artifacts
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        uses: actions/upload-artifact@v3
         with:
           name: gradle-build-outputs
           path: build/repo/${{ steps.publish.outputs.group }}/*/${{ steps.publish.outputs.version }}/*
           retention-days: 5
       - name: Upload artifacts-sha256
-        uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # v3.1.2
+        uses: actions/upload-artifact@v3
         with:
           name: artifacts-sha256
           path: artifacts-sha256
@@ -130,7 +130,7 @@ jobs:
       artifacts-sha256: ${{ steps.set-hash.outputs.artifacts-sha256 }}
     steps:
       - name: Download artifacts-sha256
-        uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3.0.2
+        uses: actions/download-artifact@v3
         with:
           name: artifacts-sha256
       # The SLSA provenance generator expects the hash digest of artifacts to be passed as a job
@@ -167,12 +167,12 @@ jobs:
         with:
           name: gradle-build-outputs
           path: build/repo
+      - name: Create artifacts archive
+        shell: bash
+        run: find build/repo -regextype sed -regex '\(.*\.jar\|.*\.pom\|.*\.module\|.*\.toml\)' | xargs zip artifacts.zip
       - name: Upload assets
-        # Upload the artifacts and SLSA L3 provenance as assets to the existing
-        # release. Note that the provenance will attest to each artifact file and
-        # not the aggregated ZIP file.
-        run: |
-          find build/repo -regextype sed -regex '\(.*\.jar\|.*\.pom\|.*\.module\|.*\.toml\)' | xargs zip artifacts.zip
-          gh release upload ${{ github.ref_name }} artifacts.zip
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Upload the artifacts to the existing release. Note that the SLSA provenance will
+        # attest to each artifact file and not the aggregated ZIP file.
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844 # v0.1.15
+        with:
+          files: artifacts.zip

@@ -2,9 +2,11 @@ plugins {
     id("io.micronaut.minimal.application")
     id "java"
 }
-
+micronaut {
+    version '4.0.0-SNAPSHOT'
+}
 dependencies {
-    testImplementation projects.pulsar
+    testImplementation projects.micronautPulsar
     testCompileOnly mn.micronaut.inject.java
     testImplementation mn.micronaut.inject
 }

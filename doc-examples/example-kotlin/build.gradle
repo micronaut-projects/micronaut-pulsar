@@ -3,12 +3,14 @@ plugins {
     id("org.jetbrains.kotlin.kapt")
     id("io.micronaut.minimal.application")
 }
-
+micronaut {
+    version '4.0.0-SNAPSHOT'
+}
 dependencies {
     kaptTest enforcedPlatform(mn.micronaut.core.bom)
     kaptTest mn.micronaut.inject.java
 
-    testImplementation projects.pulsar
+    testImplementation projects.micronautPulsar
     testImplementation libs.kotest.runner
     testImplementation libs.kotlin.reflect
     testImplementation libs.kotlin.stdlib.jdk8
@@ -22,11 +24,4 @@ tasks.named('test') {
     systemProperties['junit.jupiter.execution.parallel.enabled'] = true
     maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
     forkEvery = 1
-}
-
-tasks.named('compileTestKotlin') {
-    kotlinOptions {
-        jvmTarget = '17'
-        javaParameters = true
-    }
 }

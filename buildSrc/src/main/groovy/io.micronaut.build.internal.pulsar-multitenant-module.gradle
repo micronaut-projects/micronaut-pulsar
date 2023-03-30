@@ -3,6 +3,6 @@ plugins {
 }
 
 dependencies {
-    implementation projects.pulsar
+    implementation projects.micronautPulsar
     implementation mn.reactor
 }

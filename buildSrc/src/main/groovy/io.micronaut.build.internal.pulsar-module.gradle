@@ -12,13 +12,11 @@ dependencies {
         exclude group: 'com.google.code.gson'
     }
     compileOnly 'com.google.code.findbugs:jsr305'
-    testRuntimeOnly mn.logback.classic
+    testRuntimeOnly mnLogging.logback.classic
 }
 
-test {
-    useJUnitPlatform()
-
-    jvmArgs '-Duser.country=US'
-    jvmArgs '-Duser.language=en'
-    failFast = true
+micronautBuild {
+    binaryCompatibility {
+        enabled = false
+    }
 }

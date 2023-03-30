@@ -2,9 +2,12 @@ plugins {
     id("io.micronaut.minimal.application")
     id "groovy"
 }
+micronaut {
+    version '4.0.0-SNAPSHOT'
+}
 
 dependencies {
-    testImplementation projects.pulsar
+    testImplementation projects.micronautPulsar
 
     testCompileOnly mn.micronaut.inject.groovy
     testImplementation mn.micronaut.inject
