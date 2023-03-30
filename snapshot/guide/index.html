@@ -3,7 +3,6 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
     <title>Micronaut Pulsar</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" href="../css/main.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
     <link rel="stylesheet" href="../css/custom.css" type="text/css" media="screen, print" title="Style" charset="utf-8" />
@@ -127,7 +126,7 @@
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/introduction.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/introduction.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -140,7 +139,7 @@
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/releaseHistory.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/releaseHistory.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -151,38 +150,6 @@
 </div>
 <div class="paragraph">
 <p><a href="https://github.com/micronaut-projects/micronaut-pulsar/releases">https://github.com/micronaut-projects/micronaut-pulsar/releases</a></p>
-</div>
-<div class="sect3">
-<h4 id="_2_0_0">2.0.0</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Java 17 minimum</p>
-</li>
-<li>
-<p>Micronaut 4.0.0 minimum version</p>
-</li>
-<li>
-<p>Remove shutdown on subscribe error</p>
-</li>
-<li>
-<p>Bug fixes</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_1_3_0">1.3.0</h4>
-<div class="ulist">
-<ul>
-<li>
-<p>Dependency updates</p>
-</li>
-<li>
-<p>Micronaut 3.8.0</p>
-</li>
-</ul>
-</div>
 </div>
 <div class="sect3">
 <h4 id="_1_2_0">1.2.0</h4>
@@ -248,7 +215,7 @@
 <h1 id="quickStart"><a class="anchor" href="#quickStart"></a>3 Quick Start</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/quickStart.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/quickStart.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -312,15 +279,6 @@
 }</code></pre>
 </div>
 </div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "pulsar": {
-    "service-url": "pulsar://localhost:6650"
-  }
-}</code></pre>
-</div>
-</div>
 </div>
 </div>
 <div class="admonitionblock note">
@@ -373,15 +331,6 @@ As this module is based on the official Java client from Apache Pulsar, see the 
 }</code></pre>
 </div>
 </div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "pulsar": {
-    "service-url-provider": "BeanName"
-  }
-}</code></pre>
-</div>
-</div>
 </div>
 </div>
 <div class="paragraph">
@@ -394,7 +343,7 @@ As this module is based on the official Java client from Apache Pulsar, see the 
 <h1 id="consumer"><a class="anchor" href="#consumer"></a>4 Pulsar consumers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/consumer.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/consumer.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -591,6 +540,36 @@ same subscription.</p>
 </li>
 </ul>
 </div>
+<div class="admonitionblock warning">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-warning" title="Warning"></i>
+</td>
+<td class="content">
+Consumer names are generated non-randomly so names will contain sequence numbers which might be OK in a single
+instance deployment but can cause errors with replicas given that names will use same generating method and start again
+from 1 for each deployment (instance of the app). Pulsar expects unique names for each consumer within the subscription.
+</td>
+</tr>
+</table>
+</div>
+<div class="admonitionblock tip">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-tip" title="Tip"></i>
+</td>
+<td class="content">
+Given that subscriptions in multi-deployment environment (example same micronaut app replicated couple of times) will
+use fixed subscription name and consumer name this will problems because consumers should be unique within the subscription.
+To avoid this utilize Micronauts annotation parsing by providing expression inside of the <code>consumerName</code> property. Read
+more about it in official docs. In short, you can add expression as a name in the <code>consumerName</code> and it will be parsed so
+you can have something like a system property #{pulsar.subscriptionX.consumerYname} and set property for each deployment.
+</td>
+</tr>
+</table>
+</div>
 <div class="paragraph">
 <p>Type and acknowledgment group timeout default to Pulsar Java client library values if not set. Name will be generated
 by this module in a "counter manner" (pulsar-subscription-1,2,3,4&#8230;&#8203;).</p>
@@ -704,7 +683,7 @@ should be set to <code>KeyValueEncodingType.SEPARATED</code>; otherwise Pulsar w
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>java.lang.String</code></p></td>
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Consumer name, not required; will be generated automatically if missing</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Consumer name, not required</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">subscriptionTopicsMode</p></td>
@@ -726,20 +705,6 @@ should be set to <code>KeyValueEncodingType.SEPARATED</code>; otherwise Pulsar w
 <td class="tableblock halign-left valign-top"></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Time delay in seconds after which regex subscriptions should seek new topics.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">maxRetriesBeforeDlq</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>int</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">16 - Pulsar library default</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Maximum attempts before sending failed message to DLQ</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">deadLetterTopic</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>String</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">topic name + '-DLQ' Pulsar library default</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">No</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">DLQ topic name, if not set will let pulsar decide</p></td>
 </tr>
 </tbody>
 </table>
@@ -770,36 +735,18 @@ might not connect and could throw <code>org.apache.pulsar.client.api.PulsarClien
 </tr>
 </table>
 </div>
-<div class="sect3">
-<h4 id="_consumer_names">Consumer names</h4>
-<div class="paragraph">
-<p>Consumer names are important but can be left. This will trigger sequential assignment of names in pattern of
-<code>pulsar-cosumer-<mark>#</mark></code>. Default name assignment will start from 10 and increase with consumer number.</p>
-</div>
-<div class="admonitionblock warning">
-<table>
-<tr>
-<td class="icon">
-<i class="fa icon-warning" title="Warning"></i>
-</td>
-<td class="content">
-Pulsar expects unique names for each consumer within the subscription. To avoid issues in shared subscription
-model where multiple instances of same micronaut messaging application is deployed use expressions in consumer
-annotation. Example: <code>${pulsarapp.myTestSubscription.consumerXyz.name}</code> then have such property in you application.yml
-(or other registered property setters). This means auto-naming for consumers will break at some point as well as hardcoded
-names in annotations, so please switch to expressions and assign names via properties dynamically.
-</td>
-</tr>
-</table>
-</div>
-</div>
 </div>
 <div class="sect2">
 <h3 id="_dead_letter_queue">Dead Letter Queue</h3>
 <div class="paragraph">
-<p>Pulsar library uses DLQ for Shared and Key_Shared subscriptions. It also configures DLQ topic name as well as maximum amount of times for redelivery before putting message for DLQ.
-To override default behavior please use configuration properties <code>use-dead-letter-queue</code> and <code>default-max-retry-dlq</code>. These
-properties indicate that the DLQ settings will be used by default on all Pulsar consumers during their creation if not explicitly set through annotation.</p>
+<p>By default, Pulsar Java library does not configure DLQ to be used. Instead it will re-deliver failed messages as long as
+possible which floods the consumer(s) until message if finally received. Failed means that message was received but consumer
+did negative acknowledgement thus received means delivered and acknowledged by the consumer. However, reason for failure might be
+bad JSON formatting (in the case where JSON is being used) or such which will create unnecessary traffic to consumer(s) and message
+will never be delivered resulting in either consumers slowing down due to high redelivery count or at the end dropping
+due to high load. For this purpose Micronaut Pulsar is using DLQ by default and it will retry <em>only</em> 3 times. If you wish
+to configure these options please use configuration properties <code>use-dead-letter-queue</code> and <code>default-max-retry-dlq</code>. These
+properties indicate that the DLQ will be used by default on all Pulsar consumers if not explicitly set otherwise.</p>
 </div>
 </div>
 </div>
@@ -808,7 +755,7 @@ properties indicate that the DLQ settings will be used by default on all Pulsar 
 <h1 id="reader"><a class="anchor" href="#reader"></a>5 Pulsar readers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/reader.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/reader.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -938,7 +885,7 @@ is part of the message payload or <code>SEPARATED</code> - key is stored as a me
 <h1 id="producer"><a class="anchor" href="#producer"></a>6 Pulsar producers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/producer.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/producer.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1201,7 +1148,7 @@ on caller or upper layers to provide it.</td>
 <h1 id="authentication"><a class="anchor" href="#authentication"></a>7 Authentication</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/authentication.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/authentication.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1248,17 +1195,6 @@ on caller or upper layers to provide it.</td>
   pulsar {
     authentication {
       jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
-    }
-  }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "pulsar": {
-    "authentication": {
-      "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
     }
   }
 }</code></pre>
@@ -1323,17 +1259,6 @@ pulsar.audience=localhost:6650</code></pre>
 }</code></pre>
 </div>
 </div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "pulsar": {
-    "oauth-issuer-url": "https://some-sso.io/...",
-    "oauth-credentials-url": "file:///path/to/file.json",
-    "audience": "localhost:6650"
-  }
-}</code></pre>
-</div>
-</div>
 </div>
 </div>
 <div class="paragraph">
@@ -1364,7 +1289,7 @@ and <em>role</em> attribute in its configuration files must be specified for Pul
 <h1 id="tls"><a class="anchor" href="#tls"></a>8 Transport encryption</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/tls.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/tls.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1439,18 +1364,6 @@ pulsar.tls-protocols[1]=TLSv1.2</code></pre>
 }</code></pre>
 </div>
 </div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
-  "pulsar": {
-    "service-url": "pulsar+ssl://localhost:6651",
-    "tls-cert-file-path": "path/to/cert.pem",
-    "tls-ciphers": ["TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"],
-    "tls-protocols": ["TLSv1.3", "TLSv1.2"]
-  }
-}</code></pre>
-</div>
-</div>
 </div>
 </div>
 <div class="paragraph">
@@ -1466,7 +1379,7 @@ hostname is not verified but can be enabled by using <code>tls-verify-hostname: 
 <h1 id="protobuf"><a class="anchor" href="#protobuf"></a>9 Protocol Buffers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/protobuf.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/protobuf.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1515,7 +1428,7 @@ google and micronaut dependencies</p>
 <h1 id="repository"><a class="anchor" href="#repository"></a>10 Repository</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/master/src/main/docs/guide/repository.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/1.3.x/src/main/docs/guide/repository.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
