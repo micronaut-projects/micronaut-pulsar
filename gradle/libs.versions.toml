@@ -6,7 +6,7 @@ junit = '5.9.2'
 kotlin = "1.8.21"
 kotlin-coroutines = "1.7.0"
 kotest-runner = '5.5.5'
-protobuf-java = '3.22.4'
+protobuf-java = '3.23.0'
 spock = "2.3-groovy-4.0"
 testcontainers = '1.18.0'
 
