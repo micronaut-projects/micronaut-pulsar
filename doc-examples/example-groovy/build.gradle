@@ -3,7 +3,7 @@ plugins {
     id "groovy"
 }
 micronaut {
-    version '4.0.0-SNAPSHOT'
+    version libs.versions.micronaut.platform.get()
 }
 
 dependencies {
