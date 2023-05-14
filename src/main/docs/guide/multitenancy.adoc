@@ -9,33 +9,62 @@ dependency::micronaut-multitenancy[groupId="io.micronaut.multitenancy"]
 And Micronaut Pulsar Multitenant module
 dependency::pulsar-multitenant[groupId="io.micronaut.pulsar"]
 
+=== Configuration for multitenant listeners / producers
 To make a reader, consumer, or a producer multitenant simply use `${tenant}` in topic value.
 For example: `"persistent://${tenant}/public/default"`. This will indicate to Pulsar module that the client needs to
 resolve tenant name prior to instantiation.
 
-A good use case for this is orchestration of messaging clients that use same workflow thus same namespaces and topics but
+=== Dynamic vs fixed tenant names
+
+A good use case for this module is orchestration of messaging clients that use same workflow thus same namespaces and topics but
 different tenants. In such case it's good to have `SystemPropertyTenantResolver` or `FixedTenantResolver` setup in
 Micronaut application which will always use one single tenant per application instance. This will make it possible to use
 same code for different tenants by simply specifying tenant-id before deploying the application, and it also makes it
 possible to individually scale messaging clients based upon tenant or simply automating deployment of messaging clients
 with the creation of tenants in the system.
 
+Tenant names are resolved by Micronaut Multitenancy  module. This module has coupe of out-of-the-box resolvers for
+tenant names, but we can divide them in 2 groups: fixed / static & dynamic.
+
+==== Static / Fixed tenant name resolution
+Fixed ones would be `FixedTenantResolver` & `SystemPropertyTenantResolver`. Latter one is usually used for testing
+(resolves tenant name only from system property named `tenantId`) while former is reading property value from the
+properties file. Since properties file can be used to inject ENV variables or such it's covering the both purposes.
+Such approach would be the most reasonable given that each instance of this application would then only read data sent to
+only 1 Apache Pulsar tenant which would provide further data isolation, and independent scaling capabilities based on
+tenants.
+
+==== Dynamic tenant name resolution
+Dynamic group would be resolving tenant name through cookies, http headers, or any such way. This means that there's no
+reasonable way for Micronaut messaging application that uses Pulsar module to figure out what tenants should it listen
+or produce to. For producers, it's much easier assuming that each request to produce a message would *_probably_* be linked
+to some kind of request that would contain tenant description. Similar could be said for readers as sometimes we want to
+read data to fulfill a request by enriching information or just simply reading values from streams. Both cases would
+be easy implement given that there's some kind of context.
+
+However, for consumers, we usually want to start them beforehand. Before any request is made, on the application boot.
+Also, we want producers, and readers sometimes to work independently of outside requests or any context that would bring
+in *_later_* needed name. For this reason dynamic approach is less likely but not uncommon.
+
+BUT sometimes we want to provide tenant name in _"reactive"_ style, where a new tenant is created across the whole system
+and a message is sent. Or a tenant is reported on-demand via HTTP like user adding tenant via web UI and expecting
+instant consumer activation. In such cases this module provides `PulsarTenantDiscoveredEvent` which can be fired up at
+any time. This will force creating consumers, producers, or readers specified as beans and instantly activate them for
+each new tenant detected in this event. Implementation tries to ensure that no "double" tenant listeners will be made
+within a single application instance. It means that if you fire up 2 of such events concurrently it should only create 1
+consumer/producer/reader per specified bean.
 
 
+It is also possible to create a bean that would read tenant names from the database and fire up mentioned event for each
+tenant name. This would make it somewhat of a "static via dynamic" approach. You fire up events as soon as DB query
+is ready and those are the only tenants that would be made through application lifecycle.
 
-1. For fixed and system resolved tenants it will happen once during server (application) startup and thus consumers and producers
-will be instantiated during server startup.
-2. Dynamically discovered tenants like Cookie-based or from HTTP headers will be resolved during each client request.
-Micronaut Pulsar multi tenancy module will detect usage of these types for tenant resolution (by default) and will store
-each consumer and producer definition with dynamic tenant in the background. This will serve as a cache which will for each
-new detected tenant create a new consumer or a producer from definition cache.
-Ex. let's say a consumer is defined with `"persistent://${tenant}/public/default"`. This will store configuration for such
-consumer throughout the whole application lifecycle. After the first request, cache is checked and a new consumer is created
-for a tenant defined in the HTTP header (or cookie or such). For each request it will check the tenant again. If there
-is a new request with a different tenant, creation of a consumer is repeated and now application has 2 consumers running
-for each tenant.
 
-=== Multitenant readers
+==== Combined approach?
 
-Readers are special. They do not need dynamic or fixed discovery of tenants. Only important thing is that some tenant is
-available during
+In some cases it might be useful to separate readers, consumers, and producers and allow each one to resolve tenant
+names individually - like letting tenants for consumers be resolved on boot via DB or properties file while allowing
+producers & readers to be generated via some other HTTP header. Currently, this is not supported, and you would need to
+override multiple infrastructure classes to achieve this. Later it might be supported to via reserved keywords and/or
+configuration through application properties to allow each type or event specific instance to depend on a specific
+way of resolving tenant name.

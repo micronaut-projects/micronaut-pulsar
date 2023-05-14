@@ -162,14 +162,15 @@ might not connect and could throw `org.apache.pulsar.client.api.PulsarClientExce
 
 ==== Consumer names
 
-Consumer names are important but can be left. This will trigger sequential assignment of names in pattern of
+Consumer names are important but can be left out. This will trigger sequential assignment of names in pattern of
 `pulsar-cosumer-###`. Default name assignment will start from 10 and increase with consumer number.
 
-WARNING: Pulsar expects unique names for each consumer within the subscription. To avoid issues in shared subscription
-model where multiple instances of same micronaut messaging application is deployed use expressions in consumer
+WARNING: Apache Pulsar expects unique names for each consumer within the subscription. To avoid issues in shared subscription
+model, where multiple instances of same micronaut messaging application is deployed, use expressions in consumer
 annotation. Example: `${pulsarapp.myTestSubscription.consumerXyz.name}` then have such property in you application.yml
-(or other registered property setters). This means auto-naming for consumers will break at some point as well as hardcoded
-names in annotations, so please switch to expressions and assign names via properties dynamically.
+(or other ways). This means auto-naming for consumers will break at some point as well as hardcoded
+names in annotations, so please switch to expressions and assign names via properties dynamically to be able to do
+something like value injection via CI/CD or ENV variables.
 
 
 === Dead Letter Queue
