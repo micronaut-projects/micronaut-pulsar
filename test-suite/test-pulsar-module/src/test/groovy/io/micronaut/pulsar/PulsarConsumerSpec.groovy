@@ -48,8 +48,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         expect:
         null != tester
         consumerProcessor.consumers
-                .findAll { it.value.consumerName.matches('pulsar-consumer-\\d\\d') }
-                .size() == 2
+                .count { it.value.consumerName.matches('pulsar\\-consumer\\-[\\d]+') } == 2
         consumerProcessor.consumers.any { it.value.consumerName == PULSAR_CONSUMER_NAME_PROPERTY_VALUE }
     }
 
