@@ -7,6 +7,7 @@ https://github.com/{githubSlug}/releases[https://github.com/{githubSlug}/release
 * Micronaut 4.0.0 minimum version
 * Remove shutdown on subscribe error
 * Bug fixes
+* Apache Pulsar dependency 3.0.0
 
 ==== 1.3.0
 
