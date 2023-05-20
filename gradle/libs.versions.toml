@@ -23,7 +23,7 @@ micronaut-serde = "2.0.0-M7"
 micronaut-test = '4.0.0-M1'
 micronaut-logging = "1.0.0-M2"
 
-managed-pulsar-client = '2.11.1'
+managed-pulsar-client = '3.0.0'
 
 [libraries]
 # Micronaut BOMS
