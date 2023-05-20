@@ -21,7 +21,7 @@ micronaut-validation = "4.0.0-M2"
 micronaut-reactor = "3.0.0-M1"
 micronaut-serde = "2.0.0-M1"
 micronaut-test = '4.0.0-M1'
-micronaut-logging = "1.0.0-M1"
+micronaut-logging = "1.0.0-M2"
 
 managed-pulsar-client = '2.11.1'
 
