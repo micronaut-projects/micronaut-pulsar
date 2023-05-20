@@ -2,25 +2,26 @@
 
 conscrypt-openjdk = "2.5.2"
 groovy = "4.0.10"
-junit = '5.9.2'
+junit = '5.9.3'
 kotlin = "1.8.21"
-kotlin-coroutines = "1.6.4"
-kotest-runner = '5.5.5'
-protobuf-java = '3.22.3'
+kotlin-coroutines = "1.7.1"
+kotest-runner = '5.6.2'
+protobuf-java = '3.23.1'
 spock = "2.3-groovy-4.0"
-testcontainers = '1.18.0'
+testcontainers = '1.18.1'
 
-micronaut = '4.0.0-M1'
+micronaut = '4.0.0-M2'
+micronaut-platform = '4.0.0-M1'
 micronaut-docs = '2.0.0'
-micronaut-gradle-plugin = '4.0.0-SNAPSHOT'
+micronaut-gradle-plugin = '4.0.0-M3'
 
 micronaut-grpc = "4.0.0-M1"
-micronaut-multitenancy = "5.0.0-M1"
-micronaut-validation = "4.0.0-M2"
-micronaut-reactor = "3.0.0-M1"
-micronaut-serde = "2.0.0-M1"
+micronaut-multitenancy = "5.0.0-M3"
+micronaut-validation = "4.0.0-M7"
+micronaut-reactor = "3.0.0-M2"
+micronaut-serde = "2.0.0-M7"
 micronaut-test = '4.0.0-M1'
-micronaut-logging = "1.0.0-SNAPSHOT"
+micronaut-logging = "1.0.0-M2"
 
 managed-pulsar-client = '3.0.0'
 

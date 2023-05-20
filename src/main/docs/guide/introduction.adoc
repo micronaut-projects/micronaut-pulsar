@@ -1,1 +1,2 @@
-This project includes integration between Micronaut and Apache Pulsar.
+This project includes integration between Micronaut framework and Apache Pulsar. It tries to simplify configuration
+and replace building consumers, producers, and readers with annotation based approach.
