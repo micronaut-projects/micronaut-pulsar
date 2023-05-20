@@ -49,8 +49,8 @@ final class ToStringTenantNameResolver implements TenantNameResolver {
     @Override
     public String resolveTenantNameFromId(final Serializable tenantId) {
         final String tenantName;
-        if (tenantId instanceof String) {
-            tenantName = (String) tenantId;
+        if (tenantId instanceof String stringId) {
+            tenantName = stringId;
         } else {
             tenantName = tenantId.toString();
         }
@@ -72,7 +72,7 @@ final class ToStringTenantNameResolver implements TenantNameResolver {
 
     @Override
     public String getCurrentTenantName() throws TenantNotFoundException {
-        final String currentTenantName = CURRENT_TENANT.get();
+        final var currentTenantName = CURRENT_TENANT.get();
         if (null == currentTenantName) {
             return resolveTenantNameFromId(tenantResolver.resolveTenantIdentifier());
         }

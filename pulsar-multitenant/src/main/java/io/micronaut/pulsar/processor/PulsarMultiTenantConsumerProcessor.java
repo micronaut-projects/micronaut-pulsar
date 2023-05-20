@@ -67,10 +67,10 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
             pulsarClientConfiguration,
             topicResolver);
         this.tenantNameResolver = tenantNameResolver;
-        if (!tenantNameResolver.isStaticTenantResolver()) {
-            multiTenantConsumers = new ConcurrentHashMap<>(10);
-        } else {
+        if (tenantNameResolver.isStaticTenantResolver()) {
             multiTenantConsumers = null;
+        } else {
+            multiTenantConsumers = new ConcurrentHashMap<>(10);
         }
     }
 
@@ -119,9 +119,9 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
 
     @Override
     public void onApplicationEvent(final PulsarTenantDiscoveredEvent event) {
-        final String tenantName = tenantNameResolver.resolveTenantNameFromId(event.getTenant());
+        final var tenantName = tenantNameResolver.resolveTenantNameFromId(event.getTenant());
         tenantNameResolver.overrideTenantName(tenantName);
-        for (final MultiTenantConsumer x : multiTenantConsumers.values()) {
+        for (final var x : multiTenantConsumers.values()) {
             this.process(x.getBeanDefinition(), x.getMethod());
         }
         tenantNameResolver.clearTenantName();
