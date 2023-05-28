@@ -54,8 +54,9 @@ class TlsAwareClientTest extends Specification {
                 ['pulsar.service-url'                 : PulsarTls.pulsarBrokerTlsUrl,
                  'pulsar.tls-cert-file-path'          : tlsPathForPulsar,
                  'pulsar.shutdown-on-subscriber-error': true,
-                 'pulsar.tls-ciphers'                 : ['TLS_RSA_WITH_AES_256_GCM_SHA384', 'TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256'],
-                 'pulsar.tls-protocols'               : ['TLSv1.3', 'TLSv1.2', 'TLSv1.1'],
+                 'pulsar.tls-ciphers'                 : ['TLS_AES_256_GCM_SHA384'],
+                 'pulsar.tls-protocols'               : ['TLSv1.3'],
+                 'pulsar.tls-verify-hostname'         : false,
                  'spec.name'                          : getClass().simpleName],
                 Environment.TEST
         )
