@@ -58,6 +58,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private Boolean useDeadLetterQueue;
     private int defaultMaxRetryDlq = RetryMessageUtil.MAX_RECONSUMETIMES;
     private String tlsTrustStorePath;
+    private String tlsTrustStorePassword;
     private String tlsCertFilePath;
     private Boolean tlsVerifyHostname;
     private Boolean tlsAllowInsecureConnection;
@@ -114,6 +115,14 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     @Override
     public Optional<String> getTlsTrustStorePath() {
         return Optional.ofNullable(tlsTrustStorePath);
+    }
+    public void setTlsTrustStorePassword(String tlsTrustStorePassword) {
+        this.tlsTrustStorePassword = tlsTrustStorePassword;
+    }
+
+    @Override
+    public Optional<String> getTlsTrustStorePassword() {
+        return Optional.ofNullable(tlsTrustStorePassword);
     }
 
     public void setTlsCertFilePath(String tlsCertFilePath) {

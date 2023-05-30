@@ -66,6 +66,12 @@ public interface PulsarClientConfiguration {
     Optional<String> getTlsTrustStorePath();
 
     /**
+     * @return trust store password if any, trust stores don't contain any sensitive information
+     * but often work better with password in Java context.
+     */
+    Optional<String> getTlsTrustStorePassword();
+
+    /**
      * @return TLS certificate file path if any for TLS communication between Pulsar & clients.
      */
     Optional<String> getTlsCertFilePath();
