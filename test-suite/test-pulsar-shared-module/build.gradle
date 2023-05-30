@@ -10,10 +10,6 @@ dependencies {
 
     runtimeOnly mn.micronaut.http.server.netty
     runtimeOnly mn.micronaut.runtime
-    // need this because ApachePulsar will check for class EpollEventLoopGroup even if not used
-    runtimeOnly mn.netty.transport.native.epoll
-    // this is also used by the pulsar
-    implementation 'io.netty:netty-resolver-dns:4.1.93.Final'
 
     implementation mnGrpc.micronaut.protobuff.support
     implementation mnReactor.micronaut.reactor
