@@ -24,10 +24,12 @@ import org.testcontainers.utility.DockerImageName
 
 abstract class PulsarTls {
 
+    public static final String PULSAR_VERSION = "3.0.0"
+
     public static final int HTTPS = 8443
     public static final int BROKER_SSL = 6651
     private static final PulsarContainer PULSAR_CONTAINER =
-            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:2.11.0"))
+            new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:${PULSAR_VERSION}"))
     private static ClassLoader resourceLoader
     private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 

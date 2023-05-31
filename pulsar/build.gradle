@@ -4,8 +4,6 @@ plugins {
 
 dependencies {
     annotationProcessor mnValidation.micronaut.validation.processor
-    api mn.micronaut.messaging
-    api libs.managed.pulsar.client
 
     implementation mnValidation.micronaut.validation
 

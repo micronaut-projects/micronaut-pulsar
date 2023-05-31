@@ -3,10 +3,11 @@ For this project, you can find a list of releases (with release notes) here:
 https://github.com/{githubSlug}/releases[https://github.com/{githubSlug}/releases]
 
 ==== 2.0.0
-* Java 17 minimum
+* Java 17 baseline
 * Micronaut 4.0.0 minimum version
 * Remove shutdown on subscribe error
 * Bug fixes
+* Apache Pulsar Java Client dependency 3.0.0
 
 ==== 1.3.0
 
@@ -24,7 +25,7 @@ https://github.com/{githubSlug}/releases[https://github.com/{githubSlug}/release
 * Key-Value messages support
 * Message Headers support
 * Protobuf native messages support using micronaut protobuf dependency
-* Apache Pulsar dependency upgraded to 2.9.1
+* Apache Pulsar Java Client dependency 2.9.1
 
 ==== 1.0.0
 

@@ -29,6 +29,7 @@ import org.apache.pulsar.client.impl.schema.StringSchema
 import reactor.core.publisher.Mono
 import spock.lang.Stepwise
 import spock.util.concurrent.BlockingVariables
+import spock.util.concurrent.PollingConditions
 
 import static java.util.concurrent.TimeUnit.SECONDS
 import static org.apache.pulsar.client.api.MessageId.latest
@@ -44,12 +45,15 @@ class PulsarConsumerSpec extends PulsarAwareTest {
         given:
         PulsarConsumerProcessor consumerProcessor = context.getBean(PulsarConsumerProcessor)
         ConsumerNameConfigTester tester = context.getBean(ConsumerNameConfigTester)
+        def conditions = new PollingConditions(timeout: 10)
 
         expect:
-        null != tester
-        consumerProcessor.consumers
-                .count { it.value.consumerName.matches('pulsar\\-consumer\\-[\\d]+') } == 2
-        consumerProcessor.consumers.any { it.value.consumerName == PULSAR_CONSUMER_NAME_PROPERTY_VALUE }
+        conditions.eventually {
+            null != tester
+            consumerProcessor.consumers
+                    .count { it.value.consumerName.matches('pulsar\\-consumer\\-[\\d]+') } == 2
+            consumerProcessor.consumers.any { it.value.consumerName == PULSAR_CONSUMER_NAME_PROPERTY_VALUE }
+        }
     }
 
     void "test consumer read default topic and array"() {

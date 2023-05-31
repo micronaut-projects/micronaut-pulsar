@@ -6,11 +6,7 @@ plugins {
 dependencies {
     api mn.micronaut.messaging
     api mnSerde.micronaut.serde.support
-    api(libs.managed.pulsar.client) {
-        exclude group: 'io.netty'
-        exclude group: 'com.fasterxml.jackson.module'
-        exclude group: 'com.google.code.gson'
-    }
+    api(libs.managed.pulsar.client)
     compileOnly 'com.google.code.findbugs:jsr305'
     testRuntimeOnly mnLogging.logback.classic
 }

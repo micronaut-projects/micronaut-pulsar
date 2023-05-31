@@ -3,9 +3,6 @@ plugins {
 }
 
 dependencies {
-    api mn.micronaut.messaging
-    api libs.managed.pulsar.client
-
     implementation projects.micronautPulsar
     implementation mnMultitenancy.micronaut.multitenancy
     compileOnly mnReactor.micronaut.reactor

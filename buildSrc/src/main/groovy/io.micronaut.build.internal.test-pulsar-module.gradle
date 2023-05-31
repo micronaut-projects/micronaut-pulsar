@@ -16,6 +16,7 @@ dependencies {
     testImplementation mnReactor.micronaut.reactor
     testImplementation mnGrpc.micronaut.protobuff.support
     testImplementation mnSerde.micronaut.serde.jackson
+    testRuntimeOnly mnLogging.logback.classic
 }
 
 tasks.withType(GroovyCompile).configureEach {

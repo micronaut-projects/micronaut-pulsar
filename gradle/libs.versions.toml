@@ -10,7 +10,7 @@ protobuf-java = '3.23.2'
 spock = "2.3-groovy-4.0"
 testcontainers = '1.18.1'
 
-micronaut = '4.0.0-M5'
+micronaut = '4.0.0-M6'
 micronaut-platform = '4.0.0-M1'
 micronaut-docs = '2.0.0'
 micronaut-gradle-plugin = '4.0.0-M4'
@@ -23,7 +23,7 @@ micronaut-serde = "2.0.0-M8"
 micronaut-test = '4.0.0-M1'
 micronaut-logging = "1.0.0-M2"
 
-managed-pulsar-client = '2.11.1'
+managed-pulsar-client = '3.0.0'
 
 [libraries]
 # Core
