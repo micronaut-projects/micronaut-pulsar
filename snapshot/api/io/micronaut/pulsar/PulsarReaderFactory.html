@@ -129,9 +129,9 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.apache.pulsar.client.api.Reader&lt;?&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getReaderByInjectionPoint(io.micronaut.context.BeanResolutionContext,io.micronaut.core.annotation.AnnotationValue,io.micronaut.core.type.Argument,io.micronaut.aop.MethodInvocationContext)" class="member-name-link">getReaderByInjectionPoint</a><wbr>(io.micronaut.context.BeanResolutionContext&nbsp;context,
- io.micronaut.core.annotation.AnnotationValue&lt;<a href="annotation/PulsarReader.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarReader</a>&gt;&nbsp;annotationValue,
- io.micronaut.core.type.Argument&lt;?&gt;&nbsp;returnType,
- io.micronaut.aop.MethodInvocationContext&lt;?,<wbr>?&gt;&nbsp;methodInvocationContext)</code></div>
+ @Nullable io.micronaut.core.annotation.AnnotationValue&lt;<a href="annotation/PulsarReader.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarReader</a>&gt;&nbsp;annotationValue,
+ @Nullable io.micronaut.core.type.Argument&lt;?&gt;&nbsp;returnType,
+ @Nullable io.micronaut.aop.MethodInvocationContext&lt;?,<wbr>?&gt;&nbsp;methodInvocationContext)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Create Pulsar Reader for given injection point if missing.</div>
 </div>
@@ -177,11 +177,11 @@ implements <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base
 <div class="member-signature"><span class="annotations">@Prototype
 </span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.apache.pulsar.client.api.Reader&lt;?&gt;</span>&nbsp;<span class="element-name">getReaderByInjectionPoint</span><wbr><span class="parameters">(io.micronaut.context.BeanResolutionContext&nbsp;context,
  @Nullable @Parameter
- io.micronaut.core.annotation.AnnotationValue&lt;<a href="annotation/PulsarReader.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarReader</a>&gt;&nbsp;annotationValue,
+ @Nullable io.micronaut.core.annotation.AnnotationValue&lt;<a href="annotation/PulsarReader.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarReader</a>&gt;&nbsp;annotationValue,
  @Nullable @Parameter
- io.micronaut.core.type.Argument&lt;?&gt;&nbsp;returnType,
+ @Nullable io.micronaut.core.type.Argument&lt;?&gt;&nbsp;returnType,
  @Nullable @Parameter
- io.micronaut.aop.MethodInvocationContext&lt;?,<wbr>?&gt;&nbsp;methodInvocationContext)</span>
+ @Nullable io.micronaut.aop.MethodInvocationContext&lt;?,<wbr>?&gt;&nbsp;methodInvocationContext)</span>
                                                                  throws <span class="exceptions">org.apache.pulsar.client.api.PulsarClientException</span></div>
 <div class="block">Create Pulsar Reader for given injection point if missing.</div>
 <dl class="notes">

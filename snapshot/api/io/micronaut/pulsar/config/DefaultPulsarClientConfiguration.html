@@ -116,7 +116,7 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(io.micronaut.context.env.Environment,org.apache.pulsar.client.api.ServiceUrlProvider)" class="member-name-link">DefaultPulsarClientConfiguration</a><wbr>(io.micronaut.context.env.Environment&nbsp;environment,
- org.apache.pulsar.client.api.ServiceUrlProvider&nbsp;serviceUrlProvider)</code></div>
+ @Nullable org.apache.pulsar.client.api.ServiceUrlProvider&nbsp;serviceUrlProvider)</code></div>
 <div class="col-last even-row-color">
 <div class="block">Constructs the default Pulsar Client configuration.</div>
 </div>
@@ -205,7 +205,7 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUseDeadLetterQueue()" class="member-name-link">getUseDeadLetterQueue</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAuthenticationJwt(java.lang.String)" class="member-name-link">setAuthenticationJwt</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;authenticationJwt)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAuthenticationJwt(java.lang.String)" class="member-name-link">setAuthenticationJwt</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;authenticationJwt)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDefaultMaxRetryDlq(int)" class="member-name-link">setDefaultMaxRetryDlq</a><wbr>(int&nbsp;defaultMaxRetryDlq)</code></div>
@@ -238,7 +238,7 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setOauthIssuerUrl(java.net.URL)" class="member-name-link">setOauthIssuerUrl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/net/URL.html" title="class or interface in java.net" class="external-link">URL</a>&nbsp;oauthIssuerUrl)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setServiceUrl(java.lang.String)" class="member-name-link">setServiceUrl</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serviceUrl)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setServiceUrl(java.lang.String)" class="member-name-link">setServiceUrl</a><wbr>(@Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serviceUrl)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setSslProvider(java.lang.String)" class="member-name-link">setSslProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sslProvider)</code></div>
@@ -297,7 +297,7 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <h3>DefaultPulsarClientConfiguration</h3>
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">DefaultPulsarClientConfiguration</span><wbr><span class="parameters">(io.micronaut.context.env.Environment&nbsp;environment,
  @Nullable <a href="../annotation/PulsarServiceUrlProvider.html" title="annotation interface in io.micronaut.pulsar.annotation">@PulsarServiceUrlProvider</a>
- org.apache.pulsar.client.api.ServiceUrlProvider&nbsp;serviceUrlProvider)</span></div>
+ @Nullable org.apache.pulsar.client.api.ServiceUrlProvider&nbsp;serviceUrlProvider)</span></div>
 <div class="block">Constructs the default Pulsar Client configuration.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
@@ -362,7 +362,7 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <section class="detail" id="setAuthenticationJwt(java.lang.String)">
 <h3>setAuthenticationJwt</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setAuthenticationJwt</span><wbr><span class="parameters">(@Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;authenticationJwt)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;authenticationJwt)</span></div>
 </section>
 </li>
 <li>
@@ -535,7 +535,7 @@ implements <a href="PulsarClientConfiguration.html" title="interface in io.micro
 <section class="detail" id="setServiceUrl(java.lang.String)">
 <h3>setServiceUrl</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">setServiceUrl</span><wbr><span class="parameters">(@Nullable
- <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serviceUrl)</span></div>
+ @Nullable <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serviceUrl)</span></div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>serviceUrl</code> - URL to Pulsar cluster</dd>
