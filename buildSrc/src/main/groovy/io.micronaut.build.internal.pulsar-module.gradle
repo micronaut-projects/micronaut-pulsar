@@ -10,9 +10,3 @@ dependencies {
     compileOnly 'com.google.code.findbugs:jsr305'
     testRuntimeOnly mnLogging.logback.classic
 }
-
-micronautBuild {
-    binaryCompatibility {
-        enabled = false
-    }
-}
