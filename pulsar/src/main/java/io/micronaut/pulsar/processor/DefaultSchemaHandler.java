@@ -86,45 +86,33 @@ public class DefaultSchemaHandler {
                 return StringSchema.utf8();
             }
             return context.getBean(SchemaResolver.class, Qualifiers.byName(MessageSchema.JSON.getSchemaResolverName()))
-                    .forArgument(type); //default to JSON for now
+                .forArgument(type); //default to JSON for now
         }
 
-        switch (schema) {
-            case BYTES:
-                return BytesSchema.of();
-            case BYTEBUFFER:
-                return ByteBufferSchema.of();
-            case INT8:
-                return ByteSchema.of();
-            case INT16:
-                return ShortSchema.of();
-            case INT32:
-                return IntSchema.of();
-            case INT64:
-                return LongSchema.of();
-            case BOOL:
-                return BooleanSchema.of();
-            case FLOAT:
-                return FloatSchema.of();
-            case DOUBLE:
-                return DoubleSchema.of();
-            case DATE:
-                return DateSchema.of();
-            case TIME:
-                return TimeSchema.of();
-            case TIMESTAMP:
-                return TimestampSchema.of();
-            case STRING:
-                return StringSchema.utf8();
-            default:
+        return switch (schema) {
+            case BYTES -> BytesSchema.of();
+            case BYTEBUFFER -> ByteBufferSchema.of();
+            case INT8 -> ByteSchema.of();
+            case INT16 -> ShortSchema.of();
+            case INT32 -> IntSchema.of();
+            case INT64 -> LongSchema.of();
+            case BOOL -> BooleanSchema.of();
+            case FLOAT -> FloatSchema.of();
+            case DOUBLE -> DoubleSchema.of();
+            case DATE -> DateSchema.of();
+            case TIME -> TimeSchema.of();
+            case TIMESTAMP -> TimestampSchema.of();
+            case STRING -> StringSchema.utf8();
+            default -> {
                 try {
-                    return context.getBean(SchemaResolver.class, Qualifiers.byName(schema.getSchemaResolverName()))
-                            .forArgument(type);
+                    yield context.getBean(SchemaResolver.class, Qualifiers.byName(schema.getSchemaResolverName()))
+                        .forArgument(type);
                 } catch (final MessageListenerException typeHandlingException) {
                     throw new MessageListenerException(typeHandlingException.getMessage() +
-                            " (parameter: " + target + ")");
+                        " (parameter: " + target + ")");
                 }
-        }
+            }
+        };
     }
 
     public static Class<?> bodyType(final Argument<?> body) {
