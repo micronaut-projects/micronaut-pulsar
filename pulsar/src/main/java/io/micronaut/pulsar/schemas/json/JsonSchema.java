@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.pulsar.schemas;
+package io.micronaut.pulsar.schemas.json;
 
 import io.micronaut.json.JsonMapper;
-import io.micronaut.pulsar.schemas.json.JsonReader;
-import io.micronaut.pulsar.schemas.json.JsonWriter;
 import org.apache.pulsar.client.api.schema.SchemaDefinition;
 import org.apache.pulsar.client.api.schema.SchemaReader;
 import org.apache.pulsar.client.api.schema.SchemaWriter;
