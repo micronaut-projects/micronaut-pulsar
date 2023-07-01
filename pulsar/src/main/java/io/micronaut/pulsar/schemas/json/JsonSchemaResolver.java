@@ -16,7 +16,6 @@
 package io.micronaut.pulsar.schemas.json;
 
 import io.micronaut.json.JsonMapper;
-import io.micronaut.pulsar.schemas.JsonSchema;
 import io.micronaut.pulsar.schemas.SchemaResolver;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -34,7 +33,7 @@ public class JsonSchemaResolver implements SchemaResolver {
 
     private final JsonMapper mapper;
 
-    public JsonSchemaResolver(JsonMapper mapper) {
+    public JsonSchemaResolver(final JsonMapper mapper) {
         this.mapper = mapper;
     }
 

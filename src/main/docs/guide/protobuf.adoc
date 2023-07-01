@@ -2,5 +2,4 @@
 In order to allow protocol buffer *native* messaging support you need to include protocol buffers
 google and micronaut dependencies
 
-dependency::protobuf-java[groupId="com.google.protobuf"]
 dependency::micronaut-protobuff-support[groupId="io.micronaut.grpc"]

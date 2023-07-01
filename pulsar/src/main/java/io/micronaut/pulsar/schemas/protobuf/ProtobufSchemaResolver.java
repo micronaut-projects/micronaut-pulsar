@@ -16,9 +16,9 @@
 package io.micronaut.pulsar.schemas.protobuf;
 
 import com.google.protobuf.Message;
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.messaging.exceptions.MessageListenerException;
 import io.micronaut.protobuf.codec.ProtobufferCodec;
-import io.micronaut.pulsar.schemas.ProtobufSchema;
 import io.micronaut.pulsar.schemas.SchemaResolver;
 import jakarta.inject.Named;
 import jakarta.inject.Singleton;
@@ -32,6 +32,7 @@ import org.apache.pulsar.client.api.Schema;
  */
 @Singleton
 @Named(SchemaResolver.PROTOBUF_SCHEMA_NAME)
+@Requires(classes = {ProtobufferCodec.class})
 public class ProtobufSchemaResolver implements SchemaResolver {
 
     private final ProtobufferCodec codec;

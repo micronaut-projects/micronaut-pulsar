@@ -13,12 +13,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.micronaut.pulsar.schemas;
+package io.micronaut.pulsar.schemas.protobuf;
 
 import io.micronaut.core.type.Argument;
 import io.micronaut.protobuf.codec.ProtobufferCodec;
-import io.micronaut.pulsar.schemas.protobuf.ProtobufReader;
-import io.micronaut.pulsar.schemas.protobuf.ProtobufWriter;
 import org.apache.pulsar.client.api.schema.SchemaDefinition;
 import org.apache.pulsar.client.impl.schema.AbstractStructSchema;
 import org.apache.pulsar.client.impl.schema.SchemaDefinitionBuilderImpl;
