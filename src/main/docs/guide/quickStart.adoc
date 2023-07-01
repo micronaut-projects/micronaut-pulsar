@@ -1,6 +1,9 @@
 To configure the Apache Pulsar client, first add the `micronaut-pulsar` module dependency:
 
 dependency:micronaut-pulsar[groupId="io.micronaut.pulsar"]
+NOTE: default serializers & deserializers are JSON and will use mn-serde module so don't forget to include those
+as well if you will not switch manually to BYTES or other parsers
+dependency:micronaut-serde-jackson[groupId="io.micronaut.serde"]
 
 Then configure the URI of the Pulsar cluster or standalone server to communicate with:
 
