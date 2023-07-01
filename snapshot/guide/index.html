@@ -275,6 +275,22 @@ and replace building consumers, producers, and readers with annotation based app
     &lt;artifactId&gt;micronaut-pulsar&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
+</div>
+NOTE: default serializers &amp; deserializers are JSON and will use mn-serde module so don&#8217;t forget to include those
+as well if you will not switch manually to BYTES or other parsers
+        <div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="gradle">implementation(<span class="hljs-string">"io.micronaut.serde:micronaut-serde-jackson")</span></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="maven">&lt;dependency&gt;
+    &lt;groupId&gt;io.micronaut.serde&lt;/groupId&gt;
+    &lt;artifactId&gt;micronaut-serde-jackson&lt;/artifactId&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
 </div></p>
 </div>
 <div class="paragraph">
@@ -1481,8 +1497,8 @@ hostname is not verified but can be enabled by using <code>tls-verify-hostname: 
 <h2 id="_protocol_buffers_support">Protocol buffers support</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>In order to allow protocol buffer <strong>native</strong> messaging support you need to include protocol buffers
-google and micronaut dependencies</p>
+<p>In order to allow protocol buffer <strong>native</strong> messaging support you need to include support for protocol buffers
+google from micronaut dependencies</p>
 </div>
 <div class="paragraph">
 <p>        <div class="listingblock multi-language-sample">
