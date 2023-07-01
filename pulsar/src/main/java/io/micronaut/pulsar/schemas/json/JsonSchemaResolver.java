@@ -15,6 +15,7 @@
  */
 package io.micronaut.pulsar.schemas.json;
 
+import io.micronaut.context.annotation.Requires;
 import io.micronaut.json.JsonMapper;
 import io.micronaut.pulsar.schemas.SchemaResolver;
 import jakarta.inject.Named;
@@ -29,6 +30,7 @@ import org.apache.pulsar.client.api.Schema;
  */
 @Singleton
 @Named(SchemaResolver.JSON_SCHEMA_NAME)
+@Requires(classes = {JsonMapper.class})
 public class JsonSchemaResolver implements SchemaResolver {
 
     private final JsonMapper mapper;
