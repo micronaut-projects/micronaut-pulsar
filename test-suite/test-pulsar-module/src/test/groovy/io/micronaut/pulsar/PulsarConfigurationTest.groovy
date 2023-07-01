@@ -15,10 +15,14 @@
  */
 package io.micronaut.pulsar
 
+import io.micronaut.protobuf.codec.ProtobufferCodec
 import io.micronaut.pulsar.config.PulsarClientConfiguration
 import io.micronaut.pulsar.intercept.PulsarProducerAdvice
 import io.micronaut.pulsar.intercept.PulsarReaderAdvice
 import io.micronaut.pulsar.processor.PulsarConsumerProcessor
+import io.micronaut.pulsar.schemas.avro.AvroSchemaResolver
+import io.micronaut.pulsar.schemas.json.JsonSchemaResolver
+import io.micronaut.pulsar.schemas.protobuf.ProtobufSchemaResolver
 import io.micronaut.pulsar.shared.PulsarTls
 import org.apache.pulsar.client.api.PulsarClient
 import spock.lang.Stepwise
@@ -34,6 +38,10 @@ class PulsarConfigurationTest extends PulsarAwareTest {
         context.containsBean(PulsarConsumerProcessor)
         context.containsBean(PulsarProducerAdvice)
         context.containsBean(PulsarReaderAdvice)
+        context.containsBean(JsonSchemaResolver.class)
+        context.containsBean(AvroSchemaResolver.class)
+        context.containsBean(ProtobufferCodec.class)
+        context.containsBean(ProtobufSchemaResolver.class)
         PulsarTls.pulsarBrokerUrl == context.getBean(PulsarClientConfiguration).serviceUrl
     }
 }
