@@ -15,13 +15,17 @@
  */
 package io.micronaut.pulsar
 
+
+import io.micronaut.json.JsonMapper
 import io.micronaut.protobuf.codec.ProtobufferCodec
 import io.micronaut.pulsar.config.PulsarClientConfiguration
 import io.micronaut.pulsar.intercept.PulsarProducerAdvice
 import io.micronaut.pulsar.intercept.PulsarReaderAdvice
 import io.micronaut.pulsar.processor.PulsarConsumerProcessor
 import io.micronaut.pulsar.schemas.avro.AvroSchemaResolver
+import io.micronaut.pulsar.schemas.json.JsonSchema
 import io.micronaut.pulsar.schemas.json.JsonSchemaResolver
+import io.micronaut.pulsar.schemas.protobuf.ProtobufSchema
 import io.micronaut.pulsar.schemas.protobuf.ProtobufSchemaResolver
 import io.micronaut.pulsar.shared.PulsarTls
 import org.apache.pulsar.client.api.PulsarClient
@@ -43,5 +47,19 @@ class PulsarConfigurationTest extends PulsarAwareTest {
         context.containsBean(ProtobufferCodec.class)
         context.containsBean(ProtobufSchemaResolver.class)
         PulsarTls.pulsarBrokerUrl == context.getBean(PulsarClientConfiguration).serviceUrl
+    }
+
+    void "test schema resolvers"() {
+        given:
+        def jsonMapper = context.getBean(JsonMapper.class)
+        def protoCodec = context.getBean(ProtobufferCodec.class)
+
+        when:
+        def jsonSchema = JsonSchema.of(JsonJavaClass.class, jsonMapper)
+        def protoSchema = ProtobufSchema.of(ProtoMessages.ProtoMessage.class, protoCodec)
+
+        then:
+        jsonSchema instanceof JsonSchema<JsonJavaClass>
+        protoSchema instanceof ProtobufSchema<ProtoMessages.ProtoMessage>
     }
 }
