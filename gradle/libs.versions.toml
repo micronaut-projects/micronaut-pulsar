@@ -16,7 +16,7 @@ micronaut-docs = '2.0.0'
 micronaut-gradle-plugin = '4.0.2'
 
 micronaut-grpc = "4.0.1"
-micronaut-multitenancy = "5.0.1"
+micronaut-multitenancy = "5.0.2"
 micronaut-validation = "4.0.1"
 micronaut-reactor = "3.0.1"
 micronaut-serde = "2.0.0"
