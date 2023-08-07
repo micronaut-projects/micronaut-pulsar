@@ -23,7 +23,7 @@ micronaut-serde = "2.0.0"
 micronaut-test = '4.0.0'
 micronaut-logging = "1.0.0"
 
-managed-pulsar-client = '3.0.0'
+managed-pulsar-client = '3.0.1'
 
 [libraries]
 # Core
