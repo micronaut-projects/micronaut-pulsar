@@ -2,7 +2,7 @@
 
 conscrypt-openjdk = "2.5.2"
 groovy = "4.0.13"
-junit = '5.10.0'
+junit = '5.10.1'
 kotlin = "1.9.10"
 kotlin-coroutines = "1.7.3"
 kotest-runner = '5.7.2'
