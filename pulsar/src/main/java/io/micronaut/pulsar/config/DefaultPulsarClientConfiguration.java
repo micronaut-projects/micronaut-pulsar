@@ -116,6 +116,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     public Optional<String> getTlsTrustStorePath() {
         return Optional.ofNullable(tlsTrustStorePath);
     }
+    
     public void setTlsTrustStorePassword(String tlsTrustStorePassword) {
         this.tlsTrustStorePassword = tlsTrustStorePassword;
     }
