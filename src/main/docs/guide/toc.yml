@@ -15,4 +15,6 @@ tls:
   title: Transport encryption
 protobuf:
   title: Protocol Buffers
+multitenancy:
+  title: Multitenancy
 repository: Repository
