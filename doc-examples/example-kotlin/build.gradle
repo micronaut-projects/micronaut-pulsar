@@ -14,7 +14,7 @@ dependencies {
     testImplementation libs.kotest.runner
     testImplementation libs.kotlin.reflect
     testImplementation libs.kotlin.stdlib.jdk8
-    testImplementation libs.testcontainers
+    testImplementation(mnTestResources.testcontainers.core)
     implementation libs.kotlinx.coroutines.core
     implementation libs.kotlinx.coroutines.jvm
     implementation libs.kotlinx.coroutines.jdk8

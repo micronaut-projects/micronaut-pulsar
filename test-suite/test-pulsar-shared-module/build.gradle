@@ -14,7 +14,7 @@ dependencies {
     implementation mnGrpc.micronaut.protobuff.support
     implementation mnReactor.micronaut.reactor
     implementation mnTest.micronaut.test.spock
-    implementation libs.testcontainers.spock
+    implementation(platform(mnTestResources.boms.testcontainers))
     implementation libs.testcontainers.pulsar
     implementation libs.conscrypt.openjdk
 
