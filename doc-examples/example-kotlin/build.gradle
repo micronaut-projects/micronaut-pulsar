@@ -15,9 +15,8 @@ dependencies {
     testImplementation libs.kotlin.reflect
     testImplementation libs.kotlin.stdlib.jdk8
     testImplementation(mnTestResources.testcontainers.core)
-    implementation libs.kotlinx.coroutines.core
-    implementation libs.kotlinx.coroutines.jvm
-    implementation libs.kotlinx.coroutines.jdk8
+    implementation mn.kotlinx.coroutines.core
+    implementation mn.kotlinx.coroutines.jdk8
 }
 
 tasks.named('test') {
