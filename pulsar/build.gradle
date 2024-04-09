@@ -9,6 +9,5 @@ dependencies {
 
     compileOnly mnReactor.micronaut.reactor
     compileOnly libs.kotlin.coroutines
-    compileOnly libs.protobuf.java
     compileOnly mnGrpc.micronaut.protobuff.support
 }
