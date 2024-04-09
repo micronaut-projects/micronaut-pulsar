@@ -4,25 +4,24 @@ conscrypt-openjdk = "2.5.2"
 groovy = "4.0.13"
 junit = '5.10.2'
 kotlin = "1.9.23"
-kotlin-coroutines = "1.7.3"
 kotest-runner = '5.8.1'
 spock = "2.3-groovy-4.0"
 
-micronaut = '4.3.7'
+micronaut = '4.4.0'
 micronaut-platform = '4.0.0-RC1'
 micronaut-docs = '2.0.0'
-micronaut-gradle-plugin = '4.3.2'
+micronaut-gradle-plugin = '4.3.6'
 
 micronaut-grpc = "4.3.0"
 micronaut-multitenancy = "5.2.1"
-micronaut-validation = "4.4.0"
-micronaut-reactor = "3.2.1"
-micronaut-serde = "2.8.1"
+micronaut-validation = "4.4.4"
+micronaut-reactor = "3.3.0"
+micronaut-serde = "2.8.2"
 micronaut-test = '4.0.0'
 micronaut-logging = "1.2.3"
-micronaut-test-resources = "2.3.3"
+micronaut-test-resources = "2.4.0"
 
-managed-pulsar-client = '3.2.0'
+managed-pulsar-client = '3.2.2'
 
 [libraries]
 # Core
@@ -30,7 +29,6 @@ micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'mi
 
 # Micronaut BOMS
 micronaut-grpc = { module = "io.micronaut.grpc:micronaut-grpc-bom", version.ref = "micronaut-grpc" }
-micronaut-logging = { module = "io.micronaut.logging:micronaut-logging-bom", version.ref = "micronaut-logging" }
 micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
 micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
 micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
@@ -42,12 +40,8 @@ managed-pulsar-client = { module = 'org.apache.pulsar:pulsar-client-original', v
 
 # Other libraries
 conscrypt-openjdk = { module = "org.conscrypt:conscrypt-openjdk-uber", version.ref="conscrypt-openjdk" }
-kotlin-coroutines = { module = 'org.jetbrains.kotlinx:kotlinx-coroutines-core', version.ref = 'kotlin-coroutines' }
 kotlin-reflect = { module = 'org.jetbrains.kotlin:kotlin-reflect', version.ref = 'kotlin' }
 kotlin-stdlib-jdk8 = { module = 'org.jetbrains.kotlin:kotlin-stdlib-jdk8', version.ref = 'kotlin' }
-kotlinx-coroutines-core = { module = 'org.jetbrains.kotlinx:kotlinx-coroutines-core', version.ref = 'kotlin-coroutines' }
-kotlinx-coroutines-jvm = { module = 'org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm', version.ref = 'kotlin-coroutines' }
-kotlinx-coroutines-jdk8 = { module = 'org.jetbrains.kotlinx:kotlinx-coroutines-jdk8', version.ref = 'kotlin-coroutines' }
 
 junit-jupiter-api = { module = 'org.junit.jupiter:junit-jupiter-api', version.ref = 'junit' }
 kotest-runner = { module = 'io.kotest:kotest-runner-junit5', version.ref = 'kotest-runner' }

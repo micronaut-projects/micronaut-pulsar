@@ -8,6 +8,6 @@ dependencies {
     implementation mnValidation.micronaut.validation
 
     compileOnly mnReactor.micronaut.reactor
-    compileOnly libs.kotlin.coroutines
+    compileOnly mn.kotlinx.coroutines.core
     compileOnly mnGrpc.micronaut.protobuff.support
 }
