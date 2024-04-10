@@ -5,7 +5,6 @@ groovy = "4.0.13"
 junit = '5.10.2'
 kotlin = "1.9.23"
 kotest-runner = '5.8.1'
-protobuf-java = '3.25.3'
 spock = "2.3-groovy-4.0"
 
 micronaut = '4.4.0'
@@ -43,7 +42,6 @@ managed-pulsar-client = { module = 'org.apache.pulsar:pulsar-client-original', v
 conscrypt-openjdk = { module = "org.conscrypt:conscrypt-openjdk-uber", version.ref="conscrypt-openjdk" }
 kotlin-reflect = { module = 'org.jetbrains.kotlin:kotlin-reflect', version.ref = 'kotlin' }
 kotlin-stdlib-jdk8 = { module = 'org.jetbrains.kotlin:kotlin-stdlib-jdk8', version.ref = 'kotlin' }
-protobuf-java = { module = 'com.google.protobuf:protobuf-java', version.ref = 'protobuf-java' }
 
 junit-jupiter-api = { module = 'org.junit.jupiter:junit-jupiter-api', version.ref = 'junit' }
 kotest-runner = { module = 'io.kotest:kotest-runner-junit5', version.ref = 'kotest-runner' }
