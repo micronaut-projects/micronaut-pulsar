@@ -5,8 +5,7 @@ To configure JWT authentication it's sufficient to specify a JWT in `application
 [configuration]
 ----
 pulsar:
-  authentication:
-    jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...
+  authentication-jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...
 ----
 
 `io.micronaut.configuration.pulsar.config.AbstractPulsarConfiguration` is left public in case you want to implement more options yourself.
