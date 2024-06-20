@@ -16,6 +16,7 @@
 package io.micronaut.pulsar;
 
 import io.micronaut.aop.MethodInvocationContext;
+import io.micronaut.context.AbstractBeanResolutionContext;
 import io.micronaut.context.BeanResolutionContext;
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Parameter;
@@ -25,7 +26,6 @@ import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Nullable;
 import io.micronaut.core.type.Argument;
 import io.micronaut.inject.ArgumentInjectionPoint;
-import io.micronaut.inject.ConstructorInjectionPoint;
 import io.micronaut.inject.FieldInjectionPoint;
 import io.micronaut.inject.InjectionPoint;
 import io.micronaut.pulsar.annotation.PulsarReader;
@@ -90,7 +90,6 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
         return getReaderByInjectionPoint(context);
     }
 
-    @SuppressWarnings("unchecked")
     private Reader<?> getReaderByInjectionPoint(final BeanResolutionContext context) throws PulsarClientException {
         final InjectionPoint<?> injectionPoint = context.getPath().currentSegment()
             .orElseThrow(() ->
@@ -112,7 +111,7 @@ public class PulsarReaderFactory implements AutoCloseable, PulsarReaderRegistry 
                 .orElse(Argument.of(byte[].class));
             declaredName = argumentInjection.getArgument().getName();
             target = argumentInjection.getDeclaringBean().getName() + " " + declaredName;
-            if (argumentInjection.getOuterInjectionPoint() instanceof ConstructorInjectionPoint
+            if (argumentInjection instanceof AbstractBeanResolutionContext.ConstructorArgumentSegment
                 && TopicResolver.isDynamicTenantInTopic(topicValue)) {
                 throw new ConfigurationException(String.format(
                     "Cannot use dynamic tenant in topics for constructor injected Readers in %s",
