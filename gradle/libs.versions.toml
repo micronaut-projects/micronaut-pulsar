@@ -3,7 +3,7 @@
 conscrypt-openjdk = "2.5.2"
 groovy = "4.0.13"
 junit = '5.10.2'
-kotlin = "1.9.23"
+kotlin = "2.0.0"
 kotest-runner = '5.9.1'
 protobuf-java = '3.25.3'
 spock = "2.3-groovy-4.0"
