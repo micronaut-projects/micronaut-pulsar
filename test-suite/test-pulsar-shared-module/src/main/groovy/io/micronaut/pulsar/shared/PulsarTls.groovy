@@ -24,7 +24,7 @@ import org.testcontainers.utility.DockerImageName
 
 abstract class PulsarTls {
 
-    public static final String PULSAR_VERSION = "3.0.0"
+    public static final String PULSAR_VERSION = "3.3.0"
 
     public static final int HTTPS = 8443
     public static final int BROKER_SSL = 6651
