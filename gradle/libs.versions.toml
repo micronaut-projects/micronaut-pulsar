@@ -5,7 +5,7 @@ groovy = "4.0.13"
 junit = '5.10.2'
 kotlin = "2.0.0"
 kotest-runner = '5.9.1'
-protobuf-java = '3.25.3'
+protobuf-java = '4.27.2'
 spock = "2.3-groovy-4.0"
 
 micronaut = '4.5.3'
