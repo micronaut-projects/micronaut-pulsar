@@ -22,7 +22,7 @@ micronaut-test = '4.0.0'
 micronaut-logging = "1.4.0"
 micronaut-test-resources = "2.5.4"
 
-managed-pulsar-client = '3.3.1'
+managed-pulsar-client = '4.0.0'
 
 [libraries]
 # Core
