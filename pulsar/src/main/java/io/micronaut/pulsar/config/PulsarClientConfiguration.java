@@ -72,7 +72,7 @@ public interface PulsarClientConfiguration {
     Optional<String> getTlsTrustStorePassword();
 
     /**
-     * @return TLS certificate file path if any for TLS communication between Pulsar & clients.
+     * @return TLS certificate file path if any for TLS communication between Pulsar and clients.
      */
     Optional<String> getTlsCertFilePath();
 
