@@ -134,7 +134,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         then:
         annotationValue.isPresent()
-        annotationValue.get().contains 'persistent://public/default/test'
+        annotationValue.get().contains PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST
 
         when:
         definition = context.getBeanDefinition(PulsarConsumerTopicListTester)
@@ -143,7 +143,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         then:
         annotationValue.isPresent()
-        annotationValue.get().contains 'persistent://public/default/test'
+        annotationValue.get().contains PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST
 
         when:
         definition = context.getBeanDefinition(PulsarConsumerTopicPatternTester)
