@@ -37,8 +37,8 @@ import static org.apache.pulsar.client.api.MessageId.latest
 @Stepwise
 class PulsarConsumerSpec extends PulsarAwareTest {
 
-    public static final String PULSAR_REGEX_TEST_TOPIC = "persistent://public/default/other2"
-    public static final String PULSAR_STATIC_TOPIC_TEST = "persistent://public/default/test"
+    public static final String PULSAR_REGEX_TEST_TOPIC = "persistent://public/default/other-2"
+    public static final String PULSAR_STATIC_TOPIC_TEST = "persistent://public/default/test.1-combo"
     public static final String PULSAR_CONSUMER_NAME_PROPERTY_VALUE = "myConsumer"
 
     void "test consumer names setup"() {
@@ -134,7 +134,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         then:
         annotationValue.isPresent()
-        annotationValue.get().contains 'persistent://public/default/test'
+        annotationValue.get().contains PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST
 
         when:
         definition = context.getBeanDefinition(PulsarConsumerTopicListTester)
@@ -143,7 +143,7 @@ class PulsarConsumerSpec extends PulsarAwareTest {
 
         then:
         annotationValue.isPresent()
-        annotationValue.get().contains 'persistent://public/default/test'
+        annotationValue.get().contains PulsarConsumerSpec.PULSAR_STATIC_TOPIC_TEST
 
         when:
         definition = context.getBeanDefinition(PulsarConsumerTopicPatternTester)

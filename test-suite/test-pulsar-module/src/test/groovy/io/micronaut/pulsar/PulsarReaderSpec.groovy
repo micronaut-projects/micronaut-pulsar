@@ -34,10 +34,10 @@ import static java.util.concurrent.TimeUnit.SECONDS
 @Stepwise
 class PulsarReaderSpec extends PulsarAwareTest {
 
-    public static final String PULSAR_READER_TEST_TOPIC_INJECTABLE = "persistent://public/default/reader-test-injectable"
+    public static final String PULSAR_READER_TEST_TOPIC_INJECTABLE = "persistent://public/default/reader.test-injectable"
     public static final String PULSAR_READER_TEST_TOPIC_METHOD = "persistent://public/default/reader-test-method"
     public static final String PULSAR_READER_TEST_TOPIC_METHOD_WRAPPED = "persistent://public/default/reader-test-method-wrapped"
-    public static final String PULSAR_READER_TEST_TOPIC_METHOD_ASYNC = "persistent://public/default/reader-test-method-async"
+    public static final String PULSAR_READER_TEST_TOPIC_METHOD_ASYNC = "persistent://public/default/reader-test.method-async"
     public static final String PULSAR_READER_TEST_TOPIC_METHOD_ASYNC_WRAPPED = "persistent://public/default/reader-test-method-async-wrapped"
 
     void "test injectable reader"() {
