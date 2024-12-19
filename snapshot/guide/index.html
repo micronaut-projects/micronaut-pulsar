@@ -1241,29 +1241,25 @@ on caller or upper layers to provide it.</td>
 <div class="content">
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.authentication.jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...</code></pre>
+<pre class="highlightjs highlight"><code class="language-properties hljs" data-lang="properties">pulsar.authentication-jwt=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-yaml hljs" data-lang="yaml">pulsar:
-  authentication:
-    jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...</code></pre>
+  authentication-jwt: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
-  [pulsar.authentication]
-    jwt="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."</code></pre>
+  authentication-jwt="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy-config hljs" data-lang="groovy-config">pulsar {
-  authentication {
-    jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
-  }
+  authenticationJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
 }</code></pre>
 </div>
 </div>
@@ -1271,9 +1267,7 @@ on caller or upper layers to provide it.</td>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-hocon hljs" data-lang="hocon">{
   pulsar {
-    authentication {
-      jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
-    }
+    authentication-jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
   }
 }</code></pre>
 </div>
@@ -1282,9 +1276,7 @@ on caller or upper layers to provide it.</td>
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-json-config hljs" data-lang="json-config">{
   "pulsar": {
-    "authentication": {
-      "jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
-    }
+    "authentication-jwt": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."
   }
 }</code></pre>
 </div>
