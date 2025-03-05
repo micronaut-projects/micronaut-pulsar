@@ -22,7 +22,7 @@ micronaut-test = '4.6.2'
 micronaut-logging = "1.5.1"
 micronaut-test-resources = "2.7.3"
 
-managed-pulsar-client = '3.3.3'
+managed-pulsar-client = '3.3.5'
 sonatype-scan = "3.0.0"
 
 [libraries]
