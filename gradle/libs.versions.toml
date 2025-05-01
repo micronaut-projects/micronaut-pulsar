@@ -8,7 +8,7 @@ kotest-runner = '5.9.1'
 protobuf-java = '4.29.3'
 spock = "2.3-groovy-4.0"
 
-micronaut = '4.8.12'
+micronaut = '4.8.13'
 micronaut-platform = '4.7.6'
 micronaut-docs = '2.0.0'
 micronaut-gradle-plugin = '4.4.5'
