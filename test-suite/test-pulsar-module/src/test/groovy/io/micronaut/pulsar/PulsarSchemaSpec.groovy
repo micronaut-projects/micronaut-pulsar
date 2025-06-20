@@ -9,7 +9,6 @@ import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.serde.annotation.Serdeable
 import org.apache.pulsar.client.api.Message
 import org.apache.pulsar.client.api.MessageId
-import spock.lang.Ignore
 import spock.lang.Stepwise
 import spock.util.concurrent.BlockingVariables
 
@@ -37,7 +36,6 @@ class PulsarSchemaSpec extends PulsarAwareTest {
         message.properties == vars.getProperty("json_value").properties
     }
 
-    @Ignore
     void "test send receive protobuf"() {
         given:
         BlockingVariables vars = new BlockingVariables(65)
