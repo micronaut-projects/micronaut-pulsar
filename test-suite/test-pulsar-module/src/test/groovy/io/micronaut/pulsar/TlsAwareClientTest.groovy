@@ -31,7 +31,6 @@ import org.apache.pulsar.client.api.PulsarClient
 import org.apache.pulsar.client.api.Reader
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.AutoCleanup
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -41,7 +40,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
-@Ignore
 @Stepwise
 class TlsAwareClientTest extends Specification {
 
