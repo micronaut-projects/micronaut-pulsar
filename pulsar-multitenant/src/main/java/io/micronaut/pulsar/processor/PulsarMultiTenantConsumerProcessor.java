@@ -23,6 +23,7 @@ import io.micronaut.core.annotation.Internal;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.multitenancy.exceptions.TenantNotFoundException;
+import io.micronaut.pulsar.LoadableCryptoKeyReader;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.config.DefaultPulsarClientConfiguration;
 import io.micronaut.pulsar.events.PulsarTenantDiscoveredEvent;
@@ -59,13 +60,15 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
                                               final DefaultSchemaHandler simpleSchemaResolver,
                                               final DefaultPulsarClientConfiguration pulsarClientConfiguration,
                                               final TopicResolver topicResolver,
-                                              final TenantNameResolver tenantNameResolver) {
+                                              final TenantNameResolver tenantNameResolver,
+                                              final LoadableCryptoKeyReader loadableCryptoKeyReader) {
         super(applicationEventPublisher,
             beanContext,
             pulsarClient,
             simpleSchemaResolver,
             pulsarClientConfiguration,
-            topicResolver);
+            topicResolver,
+            loadableCryptoKeyReader);
         this.tenantNameResolver = tenantNameResolver;
         if (tenantNameResolver.isStaticTenantResolver()) {
             multiTenantConsumers = null;

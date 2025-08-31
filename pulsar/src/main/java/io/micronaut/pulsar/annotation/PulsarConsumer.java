@@ -188,4 +188,9 @@ public @interface PulsarConsumer {
      * @return Maximum numbers of retires before sending message to dead letter queue topic.
      */
     int maxRetriesBeforeDlq() default RetryMessageUtil.MAX_RECONSUMETIMES;
+
+    /**
+     * @return should add a cryptoKeyReader
+     */
+    boolean cryptoKeyReader() default false;
 }
