@@ -198,6 +198,27 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
             }
         });
 
+        consumerAnnotation.stringValue("exponentialNegativeAckFirstBackoff").map(Duration::parse).ifPresent(duration -> {
+            final long firstBackoff = duration.toMillis();
+            if (1000 < firstBackoff) { // pulsar lib demands gt 1 second not gte
+                consumer.negativeAckRedeliveryBackoff(new ExponentialRedeliveryBackoff(firstBackoff,
+                    consumerAnnotation.stringValue("exponentialNegativeAckMaxBackoff")
+                        .map(Duration::parse).map(Duration::toMillis).orElse(60000L)));
+            } else {
+                throw new MessageListenerException("Negative ack timeout must be greater than 1 second");
+            }
+        });
+        consumerAnnotation.stringValue("exponentialAckTimeoutFirstBackoff").map(Duration::parse).ifPresent(duration -> {
+            final long firstBackoff = duration.toMillis();
+            if (1000 < firstBackoff) { // pulsar lib demands gt 1 second not gte
+                consumer.ackTimeoutRedeliveryBackoff(new ExponentialRedeliveryBackoff(firstBackoff,
+                    consumerAnnotation.stringValue("exponentialAckTimeoutMaxBackoff")
+                        .map(Duration::parse).map(Duration::toMillis).orElse(60000L)));
+            } else {
+                throw new MessageListenerException("Acknowledge timeout must be greater than 1 second");
+            }
+        });
+
         consumer.messageListener(new DefaultListener(method, argHandler.isMessageWrapper(), bean, argHandler));
 
         return consumer;
@@ -218,15 +239,6 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
         if (0 < maxRedeliverCount) {
             builder.maxRedeliverCount(maxRedeliverCount);
             consumerBuilder.deadLetterPolicy(builder.build());
-
-            consumerAnnotation.stringValue("exponentialNackFirstBackoff").map(Duration::parse).ifPresent(duration -> {
-                final long millis = duration.toMillis();
-                if (1000 < millis) { // pulsar lib demands gt 1 second not gte
-                    consumerBuilder.negativeAckRedeliveryBackoff(new ExponentialRedeliveryBackoff(maxRedeliverCount, millis));
-                } else {
-                    throw new MessageListenerException("Acknowledge timeout must be greater than 1 second");
-                }
-            });
         }
     }
 

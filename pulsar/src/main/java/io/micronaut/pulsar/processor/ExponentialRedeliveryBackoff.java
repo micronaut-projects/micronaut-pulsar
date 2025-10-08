@@ -23,23 +23,15 @@ public class ExponentialRedeliveryBackoff implements RedeliveryBackoff {
 
     static Random random = new Random();
 
-    static final int DEFAULT_MAX_RETRIES = 3;
-    static final long FIRST_BACKOFF_IN_MS = 100;
-
-    private final int maxRetries;
     private final long firstBackoffInMs;
-    private final double maxDelay;
+    private final long maxDelayInMs;
 
-    public ExponentialRedeliveryBackoff() {
-        this(DEFAULT_MAX_RETRIES, FIRST_BACKOFF_IN_MS);
-    }
-
-    public ExponentialRedeliveryBackoff(int maxRetries, long firstBackoffInMs) {
+    public ExponentialRedeliveryBackoff(long firstBackoffInMs, long maxDelayInMs) {
         Preconditions.checkArgument(firstBackoffInMs > 0, "firstBackoff is not allowed to be negative");
-        Preconditions.checkArgument(maxRetries >= 0, "maxRetries is not allowed to be negative");
-        this.maxRetries = maxRetries;
+        Preconditions.checkArgument(maxDelayInMs >= 0, "maxDelayInMs is not allowed to be negative");
+        Preconditions.checkArgument(maxDelayInMs > firstBackoffInMs, "maxDelayInMs should be greater than firstBackoffInMs");
         this.firstBackoffInMs = firstBackoffInMs;
-        this.maxDelay = (double)firstBackoffInMs * Math.pow(2, maxRetries);
+        this.maxDelayInMs = maxDelayInMs;
     }
 
     /**
@@ -50,6 +42,6 @@ public class ExponentialRedeliveryBackoff implements RedeliveryBackoff {
     @Override
     public long next(int redeliveryCount) {
         double exponentialDelay = firstBackoffInMs * Math.pow(2, redeliveryCount);
-        return (long) Math.min( maxDelay, firstBackoffInMs + random.nextDouble() * exponentialDelay);
+        return (long) Math.min( maxDelayInMs, firstBackoffInMs + random.nextDouble() * exponentialDelay);
     }
 }
