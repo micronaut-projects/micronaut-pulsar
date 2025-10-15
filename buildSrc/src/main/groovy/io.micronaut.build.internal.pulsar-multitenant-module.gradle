@@ -1,21 +1,13 @@
 plugins {
     id 'io.micronaut.build.internal.pulsar-module'
-    id("org.sonatype.gradle.plugins.scan")
 }
-String ossIndexUsername = System.getenv("OSS_INDEX_USERNAME") ?: project.properties["ossIndexUsername"]
-String ossIndexPassword = System.getenv("OSS_INDEX_PASSWORD") ?: project.properties["ossIndexPassword"]
-boolean sonatypePluginConfigured = ossIndexUsername != null && ossIndexPassword != null
-if (sonatypePluginConfigured) {
-    ossIndexAudit {
-        username = ossIndexUsername
-        password = ossIndexPassword
+
+ossIndexAudit {
         excludeCoordinates = [
                 "commons-configuration:commons-configuration:1.10", // no version patched https://ossindex.sonatype.org/component/pkg:maven/commons-configuration/commons-configuration
                 "org.asynchttpclient:async-http-client:2.12.4" // no 2.x version patched of async-http-client https://ossindex.sonatype.org/component/pkg:maven/org.asynchttpclient/async-http-client
         ]
-    }
 }
-
 
 dependencies {
     implementation projects.micronautPulsar
