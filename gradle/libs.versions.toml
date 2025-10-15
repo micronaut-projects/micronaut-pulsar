@@ -2,7 +2,6 @@
 
 conscrypt-openjdk = "2.5.2"
 groovy = "4.0.22"
-junit = '5.14.0'
 kotlin = "2.1.21"
 kotest-runner = '5.9.1'
 protobuf-java = '4.32.1'
@@ -45,7 +44,6 @@ kotlin-reflect = { module = 'org.jetbrains.kotlin:kotlin-reflect', version.ref =
 kotlin-stdlib-jdk8 = { module = 'org.jetbrains.kotlin:kotlin-stdlib-jdk8', version.ref = 'kotlin' }
 protobuf-java = { module = 'com.google.protobuf:protobuf-java', version.ref = 'protobuf-java' }
 
-junit-jupiter-api = { module = 'org.junit.jupiter:junit-jupiter-api', version.ref = 'junit' }
 kotest-runner = { module = 'io.kotest:kotest-runner-junit5', version.ref = 'kotest-runner' }
 testcontainers-pulsar = { module = 'org.testcontainers:pulsar' }
 
