@@ -34,7 +34,7 @@ import static org.apache.pulsar.client.api.MessageId.latest
 @Stepwise
 class PulsarProducersSpec extends PulsarAwareTest {
 
-    public static final String PULSAR_PRODUCER_TEST_TOPIC = "persistent://public/default/test2"
+    public static final String PULSAR_PRODUCER_TEST_TOPIC = "persistent://public/default/test.2"
 
     void "test simple producer"() {
         given:
