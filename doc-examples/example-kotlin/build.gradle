@@ -1,7 +1,7 @@
 plugins {
+    id("io.micronaut.build.internal.pulsar-example")
     id "org.jetbrains.kotlin.jvm"
     id("org.jetbrains.kotlin.kapt")
-    id("io.micronaut.minimal.application")
 }
 micronaut {
     version libs.versions.micronaut.platform.get()
