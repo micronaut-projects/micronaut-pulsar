@@ -6,3 +6,8 @@ tasks.withType(Test).configureEach {
     // None of the examples source sets actually have a test
     failOnNoDiscoveredTests = false
 }
+
+java {
+    sourceCompatibility = "21"
+    targetCompatibility = "21"
+}
