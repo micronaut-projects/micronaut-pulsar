@@ -7,7 +7,7 @@ kotest-runner = '5.9.1'
 protobuf-java = '4.32.1'
 spock = "2.3-groovy-4.0"
 
-micronaut = "4.10.6"
+micronaut = "4.10.8"
 micronaut-platform = '4.9.4'
 micronaut-docs = '3.0.0'
 micronaut-gradle-plugin = '4.6.0'
@@ -15,7 +15,7 @@ micronaut-gradle-plugin = '4.6.0'
 micronaut-grpc = "4.12.0"
 micronaut-multitenancy = "5.8.0"
 micronaut-validation = "4.11.0"
-micronaut-reactor = "3.9.0"
+micronaut-reactor = "3.9.1"
 micronaut-serde = "2.15.5"
 micronaut-test = "4.10.1"
 micronaut-logging = "1.7.1"
