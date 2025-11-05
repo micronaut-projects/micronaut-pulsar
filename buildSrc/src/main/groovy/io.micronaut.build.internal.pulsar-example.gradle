@@ -1,13 +1,9 @@
 plugins {
     id("io.micronaut.minimal.application")
+    id ("io.micronaut.build.internal.java-base")
 }
 
 tasks.withType(Test).configureEach {
     // None of the examples source sets actually have a test
     failOnNoDiscoveredTests = false
-}
-
-java {
-    sourceCompatibility = "21"
-    targetCompatibility = "21"
 }
