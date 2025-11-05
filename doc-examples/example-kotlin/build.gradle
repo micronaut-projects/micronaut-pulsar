@@ -1,8 +1,6 @@
 plugins {
     id("io.micronaut.build.internal.pulsar-example")
-    id "org.jetbrains.kotlin.jvm"
-    id("org.jetbrains.kotlin.kapt")
-    id ("io.micronaut.build.internal.kotlin-base")
+    id("io.micronaut.build.internal.kotlin-kapt")
 }
 micronaut {
     version libs.versions.micronaut.platform.get()
@@ -13,8 +11,6 @@ dependencies {
 
     testImplementation projects.micronautPulsar
     testImplementation libs.kotest.runner
-    testImplementation libs.kotlin.reflect
-    testImplementation libs.kotlin.stdlib.jdk8
     testImplementation(mnTestResources.testcontainers.core)
     implementation mn.kotlinx.coroutines.core
     implementation mn.kotlinx.coroutines.jdk8
