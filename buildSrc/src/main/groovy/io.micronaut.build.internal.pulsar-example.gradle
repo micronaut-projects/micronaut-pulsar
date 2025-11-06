@@ -1,0 +1,8 @@
+plugins {
+    id("io.micronaut.minimal.application")
+}
+
+tasks.withType(Test).configureEach {
+    // None of the examples source sets actually have a test
+    failOnNoDiscoveredTests = false
+}

@@ -1,5 +1,5 @@
 plugins {
-    id("io.micronaut.minimal.application")
+    id("io.micronaut.build.internal.pulsar-example")
     id "groovy"
 }
 micronaut {
