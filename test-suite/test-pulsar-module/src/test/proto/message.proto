@@ -1,0 +1,19 @@
+syntax = "proto3";
+option java_package = "io.micronaut.pulsar";
+option java_outer_classname = "ProtoMessages";
+
+message ProtoMessage {
+  string message = 1;
+  int32 number = 2;
+  map<string, NestedMessage> complex = 3;
+}
+
+message NestedMessage {
+    repeated string alist = 1;
+    EnumMessage order = 2;
+}
+
+enum EnumMessage {
+    OPTION_ONE = 0;
+    OPTION_TWO = 1;
+}

@@ -1,8 +1,17 @@
 plugins {
     id 'io.micronaut.build.internal.test-pulsar-module'
+    id 'com.google.protobuf' version '0.9.5'
 }
 
 sourceSets {
+    main {
+        java {
+            srcDirs(
+                "build/generated/source/proto/main/grpc",
+                "build/generated/source/proto/main/java"
+            )
+        }
+    }
     test {
         resources {
             srcDir '../test-pulsar-shared-module/src/test/resources'
@@ -10,3 +19,23 @@ sourceSets {
         }
     }
 }
+
+protobuf {
+    protoc {
+        artifact = "com.google.protobuf:protoc:${libs.protobuf.java.get().version.toString()}"
+    }
+    plugins {
+        grpc {
+            artifact = "io.grpc:protoc-gen-grpc-java:1.63.0"
+        }
+    }
+    generateProtoTasks {
+        all().configureEach {
+            plugins {
+                grpc{}
+            }
+        }
+    }
+}
+
+tasks.getByName("classes").dependsOn("generateProto")
