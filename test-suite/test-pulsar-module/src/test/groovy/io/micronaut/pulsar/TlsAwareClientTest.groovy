@@ -49,7 +49,7 @@ class TlsAwareClientTest extends Specification {
         String tlsPathForPulsar = new File(tlsPath).absolutePath
         this.context = ApplicationContext.run(
                 ['pulsar.service-url'                  : PulsarTls.pulsarBrokerTlsUrl,
-                 'pulsar.tls-trust-certs-file-path'    : tlsPathForPulsar,
+                 'pulsar.tls-cert-file-path'           : tlsPathForPulsar,
                  'pulsar.shutdown-on-subscriber-error' : true,
                  // 'pulsar.tls-verify-hostname': false can't work anymore
                  // as pulsar doesn't set it on trust store that it builds
