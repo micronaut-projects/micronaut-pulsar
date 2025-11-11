@@ -16,50 +16,40 @@
 package io.micronaut.pulsar.shared
 
 
-import org.testcontainers.containers.BindMode
 import org.testcontainers.containers.Container
 import org.testcontainers.containers.PulsarContainer
 import org.testcontainers.containers.output.OutputFrame
 import org.testcontainers.utility.DockerImageName
+import org.testcontainers.utility.MountableFile
 
 abstract class PulsarTls {
 
-    public static final String PULSAR_VERSION = "3.3.0"
+    public static final String PULSAR_VERSION = "3.3.9"
 
     public static final int HTTPS = 8443
     public static final int BROKER_SSL = 6651
     private static final PulsarContainer PULSAR_CONTAINER =
             new PulsarContainer(DockerImageName.parse("apachepulsar/pulsar:${PULSAR_VERSION}"))
-    private static ClassLoader resourceLoader
     private static final String PULSAR_CLI_ADMIN = "/pulsar/bin/pulsar-admin"
 
     static {
-        resourceLoader = ClassLoader.getSystemClassLoader()
-
-        final var brokerCert = resourceLoader.getResource("broker.cert.pem").path
-        PULSAR_CONTAINER.addFileSystemBind(new File(brokerCert).path, "/my-ca/broker.cert.pem", BindMode.READ_ONLY)
-        final var brokerKey = resourceLoader.getResource("broker.key-pk8.pem").path
-        PULSAR_CONTAINER.addFileSystemBind(new File(brokerKey).path, "/my-ca/broker.key-pk8.pem", BindMode.READ_ONLY)
-        final var caCert = resourceLoader.getResource("ca.cert.pem").path
-        PULSAR_CONTAINER.addFileSystemBind(new File(caCert).path, "/my-ca/ca.cert.pem", BindMode.READ_ONLY)
-
-        final var standaloneConfFile = new File(resourceLoader.getResource("standalone.conf").path)
-        standaloneConfFile.setWritable(true,false)
-        standaloneConfFile.setReadable(true,false)
-        standaloneConfFile.setExecutable(true,false)
-        final var standalone = standaloneConfFile.path
-        final var clientConfFile = new File(resourceLoader.getResource("client.conf").path)
-        clientConfFile.setWritable(true, false)
-        clientConfFile.setReadable(true, false)
-        clientConfFile.setExecutable(true, false)
-        final var client = clientConfFile.path
-
-        PULSAR_CONTAINER.addFileSystemBind(standalone, "/pulsar/conf/standalone.conf", BindMode.READ_WRITE)
-        PULSAR_CONTAINER.addFileSystemBind(client, "/pulsar/conf/client.conf", BindMode.READ_WRITE)
+        PULSAR_CONTAINER
+                .withCopyFileToContainer(MountableFile.forClasspathResource("ca.cert.pem", 0777), "/pulsar/certs/ca.cert.pem")
+                .withCopyFileToContainer(MountableFile.forClasspathResource("broker.cert.pem", 0777), "/pulsar/certs/broker.cert.pem")
+                .withCopyFileToContainer(MountableFile.forClasspathResource("broker.key-pk8.pem", 0777), "/pulsar/certs/broker.key-pk8.pem")
 
         PULSAR_CONTAINER.addExposedPorts(HTTPS, BROKER_SSL)
         try {
-            PULSAR_CONTAINER.start()
+            PULSAR_CONTAINER
+                    .withEnv("PULSAR_PREFIX_brokerServicePortTls", "6651")
+                    .withEnv("PULSAR_PREFIX_webServicePortTls", "8443")
+                    .withEnv("PULSAR_PREFIX_tlsTrustCertsFilePath", "/pulsar/certs/ca.cert.pem")
+                    .withEnv("PULSAR_PREFIX_tlsKeyFilePath", "/pulsar/certs/broker.key-pk8.pem")
+                    .withEnv("PULSAR_PREFIX_tlsCertificateFilePath", "/pulsar/certs/broker.cert.pem")
+                    .withEnv("PULSAR_PREFIX_tlsRequireTrustedClientCertOnConnect", "false")
+                    .withEnv("PULSAR_PREFIX_tlsEnableHostnameVerification", "false")
+                    .withEnv("PULSAR_PREFIX_tlsTrustStore", "NONE")
+                    .start()
         } catch (Exception e) {
             throw new Exception(PULSAR_CONTAINER.getLogs(OutputFrame.OutputType.STDERR), e)
         }
