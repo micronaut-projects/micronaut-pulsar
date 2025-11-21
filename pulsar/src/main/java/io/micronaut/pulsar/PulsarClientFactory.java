@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 package io.micronaut.pulsar;
-
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.messaging.exceptions.MessagingClientException;
 import io.micronaut.pulsar.config.PulsarClientConfiguration;
-import io.netty.channel.EventLoopGroup;
 import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.impl.ClientBuilderImpl;
-import org.apache.pulsar.client.impl.PulsarClientImpl;
-import org.apache.pulsar.client.impl.conf.ClientConfigurationData;
 
 /**
  * Create bean of PulsarClient type which is required by consumers and producers.
@@ -40,13 +36,11 @@ public final class PulsarClientFactory {
      * Simple factory method for building main PulsarClient that serves as a connection to Pulsar cluster.
      *
      * @param pulsarClientConfiguration Main configuration for building PulsarClient
-     * @param eventLoopGroup netty's event loop group from Micronaut to pass to pulsar
      * @return Instance of {@link PulsarClient}
      * @throws MessagingClientException in case any of the required options are missing or malformed
      */
     @Singleton
-    public PulsarClient pulsarClient(final PulsarClientConfiguration pulsarClientConfiguration,
-                                     final EventLoopGroup eventLoopGroup) throws MessagingClientException {
+    public PulsarClient pulsarClient(final PulsarClientConfiguration pulsarClientConfiguration) throws MessagingClientException {
         final ClientBuilderImpl clientBuilder = (ClientBuilderImpl) new ClientBuilderImpl()
             .authentication(pulsarClientConfiguration.getAuthentication());
 
@@ -68,10 +62,12 @@ public final class PulsarClientFactory {
         pulsarClientConfiguration.getTlsProtocols().ifPresent(clientBuilder::tlsProtocols);
 
         try {
-            final ClientConfigurationData data = clientBuilder.getClientConfigurationData();
-            return new PulsarClientImpl(data, eventLoopGroup);
+            // Pulsar Client performs various targeted optimizations when creating its own EventLoopGroup.
+            // To preserve these optimizations, we avoid using Micronaut's mechanism and rely on Pulsar's default behavior.
+            return clientBuilder.build();
         } catch (Exception ex) {
             throw new MessagingClientException("Failed to initialize Pulsar Client", ex);
         }
     }
 }
+
