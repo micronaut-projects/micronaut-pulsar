@@ -15,7 +15,7 @@
  */
 package io.micronaut.pulsar.events;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import java.io.Serializable;
 
 /**
