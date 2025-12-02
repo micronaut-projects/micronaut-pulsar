@@ -13,7 +13,7 @@ dependencies {
     compileOnly mnGrpc.micronaut.protobuff.support
 
     constraints {
-        implementation("org.asynchttpclient:async-http-client:3.0.1"){
+        implementation("org.asynchttpclient:async-http-client:3.0.4"){
             because("Older versions has a CVE(CVE-2024-53990) Vulnerability ")
         }
         implementation("com.google.code.gson:gson:2.13.2") {
