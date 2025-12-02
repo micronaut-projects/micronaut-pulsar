@@ -15,7 +15,7 @@
  */
 package io.micronaut.pulsar;
 
-import io.micronaut.core.annotation.Nullable;
+import org.jspecify.annotations.Nullable;
 import io.micronaut.pulsar.schemas.SchemaResolver;
 
 /**

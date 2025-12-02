@@ -15,7 +15,7 @@
  */
 package io.micronaut.pulsar.config;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.impl.auth.AuthenticationDisabled;
 

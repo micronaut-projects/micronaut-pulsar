@@ -15,7 +15,7 @@
  */
 package io.micronaut.pulsar;
 
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import org.apache.pulsar.client.api.Producer;
 
 import java.util.Map;
