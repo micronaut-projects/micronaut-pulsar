@@ -23,7 +23,9 @@
             document.body.className = classes.join(" ");
         }
     </script>
-
+    <style type="text/css">
+        .lang-java { display: block }; .lang-python { display: block }; .lang-kotlin { display: block }; .lang-groovy { display: block }; 
+    </style>
 </head>
 
 <body class="body" id="docs" onload="addJsClass();" onhashchange="highlightMenu()">
@@ -468,6 +470,32 @@ public class ConsumerProducer { // <b class="conum">(2)</b>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarConsumer
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarSubscription
+import org.apache.pulsar.client.api.SubscriptionType
+
+@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+open class ConsumerProducer { // <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
+    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
+        val changed = report(message)
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
+    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
+        return "Reporting message '$message'" // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
 
 import io.micronaut.pulsar.annotation.PulsarConsumer;
@@ -494,32 +522,6 @@ class ConsumerProducer { // <b class="conum">(2)</b>
     @PulsarProducer(topic = "persistent://public/default/reports-groovy-docs", producerName = "report-producer-groovy") // <b class="conum">(5)</b>
     CompletableFuture&lt;String&gt; report(String message) { // <b class="conum">(6)</b>
         return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); // <b class="conum">(7)</b>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
-
-import io.micronaut.pulsar.annotation.PulsarConsumer
-import io.micronaut.pulsar.annotation.PulsarProducer
-import io.micronaut.pulsar.annotation.PulsarSubscription
-import org.apache.pulsar.client.api.SubscriptionType
-
-@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
-open class ConsumerProducer { // <b class="conum">(2)</b>
-
-    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
-    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
-        val changed = report(message)
-        //...
-    }
-
-
-    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
-    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
-        return "Reporting message '$message'" // <b class="conum">(7)</b>
     }
 }</code></pre>
 </div>
@@ -882,6 +884,27 @@ public class ReaderExample {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarReader
+import jakarta.inject.Singleton
+import kotlinx.coroutines.future.await
+import org.apache.pulsar.client.api.Message
+import org.apache.pulsar.client.api.Reader
+
+@Singleton
+class ReaderExample {
+    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-k-reader") // <b class="conum">(1)</b>
+    private lateinit var reader: Reader&lt;String&gt; // <b class="conum">(2)</b>
+
+    suspend fun readNext(): Message&lt;String&gt; { // <b class="conum">(3)</b>
+        return reader.readNextAsync().await() // <b class="conum">(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
 
 import io.micronaut.pulsar.annotation.PulsarReader;
@@ -900,27 +923,6 @@ class ReaderExample {
 
     CompletableFuture&lt;Message&lt;String&gt;&gt; readNext() { // <b class="conum">(3)</b>
         return reader.readNextAsync() // <b class="conum">(4)</b>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
-
-import io.micronaut.pulsar.annotation.PulsarReader
-import jakarta.inject.Singleton
-import kotlinx.coroutines.future.await
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.Reader
-
-@Singleton
-class ReaderExample {
-    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-k-reader") // <b class="conum">(1)</b>
-    private lateinit var reader: Reader&lt;String&gt; // <b class="conum">(2)</b>
-
-    suspend fun readNext(): Message&lt;String&gt; { // <b class="conum">(3)</b>
-        return reader.readNextAsync().await() // <b class="conum">(4)</b>
     }
 }</code></pre>
 </div>
@@ -999,6 +1001,23 @@ public interface Producer {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarProducerClient
+import org.apache.pulsar.client.api.MessageId
+
+@PulsarProducerClient // <b class="conum">(1)</b>
+interface Producer {
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
+    suspend fun send(message: String): MessageId // <b class="conum">(3)</b>
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    fun sendBlocking(message: String) // <b class="conum">(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
 
 import io.micronaut.pulsar.annotation.PulsarProducer;
@@ -1014,23 +1033,6 @@ interface Producer {
 
     @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
     void sendBlocking(String message); // <b class="conum">(4)</b>
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
-
-import io.micronaut.pulsar.annotation.PulsarProducer
-import io.micronaut.pulsar.annotation.PulsarProducerClient
-import org.apache.pulsar.client.api.MessageId
-
-@PulsarProducerClient // <b class="conum">(1)</b>
-interface Producer {
-    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
-    suspend fun send(message: String): MessageId // <b class="conum">(3)</b>
-    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
-    fun sendBlocking(message: String) // <b class="conum">(4)</b>
 }</code></pre>
 </div>
 </div>
@@ -1132,6 +1134,32 @@ public class ConsumerProducer { // <b class="conum">(2)</b>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarConsumer
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarSubscription
+import org.apache.pulsar.client.api.SubscriptionType
+
+@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+open class ConsumerProducer { // <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
+    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
+        val changed = report(message)
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
+    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
+        return "Reporting message '$message'" // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
 
 import io.micronaut.pulsar.annotation.PulsarConsumer;
@@ -1158,32 +1186,6 @@ class ConsumerProducer { // <b class="conum">(2)</b>
     @PulsarProducer(topic = "persistent://public/default/reports-groovy-docs", producerName = "report-producer-groovy") // <b class="conum">(5)</b>
     CompletableFuture&lt;String&gt; report(String message) { // <b class="conum">(6)</b>
         return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); // <b class="conum">(7)</b>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
-
-import io.micronaut.pulsar.annotation.PulsarConsumer
-import io.micronaut.pulsar.annotation.PulsarProducer
-import io.micronaut.pulsar.annotation.PulsarSubscription
-import org.apache.pulsar.client.api.SubscriptionType
-
-@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
-open class ConsumerProducer { // <b class="conum">(2)</b>
-
-    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
-    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
-        val changed = report(message)
-        //...
-    }
-
-
-    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
-    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
-        return "Reporting message '$message'" // <b class="conum">(7)</b>
     }
 }</code></pre>
 </div>
