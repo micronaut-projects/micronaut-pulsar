@@ -15,7 +15,7 @@
  */
 package io.micronaut.pulsar
 
-
+import org.apache.pulsar.common.schema.SchemaType
 import io.micronaut.json.JsonMapper
 import io.micronaut.protobuf.codec.ProtobufferCodec
 import io.micronaut.pulsar.config.PulsarClientConfiguration
