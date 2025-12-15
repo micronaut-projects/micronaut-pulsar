@@ -128,8 +128,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>org.apache.pulsar.client.api.PulsarClient</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pulsarClient(io.micronaut.pulsar.config.PulsarClientConfiguration,io.netty.channel.EventLoopGroup)" class="member-name-link">pulsarClient</a><wbr>(<a href="config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a>&nbsp;pulsarClientConfiguration,
- io.netty.channel.EventLoopGroup&nbsp;eventLoopGroup)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pulsarClient(io.micronaut.pulsar.config.PulsarClientConfiguration)" class="member-name-link">pulsarClient</a><wbr>(<a href="config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a>&nbsp;pulsarClientConfiguration)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Simple factory method for building main PulsarClient that serves as a connection to Pulsar cluster.</div>
 </div>
@@ -165,17 +164,15 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="pulsarClient(io.micronaut.pulsar.config.PulsarClientConfiguration,io.netty.channel.EventLoopGroup)">
+<section class="detail" id="pulsarClient(io.micronaut.pulsar.config.PulsarClientConfiguration)">
 <h3>pulsarClient</h3>
 <div class="member-signature"><span class="annotations">@Singleton
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.apache.pulsar.client.api.PulsarClient</span>&nbsp;<span class="element-name">pulsarClient</span><wbr><span class="parameters">(<a href="config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a>&nbsp;pulsarClientConfiguration,
- io.netty.channel.EventLoopGroup&nbsp;eventLoopGroup)</span>
+</span><span class="modifiers">public</span>&nbsp;<span class="return-type">org.apache.pulsar.client.api.PulsarClient</span>&nbsp;<span class="element-name">pulsarClient</span><wbr><span class="parameters">(<a href="config/PulsarClientConfiguration.html" title="interface in io.micronaut.pulsar.config">PulsarClientConfiguration</a>&nbsp;pulsarClientConfiguration)</span>
                                                        throws <span class="exceptions">io.micronaut.messaging.exceptions.MessagingClientException</span></div>
 <div class="block">Simple factory method for building main PulsarClient that serves as a connection to Pulsar cluster.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
 <dd><code>pulsarClientConfiguration</code> - Main configuration for building PulsarClient</dd>
-<dd><code>eventLoopGroup</code> - netty's event loop group from Micronaut to pass to pulsar</dd>
 <dt>Returns:</dt>
 <dd>Instance of <code>PulsarClient</code></dd>
 <dt>Throws:</dt>
