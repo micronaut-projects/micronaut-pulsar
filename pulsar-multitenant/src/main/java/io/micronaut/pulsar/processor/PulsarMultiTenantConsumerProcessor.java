@@ -83,7 +83,7 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
      * @param method         executable method that serves as a message consumer
      */
     @Override
-    public void process(final BeanDefinition<?> beanDefinition, final ExecutableMethod<?, ?> method) {
+    public <B> void process(final BeanDefinition<B> beanDefinition, final ExecutableMethod<B, ?> method) {
         try {
             final var annotation = method.getAnnotation(PulsarConsumer.class);
             final var consumerId = getConsumerName(annotation);
@@ -122,7 +122,7 @@ final class PulsarMultiTenantConsumerProcessor extends PulsarConsumerProcessor i
         final var tenantName = tenantNameResolver.resolveTenantNameFromId(event.getTenant());
         tenantNameResolver.overrideTenantName(tenantName);
         for (final var x : multiTenantConsumers.values()) {
-            this.process(x.getBeanDefinition(), x.getMethod());
+            this.process((BeanDefinition) x.getBeanDefinition(), (ExecutableMethod) x.getMethod());
         }
         tenantNameResolver.clearTenantName();
     }
