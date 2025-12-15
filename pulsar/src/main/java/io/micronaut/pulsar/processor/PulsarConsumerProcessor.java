@@ -87,7 +87,7 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
 
     @Override
     @SuppressWarnings("unchecked")
-    public void process(final BeanDefinition<?> beanDefinition, final ExecutableMethod<?, ?> method) {
+    public <B> void process(final BeanDefinition<B> beanDefinition, final ExecutableMethod<B, ?> method) {
         final var consumerAnnotation = method.getDeclaredAnnotation(PulsarConsumer.class);
         if (null == consumerAnnotation) {
             return;
