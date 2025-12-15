@@ -90,7 +90,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>io.micronaut.context.processor.AnnotationProcessor&lt;<a href="../annotation/PulsarConsumer.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarConsumer</a>,<wbr>io.micronaut.inject.ExecutableMethod&lt;?,<wbr>?&gt;&gt;</code>, <code>io.micronaut.context.processor.ExecutableMethodProcessor&lt;<a href="../annotation/PulsarConsumer.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarConsumer</a>&gt;</code>, <code><a href="../PulsarConsumerRegistry.html" title="interface in io.micronaut.pulsar">PulsarConsumerRegistry</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></dd>
+<dd><code>io.micronaut.context.processor.ExecutableMethodProcessor&lt;<a href="../annotation/PulsarConsumer.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarConsumer</a>&gt;</code>, <code><a href="../PulsarConsumerRegistry.html" title="interface in io.micronaut.pulsar">PulsarConsumerRegistry</a></code>, <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/AutoCloseable.html" title="class or interface in java.lang" class="external-link">AutoCloseable</a></code></dd>
 </dl>
 <hr>
 <div class="type-signature"><span class="annotations">@Singleton
@@ -181,9 +181,9 @@ implements io.micronaut.context.processor.ExecutableMethodProcessor&lt;<a href="
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pause(java.lang.String)" class="member-name-link">pause</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#process(io.micronaut.inject.BeanDefinition,io.micronaut.inject.ExecutableMethod)" class="member-name-link">process</a><wbr>(io.micronaut.inject.BeanDefinition&lt;?&gt;&nbsp;beanDefinition,
- io.micronaut.inject.ExecutableMethod&lt;?,<wbr>?&gt;&nbsp;method)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;B&gt;&nbsp;void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#process(io.micronaut.inject.BeanDefinition,io.micronaut.inject.ExecutableMethod)" class="member-name-link">process</a><wbr>(io.micronaut.inject.BeanDefinition&lt;B&gt;&nbsp;beanDefinition,
+ io.micronaut.inject.ExecutableMethod&lt;B,<wbr>?&gt;&nbsp;method)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resume(java.lang.String)" class="member-name-link">resume</a><wbr>(@NonNull <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;id)</code></div>
@@ -247,11 +247,9 @@ implements io.micronaut.context.processor.ExecutableMethodProcessor&lt;<a href="
 <li>
 <section class="detail" id="process(io.micronaut.inject.BeanDefinition,io.micronaut.inject.ExecutableMethod)">
 <h3>process</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">process</span><wbr><span class="parameters">(io.micronaut.inject.BeanDefinition&lt;?&gt;&nbsp;beanDefinition,
- io.micronaut.inject.ExecutableMethod&lt;?,<wbr>?&gt;&nbsp;method)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;B&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">process</span><wbr><span class="parameters">(io.micronaut.inject.BeanDefinition&lt;B&gt;&nbsp;beanDefinition,
+ io.micronaut.inject.ExecutableMethod&lt;B,<wbr>?&gt;&nbsp;method)</span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>process</code>&nbsp;in interface&nbsp;<code>io.micronaut.context.processor.AnnotationProcessor&lt;<a href="../annotation/PulsarConsumer.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarConsumer</a>,<wbr>io.micronaut.inject.ExecutableMethod&lt;?,<wbr>?&gt;&gt;</code></dd>
 <dt>Specified by:</dt>
 <dd><code>process</code>&nbsp;in interface&nbsp;<code>io.micronaut.context.processor.ExecutableMethodProcessor&lt;<a href="../annotation/PulsarConsumer.html" title="annotation interface in io.micronaut.pulsar.annotation">PulsarConsumer</a>&gt;</code></dd>
 </dl>
