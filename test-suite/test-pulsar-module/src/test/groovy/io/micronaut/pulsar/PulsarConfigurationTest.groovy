@@ -59,7 +59,8 @@ class PulsarConfigurationTest extends PulsarAwareTest {
         def protoSchema = ProtobufSchema.of(ProtoMessages.ProtoMessage.class, protoCodec)
 
         then:
-        jsonSchema instanceof JsonSchema<JsonJavaClass>
-        protoSchema instanceof ProtobufSchema<ProtoMessages.ProtoMessage>
+        jsonSchema.schemaInfo.schemaType == SchemaType.JSON
+        protoSchema.schemaInfo.schemaType == SchemaType.PROTOBUF
+
     }
 }
