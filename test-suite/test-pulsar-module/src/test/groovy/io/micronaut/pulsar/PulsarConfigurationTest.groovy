@@ -15,7 +15,7 @@
  */
 package io.micronaut.pulsar
 
-
+import org.apache.pulsar.common.schema.SchemaType
 import io.micronaut.json.JsonMapper
 import io.micronaut.protobuf.codec.ProtobufferCodec
 import io.micronaut.pulsar.config.PulsarClientConfiguration
@@ -59,7 +59,8 @@ class PulsarConfigurationTest extends PulsarAwareTest {
         def protoSchema = ProtobufSchema.of(ProtoMessages.ProtoMessage.class, protoCodec)
 
         then:
-        jsonSchema instanceof JsonSchema<JsonJavaClass>
-        protoSchema instanceof ProtobufSchema<ProtoMessages.ProtoMessage>
+        jsonSchema.schemaInfo.getType() == SchemaType.JSON
+        protoSchema.schemaInfo.getType() == SchemaType.PROTOBUF
+
     }
 }

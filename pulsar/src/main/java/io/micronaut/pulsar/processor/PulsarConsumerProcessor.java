@@ -20,7 +20,7 @@ import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
-import io.micronaut.core.annotation.NonNull;
+import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.ArrayUtils;
 import io.micronaut.core.util.StringUtils;
@@ -87,7 +87,7 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
 
     @Override
     @SuppressWarnings("unchecked")
-    public void process(final BeanDefinition<?> beanDefinition, final ExecutableMethod<?, ?> method) {
+    public <B> void process(final BeanDefinition<B> beanDefinition, final ExecutableMethod<B, ?> method) {
         final var consumerAnnotation = method.getDeclaredAnnotation(PulsarConsumer.class);
         if (null == consumerAnnotation) {
             return;
