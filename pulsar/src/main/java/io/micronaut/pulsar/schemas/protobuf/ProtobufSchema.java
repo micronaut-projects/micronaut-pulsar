@@ -17,15 +17,18 @@ package io.micronaut.pulsar.schemas.protobuf;
 
 import io.micronaut.core.type.Argument;
 import io.micronaut.protobuf.codec.ProtobufferCodec;
-import org.apache.pulsar.client.api.schema.SchemaDefinition;
+import org.apache.avro.Schema;
+import org.apache.avro.protobuf.ProtobufData;
 import org.apache.pulsar.client.impl.schema.AbstractStructSchema;
-import org.apache.pulsar.client.impl.schema.SchemaDefinitionBuilderImpl;
-import org.apache.pulsar.client.impl.schema.util.SchemaUtil;
+import org.apache.pulsar.client.impl.schema.SchemaInfoImpl;
 import org.apache.pulsar.common.schema.SchemaInfo;
 import org.apache.pulsar.common.schema.SchemaType;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * JSON Schema to allow using {@link ProtobufferCodec} from Micronaut.
@@ -49,12 +52,14 @@ public final class ProtobufSchema<T> extends AbstractStructSchema<T> {
         return (ProtobufSchema<T>) SCHEMAS.computeIfAbsent(type.hashCode(), x -> {
             final ProtobufWriter<T> writer = new ProtobufWriter<>(codec);
             final ProtobufReader<T> reader = new ProtobufReader<>(codec, Argument.of(type));
-            final SchemaDefinition<T> schemaDefinition = new SchemaDefinitionBuilderImpl<T>()
-                    .withPojo(type)
-                    .withSchemaWriter(writer)
-                    .withSchemaReader(reader)
+            final Schema schema = ProtobufData.get().getSchema(type);
+            final SchemaInfo schemaInfo = SchemaInfoImpl.builder()
+                    .schema(schema.toString().getBytes(UTF_8))
+                    .type(SchemaType.PROTOBUF)
+                    .name("")
+                    .properties(new HashMap<>())
                     .build();
-            return new ProtobufSchema<>(SchemaUtil.parseSchemaInfo(schemaDefinition, SchemaType.PROTOBUF), reader, writer);
+            return new ProtobufSchema<>(schemaInfo, reader, writer);
         });
     }
 }

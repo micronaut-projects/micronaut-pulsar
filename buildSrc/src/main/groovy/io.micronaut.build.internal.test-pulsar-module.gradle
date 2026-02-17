@@ -15,10 +15,13 @@ dependencies {
     testImplementation projects.testSuite.micronautTestPulsarSharedModule
     testImplementation mnReactor.micronaut.reactor
     testImplementation mnGrpc.micronaut.protobuff.support
+    testImplementation libs.protobuf.java
     testImplementation mnSerde.micronaut.serde.jackson
     testRuntimeOnly mnLogging.logback.classic
 
     testRuntimeOnly mnTest.junit.platform.launcher
+    testRuntimeOnly mnGrpc.grpc.stub
+    testRuntimeOnly mnGrpc.grpc.protobuf
 }
 
 tasks.withType(GroovyCompile).configureEach {
