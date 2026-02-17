@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 package io.micronaut.pulsar;
+
 import io.micronaut.context.annotation.Factory;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.messaging.exceptions.MessagingClientException;
@@ -60,6 +61,8 @@ public final class PulsarClientFactory {
         pulsarClientConfiguration.getTlsVerifyHostname().ifPresent(clientBuilder::enableTlsHostnameVerification);
         pulsarClientConfiguration.getTlsCiphers().ifPresent(clientBuilder::tlsCiphers);
         pulsarClientConfiguration.getTlsProtocols().ifPresent(clientBuilder::tlsProtocols);
+        pulsarClientConfiguration.getProxyUrl().ifPresent(url ->
+            clientBuilder.proxyServiceUrl(url, pulsarClientConfiguration.getProxyProtocol().orElseThrow()));
 
         try {
             // Pulsar Client performs various targeted optimizations when creating its own EventLoopGroup.

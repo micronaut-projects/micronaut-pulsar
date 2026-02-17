@@ -19,6 +19,7 @@ import io.micronaut.context.annotation.ConfigurationProperties;
 import io.micronaut.context.annotation.Requires;
 import io.micronaut.context.env.Environment;
 import io.micronaut.context.exceptions.ConfigurationException;
+import org.apache.pulsar.client.api.ProxyProtocol;
 import org.jspecify.annotations.Nullable;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.core.util.StringUtils;
@@ -65,6 +66,8 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private Set<String> tlsCiphers;
     private Set<String> tlsProtocols;
     private String defaultTenant;
+    private String proxyUrl;
+    private ProxyProtocol proxyProtocol;
 
     /**
      * Constructs the default Pulsar Client configuration.
@@ -116,7 +119,7 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     public Optional<String> getTlsTrustStorePath() {
         return Optional.ofNullable(tlsTrustStorePath);
     }
-    
+
     public void setTlsTrustStorePassword(String tlsTrustStorePassword) {
         this.tlsTrustStorePassword = tlsTrustStorePassword;
     }
@@ -324,5 +327,18 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
                 defaultTenant));
         }
         this.defaultTenant = defaultTenant;
+    }
+
+    @Override
+    public Optional<String> getProxyUrl() {
+        return Optional.ofNullable(proxyUrl);
+    }
+
+    @Override
+    public Optional<ProxyProtocol> getProxyProtocol() {
+        if (getProxyUrl().isPresent()) {
+            return Optional.of(Objects.requireNonNullElse(proxyProtocol, ProxyProtocol.SNI));
+        }
+        return Optional.empty();
     }
 }
