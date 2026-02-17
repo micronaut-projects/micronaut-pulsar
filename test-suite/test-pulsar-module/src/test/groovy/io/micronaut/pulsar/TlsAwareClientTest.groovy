@@ -1,4 +1,7 @@
 package io.micronaut.pulsar
+
+import io.micronaut.context.ApplicationContext
+
 /*
  * Copyright 2017-2022 original authors
  *
@@ -15,8 +18,6 @@ package io.micronaut.pulsar
  * limitations under the License.
  */
 
-
-import io.micronaut.context.ApplicationContext
 import io.micronaut.context.annotation.Requires
 import io.micronaut.context.env.Environment
 import io.micronaut.pulsar.annotation.PulsarConsumer
@@ -24,14 +25,9 @@ import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import io.micronaut.pulsar.shared.PulsarTls
-import org.apache.pulsar.client.api.Consumer
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.MessageId
-import org.apache.pulsar.client.api.PulsarClient
-import org.apache.pulsar.client.api.Reader
+import org.apache.pulsar.client.api.*
 import org.apache.pulsar.client.impl.schema.StringSchema
 import spock.lang.AutoCleanup
-import spock.lang.Ignore
 import spock.lang.Shared
 import spock.lang.Specification
 import spock.lang.Stepwise
@@ -41,7 +37,6 @@ import java.util.concurrent.TimeUnit
 import java.util.concurrent.locks.ReadWriteLock
 import java.util.concurrent.locks.ReentrantReadWriteLock
 
-@Ignore
 @Stepwise
 class TlsAwareClientTest extends Specification {
 
@@ -53,13 +48,13 @@ class TlsAwareClientTest extends Specification {
         String tlsPath = ClassLoader.getSystemClassLoader().getResource('ca.cert.pem').path
         String tlsPathForPulsar = new File(tlsPath).absolutePath
         this.context = ApplicationContext.run(
-                ['pulsar.service-url'                 : PulsarTls.pulsarBrokerTlsUrl,
-                 'pulsar.tls-cert-file-path'          : tlsPathForPulsar,
-                 'pulsar.shutdown-on-subscriber-error': true,
-                 'pulsar.tls-ciphers'                 : ['TLS_AES_256_GCM_SHA384'],
-                 'pulsar.tls-protocols'               : ['TLSv1.3'],
-                 'pulsar.tls-verify-hostname'         : false,
-                 'spec.name'                          : getClass().simpleName],
+                ['pulsar.service-url'                  : PulsarTls.pulsarBrokerTlsUrl,
+                 'pulsar.tls-cert-file-path'           : tlsPathForPulsar,
+                 'pulsar.shutdown-on-subscriber-error' : true,
+                 // 'pulsar.tls-verify-hostname': false can't work anymore
+                 // as pulsar doesn't set it on trust store that it builds
+                 'pulsar.tls-allow-insecure-connection': true,
+                 'spec.name'                           : getClass().simpleName],
                 Environment.TEST
         )
     }
