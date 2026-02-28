@@ -1,31 +1,32 @@
 [versions]
 
-conscrypt-openjdk = "2.5.2"
+conscrypt-openjdk = '2.5.2'
 kotest-runner = '5.9.1'
-protobuf-java = '4.32.1'
-micronaut = "5.0.0-M3"
+protobuf-java = '4.33.5'
+grpc-protoc-plugin = '1.63.0'
+micronaut = '5.0.0-M3'
 micronaut-platform = '4.10.1'
 micronaut-gradle-plugin = '4.6.1'
-micronaut-grpc = "4.12.0"
-micronaut-multitenancy = "5.8.0"
-micronaut-validation = "5.0.0-M1"
-micronaut-reactor = "4.0.0-M1"
-micronaut-serde = "3.0.0-M1"
-micronaut-test-resources = "2.10.1"
+micronaut-grpc = '4.12.0'
+micronaut-multitenancy = '5.8.0'
+micronaut-validation = '5.0.0-M1'
+micronaut-reactor = '4.0.0-M1'
+micronaut-serde = '3.0.0-M1'
+micronaut-test-resources = '2.10.1'
 
-managed-pulsar-client = '3.3.9'
+managed-pulsar-client = '4.1.2'
 
 [libraries]
 # Core
 micronaut-core = { module = 'io.micronaut:micronaut-core-bom', version.ref = 'micronaut' }
 
 # Micronaut BOMS
-micronaut-grpc = { module = "io.micronaut.grpc:micronaut-grpc-bom", version.ref = "micronaut-grpc" }
-micronaut-multitenancy = { module = "io.micronaut.multitenancy:micronaut-multitenancy-bom", version.ref = "micronaut-multitenancy" }
-micronaut-reactor = { module = "io.micronaut.reactor:micronaut-reactor-bom", version.ref = "micronaut-reactor" }
-micronaut-serde = { module = "io.micronaut.serde:micronaut-serde-bom", version.ref = "micronaut-serde" }
-micronaut-test-resources = { module = "io.micronaut.testresources:micronaut-test-resources-bom", version.ref = "micronaut-test-resources" }
-micronaut-validation = { module = "io.micronaut.validation:micronaut-validation-bom", version.ref = "micronaut-validation" }
+micronaut-grpc = { module = 'io.micronaut.grpc:micronaut-grpc-bom', version.ref = 'micronaut-grpc' }
+micronaut-multitenancy = { module = 'io.micronaut.multitenancy:micronaut-multitenancy-bom', version.ref = 'micronaut-multitenancy' }
+micronaut-reactor = { module = 'io.micronaut.reactor:micronaut-reactor-bom', version.ref = 'micronaut-reactor' }
+micronaut-serde = { module = 'io.micronaut.serde:micronaut-serde-bom', version.ref = 'micronaut-serde' }
+micronaut-test-resources = { module = 'io.micronaut.testresources:micronaut-test-resources-bom', version.ref = 'micronaut-test-resources' }
+micronaut-validation = { module = 'io.micronaut.validation:micronaut-validation-bom', version.ref = 'micronaut-validation' }
 
 # Managed libraries
 managed-pulsar-client = { module = 'org.apache.pulsar:pulsar-client-original', version.ref= 'managed-pulsar-client' }
@@ -33,7 +34,9 @@ managed-pulsar-client = { module = 'org.apache.pulsar:pulsar-client-original', v
 # Other libraries
 conscrypt-openjdk = { module = "org.conscrypt:conscrypt-openjdk-uber", version.ref="conscrypt-openjdk" }
 protobuf-java = { module = 'com.google.protobuf:protobuf-java', version.ref = 'protobuf-java' }
+protobuf-grpc = { module = 'io.grpc:protoc-gen-grpc-java', version.ref = 'grpc-protoc-plugin' }
+protobuf-protoc = { module = 'com.google.protobuf:protoc', version.ref = 'protobuf-java' }
 
 kotest-runner = { module = 'io.kotest:kotest-runner-junit5', version.ref = 'kotest-runner' }
 testcontainers-pulsar = { module = 'org.testcontainers:pulsar' }
-gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = "micronaut-gradle-plugin" }
+gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = 'micronaut-gradle-plugin' }

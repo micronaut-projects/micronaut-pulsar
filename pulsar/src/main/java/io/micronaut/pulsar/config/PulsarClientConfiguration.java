@@ -16,6 +16,7 @@
 package io.micronaut.pulsar.config;
 
 import org.apache.pulsar.client.api.Authentication;
+import org.apache.pulsar.client.api.ProxyProtocol;
 import org.apache.pulsar.client.api.ServiceUrlProvider;
 
 import java.util.Optional;
@@ -105,6 +106,14 @@ public interface PulsarClientConfiguration {
      * @return Default tenant name if any.
      */
     default Optional<String> getDefaultTenant() {
+        return Optional.empty();
+    }
+
+    default Optional<String> getProxyUrl() {
+        return Optional.empty();
+    }
+
+    default Optional<ProxyProtocol> getProxyProtocol() {
         return Optional.empty();
     }
 }

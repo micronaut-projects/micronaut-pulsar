@@ -3,10 +3,15 @@ plugins {
     id "io.micronaut.build.internal.module"
 }
 
+// can't use newer aircompressor than 2.0.2 as it requires Java 22
+// and has breakig changes that might not work with apache pulsar client lib
+ossIndexAudit {
+    excludeCoordinates = ["io.airlift:aircompressor:2.0.2"]
+}
+
 dependencies {
     api mn.micronaut.messaging
     api mnSerde.micronaut.serde.support
     api(libs.managed.pulsar.client)
-    compileOnly 'com.google.code.findbugs:jsr305'
     testRuntimeOnly mnLogging.logback.classic
 }
