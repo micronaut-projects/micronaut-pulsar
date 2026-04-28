@@ -1,6 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.test-pulsar-module'
-    id 'com.google.protobuf' version '0.9.6'
+    id 'com.google.protobuf' version '0.10.0'
 }
 
 sourceSets {
