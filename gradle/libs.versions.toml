@@ -1,7 +1,7 @@
 [versions]
 
 conscrypt-openjdk = '2.5.2'
-kotest-runner = '5.9.1'
+kotest-runner = '6.1.11'
 protobuf-java = '4.34.1'
 grpc-protoc-plugin = '1.81.0'
 micronaut = '5.0.0-M26'
