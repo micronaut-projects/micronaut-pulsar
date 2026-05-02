@@ -6,7 +6,7 @@ plugins {
 // can't use newer aircompressor than 2.0.2 as it requires Java 22
 // and has breakig changes that might not work with apache pulsar client lib
 ossIndexAudit {
-    excludeCoordinates = ["io.airlift:aircompressor:2.0.2"]
+    excludeCoordinates = ["io.airlift:aircompressor:2.0.3"]
 }
 
 dependencies {
