@@ -19,7 +19,7 @@ dependencies {
         implementation("com.google.code.gson:gson:2.14.0") {
             because("Older versions has a CVE(CVE-2025-53864) Vulnerability ")
         }
-        implementation("com.fasterxml.jackson.core:jackson-core:2.21.1") {
+        implementation("com.fasterxml.jackson.core:jackson-core:2.21.3") {
             because("Older versions has a CVE(CVE-2025-52999) Vulnerability ")
         }
     }
