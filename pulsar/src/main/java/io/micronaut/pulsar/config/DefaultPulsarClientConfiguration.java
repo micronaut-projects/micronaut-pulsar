@@ -31,7 +31,12 @@ import org.apache.pulsar.client.impl.auth.oauth2.AuthenticationFactoryOAuth2;
 import org.apache.pulsar.client.util.RetryMessageUtil;
 
 import java.net.URL;
-import java.util.*;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Properties;
+import java.util.Set;
 
 import static io.micronaut.core.naming.conventions.StringConvention.RAW;
 import static io.micronaut.pulsar.config.AbstractPulsarConfiguration.PREFIX;

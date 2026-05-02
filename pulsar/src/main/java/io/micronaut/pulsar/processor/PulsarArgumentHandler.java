@@ -26,7 +26,12 @@ import io.micronaut.pulsar.annotation.MessageProperties;
 import org.apache.pulsar.client.api.Consumer;
 import org.apache.pulsar.client.api.Message;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Helper processor class for arguments and headers on Pulsar consumers / processors.
