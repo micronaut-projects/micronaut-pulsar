@@ -18,12 +18,12 @@ subprojects {
                 // lowest required
                 implementation("io.airlift:aircompressor:2.0.2") { because "CVE-2025-67721" }
                 implementation("org.apache.avro:avro:1.12.1") { because "CVE-2025-33042" }
-                implementation("io.netty:netty-codec-http:4.2.8.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-dns:4.2.8.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-haproxy:4.2.8.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-compression:4.2.8.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-http2:4.2.8.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-socks:4.2.8.Final") { because "CVE-2025-67735" }
+                implementation("io.netty:netty-codec-http:4.2.12.Final") { because "CVE-2025-67735" }
+                implementation("io.netty:netty-codec-dns:4.2.12.Final") { because "CVE-2025-67735" }
+                implementation("io.netty:netty-codec-haproxy:4.2.12.Final") { because "CVE-2025-67735" }
+                implementation("io.netty:netty-codec-compression:4.2.12.Final") { because "CVE-2025-67735" }
+                implementation("io.netty:netty-codec-http2:4.2.12.Final") { because "CVE-2025-67735" }
+                implementation("io.netty:netty-codec-socks:4.2.12.Final") { because "CVE-2025-67735" }
             }
         }
     }
