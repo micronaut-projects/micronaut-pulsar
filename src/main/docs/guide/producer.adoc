@@ -2,7 +2,7 @@
 
 To initialize a producer it's sufficient to annotate an interface with `@PulsarProducerClient` and annotate methods with `@PulsarProducer`.
 
-snippet::example.Producer[project-base="doc-examples/example", indent="0"]
+snippet::example.Producer[project-base="doc-examples/example", source="main", indent="0"]
 <1> Annotate interface with @PulsarProducerClient to notify Micronaut for processing it without implementation
 <2> Methods are the actual producers so annotate them with @PulsarProducer
 <3> Return decides whether to send message in a blocking or non-blocking manner.
@@ -36,7 +36,7 @@ on separate threads. This is mainly useful for blocking approach where it's poss
 before sending the message an if execution throws exception, sending will be skipped. *First parameter of the method is
 still used as a message body*.
 
-snippet::example.ConsumerProducer[project-base="doc-examples/example", indent="0"]
+snippet::example.ConsumerProducer[project-base="doc-examples/example", source="main", indent="0"]
 <1> For Kotlin, open is required in non-interface (abstract) classes because of AOT
 <2> -
 <3> -

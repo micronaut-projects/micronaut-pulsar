@@ -3,7 +3,7 @@ To create a consumer annotate any bean method with a `@PulsarConsumer` and defin
 beans annotated with a `@PulsarSubscription` will try to fetch subscription name from it. Otherwise, make sure to put
 `subscriptionName` property value in the `@PulsarConsumer` annotation. Subscription beans are singletons.
 
-snippet::example.ConsumerProducer[project-base="doc-examples/example", indent="0"]
+snippet::example.ConsumerProducer[project-base="doc-examples/example", source="main", indent="0"]
 <1> The class holding consumers can be annotated with api:pulsar.annotation.PulsarSubscription. It's also allowed to set
 subscription from the `@PulsarConsumer`. By that, consumer can be located in other beans like `@Singleton`.
 <2> -

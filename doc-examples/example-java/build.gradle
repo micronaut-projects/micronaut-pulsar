@@ -6,7 +6,5 @@ micronaut {
     version libs.versions.micronaut.platform.get()
 }
 dependencies {
-    testImplementation projects.micronautPulsar
-    testCompileOnly mn.micronaut.inject.java
-    testImplementation mn.micronaut.inject
+    implementation(projects.micronautPulsar)
 }

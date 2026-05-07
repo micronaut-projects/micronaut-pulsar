@@ -5,15 +5,6 @@ plugins {
 micronaut {
     version libs.versions.micronaut.platform.get()
 }
-
 dependencies {
-    testImplementation projects.micronautPulsar
-
-    testCompileOnly mn.micronaut.inject.groovy
-    testImplementation mn.micronaut.inject
-    testImplementation mnTest.micronaut.test.spock
-}
-
-tasks.withType(GroovyCompile).configureEach {
-    groovyOptions.forkOptions.jvmArgs.add('-Dgroovy.parameters=true')
+    implementation(projects.micronautPulsar)
 }

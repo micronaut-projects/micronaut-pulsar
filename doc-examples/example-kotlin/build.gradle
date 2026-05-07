@@ -6,18 +6,7 @@ micronaut {
     version libs.versions.micronaut.platform.get()
 }
 dependencies {
-    kaptTest enforcedPlatform(mn.micronaut.core.bom)
-    kaptTest mn.micronaut.inject.java
-
-    testImplementation projects.micronautPulsar
-    testImplementation libs.kotest.runner
-    testImplementation(mnTestResources.testcontainers.core)
-    implementation mn.kotlinx.coroutines.core
-    implementation mn.kotlinx.coroutines.jdk8
+    implementation(projects.micronautPulsar)
+    implementation(mn.kotlinx.coroutines.core)
 }
 
-tasks.named('test') {
-    systemProperties['junit.jupiter.execution.parallel.enabled'] = true
-    maxParallelForks = Runtime.runtime.availableProcessors().intdiv(2) ?: 1
-    forkEvery = 1
-}

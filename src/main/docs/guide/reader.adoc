@@ -7,7 +7,7 @@ https://pulsar.apache.org/docs/en/concepts-clients/#reader-interface[documentati
 
 To initialize a reader, declare a field annotated with `@PulsarReader` inside any bean or as a constructor argument.
 
-snippet::example.ReaderExample[project-base="doc-examples/example", indent="0"]
+snippet::example.ReaderExample[project-base="doc-examples/example", source="main", indent="0"]
 <1> Reader annotation with the topic and the reader name
 <2> Reader must be of type api:org.apache.pulsar.client.api.Reader
 <3> Using readAsync requires `CompletableFeature` or in Kotlin awaiting is possible
