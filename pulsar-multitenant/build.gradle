@@ -1,9 +1,0 @@
-plugins {
-    id 'io.micronaut.build.internal.pulsar-multitenant-module'
-}
-
-dependencies {
-    implementation projects.micronautPulsar
-    implementation mnMultitenancy.micronaut.multitenancy
-    compileOnly mnReactor.micronaut.reactor
-}
