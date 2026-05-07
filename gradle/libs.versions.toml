@@ -36,5 +36,5 @@ protobuf-grpc = { module = 'io.grpc:protoc-gen-grpc-java', version.ref = 'grpc-p
 protobuf-protoc = { module = 'com.google.protobuf:protoc', version.ref = 'protobuf-java' }
 
 kotest-runner = { module = 'io.kotest:kotest-runner-junit5', version.ref = 'kotest-runner' }
-testcontainers-pulsar = { module = 'org.testcontainers:pulsar' }
+testcontainers-pulsar = { module = 'org.testcontainers:testcontainers-pulsar' }
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = 'micronaut-gradle-plugin' }
