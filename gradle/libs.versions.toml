@@ -1,7 +1,6 @@
 [versions]
 
 conscrypt-openjdk = '2.5.2'
-grpc-protoc-plugin = '1.81.0'
 micronaut = "5.0.0-RC2"
 micronaut-platform = '4.10.13'
 micronaut-gradle-plugin = '4.6.2'
@@ -31,7 +30,5 @@ managed-pulsar-client = { module = 'org.apache.pulsar:pulsar-client-original', v
 
 # Other libraries
 conscrypt-openjdk = { module = "org.conscrypt:conscrypt-openjdk-uber", version.ref="conscrypt-openjdk" }
-protobuf-grpc = { module = 'io.grpc:protoc-gen-grpc-java', version.ref = 'grpc-protoc-plugin' }
-protobuf-protoc = { module = 'com.google.protobuf:protoc', version.ref = 'protobuf-java' }
 testcontainers-pulsar = { module = 'org.testcontainers:testcontainers-pulsar' }
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = 'micronaut-gradle-plugin' }

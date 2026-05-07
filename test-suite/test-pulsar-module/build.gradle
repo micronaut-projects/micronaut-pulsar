@@ -22,11 +22,11 @@ sourceSets {
 
 protobuf {
     protoc {
-        artifact = "${libs.protobuf.protoc.get().toString()}"
+        artifact = "com.google.protobuf:protoc:${mnGrpc.versions.protobuf.asProvider().get()}"
     }
     plugins {
         grpc {
-            artifact = "${libs.protobuf.grpc.get().toString()}"
+            artifact = "io.grpc:protoc-gen-grpc-java:${mnGrpc.versions.grpc.asProvider().get()}"
         }
     }
     generateProtoTasks {
