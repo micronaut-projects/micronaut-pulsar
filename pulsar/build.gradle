@@ -9,7 +9,7 @@ dependencies {
 
     compileOnly mnReactor.micronaut.reactor
     compileOnly mn.kotlinx.coroutines.core
-    compileOnly libs.protobuf.java
+    compileOnly(mnGrpc.protobuf.java)
     compileOnly mnGrpc.micronaut.protobuff.support
 
     constraints {
