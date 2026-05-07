@@ -1,31 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.parent'
 }
-
 repositories {
     mavenCentral()
 }
-
-// try fix CI for next run
-// could remove after pulsar and other depndencies decide to update their own versions
-
-subprojects {
-    plugins.withType(JavaPlugin) {
-        dependencies {
-            constraints {
-                // aircompressor latest was moved to aircompressor-v3 which requires java 22+
-                // let's try latest fix for our cves until pulsar bumps all and we move to 23 or later for
-                // lowest required
-                implementation("io.airlift:aircompressor:2.0.3") { because "CVE-2025-67721" }
-                implementation("org.apache.avro:avro:1.12.1") { because "CVE-2025-33042" }
-                implementation("io.netty:netty-codec-http:4.2.12.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-dns:4.2.12.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-haproxy:4.2.12.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-compression:4.2.12.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-http2:4.2.12.Final") { because "CVE-2025-67735" }
-                implementation("io.netty:netty-codec-socks:4.2.12.Final") { because "CVE-2025-67735" }
-            }
-        }
-    }
-}
-
