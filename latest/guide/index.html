@@ -15,7 +15,7 @@
     <script>hljs.initHighlightingOnLoad();</script>
     <link rel="stylesheet" href="../css/multi-language-sample.css"/>
     <script src="../js/docs.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.13/clipboard.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js"></script>
     <script type="text/javascript">
         function addJsClass(el) {
             var classes = document.body.className.split(" ");
@@ -23,7 +23,9 @@
             document.body.className = classes.join(" ");
         }
     </script>
-
+    <style type="text/css">
+        .lang-java { display: block }; .lang-python { display: block }; .lang-kotlin { display: block }; .lang-groovy { display: block }; 
+    </style>
 </head>
 
 <body class="body" id="docs" onload="addJsClass();" onhashchange="highlightMenu()">
@@ -125,13 +127,13 @@
         <h1>Micronaut Pulsar</h1>
         <p></p>
         <p>Integration between Micronaut and Apache Pulsar</p>
-        <p><strong>Version:</strong> 2.6.0 </p>
+        <p><strong>Version:</strong> 3.0.0 </p>
     </div>
     
 <h1 id="introduction"><a class="anchor" href="#introduction"></a>1 Introduction</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/introduction.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/introduction.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -145,7 +147,7 @@ and replace building consumers, producers, and readers with annotation based app
 <h1 id="releaseHistory"><a class="anchor" href="#releaseHistory"></a>2 Release History</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/releaseHistory.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/releaseHistory.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -256,7 +258,7 @@ and replace building consumers, producers, and readers with annotation based app
 <h1 id="quickStart"><a class="anchor" href="#quickStart"></a>3 Quick Start</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/quickStart.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/quickStart.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -280,6 +282,7 @@ and replace building consumers, producers, and readers with annotation based app
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+
 NOTE: default serializers &amp; deserializers are JSON and will use mn-serde module so don&#8217;t forget to include those
 as well if you will not switch manually to BYTES or other parsers
         <div class="listingblock multi-language-sample">
@@ -295,7 +298,8 @@ as well if you will not switch manually to BYTES or other parsers
     &lt;artifactId&gt;micronaut-serde-jackson&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div></p>
+</div>
+</p>
 </div>
 <div class="paragraph">
 <p>Then configure the URI of the Pulsar cluster or standalone server to communicate with:</p>
@@ -418,7 +422,7 @@ As this module is based on the official Java client from Apache Pulsar, see the 
 <h1 id="consumer"><a class="anchor" href="#consumer"></a>4 Pulsar consumers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/consumer.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/consumer.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -466,6 +470,32 @@ public class ConsumerProducer { // <b class="conum">(2)</b>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarConsumer
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarSubscription
+import org.apache.pulsar.client.api.SubscriptionType
+
+@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+open class ConsumerProducer { // <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
+    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
+        val changed = report(message)
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
+    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
+        return "Reporting message '$message'" // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
 
 import io.micronaut.pulsar.annotation.PulsarConsumer;
@@ -492,32 +522,6 @@ class ConsumerProducer { // <b class="conum">(2)</b>
     @PulsarProducer(topic = "persistent://public/default/reports-groovy-docs", producerName = "report-producer-groovy") // <b class="conum">(5)</b>
     CompletableFuture&lt;String&gt; report(String message) { // <b class="conum">(6)</b>
         return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); // <b class="conum">(7)</b>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
-
-import io.micronaut.pulsar.annotation.PulsarConsumer
-import io.micronaut.pulsar.annotation.PulsarProducer
-import io.micronaut.pulsar.annotation.PulsarSubscription
-import org.apache.pulsar.client.api.SubscriptionType
-
-@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
-open class ConsumerProducer { // <b class="conum">(2)</b>
-
-    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
-    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
-        val changed = report(message)
-        //...
-    }
-
-
-    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
-    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
-        return "Reporting message '$message'" // <b class="conum">(7)</b>
     }
 }</code></pre>
 </div>
@@ -833,7 +837,7 @@ properties indicate that the DLQ settings will be used by default on all Pulsar 
 <h1 id="reader"><a class="anchor" href="#reader"></a>5 Pulsar readers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/reader.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/reader.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -880,6 +884,27 @@ public class ReaderExample {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarReader
+import jakarta.inject.Singleton
+import kotlinx.coroutines.future.await
+import org.apache.pulsar.client.api.Message
+import org.apache.pulsar.client.api.Reader
+
+@Singleton
+class ReaderExample {
+    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-k-reader") // <b class="conum">(1)</b>
+    private lateinit var reader: Reader&lt;String&gt; // <b class="conum">(2)</b>
+
+    suspend fun readNext(): Message&lt;String&gt; { // <b class="conum">(3)</b>
+        return reader.readNextAsync().await() // <b class="conum">(4)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
 
 import io.micronaut.pulsar.annotation.PulsarReader;
@@ -898,27 +923,6 @@ class ReaderExample {
 
     CompletableFuture&lt;Message&lt;String&gt;&gt; readNext() { // <b class="conum">(3)</b>
         return reader.readNextAsync() // <b class="conum">(4)</b>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
-
-import io.micronaut.pulsar.annotation.PulsarReader
-import jakarta.inject.Singleton
-import kotlinx.coroutines.future.await
-import org.apache.pulsar.client.api.Message
-import org.apache.pulsar.client.api.Reader
-
-@Singleton
-class ReaderExample {
-    @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-k-reader") // <b class="conum">(1)</b>
-    private lateinit var reader: Reader&lt;String&gt; // <b class="conum">(2)</b>
-
-    suspend fun readNext(): Message&lt;String&gt; { // <b class="conum">(3)</b>
-        return reader.readNextAsync().await() // <b class="conum">(4)</b>
     }
 }</code></pre>
 </div>
@@ -963,7 +967,7 @@ is part of the message payload or <code>SEPARATED</code> - key is stored as a me
 <h1 id="producer"><a class="anchor" href="#producer"></a>6 Pulsar producers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/producer.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/producer.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -997,6 +1001,23 @@ public interface Producer {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarProducerClient
+import org.apache.pulsar.client.api.MessageId
+
+@PulsarProducerClient // <b class="conum">(1)</b>
+interface Producer {
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
+    suspend fun send(message: String): MessageId // <b class="conum">(3)</b>
+    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    fun sendBlocking(message: String) // <b class="conum">(4)</b>
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
 
 import io.micronaut.pulsar.annotation.PulsarProducer;
@@ -1012,23 +1033,6 @@ interface Producer {
 
     @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
     void sendBlocking(String message); // <b class="conum">(4)</b>
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
-
-import io.micronaut.pulsar.annotation.PulsarProducer
-import io.micronaut.pulsar.annotation.PulsarProducerClient
-import org.apache.pulsar.client.api.MessageId
-
-@PulsarProducerClient // <b class="conum">(1)</b>
-interface Producer {
-    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
-    suspend fun send(message: String): MessageId // <b class="conum">(3)</b>
-    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
-    fun sendBlocking(message: String) // <b class="conum">(4)</b>
 }</code></pre>
 </div>
 </div>
@@ -1130,6 +1134,32 @@ public class ConsumerProducer { // <b class="conum">(2)</b>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
+
+import io.micronaut.pulsar.annotation.PulsarConsumer
+import io.micronaut.pulsar.annotation.PulsarProducer
+import io.micronaut.pulsar.annotation.PulsarSubscription
+import org.apache.pulsar.client.api.SubscriptionType
+
+@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
+open class ConsumerProducer { // <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
+    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
+        val changed = report(message)
+        //...
+    }
+
+
+    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
+    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
+        return "Reporting message '$message'" // <b class="conum">(7)</b>
+    }
+}</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
 
 import io.micronaut.pulsar.annotation.PulsarConsumer;
@@ -1156,32 +1186,6 @@ class ConsumerProducer { // <b class="conum">(2)</b>
     @PulsarProducer(topic = "persistent://public/default/reports-groovy-docs", producerName = "report-producer-groovy") // <b class="conum">(5)</b>
     CompletableFuture&lt;String&gt; report(String message) { // <b class="conum">(6)</b>
         return CompletableFuture.supplyAsync(() -&gt; String.format("Reporting message %s", message)); // <b class="conum">(7)</b>
-    }
-}</code></pre>
-</div>
-</div>
-<div class="listingblock multi-language-sample">
-<div class="content">
-<pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
-
-import io.micronaut.pulsar.annotation.PulsarConsumer
-import io.micronaut.pulsar.annotation.PulsarProducer
-import io.micronaut.pulsar.annotation.PulsarSubscription
-import org.apache.pulsar.client.api.SubscriptionType
-
-@PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
-open class ConsumerProducer { // <b class="conum">(2)</b>
-
-    @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
-    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
-        val changed = report(message)
-        //...
-    }
-
-
-    @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
-    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
-        return "Reporting message '$message'" // <b class="conum">(7)</b>
     }
 }</code></pre>
 </div>
@@ -1226,7 +1230,7 @@ on caller or upper layers to provide it.</td>
 <h1 id="authentication"><a class="anchor" href="#authentication"></a>7 Authentication</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/authentication.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/authentication.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1381,7 +1385,7 @@ and <em>role</em> attribute in its configuration files must be specified for Pul
 <h1 id="tls"><a class="anchor" href="#tls"></a>8 Transport encryption</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/tls.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/tls.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1483,7 +1487,7 @@ hostname is not verified but can be enabled by using <code>tls-verify-hostname: 
 <h1 id="protobuf"><a class="anchor" href="#protobuf"></a>9 Protocol Buffers</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/protobuf.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/protobuf.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1510,7 +1514,8 @@ google from micronaut dependencies</p>
     &lt;artifactId&gt;micronaut-protobuff-support&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div></p>
+</div>
+</p>
 </div>
 </div>
 </div>
@@ -1518,7 +1523,7 @@ google from micronaut dependencies</p>
 <h1 id="multitenancy"><a class="anchor" href="#multitenancy"></a>10 Multitenancy</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/multitenancy.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/multitenancy.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
@@ -1549,6 +1554,7 @@ Micronaut Multitenancy
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+
 And Micronaut Pulsar Multitenant module
         <div class="listingblock multi-language-sample">
 <div class="title"></div>
@@ -1563,7 +1569,8 @@ And Micronaut Pulsar Multitenant module
     &lt;artifactId&gt;pulsar-multitenant&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
 </div>
-</div></p>
+</div>
+</p>
 </div>
 <div class="sect2">
 <h3 id="_configuration_for_multitenant_listeners_producers">Configuration for multitenant listeners / producers</h3>
@@ -1646,7 +1653,7 @@ way of resolving tenant name.</p>
 <h1 id="repository"><a class="anchor" href="#repository"></a>11 Repository</h1>
 
 <div class='contribute-btn'>
-    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/2.6.x/src/main/docs/guide/repository.adoc"'>
+    <button type='button' class='btn btn-default' onclick='window.location.href="https://github.com/micronaut-projects/micronaut-pulsar/edit/3.0.x/src/main/docs/guide/repository.adoc"'>
         <i class='fa fa-pencil-square-o'></i> Improve this doc
     </button>
 </div>
