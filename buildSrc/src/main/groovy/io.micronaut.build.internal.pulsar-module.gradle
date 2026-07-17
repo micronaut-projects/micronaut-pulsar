@@ -6,5 +6,10 @@ dependencies {
     api mn.micronaut.messaging
     api mnSerde.micronaut.serde.support
     api(libs.managed.pulsar.client)
+    constraints {
+        api(libs.managed.jackson.databind) {
+            because 'Apache Pulsar 4.2.3 brings Jackson Databind 2.18.8, which is vulnerable to GHSA-5jmj-h7xm-6q6v'
+        }
+    }
     testRuntimeOnly mnLogging.logback.classic
 }
