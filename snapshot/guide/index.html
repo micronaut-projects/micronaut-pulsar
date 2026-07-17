@@ -320,8 +320,7 @@ as well if you will not switch manually to BYTES or other parsers
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
-  service-url="pulsar://localhost:6650"</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">pulsar = {service-url = "pulsar://localhost:6650"}</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -381,8 +380,7 @@ As this module is based on the official Java client from Apache Pulsar, see the 
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
-  service-url-provider="BeanName"</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">pulsar = {service-url-provider = "BeanName"}</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1256,8 +1254,7 @@ on caller or upper layers to provide it.</td>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
-  authentication-jwt="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">pulsar = {authentication-jwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpX..."}</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1318,10 +1315,7 @@ pulsar.audience=localhost:6650</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
-  oauth-issuer-url="https://some-sso.io/..."
-  oauth-credentials-url="file:///path/to/file.json"
-  audience="localhost:6650"</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">pulsar = {oauth-issuer-url = "https://some-sso.io/...", oauth-credentials-url = "file:///path/to/file.json", audience = "localhost:6650"}</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1425,17 +1419,7 @@ pulsar.tls-protocols[1]=TLSv1.2</code></pre>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
-<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">[pulsar]
-  service-url="pulsar+ssl://localhost:6651"
-  tls-cert-file-path="path/to/cert.pem"
-  tls-ciphers=[
-    "TLS_RSA_WITH_AES_256_GCM_SHA384",
-    "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"
-  ]
-  tls-protocols=[
-    "TLSv1.3",
-    "TLSv1.2"
-  ]</code></pre>
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="toml">pulsar = {service-url = "pulsar+ssl://localhost:6651", tls-cert-file-path = "path/to/cert.pem", tls-ciphers = ["TLS_RSA_WITH_AES_256_GCM_SHA384", "TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256"], tls-protocols = ["TLSv1.3", "TLSv1.2"]}</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
