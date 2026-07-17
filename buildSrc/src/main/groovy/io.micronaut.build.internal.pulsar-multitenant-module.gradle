@@ -1,15 +1,6 @@
 plugins {
     id 'io.micronaut.build.internal.pulsar-module'
 }
-
-ossIndexAudit {
-        excludeCoordinates = [
-                "commons-configuration:commons-configuration:1.10", // no version patched https://ossindex.sonatype.org/component/pkg:maven/commons-configuration/commons-configuration
-                "org.asynchttpclient:async-http-client:3.0.11", // no 2.x version patched of async-http-client https://ossindex.sonatype.org/component/pkg:maven/org.asynchttpclient/async-http-client
-                "io.airlift:aircompressor:2.0.3" // version 3.x is moved and requires java 22+
-        ]
-}
-
 dependencies {
     implementation projects.micronautPulsar
     implementation mn.reactor
