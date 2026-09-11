@@ -1,4 +1,5 @@
 [versions]
+async-http-client = '2.16.1'
 conscrypt-openjdk = '2.6.1'
 micronaut = "5.1.6"
 micronaut-platform = '5.0.5'
@@ -29,6 +30,7 @@ managed-pulsar-client = { module = 'org.apache.pulsar:pulsar-client-original', v
 managed-jackson-databind = { module = 'com.fasterxml.jackson.core:jackson-databind', version.ref = 'managed-jackson-databind' }
 
 # Other libraries
+async-http-client = { module = 'org.asynchttpclient:async-http-client', version.ref = 'async-http-client' }
 conscrypt-openjdk = { module = "org.conscrypt:conscrypt-openjdk-uber", version.ref="conscrypt-openjdk" }
 testcontainers-pulsar = { module = 'org.testcontainers:testcontainers-pulsar' }
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = 'micronaut-gradle-plugin' }

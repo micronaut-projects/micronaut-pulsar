@@ -10,6 +10,9 @@ dependencies {
         api(libs.managed.jackson.databind) {
             because 'Apache Pulsar 4.2.3 brings Jackson Databind 2.18.8, which is vulnerable to GHSA-5jmj-h7xm-6q6v'
         }
+        api(libs.async.http.client) {
+            because 'Apache Pulsar 4.2.4 brings AsyncHttpClient 2.15.0, which is vulnerable to GHSA-m452-q8c9-rg2f'
+        }
     }
     testRuntimeOnly mnLogging.logback.classic
 }
