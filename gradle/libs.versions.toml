@@ -1,6 +1,6 @@
 [versions]
 async-http-client = '2.16.1'
-conscrypt-openjdk = '2.6.1'
+conscrypt-openjdk = '2.7.0'
 micronaut = "5.2.1"
 micronaut-platform = '5.1.5'
 micronaut-gradle-plugin = '5.0.2'
