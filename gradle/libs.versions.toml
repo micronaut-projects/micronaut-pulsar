@@ -11,7 +11,7 @@ micronaut-reactor = "4.2.0"
 micronaut-serde = "3.1.1"
 micronaut-test-resources = "4.2.0"
 managed-pulsar-client = '4.2.4'
-managed-jackson-databind = '2.22.1'
+managed-jackson-databind = '2.22.2'
 
 [libraries]
 # Core
