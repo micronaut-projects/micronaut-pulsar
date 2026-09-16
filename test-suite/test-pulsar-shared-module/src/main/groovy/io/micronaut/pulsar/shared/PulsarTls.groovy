@@ -24,7 +24,7 @@ import org.testcontainers.utility.MountableFile
 
 abstract class PulsarTls {
 
-    public static final String PULSAR_VERSION = "3.3.9"
+    public static final String PULSAR_VERSION = PulsarTestConfigurer.PULSAR_VERSION
 
     public static final int HTTPS = 8443
     public static final int BROKER_SSL = 6651

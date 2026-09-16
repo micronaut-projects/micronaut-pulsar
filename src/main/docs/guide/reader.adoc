@@ -5,7 +5,7 @@ https://pulsar.apache.org/docs/en/concepts-clients/#reader-interface[documentati
 
 == Creating readers
 
-To initialize a reader, declare a field annotated with `@PulsarReader` inside any bean or as a constructor argument.
+To initialize a reader, declare an injected field (`@Inject`) annotated with `@PulsarReader` inside any bean or annotate a constructor argument with `@PulsarReader`.
 
 snippet::example.ReaderExample[project-base="doc-examples/example", source="main", indent="0"]
 <1> Reader annotation with the topic and the reader name
