@@ -8,6 +8,11 @@ snippet::example.Producer[project-base="doc-examples/example", source="main", in
 <3> Return decides whether to send message in a blocking or non-blocking manner.
 <4> A blocking send that waits until message is successfully sent or throws an exception on failure.
 
+[.lang-python]
+****
+In Python the producer client is an abstract class (`ABC`) whose `@PulsarProducer` methods are `@abstractmethod`s with `...` bodies.
+****
+
 Producers can be used in other types of beans as well (Singleton or such).
 
 === Producer method

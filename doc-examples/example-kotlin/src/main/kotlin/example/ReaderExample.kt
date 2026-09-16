@@ -1,6 +1,7 @@
 package example
 
 import io.micronaut.pulsar.annotation.PulsarReader
+import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.future.await
 import org.apache.pulsar.client.api.Message
@@ -8,6 +9,7 @@ import org.apache.pulsar.client.api.Reader
 
 @Singleton
 class ReaderExample {
+    @Inject
     @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-k-reader") // <1>
     private lateinit var reader: Reader<String> // <2>
 

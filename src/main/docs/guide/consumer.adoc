@@ -4,6 +4,12 @@ beans annotated with a `@PulsarSubscription` will try to fetch subscription name
 `subscriptionName` property value in the `@PulsarConsumer` annotation. Subscription beans are singletons.
 
 snippet::example.ConsumerProducer[project-base="doc-examples/example", source="main", indent="0"]
+
+[.lang-python]
+****
+WARNING: The Python compiler (`micronaut-inject-python`) does not support `@PulsarConsumer` methods yet: it treats a method decorated with `@PulsarConsumer` as a `@Bean` factory method and rejects it, so the decorator is commented out in the Python example. Producers, producer clients and readers work as shown.
+****
+
 <1> The class holding consumers can be annotated with api:pulsar.annotation.PulsarSubscription. It's also allowed to set
 subscription from the `@PulsarConsumer`. By that, consumer can be located in other beans like `@Singleton`.
 <2> -
