@@ -5,7 +5,7 @@ from java.util.concurrent import TimeUnit
 from micronaut.test.extensions.junit5.annotation import MicronautTest
 from org.apache.pulsar.client.api import Consumer, PulsarClient, SubscriptionInitialPosition
 from org.apache.pulsar.client.impl.schema import StringSchema
-from org.junit.jupiter.api import Disabled, Test
+from org.junit.jupiter.api import Test
 
 from example.ConsumerProducer import ConsumerProducer
 from example.Producer import Producer
@@ -57,9 +57,6 @@ class PulsarExamplesTest:
         finally:
             reports.close()
 
-    # TODO(python): the @PulsarConsumer decorator of ConsumerProducer.message_printer is commented out because the Python
-    # compiler treats the method as a @Bean factory method, so no consumer is subscribed and nothing is reported
-    @Disabled("TODO(python): @PulsarConsumer methods are treated as @Bean factory methods by the Python compiler")
     @Test
     def test_consumer(self) -> None:
         reports = self.subscribe("persistent://public/default/reports-python-docs", "pulsar-pytest-consumer-reports")

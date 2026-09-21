@@ -6,8 +6,7 @@ from org.apache.pulsar.client.api import SubscriptionType
 @PulsarSubscription(subscriptionName="pulsar-pytest-subscription", subscriptionType=SubscriptionType.Shared)  # <1>
 class ConsumerProducer:  # <2>
 
-    # TODO(python): @PulsarConsumer methods are not supported by the Python compiler yet (treated as @Bean factory methods)
-    # @PulsarConsumer(topic="persistent://public/default/messages-python-docs", consumerName="shared-consumer-pytester")  # <3>
+    @PulsarConsumer(topic="persistent://public/default/messages-python-docs", consumerName="shared-consumer-pytester")  # <3>
     def message_printer(self, message: str) -> None:  # <4>
         changed = self.report(message).get()
         # ...
