@@ -1,7 +1,8 @@
 [versions]
 async-http-client = '2.16.1'
+bouncycastle = '1.86'
 conscrypt-openjdk = '2.6.1'
-micronaut = "5.2.2"
+micronaut = "5.2.9"
 micronaut-platform = '5.1.5'
 micronaut-gradle-plugin = '5.0.2'
 micronaut-grpc = "5.1.0"
@@ -31,6 +32,9 @@ managed-jackson-databind = { module = 'com.fasterxml.jackson.core:jackson-databi
 
 # Other libraries
 async-http-client = { module = 'org.asynchttpclient:async-http-client', version.ref = 'async-http-client' }
+bouncycastle-pkix = { module = 'org.bouncycastle:bcpkix-jdk18on', version.ref = 'bouncycastle' }
+bouncycastle-provider = { module = 'org.bouncycastle:bcprov-jdk18on', version.ref = 'bouncycastle' }
+bouncycastle-util = { module = 'org.bouncycastle:bcutil-jdk18on', version.ref = 'bouncycastle' }
 conscrypt-openjdk = { module = "org.conscrypt:conscrypt-openjdk-uber", version.ref="conscrypt-openjdk" }
 testcontainers-pulsar = { module = 'org.testcontainers:testcontainers-pulsar' }
 gradle-micronaut = { module = "io.micronaut.gradle:micronaut-gradle-plugin", version.ref = 'micronaut-gradle-plugin' }

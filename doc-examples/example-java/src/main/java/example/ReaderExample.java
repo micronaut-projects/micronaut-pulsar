@@ -1,6 +1,7 @@
 package example;
 
 import io.micronaut.pulsar.annotation.PulsarReader;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.Reader;
@@ -11,6 +12,7 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 public class ReaderExample {
 
+    @Inject
     @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-j-reader") // <1>
     private Reader<String> reader; // <2>
 

@@ -13,6 +13,17 @@ dependencies {
         api(libs.async.http.client) {
             because 'Apache Pulsar 4.2.4 brings AsyncHttpClient 2.15.0, which is vulnerable to GHSA-m452-q8c9-rg2f'
         }
+        // org.apache.pulsar:bouncy-castle-bc brings the whole 1.84 line; all three artifacts move
+        // together so the provider is not mixed with an older bcpkix/bcutil
+        api(libs.bouncycastle.provider) {
+            because 'Apache Pulsar 4.2.4 brings Bouncy Castle 1.84, which is vulnerable to GHSA-9pwp-9qqc-pr26 and GHSA-qp49-qgx5-5m26'
+        }
+        api(libs.bouncycastle.pkix) {
+            because 'Apache Pulsar 4.2.4 brings Bouncy Castle 1.84, which is vulnerable to GHSA-9pwp-9qqc-pr26 and GHSA-qp49-qgx5-5m26'
+        }
+        api(libs.bouncycastle.util) {
+            because 'Apache Pulsar 4.2.4 brings Bouncy Castle 1.84, which is vulnerable to GHSA-9pwp-9qqc-pr26 and GHSA-qp49-qgx5-5m26'
+        }
     }
     testRuntimeOnly mnLogging.logback.classic
 }
