@@ -48,5 +48,5 @@ snippet::example.ConsumerProducer[project-base="doc-examples/example", source="m
 <4> -
 <5> Annotating method as a producer
 <6> A non-abstract async method. In Kotlin case we need open to allow Micronaut AOT interception.
-<7> CompletableFuture or suspend will trigger immediate execution but reactor or RxJava need subscription and will rely
+<7> A `CompletableFuture` return type will trigger immediate execution but reactor or RxJava need subscription and will rely
 on caller or upper layers to provide it.

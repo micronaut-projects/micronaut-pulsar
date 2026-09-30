@@ -4,3 +4,18 @@ plugins {
 repositories {
     mavenCentral()
 }
+
+if (System.getenv("SONAR_TOKEN") != null) {
+    // `doc-examples/*` holds the guide's code samples and `test-suite/*` the shared Pulsar test
+    // infrastructure. Both are exercised by tests, but neither contributes a JaCoCo report to the
+    // aggregate (the Python examples run in their own workflow, on a GraalVM JDK), so Sonar counts
+    // every sample line as uncovered. They stay in the analysis for issues, just not for coverage.
+    def sampleCoverageExcludes = subprojects
+            .findAll { it.projectDir.path.contains('/doc-examples/') || it.projectDir.path.contains('/test-suite/') }
+            .collect { "${rootDir.toPath().relativize(it.projectDir.toPath())}/**/*" }
+    sonarqube {
+        properties {
+            property "sonar.coverage.exclusions", sampleCoverageExcludes.join(",")
+        }
+    }
+}
