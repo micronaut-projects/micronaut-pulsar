@@ -282,6 +282,15 @@ and replace building consumers, producers, and readers with annotation based app
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.pulsar:micronaut-pulsar"</span>,
+]</code></pre>
+</div>
+</div>
 
 NOTE: default serializers &amp; deserializers are JSON and will use mn-serde module so don&#8217;t forget to include those
 as well if you will not switch manually to BYTES or other parsers
@@ -297,6 +306,15 @@ as well if you will not switch manually to BYTES or other parsers
     &lt;groupId&gt;io.micronaut.serde&lt;/groupId&gt;
     &lt;artifactId&gt;micronaut-serde-jackson&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut.serde:micronaut-serde-jackson"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
@@ -468,26 +486,47 @@ public class ConsumerProducer { // <b class="conum">(2)</b>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from java.util.concurrent import CompletableFuture
+from micronaut.pulsar.annotation import PulsarConsumer, PulsarProducer, PulsarSubscription
+from org.apache.pulsar.client.api import SubscriptionType
+
+
+@PulsarSubscription(subscriptionName="pulsar-pytest-subscription", subscriptionType=SubscriptionType.Shared)  # <b class="conum">(1)</b>
+class ConsumerProducer:  # <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic="persistent://public/default/messages-python-docs", consumerName="shared-consumer-pytester")  # <b class="conum">(3)</b>
+    def message_printer(self, message: str) -&gt; None:  # <b class="conum">(4)</b>
+        changed = self.report(message).get()
+        # ...
+
+    @PulsarProducer(topic="persistent://public/default/reports-python-docs", producerName="report-producer-python")  # <b class="conum">(5)</b>
+    def report(self, message: str) -&gt; CompletableFuture[str]:  # <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(lambda: f"Reporting message {message}")  # <b class="conum">(7)</b></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
 
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import org.apache.pulsar.client.api.SubscriptionType
+import java.util.concurrent.CompletableFuture
 
 @PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
 open class ConsumerProducer { // <b class="conum">(2)</b>
 
     @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
-    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
-        val changed = report(message)
+    fun messagePrinter(message: String) { // <b class="conum">(4)</b>
+        val changed = report(message).get()
         //...
     }
 
 
     @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
-    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
-        return "Reporting message '$message'" // <b class="conum">(7)</b>
+    open fun report(message: String): CompletableFuture&lt;String&gt; { // <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync { "Reporting message '$message'" } // <b class="conum">(7)</b>
     }
 }</code></pre>
 </div>
@@ -542,7 +581,7 @@ of the <em>topic</em> options must be specified.</td>
 </tr>
 <tr>
 <td><i class="conum" data-value="4"></i><b>4</b></td>
-<td>Using CompletableFeature, reactor-core, RxJava return types, or Kotlin suspend, allows the body of the method to be
+<td>Using a <code>CompletableFuture</code>, reactor-core or RxJava return type allows the body of the method to be
 executed in an async manner. Method invocations will be async always as underlying Pulsar library uses CompletableFuture.
 Async return type is mostly for developers control over execution flow from the method body or external callers</td>
 </tr>
@@ -854,13 +893,14 @@ properties indicate that the DLQ settings will be used by default on all Pulsar 
 <h2 id="_creating_readers">Creating readers</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>To initialize a reader, declare a field annotated with <code>@PulsarReader</code> inside any bean or as a constructor argument.</p>
+<p>To initialize a reader, declare an injected field (<code>@Inject</code>) annotated with <code>@PulsarReader</code> inside any bean or annotate a constructor argument with <code>@PulsarReader</code>.</p>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
 <pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">package example;
 
 import io.micronaut.pulsar.annotation.PulsarReader;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.Reader;
@@ -871,6 +911,7 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 public class ReaderExample {
 
+    @Inject
     @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-j-reader") // <b class="conum">(1)</b>
     private Reader&lt;String&gt; reader; // <b class="conum">(2)</b>
 
@@ -882,9 +923,29 @@ public class ReaderExample {
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from typing import Annotated
+
+from jakarta.inject import Inject, Singleton
+from java.util.concurrent import CompletableFuture
+from micronaut.pulsar.annotation import PulsarReader
+from org.apache.pulsar.client.api import Message, Reader
+
+
+@Singleton
+class ReaderExample:
+
+    reader: Annotated[Reader[str], Inject, PulsarReader("persistent://public/default/messages", readerName="simple-py-reader")]  # <b class="conum">(1)</b> <b class="conum">(2)</b>
+
+    def read_next(self) -&gt; CompletableFuture[Message[str]]:  # <b class="conum">(3)</b>
+        return self.reader.readNextAsync()  # <b class="conum">(4)</b></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
 
 import io.micronaut.pulsar.annotation.PulsarReader
+import jakarta.inject.Inject
 import jakarta.inject.Singleton
 import kotlinx.coroutines.future.await
 import org.apache.pulsar.client.api.Message
@@ -892,6 +953,7 @@ import org.apache.pulsar.client.api.Reader
 
 @Singleton
 class ReaderExample {
+    @Inject
     @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-k-reader") // <b class="conum">(1)</b>
     private lateinit var reader: Reader&lt;String&gt; // <b class="conum">(2)</b>
 
@@ -906,6 +968,7 @@ class ReaderExample {
 <pre class="highlightjs highlight"><code class="language-groovy hljs" data-lang="groovy">package example;
 
 import io.micronaut.pulsar.annotation.PulsarReader;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.Message;
 import org.apache.pulsar.client.api.Reader;
@@ -916,6 +979,7 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 class ReaderExample {
 
+    @Inject
     @PulsarReader(value = "persistent://public/default/messages", readerName = "simple-g-reader") // <b class="conum">(1)</b>
     private Reader&lt;String&gt; reader // <b class="conum">(2)</b>
 
@@ -989,12 +1053,35 @@ import java.util.concurrent.CompletableFuture;
 
 @PulsarProducerClient // <b class="conum">(1)</b>
 public interface Producer {
-    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
+    @PulsarProducer(topic = "persistent://public/default/messages-java-docs", producerName = "java-test-producer") // <b class="conum">(2)</b>
     CompletableFuture&lt;MessageId&gt; send(String message); // <b class="conum">(3)</b>
 
-    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    @PulsarProducer(topic = "persistent://public/default/messages-java-docs", producerName = "b-java-test-producer")
     void sendBlocking(String message); // <b class="conum">(4)</b>
 }</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from abc import ABC, abstractmethod
+
+from java.util.concurrent import CompletableFuture
+from micronaut.pulsar.annotation import PulsarProducer, PulsarProducerClient
+from org.apache.pulsar.client.api import MessageId
+
+
+@PulsarProducerClient  # <b class="conum">(1)</b>
+class Producer(ABC):
+
+    @PulsarProducer(topic="persistent://public/default/messages-python-docs", producerName="python-test-producer")  # <b class="conum">(2)</b>
+    @abstractmethod
+    def send(self, message: str) -&gt; CompletableFuture[MessageId]:  # <b class="conum">(3)</b>
+        ...
+
+    @PulsarProducer(topic="persistent://public/default/messages-python-docs", producerName="b-python-test-producer")
+    @abstractmethod
+    def send_blocking(self, message: str) -&gt; None:  # <b class="conum">(4)</b>
+        ...</code></pre>
 </div>
 </div>
 <div class="listingblock multi-language-sample">
@@ -1004,11 +1091,13 @@ public interface Producer {
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarProducerClient
 import org.apache.pulsar.client.api.MessageId
+import java.util.concurrent.CompletableFuture
 
 @PulsarProducerClient // <b class="conum">(1)</b>
 interface Producer {
     @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
-    suspend fun send(message: String): MessageId // <b class="conum">(3)</b>
+    fun send(message: String): CompletableFuture&lt;MessageId&gt; // <b class="conum">(3)</b>
+
     @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
     fun sendBlocking(message: String) // <b class="conum">(4)</b>
 }</code></pre>
@@ -1026,10 +1115,10 @@ import java.util.concurrent.CompletableFuture;
 
 @PulsarProducerClient // <b class="conum">(1)</b>
 interface Producer {
-    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "kotlin-test-producer") // <b class="conum">(2)</b>
+    @PulsarProducer(topic = "persistent://public/default/messages-groovy-docs", producerName = "groovy-test-producer") // <b class="conum">(2)</b>
     CompletableFuture&lt;MessageId&gt; send(String message); // <b class="conum">(3)</b>
 
-    @PulsarProducer(topic = "persistent://public/default/messages-kotlin-docs", producerName = "b-kotlin-test-producer")
+    @PulsarProducer(topic = "persistent://public/default/messages-groovy-docs", producerName = "b-groovy-test-producer")
     void sendBlocking(String message); // <b class="conum">(4)</b>
 }</code></pre>
 </div>
@@ -1053,6 +1142,13 @@ interface Producer {
 <td>A blocking send that waits until message is successfully sent or throws an exception on failure.</td>
 </tr>
 </table>
+</div>
+<div class="sidebarblock lang-python">
+<div class="content">
+<div class="paragraph">
+<p>In Python the producer client is an abstract class (<code>ABC</code>) whose <code>@PulsarProducer</code> methods are <code>@abstractmethod`s with `&#8230;&#8203;</code> bodies.</p>
+</div>
+</div>
 </div>
 <div class="paragraph">
 <p>Producers can be used in other types of beans as well (Singleton or such).</p>
@@ -1132,26 +1228,47 @@ public class ConsumerProducer { // <b class="conum">(2)</b>
 </div>
 <div class="listingblock multi-language-sample">
 <div class="content">
+<pre class="highlightjs highlight"><code class="language-python hljs" data-lang="python">from java.util.concurrent import CompletableFuture
+from micronaut.pulsar.annotation import PulsarConsumer, PulsarProducer, PulsarSubscription
+from org.apache.pulsar.client.api import SubscriptionType
+
+
+@PulsarSubscription(subscriptionName="pulsar-pytest-subscription", subscriptionType=SubscriptionType.Shared)  # <b class="conum">(1)</b>
+class ConsumerProducer:  # <b class="conum">(2)</b>
+
+    @PulsarConsumer(topic="persistent://public/default/messages-python-docs", consumerName="shared-consumer-pytester")  # <b class="conum">(3)</b>
+    def message_printer(self, message: str) -&gt; None:  # <b class="conum">(4)</b>
+        changed = self.report(message).get()
+        # ...
+
+    @PulsarProducer(topic="persistent://public/default/reports-python-docs", producerName="report-producer-python")  # <b class="conum">(5)</b>
+    def report(self, message: str) -&gt; CompletableFuture[str]:  # <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync(lambda: f"Reporting message {message}")  # <b class="conum">(7)</b></code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="content">
 <pre class="highlightjs highlight"><code class="language-kotlin hljs" data-lang="kotlin">package example
 
 import io.micronaut.pulsar.annotation.PulsarConsumer
 import io.micronaut.pulsar.annotation.PulsarProducer
 import io.micronaut.pulsar.annotation.PulsarSubscription
 import org.apache.pulsar.client.api.SubscriptionType
+import java.util.concurrent.CompletableFuture
 
 @PulsarSubscription(subscriptionName = "pulsar-ktest-subscription", subscriptionType = SubscriptionType.Shared) // <b class="conum">(1)</b>
 open class ConsumerProducer { // <b class="conum">(2)</b>
 
     @PulsarConsumer(topic = "persistent://public/default/messages-kotlin-docs", consumerName = "shared-consumer-ktester") // <b class="conum">(3)</b>
-    suspend fun messagePrinter(message: String) { // <b class="conum">(4)</b>
-        val changed = report(message)
+    fun messagePrinter(message: String) { // <b class="conum">(4)</b>
+        val changed = report(message).get()
         //...
     }
 
 
     @PulsarProducer(topic = "persistent://public/default/reports-kotlin-docs", producerName = "report-producer-kotlin") // <b class="conum">(5)</b>
-    open suspend fun report(message: String): String { // <b class="conum">(6)</b>
-        return "Reporting message '$message'" // <b class="conum">(7)</b>
+    open fun report(message: String): CompletableFuture&lt;String&gt; { // <b class="conum">(6)</b>
+        return CompletableFuture.supplyAsync { "Reporting message '$message'" } // <b class="conum">(7)</b>
     }
 }</code></pre>
 </div>
@@ -1216,7 +1333,7 @@ class ConsumerProducer { // <b class="conum">(2)</b>
 </tr>
 <tr>
 <td><i class="conum" data-value="7"></i><b>7</b></td>
-<td>CompletableFuture or suspend will trigger immediate execution but reactor or RxJava need subscription and will rely
+<td>A <code>CompletableFuture</code> return type will trigger immediate execution but reactor or RxJava need subscription and will rely
 on caller or upper layers to provide it.</td>
 </tr>
 </table>
@@ -1499,6 +1616,15 @@ google from micronaut dependencies</p>
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut:micronaut-protobuff-support"</span>,
+]</code></pre>
+</div>
+</div>
 </p>
 </div>
 </div>
@@ -1538,6 +1664,15 @@ Micronaut Multitenancy
 &lt;/dependency&gt;</code></pre>
 </div>
 </div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut:micronaut-multitenancy"</span>,
+]</code></pre>
+</div>
+</div>
 
 And Micronaut Pulsar Multitenant module
         <div class="listingblock multi-language-sample">
@@ -1552,6 +1687,15 @@ And Micronaut Pulsar Multitenant module
     &lt;groupId&gt;io.micronaut&lt;/groupId&gt;
     &lt;artifactId&gt;pulsar-multitenant&lt;/artifactId&gt;
 &lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="listingblock multi-language-sample">
+<div class="title"></div>
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-toml hljs" data-lang="pyronaut">[tool.pyronaut.dependencies]
+runtime = [
+    <span class="hljs-string">"io.micronaut:pulsar-multitenant"</span>,
+]</code></pre>
 </div>
 </div>
 </p>
