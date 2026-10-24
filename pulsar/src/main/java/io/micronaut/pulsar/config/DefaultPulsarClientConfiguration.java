@@ -31,6 +31,7 @@ import org.apache.pulsar.client.impl.auth.oauth2.AuthenticationFactoryOAuth2;
 import org.apache.pulsar.client.util.RetryMessageUtil;
 
 import java.net.URL;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
@@ -73,6 +74,8 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private String defaultTenant;
     private String proxyUrl;
     private ProxyProtocol proxyProtocol;
+    private Duration keepAliveInterval;
+    private Duration connectionTimeout;
 
     /**
      * Constructs the default Pulsar Client configuration.
@@ -345,5 +348,15 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
             return Optional.of(Objects.requireNonNullElse(proxyProtocol, ProxyProtocol.SNI));
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<Duration> getConnectionTimeout() {
+        return Optional.ofNullable(connectionTimeout);
+    }
+
+    @Override
+    public Optional<Duration> getKeepAliveInterval() {
+        return Optional.ofNullable(keepAliveInterval);
     }
 }

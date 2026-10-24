@@ -23,6 +23,8 @@ import jakarta.inject.Singleton;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.impl.ClientBuilderImpl;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Create bean of PulsarClient type which is required by consumers and producers.
  *
@@ -61,6 +63,8 @@ public final class PulsarClientFactory {
         pulsarClientConfiguration.getTlsVerifyHostname().ifPresent(clientBuilder::enableTlsHostnameVerification);
         pulsarClientConfiguration.getTlsCiphers().ifPresent(clientBuilder::tlsCiphers);
         pulsarClientConfiguration.getTlsProtocols().ifPresent(clientBuilder::tlsProtocols);
+        pulsarClientConfiguration.getKeepAliveInterval().ifPresent(k -> clientBuilder.keepAliveInterval((int) k.toMillis(), TimeUnit.MILLISECONDS));
+        pulsarClientConfiguration.getConnectionTimeout().ifPresent(k -> clientBuilder.connectionTimeout((int) k.toMillis(), TimeUnit.MILLISECONDS));
         pulsarClientConfiguration.getProxyUrl().ifPresent(url ->
             clientBuilder.proxyServiceUrl(url, pulsarClientConfiguration.getProxyProtocol().orElseThrow()));
 

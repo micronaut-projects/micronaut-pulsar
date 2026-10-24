@@ -19,6 +19,7 @@ import org.apache.pulsar.client.api.Authentication;
 import org.apache.pulsar.client.api.ProxyProtocol;
 import org.apache.pulsar.client.api.ServiceUrlProvider;
 
+import java.time.Duration;
 import java.util.Optional;
 import java.util.Set;
 
@@ -116,4 +117,15 @@ public interface PulsarClientConfiguration {
     default Optional<ProxyProtocol> getProxyProtocol() {
         return Optional.empty();
     }
+
+
+    /**
+     * @return Pulsar client connection timeout.
+     */
+    Optional<Duration> getConnectionTimeout();
+
+    /**
+     * @return Pulsar client keep alive interval.
+     */
+    Optional<Duration> getKeepAliveInterval();
 }
