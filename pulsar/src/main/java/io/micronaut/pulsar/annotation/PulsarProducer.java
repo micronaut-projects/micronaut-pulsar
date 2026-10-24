@@ -156,4 +156,11 @@ public @interface PulsarProducer {
      * @return Whether to send the message before calling actual implementation.
      */
     boolean sendBefore() default false;
+
+    /**
+     * Pulsar producer sent timeout in milliseconds.
+     * The default value 0 mean the producer try forever to send the message.
+     * @return The producer sent timeout.
+     */
+    int sentTimeout() default 0;
 }

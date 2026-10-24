@@ -34,6 +34,8 @@ import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.impl.ProducerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Pulsar {@link Producer} factory.
  *
@@ -86,6 +88,7 @@ public class PulsarProducerFactory {
         annotationValue.booleanValue("blockQueue").ifPresent(producerBuilder::blockIfQueueFull);
         annotationValue.booleanValue("batching").ifPresent(producerBuilder::blockIfQueueFull);
         annotationValue.booleanValue("chunking").ifPresent(producerBuilder::enableChunking);
+        annotationValue.intValue("sentTimeout").ifPresent(sentTimeout -> producerBuilder.sendTimeout(sentTimeout, TimeUnit.MILLISECONDS));
         annotationValue.stringValue("encryptionKey").ifPresent(producerBuilder::addEncryptionKey);
         annotationValue.longValue("initialSequenceId").ifPresent(producerBuilder::initialSequenceId);
         annotationValue.enumValue("hashingScheme", HashingScheme.class).ifPresent(producerBuilder::hashingScheme);
