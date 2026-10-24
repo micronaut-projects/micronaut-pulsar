@@ -20,6 +20,7 @@ import io.micronaut.context.event.ApplicationEventPublisher;
 import io.micronaut.context.processor.ExecutableMethodProcessor;
 import io.micronaut.core.annotation.AnnotationValue;
 import io.micronaut.core.annotation.Internal;
+import org.apache.pulsar.client.api.SubscriptionInitialPosition;
 import org.jspecify.annotations.NonNull;
 import io.micronaut.core.util.ArgumentUtils;
 import io.micronaut.core.util.ArrayUtils;
@@ -255,7 +256,11 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
             .orElseGet(() -> "pulsar-subscription-" + consumerCounter.incrementAndGet());
         final var subscriptionType = consumerAnnotation.getRequiredValue(
             "subscriptionType", SubscriptionType.class);
-        consumer.subscriptionName(subscriptionName).subscriptionType(subscriptionType);
+        final var subscriptionInitialPosition = consumerAnnotation.getRequiredValue(
+            "subscriptionInitialPosition", SubscriptionInitialPosition.class);
+        consumer.subscriptionName(subscriptionName)
+            .subscriptionType(subscriptionType)
+            .subscriptionInitialPosition(subscriptionInitialPosition);
     }
 
     private void subscriptionValues(final AnnotationValue<PulsarSubscription> subscription,
@@ -266,6 +271,7 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
         consumer.subscriptionName(subscriptionName);
 
         subscription.enumValue("subscriptionType", SubscriptionType.class).ifPresent(consumer::subscriptionType);
+        subscription.enumValue("subscriptionInitialPosition", SubscriptionInitialPosition.class).ifPresent(consumer::subscriptionInitialPosition);
 
         final var ackGroupTimeout = subscription.stringValue("ackGroupTimeout");
         if (ackGroupTimeout.isPresent()) {
