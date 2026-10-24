@@ -218,6 +218,15 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
         if (0 < maxRedeliverCount) {
             builder.maxRedeliverCount(maxRedeliverCount);
             consumerBuilder.deadLetterPolicy(builder.build());
+
+            consumerAnnotation.stringValue("exponentialNackFirstBackoff").map(Duration::parse).ifPresent(duration -> {
+                final long millis = duration.toMillis();
+                if (1000 < millis) { // pulsar lib demands gt 1 second not gte
+                    consumerBuilder.negativeAckRedeliveryBackoff(new ExponentialRedeliveryBackoff(maxRedeliverCount, millis));
+                } else {
+                    throw new MessageListenerException("Acknowledge timeout must be greater than 1 second");
+                }
+            });
         }
     }
 
