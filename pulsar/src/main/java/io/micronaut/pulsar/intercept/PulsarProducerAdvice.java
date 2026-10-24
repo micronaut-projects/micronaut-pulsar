@@ -32,6 +32,7 @@ import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.annotation.MessageBody;
 import io.micronaut.messaging.annotation.MessageHeader;
 import io.micronaut.messaging.exceptions.MessageListenerException;
+import io.micronaut.pulsar.LoadableCryptoKeyReader;
 import io.micronaut.pulsar.PulsarProducerRegistry;
 import io.micronaut.pulsar.annotation.MessageKey;
 import io.micronaut.pulsar.annotation.MessageProperties;
@@ -72,6 +73,7 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
 
     protected final Map<String, Producer<?>> producers = new ConcurrentHashMap<>();
     protected final PulsarClient pulsarClient;
+    protected final LoadableCryptoKeyReader loadableCryptoKeyReader;
     protected final DefaultSchemaHandler simpleSchemaResolver;
     protected final BeanContext beanContext;
     protected final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher;
@@ -90,12 +92,14 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
                                 final DefaultSchemaHandler simpleSchemaResolver,
                                 final BeanContext beanContext,
                                 final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher,
-                                final ConversionService conversionService) {
+                                final ConversionService conversionService,
+                                final LoadableCryptoKeyReader loadableCryptoKeyReader) {
         this.pulsarClient = pulsarClient;
         this.simpleSchemaResolver = simpleSchemaResolver;
         this.beanContext = beanContext;
         this.applicationEventPublisher = applicationEventPublisher;
         this.conversionService = conversionService;
+        this.loadableCryptoKeyReader = loadableCryptoKeyReader;
     }
 
     @Override
@@ -252,6 +256,7 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
             try {
                 producer = beanContext.createBean(Producer.class,
                     pulsarClient,
+                    loadableCryptoKeyReader,
                     annotationValue,
                     method.getArguments(),
                     simpleSchemaResolver,
