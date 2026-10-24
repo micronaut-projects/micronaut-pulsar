@@ -84,7 +84,7 @@ public class PulsarProducerFactory {
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);
         annotationValue.booleanValue("blockQueue").ifPresent(producerBuilder::blockIfQueueFull);
-        annotationValue.booleanValue("batching").ifPresent(producerBuilder::blockIfQueueFull);
+        annotationValue.booleanValue("batching").ifPresent(producerBuilder::enableBatching);
         annotationValue.booleanValue("chunking").ifPresent(producerBuilder::enableChunking);
         annotationValue.stringValue("encryptionKey").ifPresent(producerBuilder::addEncryptionKey);
         annotationValue.longValue("initialSequenceId").ifPresent(producerBuilder::initialSequenceId);

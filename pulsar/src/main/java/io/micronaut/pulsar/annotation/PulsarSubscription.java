@@ -16,6 +16,7 @@
 package io.micronaut.pulsar.annotation;
 
 import io.micronaut.messaging.annotation.MessageListener;
+import org.apache.pulsar.client.api.SubscriptionInitialPosition;
 import org.apache.pulsar.client.api.SubscriptionType;
 
 import java.lang.annotation.Documented;
@@ -65,4 +66,12 @@ public @interface PulsarSubscription {
      * @see org.apache.pulsar.client.api.ConsumerBuilder#acknowledgmentGroupTime
      */
     String ackGroupTimeout() default "";
+
+    /**
+     * By default {@code Earliest}.
+     *
+     * @return The initial subscription position
+     * @see org.apache.pulsar.client.api.ConsumerBuilder#subscriptionInitialPosition
+     */
+    SubscriptionInitialPosition subscriptionInitialPosition() default SubscriptionInitialPosition.Earliest;
 }

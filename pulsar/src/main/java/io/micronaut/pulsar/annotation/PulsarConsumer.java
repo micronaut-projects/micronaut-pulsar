@@ -21,6 +21,7 @@ import io.micronaut.messaging.annotation.MessageListener;
 import io.micronaut.messaging.annotation.MessageMapping;
 import io.micronaut.pulsar.MessageSchema;
 import org.apache.pulsar.client.api.RegexSubscriptionMode;
+import org.apache.pulsar.client.api.SubscriptionInitialPosition;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.apache.pulsar.client.util.RetryMessageUtil;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
@@ -188,4 +189,9 @@ public @interface PulsarConsumer {
      * @return Maximum numbers of retires before sending message to dead letter queue topic.
      */
     int maxRetriesBeforeDlq() default RetryMessageUtil.MAX_RECONSUMETIMES;
+
+    /**
+     * @return Subscription initial position in case consumer was defined outside of {@link PulsarSubscription} annotated class
+     */
+    SubscriptionInitialPosition subscriptionInitialPosition() default SubscriptionInitialPosition.Earliest;
 }
