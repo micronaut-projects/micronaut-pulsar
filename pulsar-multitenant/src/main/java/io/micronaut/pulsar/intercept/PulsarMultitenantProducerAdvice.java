@@ -25,6 +25,7 @@ import org.jspecify.annotations.NonNull;
 import io.micronaut.core.convert.ConversionService;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.exceptions.MessageListenerException;
+import io.micronaut.pulsar.LoadableCryptoKeyReader;
 import io.micronaut.pulsar.annotation.PulsarProducer;
 import io.micronaut.pulsar.annotation.PulsarProducerClient;
 import io.micronaut.pulsar.events.ProducerSubscriptionFailedEvent;
@@ -60,12 +61,14 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
                                            final BeanContext beanContext,
                                            final ApplicationEventPublisher<ProducerSubscriptionFailedEvent> applicationEventPublisher,
                                            final TopicResolver topicResolver,
-                                           final ConversionService conversionService) {
+                                           final ConversionService conversionService,
+                                           final LoadableCryptoKeyReader loadableCryptoKeyReader) {
         super(pulsarClient,
             simpleSchemaResolver,
             beanContext,
             applicationEventPublisher,
-            conversionService);
+            conversionService,
+            loadableCryptoKeyReader);
         this.topicResolver = topicResolver;
     }
 
@@ -87,6 +90,7 @@ public final class PulsarMultitenantProducerAdvice extends PulsarProducerAdvice
         try {
             return beanContext.createBean(Producer.class,
                 pulsarClient,
+                loadableCryptoKeyReader,
                 annotationValue,
                 method.getArguments(),
                 simpleSchemaResolver,

@@ -27,6 +27,7 @@ import io.micronaut.core.util.StringUtils;
 import io.micronaut.inject.BeanDefinition;
 import io.micronaut.inject.ExecutableMethod;
 import io.micronaut.messaging.exceptions.MessageListenerException;
+import io.micronaut.pulsar.LoadableCryptoKeyReader;
 import io.micronaut.pulsar.PulsarConsumerRegistry;
 import io.micronaut.pulsar.annotation.PulsarConsumer;
 import io.micronaut.pulsar.annotation.PulsarSubscription;
@@ -46,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
@@ -81,19 +83,22 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
     private final Map<String, Consumer<?>> consumers = new ConcurrentHashMap<>();
     private final Map<String, Consumer<?>> paused = new ConcurrentHashMap<>();
     private final AtomicInteger consumerCounter = new AtomicInteger(10);
+    private final LoadableCryptoKeyReader loadableCryptoKeyReader;
 
     public PulsarConsumerProcessor(final ApplicationEventPublisher<Object> applicationEventPublisher,
                                    final BeanContext beanContext,
                                    final PulsarClient pulsarClient,
                                    final DefaultSchemaHandler simpleSchemaResolver,
                                    final DefaultPulsarClientConfiguration pulsarClientConfiguration,
-                                   final TopicResolver topicResolver) {
+                                   final TopicResolver topicResolver,
+                                   final LoadableCryptoKeyReader loadableCryptoKeyReader) {
         this.applicationEventPublisher = applicationEventPublisher;
         this.beanContext = beanContext;
         this.pulsarClient = pulsarClient;
         this.simpleSchemaResolver = simpleSchemaResolver;
         this.pulsarClientConfiguration = pulsarClientConfiguration;
         this.topicResolver = topicResolver;
+        this.loadableCryptoKeyReader = loadableCryptoKeyReader;
     }
 
     @Override
@@ -182,6 +187,7 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
 
         resolveTopic(consumerAnnotation, consumer, topic);
         resolveDeadLetter(consumerAnnotation, consumer);
+        resolveEncryption(consumerAnnotation, consumer);
 
         if (null != subscription) {
             subscriptionValues(subscription, consumer);
@@ -201,6 +207,18 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
         consumer.messageListener(new DefaultListener(method, argHandler.isMessageWrapper(), bean, argHandler));
 
         return consumer;
+    }
+
+    private void resolveEncryption(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumerBuilder) {
+        boolean cryptoKeyReader = consumerAnnotation.booleanValue("cryptoKeyReader").orElse(false);
+        if (cryptoKeyReader) {
+            try {
+                loadableCryptoKeyReader.load();
+                consumerBuilder.cryptoKeyReader(loadableCryptoKeyReader);
+            } catch (IOException e) {
+                LOG.error("Failed to load crypto key reader:", e);
+            }
+        }
     }
 
     private void resolveDeadLetter(AnnotationValue<PulsarConsumer> consumerAnnotation, ConsumerBuilder<?> consumerBuilder) {

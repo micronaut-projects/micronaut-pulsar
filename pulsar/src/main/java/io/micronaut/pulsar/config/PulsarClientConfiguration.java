@@ -116,4 +116,8 @@ public interface PulsarClientConfiguration {
     default Optional<ProxyProtocol> getProxyProtocol() {
         return Optional.empty();
     }
+
+    Optional<String> getEncryptionPublicKeyPath();
+
+    Optional<String> getEncryptionPrivateKeyPath();
 }

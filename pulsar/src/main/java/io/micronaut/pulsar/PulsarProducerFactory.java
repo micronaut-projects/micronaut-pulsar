@@ -33,6 +33,8 @@ import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.impl.ProducerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Pulsar {@link Producer} factory.
@@ -42,6 +44,8 @@ import org.apache.pulsar.client.impl.PulsarClientImpl;
  */
 @Factory
 public class PulsarProducerFactory {
+    private static final Logger LOG = LoggerFactory.getLogger(PulsarProducerFactory.class);
+
     private final TopicResolver topicResolver;
 
     public PulsarProducerFactory(final TopicResolver topicResolver) {
@@ -52,6 +56,7 @@ public class PulsarProducerFactory {
      * Simple factory method for producing Pulsar {@link Producer} beans.
      *
      * @param pulsarClient         main Pulsar Client bean
+     * @param cryptoKeyReader      loadable CryptoKeyReader
      * @param annotationValue      method annotation to read properties from
      * @param methodArguments      arguments passed to method annotated with @PulsarProducer
      * @param simpleSchemaResolver schema resolver bean
@@ -62,6 +67,7 @@ public class PulsarProducerFactory {
     @SuppressWarnings("unchecked")
     @Prototype
     public <T> Producer<T> createProducer(@Parameter PulsarClient pulsarClient,
+                                          @Parameter LoadableCryptoKeyReader cryptoKeyReader,
                                           @Parameter AnnotationValue<PulsarProducer> annotationValue,
                                           @Parameter Argument<?>[] methodArguments,
                                           @Parameter DefaultSchemaHandler simpleSchemaResolver,
@@ -84,9 +90,17 @@ public class PulsarProducerFactory {
         annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
         annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);
         annotationValue.booleanValue("blockQueue").ifPresent(producerBuilder::blockIfQueueFull);
-        annotationValue.booleanValue("batching").ifPresent(producerBuilder::blockIfQueueFull);
+        annotationValue.booleanValue("batching").ifPresent(producerBuilder::enableBatching);
         annotationValue.booleanValue("chunking").ifPresent(producerBuilder::enableChunking);
-        annotationValue.stringValue("encryptionKey").ifPresent(producerBuilder::addEncryptionKey);
+        annotationValue.stringValue("encryptionKey").ifPresent(key -> {
+            try {
+                cryptoKeyReader.load(); // lazy loading of keys
+                producerBuilder.addEncryptionKey(key);
+                producerBuilder.cryptoKeyReader(cryptoKeyReader);
+            } catch (Exception e) {
+                LOG.error("Cannot load crypto key reader:", e);
+            }
+        });
         annotationValue.longValue("initialSequenceId").ifPresent(producerBuilder::initialSequenceId);
         annotationValue.enumValue("hashingScheme", HashingScheme.class).ifPresent(producerBuilder::hashingScheme);
         annotationValue.enumValue("compressionType", CompressionType.class)

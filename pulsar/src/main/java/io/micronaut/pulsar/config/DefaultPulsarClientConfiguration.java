@@ -73,6 +73,8 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
     private String defaultTenant;
     private String proxyUrl;
     private ProxyProtocol proxyProtocol;
+    private String encryptionPublicKeyPath;
+    private String encryptionPrivateKeyPath;
 
     /**
      * Constructs the default Pulsar Client configuration.
@@ -345,5 +347,23 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
             return Optional.of(Objects.requireNonNullElse(proxyProtocol, ProxyProtocol.SNI));
         }
         return Optional.empty();
+    }
+
+    public void setEncryptionPublicKeyPath(String encryptionPublicKeyPath) {
+        this.encryptionPublicKeyPath = encryptionPublicKeyPath;
+    }
+
+    @Override
+    public Optional<String> getEncryptionPublicKeyPath() {
+        return Optional.ofNullable(encryptionPublicKeyPath);
+    }
+
+    public void setEncryptionPrivateKeyPath(String encryptionPrivateKeyPath) {
+        this.encryptionPrivateKeyPath = encryptionPrivateKeyPath;
+    }
+
+    @Override
+    public Optional<String> getEncryptionPrivateKeyPath() {
+        return Optional.ofNullable(encryptionPrivateKeyPath);
     }
 }
