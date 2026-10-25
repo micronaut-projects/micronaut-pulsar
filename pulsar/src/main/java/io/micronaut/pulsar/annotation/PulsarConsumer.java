@@ -25,7 +25,6 @@ import org.apache.pulsar.client.api.SubscriptionType;
 import org.apache.pulsar.client.util.RetryMessageUtil;
 import org.apache.pulsar.common.schema.KeyValueEncodingType;
 
-import io.micronaut.pulsar.processor.ExponentialRedeliveryBackoff;
 import java.lang.annotation.Documented;
 import java.lang.annotation.Retention;
 import java.lang.annotation.Target;

@@ -19,6 +19,9 @@ import java.util.Random;
 import org.apache.pulsar.client.api.RedeliveryBackoff;
 import com.google.common.base.Preconditions;
 
+/**
+ * An exponential Implementation of the Pulsar RedeliveryBackoff.
+ */
 public class ExponentialRedeliveryBackoff implements RedeliveryBackoff {
 
     static Random random = new Random();
@@ -35,13 +38,15 @@ public class ExponentialRedeliveryBackoff implements RedeliveryBackoff {
     }
 
     /**
-     * Decorrelated Jitter, see https://aws.amazon.com/fr/blogs/architecture/exponential-backoff-and-jitter/
+     * Decorrelated Jitter.
+     * @see <a href="https://aws.amazon.com/fr/blogs/architecture/exponential-backoff-and-jitter/">
+     *     Exponential backoff and jitter</a>
      * @param redeliveryCount indicates the number of times the message was redelivered
      * @return delay in milliseconds
      */
     @Override
     public long next(int redeliveryCount) {
         double exponentialDelay = firstBackoffInMs * Math.pow(2, redeliveryCount);
-        return (long) Math.min( maxDelayInMs, firstBackoffInMs + random.nextDouble() * exponentialDelay);
+        return (long) Math.min(maxDelayInMs, firstBackoffInMs + random.nextDouble() * exponentialDelay);
     }
 }
