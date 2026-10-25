@@ -43,7 +43,6 @@ import org.apache.pulsar.client.api.RegexSubscriptionMode;
 import org.apache.pulsar.client.api.SubscriptionType;
 import org.apache.pulsar.client.impl.ConsumerBuilderImpl;
 import org.apache.pulsar.client.impl.PulsarClientImpl;
-import org.checkerframework.checker.units.qual.C;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -216,7 +215,7 @@ public class PulsarConsumerProcessor implements ExecutableMethodProcessor<Pulsar
             try {
                 loadableCryptoKeyReader.load();
                 consumerBuilder.cryptoKeyReader(loadableCryptoKeyReader);
-            } catch(IOException e) {
+            } catch (IOException e) {
                 LOG.error("Failed to load crypto key reader:", e);
             }
         }

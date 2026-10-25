@@ -56,6 +56,7 @@ public class PulsarProducerFactory {
      * Simple factory method for producing Pulsar {@link Producer} beans.
      *
      * @param pulsarClient         main Pulsar Client bean
+     * @param cryptoKeyReader      loadable CryptoKeyReader
      * @param annotationValue      method annotation to read properties from
      * @param methodArguments      arguments passed to method annotated with @PulsarProducer
      * @param simpleSchemaResolver schema resolver bean
@@ -96,7 +97,7 @@ public class PulsarProducerFactory {
                 cryptoKeyReader.load(); // lazy loading of keys
                 producerBuilder.addEncryptionKey(key);
                 producerBuilder.cryptoKeyReader(cryptoKeyReader);
-            } catch(Exception e) {
+            } catch (Exception e) {
                 LOG.error("Cannot load crypto key reader:", e);
             }
         });

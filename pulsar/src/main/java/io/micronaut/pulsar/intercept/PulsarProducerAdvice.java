@@ -87,6 +87,7 @@ public class PulsarProducerAdvice implements MethodInterceptor<Object, Object>, 
      * @param beanContext               Micronaut bean context
      * @param applicationEventPublisher Event publisher for reporting failed subscriptions
      * @param conversionService         Micronaut conversion service
+     * @param loadableCryptoKeyReader   Loadable CryptoKeyReader
      */
     public PulsarProducerAdvice(final PulsarClient pulsarClient,
                                 final DefaultSchemaHandler simpleSchemaResolver,
