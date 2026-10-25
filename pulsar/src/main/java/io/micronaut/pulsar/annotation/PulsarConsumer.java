@@ -188,4 +188,29 @@ public @interface PulsarConsumer {
      * @return Maximum numbers of retires before sending message to dead letter queue topic.
      */
     int maxRetriesBeforeDlq() default RetryMessageUtil.MAX_RECONSUMETIMES;
+
+    /**
+     * Negative ack exponential retry first backoff.
+     * @return Negative ack exponential retry first backoff
+     */
+    String exponentialNegativeAckFirstBackoff() default "";
+
+    /**
+     * Negative ack exponential retry max backoff.
+     * @return Negative ack exponential retry max backoff
+     */
+    String exponentialNegativeAckMaxBackoff() default "";
+
+    /**
+     * Ack timeout exponential retry first backoff.
+     * @return ack timeout exponential retry first backoff
+     */
+    String exponentialAckTimeoutFirstBackoff() default "";
+
+    /**
+     * Ack timeout exponential retry max backoff.
+     * @return ack timeout exponential retry max backoff
+     */
+    String exponentialAckTimeoutMaxBackoff() default "";
+
 }
