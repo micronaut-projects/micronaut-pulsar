@@ -349,8 +349,17 @@ public final class DefaultPulsarClientConfiguration extends AbstractPulsarConfig
         return Optional.empty();
     }
 
+    public void setEncryptionPublicKeyPath(String encryptionPublicKeyPath) {
+        this.encryptionPublicKeyPath = encryptionPublicKeyPath;
+    }
+
+    @Override
     public Optional<String> getEncryptionPublicKeyPath() {
         return Optional.ofNullable(encryptionPublicKeyPath);
+    }
+
+    public void setEncryptionPrivateKeyPath(String encryptionPrivateKeyPath) {
+        this.encryptionPrivateKeyPath = encryptionPrivateKeyPath;
     }
 
     @Override
