@@ -29,6 +29,7 @@ import org.apache.pulsar.client.api.CompressionType;
 import org.apache.pulsar.client.api.HashingScheme;
 import org.apache.pulsar.client.api.MessageRoutingMode;
 import org.apache.pulsar.client.api.Producer;
+import org.apache.pulsar.client.api.ProducerBuilder;
 import org.apache.pulsar.client.api.PulsarClient;
 import org.apache.pulsar.client.api.Schema;
 import org.apache.pulsar.client.impl.ProducerBuilderImpl;
@@ -46,6 +47,53 @@ public class PulsarProducerFactory {
 
     public PulsarProducerFactory(final TopicResolver topicResolver) {
         this.topicResolver = topicResolver;
+    }
+
+    /**
+     * Helper method to build a {@link ProducerBuilder} from annotation values.
+     *
+     * @param pulsarClient         main Pulsar Client bean
+     * @param annotationValue      method annotation to read properties from
+     * @param methodArguments      arguments passed to method annotated with @PulsarProducer
+     * @param simpleSchemaResolver schema resolver bean
+     * @param annotatedMethodName  method name on which annotation for Pulsar Producer was set
+     * @param <T>                  type of message body for pulsar producer
+     * @return populated ProducerBuilder
+     */
+    final <T> ProducerBuilder<T> createProducerBuilder(PulsarClient pulsarClient,
+                                                        AnnotationValue<PulsarProducer> annotationValue,
+                                                        Argument<?>[] methodArguments,
+                                                        DefaultSchemaHandler simpleSchemaResolver,
+                                                        String annotatedMethodName) {
+        final var argsHandler = new PulsarArgumentHandler(methodArguments, annotatedMethodName);
+        @SuppressWarnings("unchecked")
+        final var schema = (Schema<T>) simpleSchemaResolver.decideSchema(argsHandler.getBodyArgument(),
+            argsHandler.getKeyArgument(),
+            annotationValue,
+            annotatedMethodName);
+
+        final var producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
+        final var topicResolved = TopicResolver.extractTopic(annotationValue, producerName);
+
+        final ProducerBuilder<T> producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
+            .producerName(producerName)
+            // producers can't have list of topics or patterns just a single topic
+            .topic(topicResolver.resolve(topicResolved.getTopic()));
+
+        annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
+        annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);
+        annotationValue.booleanValue("blockQueue").ifPresent(producerBuilder::blockIfQueueFull);
+        annotationValue.booleanValue("batching").ifPresent(producerBuilder::enableBatching);
+        annotationValue.booleanValue("chunking").ifPresent(producerBuilder::enableChunking);
+        annotationValue.stringValue("encryptionKey").ifPresent(producerBuilder::addEncryptionKey);
+        annotationValue.longValue("initialSequenceId").ifPresent(producerBuilder::initialSequenceId);
+        annotationValue.enumValue("hashingScheme", HashingScheme.class).ifPresent(producerBuilder::hashingScheme);
+        annotationValue.enumValue("compressionType", CompressionType.class)
+            .ifPresent(producerBuilder::compressionType);
+        annotationValue.enumValue("messageRoutingMode", MessageRoutingMode.class)
+            .ifPresent(producerBuilder::messageRoutingMode);
+
+        return producerBuilder;
     }
 
     /**
@@ -67,32 +115,14 @@ public class PulsarProducerFactory {
                                           @Parameter DefaultSchemaHandler simpleSchemaResolver,
                                           @Parameter String annotatedMethodName) throws MessagingClientException {
 
-        final var argsHandler = new PulsarArgumentHandler(methodArguments, annotatedMethodName);
-        final var schema = (Schema<T>) simpleSchemaResolver.decideSchema(argsHandler.getBodyArgument(),
-            argsHandler.getKeyArgument(),
-            annotationValue,
-            annotatedMethodName);
-
         final var producerName = annotationValue.stringValue("producerName").orElse(annotatedMethodName);
         final var topicResolved = TopicResolver.extractTopic(annotationValue, producerName);
 
-        final var producerBuilder = new ProducerBuilderImpl<>((PulsarClientImpl) pulsarClient, schema)
-            .producerName(producerName)
-            // producers can't have list of topics or patterns just a single topic
-            .topic(topicResolver.resolve(topicResolved.getTopic()));
-
-        annotationValue.booleanValue("multiSchema").ifPresent(producerBuilder::enableMultiSchema);
-        annotationValue.booleanValue("autoUpdatePartition").ifPresent(producerBuilder::autoUpdatePartitions);
-        annotationValue.booleanValue("blockQueue").ifPresent(producerBuilder::blockIfQueueFull);
-        annotationValue.booleanValue("batching").ifPresent(producerBuilder::blockIfQueueFull);
-        annotationValue.booleanValue("chunking").ifPresent(producerBuilder::enableChunking);
-        annotationValue.stringValue("encryptionKey").ifPresent(producerBuilder::addEncryptionKey);
-        annotationValue.longValue("initialSequenceId").ifPresent(producerBuilder::initialSequenceId);
-        annotationValue.enumValue("hashingScheme", HashingScheme.class).ifPresent(producerBuilder::hashingScheme);
-        annotationValue.enumValue("compressionType", CompressionType.class)
-            .ifPresent(producerBuilder::compressionType);
-        annotationValue.enumValue("messageRoutingMode", MessageRoutingMode.class)
-            .ifPresent(producerBuilder::messageRoutingMode);
+        final ProducerBuilder<T> producerBuilder = this.<T>createProducerBuilder(pulsarClient,
+            annotationValue,
+            methodArguments,
+            simpleSchemaResolver,
+            annotatedMethodName);
 
         try {
             return producerBuilder.create();
