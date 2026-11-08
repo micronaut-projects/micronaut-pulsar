@@ -10,6 +10,12 @@ dependencies {
         api(libs.managed.jackson.databind) {
             because 'Apache Pulsar 4.2.3 brings Jackson Databind 2.18.8, which is vulnerable to GHSA-5jmj-h7xm-6q6v'
         }
+        api('com.google.guava:guava:33.7.2-jre') {
+            because 'Apache Pulsar brings Guava 33.7.1, which is vulnerable to GHSA-xxph-c9ww-hj94'
+        }
+        api('io.opentelemetry:opentelemetry-api:1.67.0') {
+            because 'Apache Pulsar brings OpenTelemetry API 1.62.0, which is vulnerable to GHSA-ccrj-gw8r-854m'
+        }
         api(libs.async.http.client) {
             because 'Apache Pulsar 4.2.4 brings AsyncHttpClient 2.15.0, which is vulnerable to GHSA-m452-q8c9-rg2f'
         }
