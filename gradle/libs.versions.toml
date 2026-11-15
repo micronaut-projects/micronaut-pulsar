@@ -1,8 +1,8 @@
 [versions]
 async-http-client = '2.16.1'
-bouncycastle = '1.86'
+bouncycastle = '1.87'
 conscrypt-openjdk = '2.9.0'
-micronaut = "5.2.22"
+micronaut = "5.2.23"
 micronaut-platform = '5.2.5'
 micronaut-gradle-plugin = '5.0.2'
 micronaut-grpc = "5.2.0"
